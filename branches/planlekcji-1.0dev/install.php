@@ -56,16 +56,18 @@ if (count($ctb) != 0) {
             <body>
                 <img src="lib/images/logo.png"/>
                 <h1>Instalator Intersys Plan Lekcji</h1>
-                <h3>Uruchom plik <b>index.php</b> używając wiersza poleceń i php</h3>
+                <h3 class="notice">Uruchom plik install.php w konsoli z poziomu katalogu aplikacji</h3>
                 <?php if (PHP_OS == "WINNT"): ?>
                     <p><b>Na systemie Windows, gdy ścieżka do PHP istnieje w zmiennej PATH</b></p>
                     <pre>
-C:\>php "<?php echo realpath('install.php'); ?>"
+<b>C:\></b> cd <?php echo __DIR__.DIRECTORY_SEPARATOR ?><br/>
+<b><?php echo __DIR__.DIRECTORY_SEPARATOR ?>></b> php install.php
                     </pre>
                 <?php else: ?>
                     <p><b>Na systemie UNIX</b></p>
                     <pre>
-$ php "<?php echo realpath('install.php'); ?>"
+<b></b> cd <?php echo __DIR__.DIRECTORY_SEPARATOR ?> $<br/>
+<b><?php echo __DIR__.DIRECTORY_SEPARATOR ?> $</b> php install.php
                     </pre>
                 <?php endif; ?>
                 <p class="info">Więcej informacji w dokumentacji projektu</p>
