@@ -1,0 +1,86 @@
+body{
+    font: 80% sans-serif;
+    margin: 20px;
+    max-width: 100%;
+}
+.ui-button-text-only .ui-button-text {
+    padding: 0.3em 1em;
+}
+h1{
+    font-size: 18pt;
+}
+h3{
+    font-size: 12pt;
+}
+a{
+    color: blue;
+}
+a:hover{
+    color: #ff3300
+}
+li{
+    margin-top: 5px;
+}
+a:visited{
+    color: blue;
+}
+#main{
+}
+#top{
+    height: auto;
+    margin-bottom: 15px;
+}
+#middle{
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+#menu{
+    float: left;
+    width: 20%;
+    max-width: 30%;
+}
+#content{
+    margin-left: 20px;
+    float: left;
+    width: 75%;
+}
+#foot{
+    margin-top: 15px;
+}
+table{
+    font-size: 10pt;
+}
+td{
+    padding: 5px;
+}
+thead{
+    font-weight: bold;
+}
+.info{
+    font-style: italic;
+}
+.grplek{
+    font-size: 9pt;
+    margin: 0px;
+}
+.ui-timepicker-div .ui-widget-header{ margin-bottom: 8px; }
+.ui-timepicker-div dl{ text-align: left; }
+.ui-timepicker-div dl dt{ height: 25px; }
+.ui-timepicker-div dl dd{ margin: -25px 0 10px 65px; }
+.ui-timepicker-div td { font-size: 90%; }
+select{
+    margin: 5px;
+}
+hr{
+    height: 1px;
+    border: 0;
+    color: #333;
+    background-color: #333;
+    width: 100%;
+}
+.notice{
+    color: #009900;
+}
+.error{
+    color: red;
+}
