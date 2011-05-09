@@ -53,7 +53,7 @@ $isf->DbConnect();
                         <?php endforeach; ?>
                     </td>
                     <td>
-                        <a href="<?php echo URL::site('sale/przedmiot/' . $rowcol['sala']); ?>">[ przedmioty ]</a>
+                        <a href="<?php echo URL::site('sale/przedmiot/' . $rowcol['sala']); ?>">[ przedmioty ]</a>&emsp;
                         <a href="<?php echo URL::site('sale/usun/' . $rowcol['sala']); ?>">[ usuń salę ]</a>
                     </td>
                 </tr>

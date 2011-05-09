@@ -13,8 +13,7 @@
 1. LICENCJA  │
 ─────────────┘
 
-Na stan obecny (1.0 Relase Candidate 2), dozwolone jest użycie tylko w celach
-testowych
+Plan Lekcji Intersys został wydany na licencji GNU GPL v3
 
 2. UŻYTE OPROGRAMOWANIE │
 ────────────────────────┘

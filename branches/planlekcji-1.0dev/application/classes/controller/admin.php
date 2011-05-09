@@ -25,14 +25,21 @@ class Controller_Admin extends Controller {
         }
     }
 
-    public function action_login() {
+    public function action_login($pass='') {
         if (isset($_SESSION['valid']) && isset($_COOKIE['PHPSESSID'])) {
             Kohana_Request::factory()->redirect('');
             exit;
         }
+        
         $view = view::factory('main');
         $view2 = view::factory('admin_login');
-
+        
+        if($pass=='false'){
+            $view2->set('pass', $pass);
+        }else{
+            $view2->set('pass', null);
+        }
+        
         $view->set('content', $view2->render());
         echo $view->render();
     }
@@ -49,7 +56,7 @@ class Controller_Admin extends Controller {
             setcookie('login', $res[1]['login'], null, '/');
             Kohana_Request::factory()->redirect('');
         } else {
-            echo 'Zle dane! <a href="' . URL::site('admin/login') . '">[ powrot ]</a>';
+            Kohana_Request::factory()->redirect('admin/login/false');
         }
     }
 
