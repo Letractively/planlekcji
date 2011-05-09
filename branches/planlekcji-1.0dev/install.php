@@ -80,7 +80,7 @@ if (count($ctb) != 0) {
 + + + + + + + + + + + + + + + + + + + +
 +                                     +
 +    I   N   T   E    R   S   Y   S   +  Wersja 1.0
-+    P  L  A  N   L  E  K  C  J  I    +  Relase Candidate 2
++    P  L  A  N   L  E  K  C  J  I    +  Relase Candidate 3
 +                                     +
 + + + + + + + + + + + + + + + + + + + +
 
@@ -266,7 +266,7 @@ START;
         
         $isf->DbInsert('rejestr', array(
             'opcja' => 'app_ver',
-            'wartosc' => '1.0rc2'
+            'wartosc' => '1.0 RC3'
         ));
 
         $pass = substr(md5(@date('Y:m:d')), 0, 8);
