@@ -54,11 +54,10 @@ $grp = $isf->DbSelect('rejestr', array('*'), 'where opcja="ilosc_grup"');
 
         <?php endforeach; ?>
     </table>
-    <p><b>Usunięcie klasy oznacza usunięcie wszystkich elementów pokrewnych (plan zajęć) powiązanych
-            z tą klasą.</b>
+    <p><b>Usunięcie klasy usunie wszystkie powiązania z nauczycielami uczących daną klasę.</b>
     </p>
 <?php endif; ?>
-<h3>Grupy (między)klasowe</h3>
+<h3>Grupy klasowe</h3>
 <p><b>Bieżąca ilość grup: </b><?php echo $grp[1]['wartosc']; ?></p>
 <form action="<?php echo url::site('klasy/grupyklasowe'); ?>" method="post" name="form">
     <select name="grp">
