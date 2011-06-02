@@ -40,7 +40,7 @@ function pobierzdzien($dzien, $lekcja) {
         }
     }
     $ret .= '<select style="width:200px;" name="' . $dzien . '[' . $lekcja . ']">';
-    if($vl!=''){
+    if ($vl != '') {
         $ret .= '<option selected>' . $vl . '</option>';
     }
     $ret .= '<option>---</option>';
@@ -76,10 +76,7 @@ function pobierzdzien($dzien, $lekcja) {
         <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style.css"/>
     </head>
     <body>
-        <h1>Edycja planu dla <?php echo $klasa; ?></h1>
-        <form action="<?php echo URL::site('plan/zatwierdz'); ?>" method="post" name="formPlan">
-            <p><a href="#" onClick="document.forms['formPlan'].submit();">[ zapisz i zakończ edycję ]</a> <b>(usunie także plan dla grup)</b>
-                &emsp;'---' brak lekcji w danym czasie (domyslnie ustawione)</p>
+        <form action="<?php echo URL::site('plan/zatwierdz'); ?>" method="post" name="formPlan" style="margin-top: 100px;">
             <input type="hidden" name="klasa" value="<?php echo $klasa; ?>"/>
             <table>
                 <thead style="background: greenyellow;">

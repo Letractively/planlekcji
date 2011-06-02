@@ -38,5 +38,5 @@ if (count($klasy) != 0) {
 }
 ?>
 <p class="info"><b>Uwaga!</b> Przypisanie przedmiotów oraz klas <b>zostanie usunięte</b>.</p>
-<p>Czy napewno chcesz usunąć? <b><a href="<?php echo URL::site('nauczyciele/index'); ?>" id="a_nie">[ nie ]</a> </b>
+<p>Czy napewno chcesz usunąć? <a href="<?php echo URL::site('nauczyciele/index'); ?>" id="a_nie">[ nie ]</a>
     <a href="<?php echo URL::site('nauczyciele/usun/' . $nauczyciel . '/true'); ?>" id="a_tak">[ tak ]</a></p>

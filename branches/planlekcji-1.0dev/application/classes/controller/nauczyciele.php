@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Intersys - Plan Lekcji
  * 
@@ -7,6 +8,7 @@
  * @author Michał Bocian <mhl.bocian@gmail.com>
  */
 defined('SYSPATH') or die('No direct script access.');
+
 /**
  * Kontroler: nauczyciele
  * 
@@ -35,6 +37,7 @@ class Controller_Nauczyciele extends Controller {
 
         $view2->set('_err', $err);
 
+        $view->set('bodystr', 'onLoad="document.forms.form1.inpName.focus()"');
         $view->set('content', $view2->render());
         echo $view->render();
     }
@@ -62,9 +65,10 @@ class Controller_Nauczyciele extends Controller {
                 exit;
             }
 
-            $in = explode(' ', $_POST['inpName']);
-            $sk = substr($in[0], 0, 3) . substr($in[1], 0, 3);
-            $sk = strtoupper($sk);
+            $lit = substr($_POST['inpName'], 0, 1);
+            $rsl = $isf->DbSelect('nauczyciele', array('*'), 'where imie_naz like "' . $lit . '%"');
+            $nr = count($rsl) + 1;
+            $sk = strtoupper($lit.$nr);
 
             $isf->DbInsert('nauczyciele', array(
                 'imie_naz' => $_POST['inpName'],

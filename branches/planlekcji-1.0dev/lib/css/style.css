@@ -9,6 +9,10 @@ body{
 h1{
     font-size: 18pt;
 }
+.anac{
+    color: #009900;
+    font-weight: bold;
+}
 h3{
     font-size: 12pt;
 }
@@ -20,9 +24,6 @@ a:hover{
 }
 li{
     margin-top: 5px;
-}
-a:visited{
-    color: blue;
 }
 #main{
 }
@@ -83,4 +84,25 @@ hr{
 }
 .error{
     color: red;
+}
+table.przed {
+	border-width: 0px;
+	border-spacing: 0px;
+	border-style: solid;
+	border-color: green;
+	border-collapse: collapse;
+	background-color: white;
+}
+table.przed th {
+	border-width: 1px;
+	padding: 3px;
+	border-style: solid;
+	border-color: black;
+}
+table.przed td {
+	border-width: 1px;
+	padding: 3px;
+	border-style: solid;
+	border-color: black;
+	background-color: white;
 }

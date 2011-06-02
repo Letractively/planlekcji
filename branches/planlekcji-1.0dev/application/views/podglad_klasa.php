@@ -25,7 +25,12 @@ function pobierzdzien($dzien, $lekcja) {
             echo '';
         }else{
             foreach($rn as $rowid=>$rowcol){
-                echo '<p class="grplek">gr '.$rowcol['grupa'].' - '.$rowcol['przedmiot'].' (<a href="'.URL::site('podglad/sala/'.$rowcol['sala']).'">'.$rowcol['sala'].'</a>)</p>';
+                if($rowcol['sala']==''||empty($rowcol['sala'])){
+                    $sstr='';
+                }else{
+                    $sstr='(<a href="'.URL::site('podglad/sala/'.$rowcol['sala']).'">'.$rowcol['sala'].'</a>)';
+                }
+                echo '<p class="grplek">gr '.$rowcol['grupa'].' - '.$rowcol['przedmiot'].' '.$sstr.'</p>';
             }
         }
     }
@@ -35,12 +40,12 @@ function pobierzdzien($dzien, $lekcja) {
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Plan lekcji ZSO</title>
+        <title>Plan lekcji</title>
         <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style.css"/>
     </head>
     <body>
         <h1><a href="#" onClick="window.print();"><img border="0" src="<?php echo URL::base() ?>lib/images/printer.png" alt="[drukuj plan]"/></a>
-            Plan lekcji [ <?php echo $klasa; ?> ]</h1>
+            Plan lekcji - <?php echo $klasa; ?></h1>
         <table>
             <thead style="background: greenyellow;">
                 <tr>

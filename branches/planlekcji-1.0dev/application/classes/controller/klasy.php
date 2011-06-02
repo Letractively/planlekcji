@@ -34,7 +34,7 @@ class Controller_Klasy extends Controller {
         $view2 = View::factory('klasy_index');
 
         $view2->set('_err', $err);
-
+        $view->set('bodystr', 'onLoad="document.forms.form1.inpKlasa.focus()"');
         $view->set('content', $view2->render());
         echo $view->render();
     }

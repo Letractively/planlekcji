@@ -45,7 +45,7 @@ if (count($res) == 0) {
     <p class="info">Obecna ilość godzin lekcyjnych jest ustawiona na <b>0</b>!</p>
 <?php else: ?>
     <form action="<?php echo URL::site('godziny/lekcje'); ?>" method="post">
-        <table>
+        <table class="przed">
             <thead>
                 <tr>
                     <td>

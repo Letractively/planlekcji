@@ -288,9 +288,7 @@ class Kohana_Isf {
      */
     public function JQUi_CustomFunction($function, $ui_script=true) {
         if ($ui_script == true) {
-            $this->script .= '
-                ' . $function . '
-            ';
+            $this->script .= '' . $function . '';
         } else {
             return $function;
         }
@@ -586,8 +584,8 @@ class Kohana_Isf {
         $name = $this->hashname($name);
         $script = '<div id="isf_adiv_' . $name . '" style="display: none;">';
         if ($progressgif == true) {
-            $script .= '<div id="isf_adc_' . $name . '">
-                <img src="' . $this->jqpath . '/css/load.gif" id="isf_adl_' . $hash . '"></div>';
+            $script .= '<div id="isf_adc_' . $name . '">Trwa ładowanie danych... 
+                <img src="' . $this->jqpath . '/css/load.gif" id="isf_adl_' . $name . '"></div>';
         } else {
             $script .= '<div id="isf_adc_' . $name . '"></div>';
         }
@@ -610,7 +608,7 @@ class Kohana_Isf {
      * @param text $url Adres URL strony z zapytaniem
      * @return text Zwraca kod JQuery
      */
-    public function JQUi_AjaxdivDoAjax($divname, $url) {
+    public function JQUi_AjaxdivDoAjax($divname, $url, $to_mscript=false) {
         $divname = $this->hashname($divname);
         $script = '
             $("#isf_adiv_' . $divname . '").show("slow", function(){
@@ -622,7 +620,10 @@ class Kohana_Isf {
                     }
                 });
             });';
-        return $script;
+        if($to_mscript==false)
+            return $script;
+        else
+            $this->script .= $script;
     }
 
     /**

@@ -8,7 +8,7 @@ $isf = new Kohana_Isf();
 $isf->DbConnect();
 ?>
 <h1>Zarządzanie nauczycielami</h1>
-<form action="<?php echo URL::site('nauczyciele/dodaj'); ?>" method="post">
+<form action="<?php echo URL::site('nauczyciele/dodaj'); ?>" method="post" name="form1">
     Imię i nazwisko: <input type="text" name="inpName"/>&nbsp;
     <button type="submit" name="btnSubmit">Dodaj nauczyciela</button>
 </form>
@@ -37,7 +37,7 @@ $res = $isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc');
 <?php if (count($res) == 0): ?>
     <p class="info">Brak nauczycieli w systemie.</p>
 <?php else: ?>
-    <table>
+    <table class="przed">
         <thead>
             <tr style="height: 30px; font-weight: bold;">
                 <td>Imię i nazwisko</td>
@@ -49,8 +49,11 @@ $res = $isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc');
         <tbody>
             <?php foreach ($res as $rowid => $rowcol): ?>
                 <tr>
-                    <td><a href="<?php echo URL::site('nauczyciele/zarzadzanie/' . $rowcol['imie_naz']); ?>">
-                            <?php echo $rowcol['imie_naz']; ?></a></td>
+                    <td>
+                        (<?php echo $rowcol['skrot']; ?>)
+                        <a href="<?php echo URL::site('nauczyciele/zarzadzanie/' . $rowcol['imie_naz']); ?>">
+                            <?php echo $rowcol['imie_naz']; ?></a>
+                    </td>
                     <td>
                         <?php foreach ($isf->DbSelect('nl_przedm', array('przedmiot'), 'where nauczyciel="' . $rowcol['imie_naz'] . '"')
                         as $rid => $rcl): ?>
@@ -58,16 +61,18 @@ $res = $isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc');
                         <?php endforeach; ?>
                     </td>
                     <td
-                        style="max-width: 250px;">
+                        style="max-width: 250px; width: 100px;">
                         <?php foreach ($isf->DbSelect('nl_klasy', array('klasa'), 'where nauczyciel="' . $rowcol['imie_naz'] . '" order by klasa asc')
                         as $rid => $rcl): ?>
                             <?php echo $rcl['klasa']; ?>, 
                         <?php endforeach; ?>
                     </td>
                     <td>
-                        <a href="<?php echo URL::site('nauczyciele/zarzadzanie/' . $rowcol['imie_naz']); ?>">
-                            [ zarządzanie ]</a>
-                        <a href="<?php echo URL::site('nauczyciele/usun/' . $rowcol['imie_naz']); ?>">[ usuń nauczyciela ]</a>
+                        <a class="anac"
+                            href="<?php echo URL::site('nauczyciele/zarzadzanie/' . $rowcol['imie_naz']); ?>">
+                            zarządzanie</a>&emsp;
+                        <a class="anac"
+                            href="<?php echo URL::site('nauczyciele/usun/' . $rowcol['imie_naz']); ?>">usuń nauczyciela</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

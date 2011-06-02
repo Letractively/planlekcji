@@ -6,7 +6,7 @@ $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
 $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
 
 $isf->JQUi();
-$isf->JQUi_AjaxdivDoAjax('progress', URL::site('plan/grupaajax/' . $klasa), true);
+$isf->JQUi_AjaxdivDoAjax('progress', URL::site('plan/klasaajax/' . $klasa), true);
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -20,8 +20,9 @@ $isf->JQUi_AjaxdivDoAjax('progress', URL::site('plan/grupaajax/' . $klasa), true
             <h1>
                 <a href="#" onClick="document.forms['formPlan'].submit();">
                     <img src="<?php echo URL::base() ?>lib/images/save.png" alt="zapisz"/></a>
-                Edycja planu dla <?php echo $klasa; ?> (grupowy)
+                Edycja planu dla <?php echo $klasa; ?>
             </h1>
+            <p class="error">Zapisanie planu spowoduje usunięcie planu dla grup dla danej klasy</p>
         </div>
         <div style="margin-top: 100px">
             <?php echo $isf->JQUi_AjaxdivCreate('progress'); ?>

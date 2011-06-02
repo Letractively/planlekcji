@@ -6,7 +6,7 @@
  */
 ?>
 <h1>Zarządzanie klasami</h1>
-<form action="<?php echo URL::site('klasy/dodaj'); ?>" method="post">
+<form action="<?php echo URL::site('klasy/dodaj'); ?>" method="post" name="form1">
     Klasa: <input type="text" name="inpKlasa"/>&nbsp;
     <button type="submit" name="btnSubmit">Dodaj klasę</button>
 </form>
@@ -39,7 +39,7 @@ $grp = $isf->DbSelect('rejestr', array('*'), 'where opcja="ilosc_grup"');
     <p class="info">Brak klas w systemie</p>
 <?php else: ?>
     <p><b>Klasy w systemie</b></p>
-    <table>
+    <table class="przed">
         <thead>
             <tr>
                 <td>Klasa</td>
@@ -49,7 +49,8 @@ $grp = $isf->DbSelect('rejestr', array('*'), 'where opcja="ilosc_grup"');
         <?php foreach ($res as $rowid => $rowcol): ?>
             <tr>
                 <td><?php echo $rowcol['klasa']; ?></td>
-                <td><a href="<?php echo URL::site('klasy/usun/' . $rowcol['klasa']); ?>">[ usuń ]</a></td>
+                <td><a class="anac"
+                        href="<?php echo URL::site('klasy/usun/' . $rowcol['klasa']); ?>">usuń</a></td>
             </tr>
 
         <?php endforeach; ?>

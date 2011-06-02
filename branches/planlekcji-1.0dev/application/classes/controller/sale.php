@@ -47,6 +47,7 @@ class Controller_Sale extends Controller {
         $view2->set('_err', $err);
 
 
+        $view->set('bodystr', 'onLoad="document.forms.form1.inpSala.focus()"');
         $view->set('content', $view2->render());
         echo $view->render();
     }

@@ -11,6 +11,8 @@ if (!isset($content))
     $content = null;
 if (!isset($script))
     $script = null;
+if (!isset($bodystr))
+    $bodystr = null;
 $isf = new Kohana_Isf();
 $isf->DbConnect();
 $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
@@ -23,15 +25,29 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
         <?php echo $script ?>
         <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style.css"/>
     </head>
-    <body>
+    <body <?php echo $bodystr; ?>>
         <div id="main">
             <div id="top">
                 <img src="<?php echo URL::base() ?>lib/images/logo.png" alt="<?php echo $ns[1]['wartosc']; ?>"
                      style="height: 70px;"/>
             </div>
             <hr/>
+            <?php if (isset($_SESSION['valid']) && isset($_COOKIE['PHPSESSID'])): ?>
+                <div id="menuad">
+                    Witaj, <b><?php echo $_COOKIE['login']; ?></b>!&emsp;
+                    <a href="<?php echo URL::site('admin/logout'); ?>">wyloguj</a>&emsp;
+                    <a href="<?php echo URL::site('admin/haslo'); ?>">zmiana hasła</a>&emsp;
+                    <a href="<?php echo URL::site('admin/zmiendane'); ?>">zmiana danych szkoły</a>&emsp;
+                    <a class="anac" href="<?php echo url::site('admin/reset'); ?>">resetowanie systemu</a>
+                </div>
+                <hr/>
+            <?php endif; ?>
             <div id="middle">
                 <div id="menu">
+                    <p>
+                        <a href="<?php echo URL::site('default/index'); ?>" style="font-size: 12pt; font-weight: bold;">
+                            <img src="<?php echo URL::base();?>lib/images/home.png" alt="" width="32" height="32"/>Strona główna</a>
+                    </p>
                     <?php
                     if (!isset($_SESSION['valid']) || !isset($_COOKIE['PHPSESSID'])) {
                         ?>
@@ -65,16 +81,6 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                         endif;
                     } else {
                         ?>
-                        <p>Witaj, <b><?php echo $_COOKIE['login']; ?></b>!
-                            <a href="<?php echo URL::site('admin/logout'); ?>">[ wyloguj ]</a>
-                        <ul>
-                            <li><a href="<?php echo URL::site('admin/haslo'); ?>">[ zmiana hasła ]</a></li>
-                            <li><a href="<?php echo URL::site('admin/zmiendane'); ?>">[ zmiana danych szkoły ]</a></li>
-                            <li><a style="color:red;" href="<?php echo url::site('admin/reset'); ?>">[ resetowanie systemu ]</a></li>
-                        </ul>
-
-
-                        </p>
                         <?php if ($reg[1]['wartosc'] == 1): ?>
                             <hr/>
                             <h3>Menu administratora</h3>
@@ -98,9 +104,22 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                             <hr/>
                             <h3>Edycja planów</h3>
                             <ul>
-                                <li><b><a href="<?php echo URL::site('plan/grupy'); ?>">[ lekcja z podziałem na grupy ]</a></b></li>
                                 <?php foreach ($isf->DbSelect('klasy', array('klasa'), 'order by klasa asc') as $r => $c): ?>
-                                    <li><a href="<?php echo URL::site('plan/edycja/' . $c['klasa']); ?>" target="_blank"><?php echo $c['klasa']; ?></a></li>
+                                    <li><a href="#" id="class_plan_<?php echo $c['klasa']; ?>"><?php echo $c['klasa']; ?></a></li>
+                                    <li id="ul_classedit_<?php echo $c['klasa']; ?>" style="display:none; list-style: none; margin-top: 0px;">
+                                        <ul>
+                                            <li>
+                                                <a href="<?php echo URL::site('plan/klasa/' . $c['klasa']); ?>" target="_blank">Plan wspólny</a>
+                                            </li>
+                                            <?php
+                                            $grp = $isf->DbSelect('rejestr', array('*'), 'where opcja="ilosc_grup"');
+                                            ?>
+                                            <?php if(count($grp)==1): ?>
+                                                <li><a href="<?php echo URL::site('plan/grupy/'.$c['klasa']); ?>" target="_blank">Plan grupowy</a></li>
+                                            <?php endif; ?>
+                                            <li style="list-style: none">&nbsp;</li>
+                                        </ul>
+                                    </li>
                                 <?php endforeach; ?> 
                             </ul>
                             <hr/>
@@ -119,7 +138,7 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                             <h3>Plany lekcji według nauczycieli</h3>
                             <ul>
                                 <?php foreach ($isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc') as $rw => $rc): ?>
-                                    <li><a href="<?php echo URL::site('podglad/nauczyciel/' . $rc['imie_naz']); ?>" target="_blank"><?php echo $rc['imie_naz']; ?></a></li>
+                                    <li>(<?php echo $rc['skrot']; ?>) <a href="<?php echo URL::site('podglad/nauczyciel/' . $rc['imie_naz']); ?>" target="_blank"><?php echo $rc['imie_naz']; ?></a></li>
                                 <?php endforeach; ?>    
                             </ul>
                         <?php endif; ?>
@@ -136,5 +155,15 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                 <p><b>Plan lekcji</b> - <?php echo $ns[1]['wartosc']; ?></p>
             </div>
         </div>
+        <?php
+        if (isset($_SESSION['valid']) && isset($_COOKIE['PHPSESSID'])) {
+            $isf->JQUi();
+            foreach ($isf->DbSelect('klasy', array('*')) as $rid => $rcl) {
+                $f1 = '$("#class_plan_' . $rcl['klasa'] . '").click(function(){$("#ul_classedit_' . $rcl['klasa'] . '").toggle();});';
+                $isf->JQUi_CustomFunction($f1);
+            }
+            echo $isf->JQUi_MakeScript();
+        }
+        ?>
     </body>
 </html>

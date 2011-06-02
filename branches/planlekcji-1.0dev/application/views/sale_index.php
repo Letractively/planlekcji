@@ -8,7 +8,7 @@ $isf = new Kohana_Isf();
 $isf->DbConnect();
 ?>
 <h1>Zarządzanie salami</h1>
-<form action="<?php echo URL::site('sale/dodaj'); ?>" method="post">
+<form action="<?php echo URL::site('sale/dodaj'); ?>" method="post" name="form1">
     Sala: <input type="text" name="inpSala"/>&nbsp;
     <button type="submit" name="btnSubmit">Dodaj salę</button>
 </form>
@@ -34,7 +34,7 @@ $isf->DbConnect();
 <?php if (count($res) == 0): ?>
     <p class="info">Brak zdefiniowanych sal lekcyjnych. Dodaj nową salę.</p>
 <?php else: ?>
-    <table>
+    <table class="przed">
         <thead>
             <tr style="height: 30px; font-weight: bold;">
                 <td style="width: 100px;">Numer sali</td>
@@ -53,8 +53,8 @@ $isf->DbConnect();
                         <?php endforeach; ?>
                     </td>
                     <td>
-                        <a href="<?php echo URL::site('sale/przedmiot/' . $rowcol['sala']); ?>">[ przedmioty ]</a>&emsp;
-                        <a href="<?php echo URL::site('sale/usun/' . $rowcol['sala']); ?>">[ usuń salę ]</a>
+                        <a class="anac" href="<?php echo URL::site('sale/przedmiot/' . $rowcol['sala']); ?>">przedmioty</a>&emsp;
+                        <a class="anac" href="<?php echo URL::site('sale/usun/' . $rowcol['sala']); ?>">usuń salę</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

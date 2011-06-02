@@ -18,19 +18,22 @@ if(!file_exists('index.php')){
 }
 $err = '';
 if (phpversion() < 5.3) {
-    $err.='Wymagane jest PHP w wersji 5.3; ';
+    $err.='Wymagane jest PHP w wersji 5.3'.PHP_EOL;
 }
 if (!class_exists('SQLite3')) {
-    $err.='Wymagana jest obsługa SQLite3 przez PHP; ';
+    $err.='Wymagana jest obsluga SQLite3 przez PHP'.PHP_EOL;
+}
+if(!extension_loaded('gd')){
+    $err.='Wymagana jest obsługa modulu GD2'.PHP_EOL;
 }
 if (!is_writable(realpath('modules/isf/isf_resources'))) {
-    $err.='Katalog modules/isf/isf_resources musi byc zapisywalny; ';
+    $err.='Katalog modules/isf/isf_resources musi byc zapisywalny'.PHP_EOL;
 }
 if ((file_exists(realpath('modules/isf/isf_resources/default.sqlite'))) && !is_writable(realpath('modules/isf/isf_resources/default.sqlite'))) {
-    $err .= 'Plik modules/isf/isf_resources/default.sqlite musi byc zapisywalny; ';
+    $err .= 'Plik modules/isf/isf_resources/default.sqlite musi byc zapisywalny'.PHP_EOL;
 }
 if (!is_writable(realpath('application/logs')) || !is_writable(realpath('application/cache'))) {
-    $err .= 'Katalog application/logs i application/cache musi byc zapisywalny; ';
+    $err .= 'Katalog application/logs i application/cache musi byc zapisywalny'.PHP_EOL;
 }
 if (!empty($err)) {
     die($err);

@@ -25,6 +25,7 @@ class Controller_Default extends Controller {
         
         $content = $isf->DbSelect('rejestr', array('*'), 'where opcja = \'index_text\'');
         $content = $content[1]['wartosc'];
+        
         $view->set('content', $content);
         echo $view->render();
     }

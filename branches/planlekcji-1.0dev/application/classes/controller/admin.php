@@ -56,6 +56,7 @@ class Controller_Admin extends Controller {
             setcookie('login', $res[1]['login'], null, '/');
             Kohana_Request::factory()->redirect('');
         } else {
+            Kohana_Request::factory()->post('inpLogin', $login);
             Kohana_Request::factory()->redirect('admin/login/false');
         }
     }
