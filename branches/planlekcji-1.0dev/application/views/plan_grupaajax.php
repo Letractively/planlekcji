@@ -77,11 +77,17 @@ function pobierzdzien($dzien, $lekcja) {
     return $ret;
 }
 ?>
+<?php if ($alternative != false): ?>
+    <h3>Edycja planu grupowego dla klasy <?php echo $klasa; ?></h3>
+<?php endif; ?>
 <?php if ($ilosc_grp[1]['wartosc'] == 0): ?>
     <h3>Nie można dokonać edycji z powodu braku ustawionych grup</h3>
 <?php else: ?>
     <form action="<?php echo URL::site('plan/grupazatw'); ?>" method="post" name="formPlan" style="margin-top: 100px;">
         <input type="hidden" name="klasa" value="<?php echo $klasa; ?>"/>
+        <?php if ($alternative != false): ?>
+            <button type="submit" name="btnSubmit">Zapisz zmiany</button>
+        <?php endif; ?>
         <table class="przed">
             <thead style="background: #7cc1f0;">
                 <tr>

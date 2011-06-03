@@ -68,52 +68,48 @@ function pobierzdzien($dzien, $lekcja) {
     return $ret;
 }
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Plan lekcji ZSO</title>
-        <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style.css"/>
-    </head>
-    <body>
-        <form action="<?php echo URL::site('plan/zatwierdz'); ?>" method="post" name="formPlan" style="margin-top: 100px;">
-            <input type="hidden" name="klasa" value="<?php echo $klasa; ?>"/>
-            <table class="przed">
-                <thead style="background: greenyellow;">
-                    <tr>
-                        <td></td>
-                        <td>Godziny</td>
-                        <td>Poniedziałek</td>
-                        <td>Wtorek</td>
-                        <td>Środa</td>
-                        <td>Czwartek</td>
-                        <td>Piątek</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php for ($i = 1; $i <= $ilosc_lek; $i++): ?>
-                        <tr>
-                            <td><?php echo $i; ?></td>
-                            <td><?php echo $lek_godziny[$i]['godzina']; ?></td>
-                            <td>
-                                <?php echo pobierzdzien('Poniedziałek', $i); ?>
-                            </td>
-                            <td>
-                                <?php echo pobierzdzien('Wtorek', $i); ?>
-                            </td>
-                            <td>
-                                <?php echo pobierzdzien('Środa', $i); ?>
-                            </td>
-                            <td>
-                                <?php echo pobierzdzien('Czwartek', $i); ?>
-                            </td>
-                            <td>
-                                <?php echo pobierzdzien('Piątek', $i); ?>
-                            </td>
-                        </tr>
-                    <?php endfor; ?>
-                </tbody>
-            </table>
-        </form>
-    </body>
-</html>
+<?php if ($alternative != false): ?>
+    <h3>Edycja planu grupowego dla klasy <?php echo $klasa; ?></h3>
+<?php endif; ?>
+<form action="<?php echo URL::site('plan/zatwierdz'); ?>" method="post" name="formPlan" style="margin-top: 100px;">
+    <input type="hidden" name="klasa" value="<?php echo $klasa; ?>"/>
+    <?php if ($alternative != false): ?>
+        <button type="submit" name="btnSubmit">Zapisz zmiany</button>
+    <?php endif; ?>
+    <table class="przed">
+        <thead style="background: greenyellow;">
+            <tr>
+                <td></td>
+                <td>Godziny</td>
+                <td>Poniedziałek</td>
+                <td>Wtorek</td>
+                <td>Środa</td>
+                <td>Czwartek</td>
+                <td>Piątek</td>
+            </tr>
+        </thead>
+        <tbody>
+            <?php for ($i = 1; $i <= $ilosc_lek; $i++): ?>
+                <tr>
+                    <td><?php echo $i; ?></td>
+                    <td><?php echo $lek_godziny[$i]['godzina']; ?></td>
+                    <td>
+                        <?php echo pobierzdzien('Poniedziałek', $i); ?>
+                    </td>
+                    <td>
+                        <?php echo pobierzdzien('Wtorek', $i); ?>
+                    </td>
+                    <td>
+                        <?php echo pobierzdzien('Środa', $i); ?>
+                    </td>
+                    <td>
+                        <?php echo pobierzdzien('Czwartek', $i); ?>
+                    </td>
+                    <td>
+                        <?php echo pobierzdzien('Piątek', $i); ?>
+                    </td>
+                </tr>
+            <?php endfor; ?>
+        </tbody>
+    </table>
+</form>

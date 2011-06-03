@@ -24,7 +24,7 @@ $isf->JQUi_AjaxdivDoAjax('progress', URL::site('plan/grupaajax/' . $klasa), true
             </h1>
         </div>
         <div style="margin-top: 100px">
-            <?php echo $isf->JQUi_AjaxdivCreate('progress'); ?>
+            <?php echo $isf->JQUi_AjaxdivCreate('progress', true, false, '<b>Przeglądarka nie obsługuje JavaScript? Spróbuj <a href="' . URL::site('plan/grupaajax/' . $klasa . '/true') . '">metodę alternatywną</a></b>'); ?>
         </div>
         <?php echo $isf->JQUi_MakeScript(); ?>
     </body>

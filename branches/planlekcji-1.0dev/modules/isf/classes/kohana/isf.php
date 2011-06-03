@@ -5,12 +5,12 @@
  *
  * @author Michal Bocian <mhl.bocian@gmail.com>
  */
-
 class Kohana_Isf {
+
     /**
      * Zwraca wersje ISF
      */
-    public function isf_version(){
+    public function isf_version() {
         echo '1.0.2';
     }
 
@@ -64,7 +64,7 @@ class Kohana_Isf {
             $query .= ' ' . $condition;
         $exec = $this->dbhandle->query($query);
         $r = 1;
-        $result=array();
+        $result = array();
         while ($row = $exec->fetchArray()) {
             $result[$r] = $row;
             $r++;
@@ -156,7 +156,7 @@ class Kohana_Isf {
         }
         $query = substr($query, 0, -2);
         $query .= ' where ' . $cond;
-        
+
         if ($this->dbhandle->exec($query) == true)
             return TRUE;
         else
@@ -236,14 +236,14 @@ class Kohana_Isf {
      * @param text $style Nazwa stylu w katalogu <b>/templates/css</b>
      */
     public function JQUi($style='smoothness') {
-        $respath = URL::base(true).'lib/jquery';
+        $respath = URL::base(true) . 'lib/jquery';
         $path = array(
             1 => $respath . '/css/' . $style . '/style.css',
             2 => $respath . '/js/jquery-ui.js',
             3 => $respath . '/js/jquery.js',
             4 => URL::base(true) . 'lib/jquery-ui-timepicker-addon.js',
         );
-        $this->jqpath = URL::base().'lib/jquery';
+        $this->jqpath = URL::base() . 'lib/jquery';
         $this->script = '
             <link type="text/css" href="' . $path[1] . '" rel="stylesheet" />
             <script type="text/javascript" src="' . $path[3] . '"></script>
@@ -384,13 +384,13 @@ class Kohana_Isf {
     public function JQUi_DialogCreate($name, $content, $buttons, $autoopen=false, $modal=false, $height=null) {
         $name = 'isf_dialog_' . $this->hashname($name);
 
-        if($autoopen==false)
-            $autoopen='false';
+        if ($autoopen == false)
+            $autoopen = 'false';
         else
             $autoopen='true';
 
-        if($modal==false)
-            $modal='false';
+        if ($modal == false)
+            $modal = 'false';
         else
             $modal='true';
 
@@ -580,15 +580,19 @@ class Kohana_Isf {
      * @param bool $hiddenbtn Pokazanie przycisku ukrycia elementu
      * @return text Zwraca kod HTML
      */
-    public function JQUi_AjaxdivCreate($name, $progressgif=true, $hiddenbtn=false) {
+    public function JQUi_AjaxdivCreate($name, $progressgif=true, $hiddenbtn=false, $customtext=false) {
         $name = $this->hashname($name);
         $script = '<div id="isf_adiv_' . $name . '" style="display: none;">';
         if ($progressgif == true) {
             $script .= '<div id="isf_adc_' . $name . '">Trwa ładowanie danych... 
-                <img src="' . $this->jqpath . '/css/load.gif" id="isf_adl_' . $name . '"></div>';
+                <img src="' . $this->jqpath . '/css/load.gif" id="isf_adl_' . $name . '">';
         } else {
-            $script .= '<div id="isf_adc_' . $name . '"></div>';
+            $script .= '<div id="isf_adc_' . $name . '">';
         }
+        if ($customtext != false) {
+            $script .= '<p>'.$customtext.'</p>';
+        }
+        $script .= '</div>';
         if ($hiddenbtn == true) {
             $script .= '<p><a href="#" id="isf_ada_' . $name . '">Ukryj panel</a></p>';
             $this->button_create('isf_ada_' . $name);
@@ -620,7 +624,7 @@ class Kohana_Isf {
                     }
                 });
             });';
-        if($to_mscript==false)
+        if ($to_mscript == false)
             return $script;
         else
             $this->script .= $script;

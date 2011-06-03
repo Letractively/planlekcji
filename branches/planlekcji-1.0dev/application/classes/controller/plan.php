@@ -43,14 +43,16 @@ class Controller_Plan extends Controller {
         echo $view->render();
     }
 
-    public function action_klasaajax($klasa) {
+    public function action_klasaajax($klasa, $alternative=false) {
         $view = view::factory('plan_klasaajax');
+        $view->set('alternative', $alternative);
         $view->set('klasa', $klasa);
         echo $view->render();
     }
 
-    public function action_grupaajax($klasa) {
+    public function action_grupaajax($klasa, $alternative=false) {
         $view = view::factory('plan_grupaajax');
+        $view->set('alternative', $alternative);
         $view->set('klasa', $klasa);
         echo $view->render();
     }

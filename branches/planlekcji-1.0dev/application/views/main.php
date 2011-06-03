@@ -26,27 +26,26 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
         <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style.css"/>
     </head>
     <body <?php echo $bodystr; ?>>
-        <div id="main">
-            <div id="top">
-                <img src="<?php echo URL::base() ?>lib/images/logo.png" alt="<?php echo $ns[1]['wartosc']; ?>"
-                     style="height: 70px;"/>
+        <div id="top">
+            <img src="<?php echo URL::base() ?>lib/images/logo.png" alt="<?php echo $ns[1]['wartosc']; ?>"
+                 style="height: 70px;"/>
+        </div>
+        <hr/>
+        <?php if (isset($_SESSION['valid']) && isset($_COOKIE['PHPSESSID'])): ?>
+            <div id="menuad">
+                Witaj, <b><?php echo $_COOKIE['login']; ?></b>!&emsp;
+                <a href="<?php echo URL::site('admin/logout'); ?>">wyloguj</a>&emsp;
+                <a href="<?php echo URL::site('admin/haslo'); ?>">zmiana hasła</a>&emsp;
+                <a href="<?php echo URL::site('admin/zmiendane'); ?>">zmiana danych szkoły</a>&emsp;
+                <a class="anac" href="<?php echo url::site('admin/reset'); ?>">resetowanie systemu</a>
             </div>
             <hr/>
-            <?php if (isset($_SESSION['valid']) && isset($_COOKIE['PHPSESSID'])): ?>
-                <div id="menuad">
-                    Witaj, <b><?php echo $_COOKIE['login']; ?></b>!&emsp;
-                    <a href="<?php echo URL::site('admin/logout'); ?>">wyloguj</a>&emsp;
-                    <a href="<?php echo URL::site('admin/haslo'); ?>">zmiana hasła</a>&emsp;
-                    <a href="<?php echo URL::site('admin/zmiendane'); ?>">zmiana danych szkoły</a>&emsp;
-                    <a class="anac" href="<?php echo url::site('admin/reset'); ?>">resetowanie systemu</a>
-                </div>
-                <hr/>
-            <?php endif; ?>
-            <div id="middle">
-                <div id="menu">
+        <?php endif; ?>
+        <table class="main">
+            <tr style="vertical-align: top"><td style="width: 20%">
                     <p>
                         <a href="<?php echo URL::site('default/index'); ?>" style="font-size: 12pt; font-weight: bold;">
-                            <img src="<?php echo URL::base();?>lib/images/home.png" alt="" width="32" height="32"/>Strona główna</a>
+                            <img src="<?php echo URL::base(); ?>lib/images/home.png" alt="" width="32" height="32"/>Strona główna</a>
                     </p>
                     <?php
                     if (!isset($_SESSION['valid']) || !isset($_COOKIE['PHPSESSID'])) {
@@ -113,8 +112,8 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                                             <?php
                                             $grp = $isf->DbSelect('rejestr', array('*'), 'where opcja="ilosc_grup"');
                                             ?>
-                                            <?php if(count($grp)==1): ?>
-                                                <li><a href="<?php echo URL::site('plan/grupy/'.$c['klasa']); ?>" target="_blank">Plan grupowy</a></li>
+                                            <?php if (count($grp) == 1): ?>
+                                                <li><a href="<?php echo URL::site('plan/grupy/' . $c['klasa']); ?>" target="_blank">Plan grupowy</a></li>
                                             <?php endif; ?>
                                             <li style="list-style: none">&nbsp;</li>
                                         </ul>
@@ -142,17 +141,14 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                             </ul>
                         <?php endif; ?>
                     <?php } ?>
-                </div>
-                <div id="content">
+                </td>
+                <td>
                     <?php echo $content; ?>
-                </div>
-            </div>
-            <br style="clear:both;"/>
-            <br/>
-            <hr/>
-            <div id="foot">
-                <p><b>Plan lekcji</b> - <?php echo $ns[1]['wartosc']; ?></p>
-            </div>
+                </td>
+        </table>
+        <hr/>
+        <div id="foot">
+            <p><b>Plan lekcji</b> - <?php echo $ns[1]['wartosc']; ?></p>
         </div>
         <?php
         if (isset($_SESSION['valid']) && isset($_COOKIE['PHPSESSID'])) {

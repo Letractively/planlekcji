@@ -72,3 +72,13 @@ Route::set('plan_grpdel', '(plan/grpdel/<dzien>/<lekcja>/<klasa>/<grupa>)')->def
     'action'=>'grpdel',
         )
 );
+Route::set('grupaajax', '(plan/grupaajax/<klasa>/<alternative>)')->defaults(array(
+    'controller'=>'plan',
+    'action'=>'grupaajax',
+        )
+);
+Route::set('klasaajax', '(plan/klasaajax/<klasa>/<alternative>)')->defaults(array(
+    'controller'=>'plan',
+    'action'=>'klasaajax',
+        )
+);

@@ -25,7 +25,8 @@ $isf->JQUi_AjaxdivDoAjax('progress', URL::site('plan/klasaajax/' . $klasa), true
             <p class="error">Zapisanie planu spowoduje usunięcie planu dla grup dla danej klasy</p>
         </div>
         <div style="margin-top: 100px">
-            <?php echo $isf->JQUi_AjaxdivCreate('progress'); ?>
+            <?php echo $isf->JQUi_AjaxdivCreate('progress', true, false,
+                    '<b>Przeglądarka nie obsługuje JavaScript? Spróbuj <a href="'.URL::site('plan/klasaajax/' . $klasa . '/true').'">metodę alternatywną</a></b>'); ?>
         </div>
         <?php echo $isf->JQUi_MakeScript(); ?>
     </body>

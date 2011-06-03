@@ -106,3 +106,6 @@ table.przed td {
 	border-color: black;
 	background-color: white;
 }
+table.main {
+    border-width: 0px;
+}
