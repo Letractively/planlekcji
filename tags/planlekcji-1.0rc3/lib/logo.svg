@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="468"
+   height="60"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.0 r9654"
+   sodipodi:docname="logo.svg"
+   inkscape:export-filename="C:\http\htdocs\lib\images\logo.png"
+   inkscape:export-xdpi="150"
+   inkscape:export-ydpi="150">
+  <defs
+     id="defs4">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3792">
+      <stop
+         style="stop-color:#7c916f;stop-opacity:1"
+         offset="0"
+         id="stop3794" />
+      <stop
+         style="stop-color:#22241c;stop-opacity:1"
+         offset="1"
+         id="stop3796" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3778">
+      <stop
+         style="stop-color:#447821;stop-opacity:1"
+         offset="0"
+         id="stop3780" />
+      <stop
+         style="stop-color:#808080;stop-opacity:0;"
+         offset="1"
+         id="stop3782" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3119">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="0"
+         id="stop3121" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0;"
+         offset="1"
+         id="stop3123" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3119"
+       id="linearGradient3125"
+       x1="39.39595"
+       y1="1018.017"
+       x2="-5.5558391"
+       y2="973.06519"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.47922698,0,0,0.47922698,3.1018441,519.6811)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3778"
+       id="linearGradient3784"
+       x1="-9.5964489"
+       y1="-5.6599154"
+       x2="55.558388"
+       y2="13.53298"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3792"
+       id="linearGradient3798"
+       x1="108.5914"
+       y1="1020.0373"
+       x2="53.538086"
+       y2="1012.4612"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.979899"
+     inkscape:cx="177.59589"
+     inkscape:cy="49.316598"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1360"
+     inkscape:window-height="702"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid3099"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-992.36218)">
+    <text
+       xml:space="preserve"
+       style="font-size:35.4992218px;font-style:oblique;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient3125);fill-opacity:1;stroke:none;font-family:DigitalSansEF;-inkscape-font-specification:DigitalSansEF Bold Oblique"
+       x="5.6008916"
+       y="1021.581"
+       id="text3091"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3093"
+         x="5.6008916"
+         y="1021.581"
+         style="fill:url(#linearGradient3125);fill-opacity:1">P</tspan></text>
+    <path
+       style="fill:url(#linearGradient3784);stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
+       d="M 0,0 60,0 50,60 0,60 z"
+       id="path3101"
+       inkscape:connector-curvature="0"
+       transform="translate(0,992.36218)" />
+    <g
+       id="g3786"
+       transform="translate(-47.982246,0)"
+       style="fill-opacity:1;fill:url(#linearGradient3798)">
+      <text
+         xml:space="preserve"
+         style="font-size:26.69322014000000100px;font-style:oblique;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient3798);fill-opacity:1;stroke:none;font-family:DigitalSansEF;-inkscape-font-specification:DigitalSansEF Bold Oblique"
+         x="60"
+         y="1015.2329"
+         id="text3095"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan3097"
+           x="60"
+           y="1015.2329"
+           style="fill-opacity:1;fill:url(#linearGradient3798)">Plan Lekcji</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text3103"
+         y="1042.3622"
+         x="55"
+         style="font-size:26.69322014000000100px;font-style:oblique;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient3798);fill-opacity:1;stroke:none;font-family:DigitalSansEF;-inkscape-font-specification:DigitalSansEF Bold Oblique"
+         xml:space="preserve"><tspan
+           y="1042.3622"
+           x="55"
+           id="tspan3105"
+           sodipodi:role="line"
+           style="fill-opacity:1;fill:url(#linearGradient3798)">1.0 Relase Candidate 3</tspan></text>
+    </g>
+    <text
+       sodipodi:linespacing="125%"
+       id="text3107"
+       y="1044.2576"
+       x="344.72153"
+       style="font-size:16.55794525px;font-style:oblique;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ff5555;fill-opacity:1;stroke:none;font-family:DigitalSansEF;-inkscape-font-specification:DigitalSansEF Bold Oblique"
+       xml:space="preserve"><tspan
+         y="1044.2576"
+         x="344.72153"
+         id="tspan3109"
+         sodipodi:role="line">wydanie testowe</tspan></text>
+  </g>
+</svg>
