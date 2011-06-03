@@ -19,14 +19,20 @@ function pobierzdzien($dzien, $lekcja) {
     $ret = '';
     $r = $isf->DbSelect('planlek', array('*'), 'where sala="' . $k . '" and dzien="' . $dzien . '" and lekcja="' . $lekcja . '"');
     if (count($r) != 0) {
-        echo $r[1]['przedmiot'] . ' (<a href="' . URL::site('podglad/klasa/' . $r[1]['klasa']) . '">' . $r[1]['klasa'] . '</a>)';
+        echo $r[1]['przedmiot'] . ' (<a href="' . URL::site('podglad/klasa/' . $r[1]['klasa']) . '">' . $r[1]['klasa'] . '</a>)
+            (<a href="' . URL::site('podglad/nauczyciel/' . $r[1]['skrot']) . '">' . $r[1]['skrot'] . '</a>)
+            ';
     } else {
         $rn = $isf->DbSelect('plan_grupy', array('*'), 'where sala="' . $k . '" and dzien="' . $dzien . '" and lekcja="' . $lekcja . '"');
         if (count($rn) == 0) {
             echo '';
         } else {
             foreach ($rn as $rowid => $rowcol) {
-                echo '<p class="grplek">' . $rowcol['przedmiot'] . ' (<a href="' . URL::site('podglad/klasa/' . $rowcol['klasa']) . '">' . $rowcol['klasa'] . '</a> - gr' . $rowcol['grupa'] . ')</p>';
+                echo '
+                    <p class="grplek">' . $rowcol['przedmiot'] . ' (<a href="' . URL::site('podglad/klasa/' . $rowcol['klasa']) . '">' . $rowcol['klasa'] . '</a> - gr' . $rowcol['grupa'] . ')
+                        (<a href="' . URL::site('podglad/nauczyciel/' . $rowcol['skrot']) . '">' . $rowcol['skrot'] . '</a>)
+                        </p>
+                        ';
             }
         }
     }
@@ -42,7 +48,7 @@ function pobierzdzien($dzien, $lekcja) {
     <body>
         <h1><a href="#" onClick="window.print();"><img border="0" src="<?php echo URL::base() ?>lib/images/printer.png" alt="[drukuj plan]"/></a>
             Plan lekcji - sala <?php echo $klasa; ?></h1>
-        <table>
+        <table class="przed">
             <thead style="background: #ccccff;">
                 <tr>
                     <td></td>

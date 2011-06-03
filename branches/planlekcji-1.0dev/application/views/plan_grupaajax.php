@@ -24,6 +24,23 @@ function pobierzdzien($dzien, $lekcja) {
     $lek = $isf->DbSelect('planlek', array('*'), 'where lekcja="' . $lekcja . '" and dzien="' . $dzien . '" and klasa="' . $k . '"');
     $ret = '';
     $vl = '';
+    $options = '';
+    foreach ($a as $rowid => $rowcol) {
+        $b_table = 'planlek';
+        $b_cols = array('*');
+        $b_cond = 'where dzien="' . $dzien . '" and lekcja="' . $lekcja . '" and ( nauczyciel="' . $rowcol['nauczyciel'] . '" or sala="' . $rowcol['sala'] . '")';
+        if (count($isf->DbSelect($b_table, $b_cols, $b_cond)) == 0) {
+            $b_table = 'plan_grupy';
+            $b_cols = array('*');
+            $b_cond = 'where dzien="' . $dzien . '" and lekcja="' . $lekcja . '" and nauczyciel="' . $rowcol['nauczyciel'] . '"';
+            if (count($isf->DbSelect($b_table, $b_cols, $b_cond)) == 0) {
+                $v = $rowcol['przedmiot'] . ':' . $rowcol['sala'] . ':' . $rowcol['nauczyciel'];
+                $options.='<option>' . $v . '</option>';
+            }
+        } else {
+            
+        }
+    }
     if (count($lek) == 0) {
         $ilosc_grp = $isf->DbSelect('rejestr', array('*'), 'where opcja="ilosc_grup"');
         $g = $ilosc_grp[1]['wartosc'];
@@ -38,22 +55,7 @@ function pobierzdzien($dzien, $lekcja) {
                 $ret .= '<option selected>' . $vg . '</option>';
             }
             $ret .= '<option>---</option>';
-            foreach ($a as $rowid => $rowcol) {
-                $b_table = 'planlek';
-                $b_cols = array('*');
-                $b_cond = 'where dzien="' . $dzien . '" and lekcja="' . $lekcja . '" and ( nauczyciel="' . $rowcol['nauczyciel'] . '" or sala="' . $rowcol['sala'] . '")';
-                if (count($isf->DbSelect($b_table, $b_cols, $b_cond)) == 0) {
-                    $b_table = 'plan_grupy';
-                    $b_cols = array('*');
-                    $b_cond = 'where dzien="' . $dzien . '" and lekcja="' . $lekcja . '" and nauczyciel="' . $rowcol['nauczyciel'] . '"';
-                    if (count($isf->DbSelect($b_table, $b_cols, $b_cond)) == 0) {
-                        $v = $rowcol['przedmiot'] . ':' . $rowcol['sala'] . ':' . $rowcol['nauczyciel'];
-                        $ret.='<option>' . $v . '</option>';
-                    }
-                } else {
-                    
-                }
-            }
+            $ret .= $options;
             $ret.='<option>---</option>';
             foreach ($isf->DbSelect('przedmioty', array('*'), 'order by przedmiot asc') as $rc => $ri) {
                 $ret.='<option>' . $ri['przedmiot'] . '</option>';
@@ -80,7 +82,7 @@ function pobierzdzien($dzien, $lekcja) {
 <?php else: ?>
     <form action="<?php echo URL::site('plan/grupazatw'); ?>" method="post" name="formPlan" style="margin-top: 100px;">
         <input type="hidden" name="klasa" value="<?php echo $klasa; ?>"/>
-        <table>
+        <table class="przed">
             <thead style="background: #7cc1f0;">
                 <tr>
                     <td></td>

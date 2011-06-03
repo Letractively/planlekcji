@@ -78,7 +78,7 @@ function pobierzdzien($dzien, $lekcja) {
     <body>
         <form action="<?php echo URL::site('plan/zatwierdz'); ?>" method="post" name="formPlan" style="margin-top: 100px;">
             <input type="hidden" name="klasa" value="<?php echo $klasa; ?>"/>
-            <table>
+            <table class="przed">
                 <thead style="background: greenyellow;">
                     <tr>
                         <td></td>

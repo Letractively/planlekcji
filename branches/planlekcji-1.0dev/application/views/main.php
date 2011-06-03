@@ -74,7 +74,7 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                             <h3>Plany lekcji według nauczycieli</h3>
                             <ul>
                                 <?php foreach ($isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc') as $rw => $rc): ?>
-                                    <li><a target="_blank" href="<?php echo URL::site('podglad/nauczyciel/' . $rc['imie_naz']); ?>"><?php echo $rc['imie_naz']; ?></a></li>
+                                    <li>(<?php echo $rc['skrot']; ?>) <a href="<?php echo URL::site('podglad/nauczyciel/' . $rc['skrot']); ?>" target="_blank"><?php echo $rc['imie_naz']; ?></a></li>
                                 <?php endforeach; ?>    
                             </ul>
                         <?php
@@ -100,7 +100,6 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                             <p class="info">Dopóki nie zamkniesz edycji danych, nie możesz tworzyć planów.
                                 Zamknięcie edycji oznacza <b>brak możliwości</b> ponownej edycji danych.</p>
                         <?php else: ?>
-                            <p class="info">Tryb edycji <b>wyłączony</b>. System planów jest <b>aktywny</b>.</p>
                             <hr/>
                             <h3>Edycja planów</h3>
                             <ul>
@@ -138,7 +137,7 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                             <h3>Plany lekcji według nauczycieli</h3>
                             <ul>
                                 <?php foreach ($isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc') as $rw => $rc): ?>
-                                    <li>(<?php echo $rc['skrot']; ?>) <a href="<?php echo URL::site('podglad/nauczyciel/' . $rc['imie_naz']); ?>" target="_blank"><?php echo $rc['imie_naz']; ?></a></li>
+                                    <li>(<?php echo $rc['skrot']; ?>) <a href="<?php echo URL::site('podglad/nauczyciel/' . $rc['skrot']); ?>" target="_blank"><?php echo $rc['imie_naz']; ?></a></li>
                                 <?php endforeach; ?>    
                             </ul>
                         <?php endif; ?>

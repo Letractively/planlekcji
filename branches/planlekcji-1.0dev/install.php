@@ -182,7 +182,8 @@ START;
             'lekcja' => 'text',
             'przedmiot' => 'text',
             'sala' => 'text',
-            'nauczyciel' => 'text'
+            'nauczyciel' => 'text',
+            'skrot' => 'text'
         ));
 
         print <<< START
@@ -208,6 +209,7 @@ START;
             'grupa' => 'text',
             'przedmiot' => 'text',
             'nauczyciel' => 'text',
+            'skrot' => 'text',
             'sala' => 'text'
         ));
 

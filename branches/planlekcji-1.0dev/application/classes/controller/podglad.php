@@ -33,7 +33,15 @@ class Controller_Podglad extends Controller {
     public function action_nauczyciel($klasa)
     {
         $view = view::factory('podglad_nauczyciel');
-        $view->set('klasa', $klasa);
+        
+        $isf = new Kohana_Isf();
+        $isf->DbConnect();
+        
+        $imienaz = $isf->DbSelect('nauczyciele', array('*'), 'where skrot="'.$klasa.'"');
+        $imienaz = $imienaz[1]['imie_naz'];
+        
+        $view->set('skrot', $klasa);
+        $view->set('klasa', $imienaz);
         echo $view->render();
     }
     

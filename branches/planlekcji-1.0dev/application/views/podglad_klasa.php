@@ -11,26 +11,31 @@ $ilosc_lek = $ilosc_lek[1]['wartosc'];
 $lek_godziny = $isf->DbSelect('lek_godziny', array('*'));
 $k = $klasa;
 $GLOBALS['k'] = $klasa;
+
 function pobierzdzien($dzien, $lekcja) {
     global $k;
     $isf = new Kohana_Isf();
     $isf->DbConnect();
-    $ret='';
-    $r = $isf->DbSelect('planlek', array('*'), 'where klasa="'.$k.'" and dzien="'.$dzien.'" and lekcja="'.$lekcja.'"');
-    if(count($r)!=0){
-        echo ''.$r[1]['przedmiot'].' (<a href="'.URL::site('podglad/sala/'.$r[1]['sala']).'">'.$r[1]['sala'].'</a>)';
-    }else{
-        $rn = $isf->DbSelect('plan_grupy', array('*'), 'where klasa="'.$k.'" and dzien="'.$dzien.'" and lekcja="'.$lekcja.'"');
-        if(count($rn)==0){
+    $ret = '';
+    $r = $isf->DbSelect('planlek', array('*'), 'where klasa="' . $k . '" and dzien="' . $dzien . '" and lekcja="' . $lekcja . '"');
+    if (count($r) != 0) {
+        if (empty($r[1]['sala'])) {
+            echo $r[1]['przedmiot'];
+        } else {
+            echo '' . $r[1]['przedmiot'] . ' (<a href="' . URL::site('podglad/sala/' . $r[1]['sala']) . '">' . $r[1]['sala'] . '</a>) (<a href="' . URL::site('podglad/nauczyciel/' . $r[1]['skrot']) . '">' . $r[1]['skrot'] . '</a>)';
+        }
+    } else {
+        $rn = $isf->DbSelect('plan_grupy', array('*'), 'where klasa="' . $k . '" and dzien="' . $dzien . '" and lekcja="' . $lekcja . '"');
+        if (count($rn) == 0) {
             echo '';
-        }else{
-            foreach($rn as $rowid=>$rowcol){
-                if($rowcol['sala']==''||empty($rowcol['sala'])){
-                    $sstr='';
-                }else{
-                    $sstr='(<a href="'.URL::site('podglad/sala/'.$rowcol['sala']).'">'.$rowcol['sala'].'</a>)';
+        } else {
+            foreach ($rn as $rowid => $rowcol) {
+                if ($rowcol['sala'] == '' || empty($rowcol['sala'])) {
+                    $sstr = '';
+                } else {
+                    $sstr = '(<a href="' . URL::site('podglad/sala/' . $rowcol['sala']) . '">' . $rowcol['sala'] . '</a>) (<a href="' . URL::site('podglad/nauczyciel/' . $rowcol['skrot']) . '">' . $rowcol['skrot'] . '</a>)';
                 }
-                echo '<p class="grplek">gr '.$rowcol['grupa'].' - '.$rowcol['przedmiot'].' '.$sstr.'</p>';
+                echo '<p class="grplek">gr ' . $rowcol['grupa'] . ' - ' . $rowcol['przedmiot'] . ' ' . $sstr . '</p>';
             }
         }
     }
@@ -46,7 +51,7 @@ function pobierzdzien($dzien, $lekcja) {
     <body>
         <h1><a href="#" onClick="window.print();"><img border="0" src="<?php echo URL::base() ?>lib/images/printer.png" alt="[drukuj plan]"/></a>
             Plan lekcji - <?php echo $klasa; ?></h1>
-        <table>
+        <table class="przed">
             <thead style="background: greenyellow;">
                 <tr>
                     <td></td>
@@ -59,27 +64,27 @@ function pobierzdzien($dzien, $lekcja) {
                 </tr>
             </thead>
             <tbody>
-                <?php for ($i = 1; $i <= $ilosc_lek; $i++): ?>
+<?php for ($i = 1; $i <= $ilosc_lek; $i++): ?>
                     <tr>
                         <td><b><?php echo $i; ?></b></td>
                         <td class="info"><?php echo $lek_godziny[$i]['godzina']; ?></td>
                         <td>
-                            <?php echo pobierzdzien('Poniedziałek', $i); ?>
+    <?php echo pobierzdzien('Poniedziałek', $i); ?>
                         </td>
                         <td>
-                            <?php echo pobierzdzien('Wtorek', $i); ?>
+    <?php echo pobierzdzien('Wtorek', $i); ?>
                         </td>
                         <td>
-                            <?php echo pobierzdzien('Środa', $i); ?>
+    <?php echo pobierzdzien('Środa', $i); ?>
                         </td>
                         <td>
-                            <?php echo pobierzdzien('Czwartek', $i); ?>
+    <?php echo pobierzdzien('Czwartek', $i); ?>
                         </td>
                         <td>
-                            <?php echo pobierzdzien('Piątek', $i); ?>
+    <?php echo pobierzdzien('Piątek', $i); ?>
                         </td>
                     </tr>
-                <?php endfor; ?>
+<?php endfor; ?>
             </tbody>
         </table>
     </body>
