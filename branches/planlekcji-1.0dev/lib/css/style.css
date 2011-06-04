@@ -79,7 +79,6 @@ table.przed {
 	border-style: solid;
 	border-color: green;
 	border-collapse: collapse;
-	background-color: white;
 }
 table.przed th {
 	border-width: 1px;
@@ -92,7 +91,6 @@ table.przed td {
 	padding: 3px;
 	border-style: solid;
 	border-color: black;
-	background-color: white;
 }
 table.main {
     border-width: 0px;
