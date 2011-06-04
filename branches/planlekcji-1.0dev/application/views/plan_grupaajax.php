@@ -49,7 +49,7 @@ function pobierzdzien($dzien, $lekcja) {
             $i++;
             $ret .= '<p class="grplek">gr' . $i;
             $ret .= '<select style="width:200px;" name="' . $dzien . '[' . $lekcja . '][' . $i . ']">';
-            $lg = $isf->DbSelect('plan_grupy', array('*'), 'where dzien="' . $dzien . '" and lekcja="' . $lekcja . '" and grupa="' . $i . '"');
+            $lg = $isf->DbSelect('plan_grupy', array('*'), 'where dzien="' . $dzien . '" and lekcja="' . $lekcja . '" and grupa="' . $i . '" and klasa="'.$k.'"');
             if (count($lg) != 0) {
                 $vg = $lg[1]['przedmiot'] . ':' . $lg[1]['sala'] . ':' . $lg[1]['nauczyciel'];
                 $ret .= '<option selected>' . $vg . '</option>';

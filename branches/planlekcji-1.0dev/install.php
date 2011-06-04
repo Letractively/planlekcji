@@ -80,7 +80,7 @@ if (count($ctb) != 0) {
 + + + + + + + + + + + + + + + + + + + +
 +                                     +
 +    I   N   T   E    R   S   Y   S   +  Wersja 1.0
-+    P  L  A  N   L  E  K  C  J  I    +  Relase Candidate 3
++    P  L  A  N   L  E  K  C  J  I    + 
 +                                     +
 + + + + + + + + + + + + + + + + + + + +
 
@@ -253,7 +253,8 @@ START;
 
         $isf->DbInsert('rejestr', array(
             'opcja' => 'index_text',
-            'wartosc' => '<h1>Witaj w Planie Lekcji</h1><p>Prosze zmienic tresc tej strony</p>'
+            'wartosc' => '<h1>Witaj w Planie Lekcji</h1><p>Na początek proszę zmienić hasła do panelu administracyjnego
+                oraz zmienić treść tej strony w górnym panelu użytkownika.</p><p>Dziękuję za skorzystanie z Plan Lekcji 1.0</p>'
                 ), false);
 
         $isf->DbInsert('rejestr', array(
@@ -268,7 +269,7 @@ START;
         
         $isf->DbInsert('rejestr', array(
             'opcja' => 'app_ver',
-            'wartosc' => '1.0 RC3'
+            'wartosc' => '1.0'
         ));
 
         $pass = substr(md5(@date('Y:m:d')), 0, 8);

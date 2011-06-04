@@ -236,6 +236,13 @@ class Controller_Plan extends Controller {
                     } else {
                         $nl_s = $isf->DbSelect('nauczyciele', array('skrot'), 'where imie_naz="' . $przedm[2] . '"');
                         $nl_s = $nl_s[1]['skrot'];
+
+                        $valid = $isf->DbSelect('plan_grupy', array('*'), 'where dzien="Poniedziałek" and lekcja="' . $lek . '" and nauczyciel="' . $przedm[2] . '" and sala!="' . $przedm[1] . '"');
+                        if (count($valid) > 0) {
+                            echo 'Nauczyciel ' . $przedm[2] . ' prowadzi juz zajecia w poniedziałek na lekcji ' . $lek . ' w sali ' . $przedm[1];
+                            exit;
+                        }
+
                         $colval = array(
                             'dzien' => 'Poniedziałek',
                             'klasa' => $klasa,
@@ -268,6 +275,13 @@ class Controller_Plan extends Controller {
                     } else {
                         $nl_s = $isf->DbSelect('nauczyciele', array('skrot'), 'where imie_naz="' . $przedm[2] . '"');
                         $nl_s = $nl_s[1]['skrot'];
+
+                        $valid = $isf->DbSelect('plan_grupy', array('*'), 'where dzien="Wtorek" and lekcja="' . $lek . '" and nauczyciel="' . $przedm[2] . '" and sala!="' . $przedm[1] . '"');
+                        if (count($valid) > 0) {
+                            echo 'Nauczyciel ' . $przedm[2] . ' prowadzi juz zajecia we wtorek na lekcji ' . $lek . ' w sali ' . $przedm[1];
+                            exit;
+                        }
+
                         $colval = array(
                             'dzien' => 'Wtorek',
                             'klasa' => $klasa,
@@ -300,6 +314,13 @@ class Controller_Plan extends Controller {
                     } else {
                         $nl_s = $isf->DbSelect('nauczyciele', array('skrot'), 'where imie_naz="' . $przedm[2] . '"');
                         $nl_s = $nl_s[1]['skrot'];
+
+                        $valid = $isf->DbSelect('plan_grupy', array('*'), 'where dzien="Środa" and lekcja="' . $lek . '" and nauczyciel="' . $przedm[2] . '" and sala!="' . $przedm[1] . '"');
+                        if (count($valid) > 0) {
+                            echo 'Nauczyciel ' . $przedm[2] . ' prowadzi juz zajecia w środę na lekcji ' . $lek . ' w sali ' . $przedm[1];
+                            exit;
+                        }
+
                         $colval = array(
                             'dzien' => 'Środa',
                             'klasa' => $klasa,
@@ -332,6 +353,13 @@ class Controller_Plan extends Controller {
                     } else {
                         $nl_s = $isf->DbSelect('nauczyciele', array('skrot'), 'where imie_naz="' . $przedm[2] . '"');
                         $nl_s = $nl_s[1]['skrot'];
+
+                        $valid = $isf->DbSelect('plan_grupy', array('*'), 'where dzien="Czwartek" and lekcja="' . $lek . '" and nauczyciel="' . $przedm[2] . '" and sala!="' . $przedm[1] . '"');
+                        if (count($valid) > 0) {
+                            echo 'Nauczyciel ' . $przedm[2] . ' prowadzi juz zajecia w czwartek na lekcji ' . $lek . ' w sali ' . $przedm[1];
+                            exit;
+                        }
+
                         $colval = array(
                             'dzien' => 'Czwartek',
                             'klasa' => $klasa,
@@ -364,6 +392,13 @@ class Controller_Plan extends Controller {
                     } else {
                         $nl_s = $isf->DbSelect('nauczyciele', array('skrot'), 'where imie_naz="' . $przedm[2] . '"');
                         $nl_s = $nl_s[1]['skrot'];
+
+                        $valid = $isf->DbSelect('plan_grupy', array('*'), 'where dzien="Piątek" and lekcja="' . $lek . '" and nauczyciel="' . $przedm[2] . '" and sala!="' . $przedm[1] . '"');
+                        if (count($valid) > 0) {
+                            echo 'Nauczyciel ' . $przedm[2] . ' prowadzi juz zajecia w piątek na lekcji ' . $lek . ' w sali ' . $przedm[1];
+                            exit;
+                        }
+
                         $colval = array(
                             'dzien' => 'Piątek',
                             'klasa' => $klasa,

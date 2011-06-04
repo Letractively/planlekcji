@@ -1,14 +1,7 @@
-﻿┌─────────────┐
-│ PLAN LEKCJI │	
-│  INTERSYS   │
-└─────────────┘
-%%%%%    %%%%   %%%%%%
-%%%%%%  %%% %%  %%%%%
-%%  %%  %%         %%
-%%%%%   %%       %%%
-%%  %%  %%% %%     %%
-%%  %%  %%% %%  %%%%%%
-%%  %%   %%%%   %%%%%
+﻿┌─────────────┐ ##      ###
+│ PLAN LEKCJI │	 #     #   #
+│  INTERSYS   │  #     #   #
+└─────────────┘ ### ##  ###
 
 1. LICENCJA  │
 ─────────────┘
@@ -21,7 +14,6 @@ Plan Lekcji Intersys został wydany na licencji GNU GPL v3
 KOHANA3			BSD
 ISF1.0 KOHANA3 MODULE	GNU GPL
 TINY_MCE		GNU GPL
-NUSOAP			GNU LGPL
 
 Wymaga min. PHP 5.3 oraz obsługi SQLite3.
 Katalog /modules/isf/isf_resources musi mieć uprawnienia do zapisu (dot. systemów Unix oraz Windows Server)
