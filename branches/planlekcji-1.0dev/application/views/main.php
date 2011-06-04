@@ -47,6 +47,7 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                         <a href="<?php echo URL::site('default/index'); ?>" style="font-size: 12pt; font-weight: bold;">
                             <img src="<?php echo URL::base(); ?>lib/images/home.png" alt="" width="32" height="32"/>Strona główna</a>
                     </p>
+                    <hr/>
                     <?php
                     if (!isset($_SESSION['valid']) || !isset($_COOKIE['PHPSESSID'])) {
                         ?>
@@ -81,7 +82,6 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                     } else {
                         ?>
                         <?php if ($reg[1]['wartosc'] == 1): ?>
-                            <hr/>
                             <h3>Menu administratora</h3>
                             <ul id="menu_js">
                                 <li>
@@ -99,7 +99,6 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                             <p class="info">Dopóki nie zamkniesz edycji danych, nie możesz tworzyć planów.
                                 Zamknięcie edycji oznacza <b>brak możliwości</b> ponownej edycji danych.</p>
                         <?php else: ?>
-                            <hr/>
                             <h3>Edycja planów</h3>
                             <ul>
                                 <?php foreach ($isf->DbSelect('klasy', array('klasa'), 'order by klasa asc') as $r => $c): ?>

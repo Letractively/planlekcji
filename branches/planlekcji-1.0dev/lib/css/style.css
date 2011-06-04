@@ -94,4 +94,6 @@ table.przed td {
 }
 table.main {
     border-width: 0px;
+    width: 100%;
+    max-width: 100%;
 }
