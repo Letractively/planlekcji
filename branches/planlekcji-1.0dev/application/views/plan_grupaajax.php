@@ -32,7 +32,7 @@ function pobierzdzien($dzien, $lekcja) {
         if (count($isf->DbSelect($b_table, $b_cols, $b_cond)) == 0) {
             $b_table = 'plan_grupy';
             $b_cols = array('*');
-            $b_cond = 'where dzien="' . $dzien . '" and lekcja="' . $lekcja . '" and nauczyciel="' . $rowcol['nauczyciel'] . '"';
+            $b_cond = 'where dzien="' . $dzien . '" and lekcja="' . $lekcja . '" and nauczyciel="' . $rowcol['nauczyciel'] . '" and sala!="' . $rowcol['sala'] . '"';
             if (count($isf->DbSelect($b_table, $b_cols, $b_cond)) == 0) {
                 $v = $rowcol['przedmiot'] . ':' . $rowcol['sala'] . ':' . $rowcol['nauczyciel'];
                 $options.='<option>' . $v . '</option>';
