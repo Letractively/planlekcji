@@ -254,7 +254,7 @@ START;
         $isf->DbInsert('rejestr', array(
             'opcja' => 'index_text',
             'wartosc' => '<h1>Witaj w Planie Lekcji</h1><p>Na początek proszę zmienić hasła do panelu administracyjnego
-                oraz zmienić treść tej strony w górnym panelu użytkownika.</p><p>Dziękuję za skorzystanie z Plan Lekcji 1.0</p>'
+                oraz zmienić treść tej strony w górnym panelu użytkownika.</p><p>Dziękuję za skorzystanie z systemu Plan Lekcji</p>'
                 ), false);
 
         $isf->DbInsert('rejestr', array(
@@ -269,7 +269,7 @@ START;
         
         $isf->DbInsert('rejestr', array(
             'opcja' => 'app_ver',
-            'wartosc' => '1.0'
+            'wartosc' => '1.0.1'
         ));
 
         $pass = substr(md5(@date('Y:m:d')), 0, 8);
@@ -300,6 +300,7 @@ Prosze zapisac ponizsze dane, aby uzyskac dostep do panelu administratora
     Haslo: $pass
 
 START;
+        fgets(fopen('php://stdin', 'r'));
         ?>
     <?php endif; ?>
 <?php endif; ?>
