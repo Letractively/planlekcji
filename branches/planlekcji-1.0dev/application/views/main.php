@@ -45,8 +45,9 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
             <tr style="vertical-align: top"><td style="width: 20%">
                     <p>
                         <a href="<?php echo URL::site('default/index'); ?>" style="font-size: 12pt; font-weight: bold;">
-                            <img src="<?php echo URL::base(); ?>lib/images/home.png" alt="" width="24" height="24"/>Strona główna</a>
+                            <img src="<?php echo URL::base(); ?>lib/images/home.png" alt="" width="32" height="32"/>Strona główna</a>
                     </p>
+                    <hr/>
                     <?php
                     if (!isset($_SESSION['valid']) || !isset($_COOKIE['PHPSESSID'])) {
                         ?>
@@ -58,16 +59,6 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                             <?php
                         else:
                             ?>
-                            <p>
-                                <a href="<?php echo URL::site('admin/login'); ?>" style="font-size: 12pt; font-weight: bold;">
-                                    <img src="<?php echo URL::base(); ?>lib/images/t1.png" alt="" width="24" height="24"/> Administracja
-                                </a>
-                            </p>
-                            <p>
-                                <a href="<?php echo URL::site('podglad/zestawienie'); ?>" style="font-size: 12pt; font-weight: bold;" target="_blank">
-                                    <img src="<?php echo URL::base(); ?>lib/images/t2.png" alt="" width="24" height="24"/> Zestawienie planów
-                                </a>
-                            </p>
                             <h3>Plany lekcji według klas</h3>
                             <ul>
                                 <?php foreach ($isf->DbSelect('klasy', array('*'), 'order by klasa asc') as $rw => $rc): ?>
@@ -108,11 +99,6 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                             <p class="info">Dopóki nie zamkniesz edycji danych, nie możesz tworzyć planów.
                                 Zamknięcie edycji oznacza <b>brak możliwości</b> ponownej edycji danych.</p>
                         <?php else: ?>
-                            <p>
-                                <a href="<?php echo URL::site('podglad/zestawienie'); ?>" style="font-size: 12pt; font-weight: bold;" target="_blank">
-                                    <img src="<?php echo URL::base(); ?>lib/images/t2.png" alt="" width="24" height="24"/> Zestawienie planów
-                                </a>
-                            </p>
                             <h3>Edycja planów</h3>
                             <ul>
                                 <?php foreach ($isf->DbSelect('klasy', array('klasa'), 'order by klasa asc') as $r => $c): ?>
