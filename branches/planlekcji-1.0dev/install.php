@@ -269,7 +269,7 @@ START;
         
         $isf->DbInsert('rejestr', array(
             'opcja' => 'app_ver',
-            'wartosc' => '1.0.1'
+            'wartosc' => 'trunk version'
         ));
 
         $pass = substr(md5(@date('Y:m:d')), 0, 8);
