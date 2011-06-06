@@ -51,7 +51,11 @@ function pobierzdzien($dzien, $lekcja) {
             $ret .= '<select style="width:200px;" name="' . $dzien . '[' . $lekcja . '][' . $i . ']">';
             $lg = $isf->DbSelect('plan_grupy', array('*'), 'where dzien="' . $dzien . '" and lekcja="' . $lekcja . '" and grupa="' . $i . '" and klasa="'.$k.'"');
             if (count($lg) != 0) {
-                $vg = $lg[1]['przedmiot'] . ':' . $lg[1]['sala'] . ':' . $lg[1]['nauczyciel'];
+                if(isset($lg[1]['sala'])&&isset($lg[1]['nauczyciel'])){
+                    $vg = $lg[1]['przedmiot'] . ':' . $lg[1]['sala'] . ':' . $lg[1]['nauczyciel'];
+                }else{
+                    $vg = $lg[1]['przedmiot'];
+                }
                 $ret .= '<option selected>' . $vg . '</option>';
             }
             $ret .= '<option>---</option>';
