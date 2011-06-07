@@ -34,7 +34,7 @@ class Controller_Zastepstwa extends Controller {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
         $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja="edycja_danych"');
-        if ($reg[1]['wartosc'] != 0) {
+        if ($reg[1]['wartosc'] != 3) {
             echo '<h1>Edycja danych nie zostala zamknieta</h1>';
             exit;
         }
@@ -186,6 +186,16 @@ class Controller_Zastepstwa extends Controller {
         
         Kohana_Request::factory()->redirect('zastepstwa/index');
         
+    }
+    
+    public function action_drukuj(){
+        $this->checklogin();
+        if(!isset($_POST)){
+            Request::factory()->redirect('default/index');
+            exit;
+        }
+        $view = View::factory('zastepstwa_drukuj');
+        echo $view->render();
     }
 
 }

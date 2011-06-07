@@ -42,18 +42,17 @@ function pobierzdzien($dzien, $nauczyciel) {
                     </p>';
             pobierznl($dzien, $rowid);
             echo '</td></tr>';
-        }
-        if (count($res) == 0) {
+        } else {
             $res = $isf->DbSelect('plan_grupy', array('*'), 'where nauczyciel=\'' . $nauczyciel . '\'
             and dzien=\'' . $dzien . '\' and lekcja=\'' . $lek_nr . '\'');
-            if (count($res != 0)) {
+            if (count($res)>0) {
                 foreach ($res as $rowid => $rowcol) {
                     echo '<p class="grplek">
                 <b>' . $rowcol['klasa'] . ' gr ' . $rowcol['grupa'] . '</b> - ' . $rowcol['przedmiot'] . ' (' . $rowcol['sala'] . ')
                     </p>';
-                    pobierznl($dzien, $lek_nr);
-                    echo '</td></tr>';
                 }
+                pobierznl($dzien, $lek_nr);
+                echo '</td></tr>';
             } else {
                 echo '---</td></tr>';
             }

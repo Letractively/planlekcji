@@ -1,7 +1,7 @@
 <?php
 $isf = new Kohana_Isf();
 $isf->DbConnect();
-$naucz = $isf->DbSelect('nauczyciele', array('*'));
+$naucz = $isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc');
 $c_naucz = count($naucz);
 ?>
 <h1>

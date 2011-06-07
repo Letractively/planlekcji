@@ -6,15 +6,21 @@ function pobierz_naglowki() {
     $isf = new Kohana_Isf();
     $isf->DbConnect();
     $klasy = $isf->DbSelect('klasy', array('*'));
+    $nl = $isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc');
+    $GLOBALS['ilosc_nl'] = count($nl);
     $GLOBALS['ilosc_klas'] = count($klasy);
-    
-    echo '<tr><td colspan=2></td><td colspan='.$GLOBALS['ilosc_klas'].'>Klasy</td>';
+
+    echo '<tr><td colspan=2></td><td colspan=' . $GLOBALS['ilosc_klas'] . '>Klasy</td>';
+    echo '<td colspan=' . $GLOBALS['ilosc_nl'] . '>Nauczyciele</td>';
     echo '<tr><td></td><td>Godziny</td>';
-    
+
     foreach ($klasy as $rowid => $rowcol) {
-        echo '<td width="150">' . $rowcol['klasa'] . '</td>';
+        echo '<td width="150" style="min-width:150px;">' . $rowcol['klasa'] . '</td>';
     }
-    
+    foreach ($nl as $rowid => $rowcol) {
+        echo '<td width="150" style="min-width:50px;max-width:50px;">' . $rowcol['skrot'] . '</td>';
+    }
+
     echo '</tr>';
 }
 
@@ -27,27 +33,46 @@ function pobierz_klasy($dzien, $lekcja) {
     $klasy = $isf->DbSelect('klasy', array('*'));
     foreach ($klasy as $rowid => $rowcol) {
         echo '<td>';
-        $lek = $isf->DbSelect('planlek', array('*'),
-                'where dzien==\''.$dzien.'\' and klasa=\''.$rowcol['klasa'].'\'
-                    and lekcja=\''.$lekcja.'\'');
-        if(count($lek)!=0){
-            if(isset($lek[1]['sala'])&&isset($lek[1]['skrot'])){
-                echo '' . $lek[1]['przedmiot'] . ' (<a href="' . URL::site('podglad/sala/' . $lek[1]['sala']) . '">' . $lek[1]['sala'] . '</a>) (<a href="' . URL::site('podglad/nauczyciel/' . $lek[1]['skrot']) . '">' . $lek[1]['skrot'] . '</a>)';
-            }else{
-                echo ''.$lek[1]['przedmiot'].'';
+        $lek = $isf->DbSelect('planlek', array('*'), 'where dzien==\'' . $dzien . '\' and klasa=\'' . $rowcol['klasa'] . '\'
+                    and lekcja=\'' . $lekcja . '\'');
+        if (count($lek) != 0) {
+            if (isset($lek[1]['sala']) && isset($lek[1]['skrot'])) {
+                echo '<b>' . $lek[1]['przedmiot'] . '</b> (<a href="' . URL::site('podglad/sala/' . $lek[1]['sala']) . '">' . $lek[1]['sala'] . '</a>) (<a href="' . URL::site('podglad/nauczyciel/' . $lek[1]['skrot']) . '">' . $lek[1]['skrot'] . '</a>)';
+            } else {
+                echo '<b>' . $lek[1]['przedmiot'] . '</b>';
             }
-        }else{
-            $lek = $isf->DbSelect('plan_grupy', array('*'),
-                'where dzien=\''.$dzien.'\' and klasa=\''.$rowcol['klasa'].'\'
-                    and lekcja=\''.$lekcja.'\' order by grupa asc');
-            foreach($lek as $rowid=>$rowcol){
-                if(isset($rowcol['sala'])&&isset($rowcol['skrot'])){
-                    echo '<p class="grplek">gr '.$rowcol['grupa'].' -' . $lek[1]['przedmiot'] . ' (<a href="' . URL::site('podglad/sala/' . $lek[1]['sala']) . '">' . $lek[1]['sala'] . '</a>)
+        } else {
+            $lek = $isf->DbSelect('plan_grupy', array('*'), 'where dzien=\'' . $dzien . '\' and klasa=\'' . $rowcol['klasa'] . '\'
+                    and lekcja=\'' . $lekcja . '\' order by grupa asc');
+            foreach ($lek as $rowid => $rowcol) {
+                if (isset($rowcol['sala']) && isset($rowcol['skrot'])) {
+                    echo '<p class="grplek">gr ' . $rowcol['grupa'] . ' - <b>' . $lek[1]['przedmiot'] . '</b> (<a href="' . URL::site('podglad/sala/' . $lek[1]['sala']) . '">' . $lek[1]['sala'] . '</a>)
                         (<a href="' . URL::site('podglad/nauczyciel/' . $lek[1]['skrot']) . '">' . $lek[1]['skrot'] . '</a>)</p>';
-                }else{
-                    echo '<p class="grplek">gr '.$rowcol['grupa'].'- '.$rowcol['przedmiot'].'</p>';
+                } else {
+                    echo '<p class="grplek">gr ' . $rowcol['grupa'] . ' - <b>' . $rowcol['przedmiot'] . '</b></p>';
                 }
-                
+            }
+        }
+        echo '</td>';
+    }
+    $nl = $isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc');
+    foreach ($nl as $rowid => $rowcol) {
+        echo '<td>';
+        $lek = $isf->DbSelect('planlek', array('*'), 'where dzien==\'' . $dzien . '\' and nauczyciel=\'' . $rowcol['imie_naz'] . '\'
+                    and lekcja=\'' . $lekcja . '\'');
+        if (count($lek) == 1) {
+            echo '<p class="grplek"><b>' . $lek[1]['klasa'] . '</b> - ' . $lek[1]['sala'] . '</p>';
+        } else {
+            $lek = $isf->DbSelect('plan_grupy', array('*'), 'where dzien==\'' . $dzien . '\' and nauczyciel=\'' . $rowcol['imie_naz'] . '\'
+                    and lekcja=\'' . $lekcja . '\'');
+            if (count($lek) > 0) {
+                echo '<p class="grplek"><b>';
+                foreach ($lek as $rowid => $rowcol) {
+                    echo '<b>' . $rowcol['klasa'] . ' ('.$rowcol['grupa'].')</b>, ';
+                }
+                echo '</b></p><p class="grplek">' . $rowcol['sala'] . '</p>';
+            } else {
+                echo '---';
             }
         }
         echo '</td>';
@@ -61,8 +86,9 @@ function pobierz_dzien($dzien) {
 
     $lekcje = $isf->DbSelect('lek_godziny', array('*'));
 
-    $colspan = $GLOBALS['ilosc_klas'] + 2;
-    echo '<tr class="zestdzien"><td colspan="' . $colspan . '">' . $dzien . '</td></tr>';
+    $colspan = $GLOBALS['ilosc_klas'];
+    echo '<tr class="zestdzien"><td colspan=2></td><td colspan="' . $colspan . '">' . $dzien . '</td>';
+    echo '<td colspan=' . $GLOBALS['ilosc_nl'] . '>' . $dzien . '</td></tr>';
 
     foreach ($lekcje as $rowid => $rowcol) {
         pobierz_klasy($dzien, $rowid);
@@ -75,6 +101,11 @@ function pobierz_dzien($dzien) {
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Plan lekcji</title>
         <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style.css"/>
+        <style>
+            body{
+                max-width: none;
+            }
+        </style>
     </head>
     <body>
         <h1><a href="#" onClick="window.print();"><img border="0" src="<?php echo URL::base() ?>lib/images/printer.png" alt="[drukuj plan]"/></a>
