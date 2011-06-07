@@ -90,7 +90,8 @@ class Controller_Admin extends Controller {
 
     public function action_logout() {
         unset($_SESSION['valid']);
-        setcookie('login');
+        setcookie('login', '', time() - 3600, '/');
+        setcookie('PHPSESSID', '', time() - 3600, '/');
         Kohana_Request::factory()->redirect('default/index');
     }
 
