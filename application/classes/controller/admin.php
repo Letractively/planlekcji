@@ -74,6 +74,20 @@ class Controller_Admin extends Controller {
         $view->set('content', $view2->render());
         echo $view->render();
     }
+    
+    public function action_zamknij2() {
+
+        if (!isset($_SESSION['valid']) || !isset($_COOKIE['PHPSESSID'])) {
+            Kohana_Request::factory()->redirect('admin/login');
+            exit;
+        }
+
+        $view = view::factory('main');
+        $view2 = view::factory('admin_zamknij2');
+
+        $view->set('content', $view2->render());
+        echo $view->render();
+    }
 
     public function action_zamknijconfirm() {
 
@@ -85,6 +99,19 @@ class Controller_Admin extends Controller {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
         $isf->DbUpdate('rejestr', array('wartosc' => '0'), 'opcja="edycja_danych"');
+        Kohana_Request::factory()->redirect('default/index');
+    }
+    
+    public function action_zamknijconfirm2() {
+
+        if (!isset($_SESSION['valid']) || !isset($_COOKIE['PHPSESSID'])) {
+            Kohana_Request::factory()->redirect('admin/login');
+            exit;
+        }
+
+        $isf = new Kohana_Isf();
+        $isf->DbConnect();
+        $isf->DbUpdate('rejestr', array('wartosc' => '3'), 'opcja="edycja_danych"');
         Kohana_Request::factory()->redirect('default/index');
     }
 
@@ -117,6 +144,8 @@ class Controller_Admin extends Controller {
         $isf->DbConnect();
         $isf->DbDelete('planlek', 'klasa like "%"');
         $isf->DbDelete('plan_grupy', 'klasa like "%"');
+        $isf->DbDelete('zast_id', 'zast_id like \'%\'');
+        $isf->DbDelete('zastepstwa', 'zast_id like \'%\'');
         $isf->DbUpdate('rejestr', array('wartosc' => '1'), 'opcja="edycja_danych"');
         if (isset($_POST['cl'])) {
             $isf->DbDelete('klasy', 'klasa like "%"');

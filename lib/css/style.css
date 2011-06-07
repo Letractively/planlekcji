@@ -14,7 +14,7 @@ h1{
     font-weight: bold;
 }
 h3{
-    font-size: 12pt;
+    font-size: 11pt;
 }
 a{
     color: blue;
@@ -96,4 +96,10 @@ table.main {
     border-width: 0px;
     width: 100%;
     max-width: 100%;
+}
+
+tr.zestdzien{
+    background: #ffff99;
+    font-weight: bold;
+    text-align: center;
 }
