@@ -79,8 +79,8 @@ if (count($ctb) != 0) {
 
 + + + + + + + + + + + + + + + + + + + +
 +                                     +
-+    I   N   T   E    R   S   Y   S   +  Wersja 1.0
-+    P  L  A  N   L  E  K  C  J  I    + 
++    I   N   T   E    R   S   Y   S   +  Wersja 1.5
++    P  L  A  N   L  E  K  C  J  I    +  UNSTABLE
 +                                     +
 + + + + + + + + + + + + + + + + + + + +
 
@@ -212,6 +212,31 @@ START;
             'skrot' => 'text',
             'sala' => 'text'
         ));
+        
+        print <<< START
+Tworzenie tabeli: zast_id
+
+START;
+
+        $isf->DbTblCreate('zast_id', array(
+            'zast_id' => 'integer primary key autoincrement not null',
+            'dzien' => 'text',
+            'za_nl' => 'text',
+            'info' => 'text',
+        ));
+        
+        print <<< START
+Tworzenie tabeli: zastepstwa
+
+START;
+
+        $isf->DbTblCreate('zastepstwa', array(
+            'zast_id' => 'text',
+            'lekcja' => 'text',
+            'przedmiot' => 'text',
+            'nauczyciel' => 'text',
+            'sala' => 'text',
+        ));
 
         print <<< START
 Tworzenie tabeli: lek_godziny
@@ -300,7 +325,6 @@ Prosze zapisac ponizsze dane, aby uzyskac dostep do panelu administratora
     Haslo: $pass
 
 START;
-        fgets(fopen('php://stdin', 'r'));
         ?>
     <?php endif; ?>
 <?php endif; ?>
