@@ -80,9 +80,15 @@ function pobierzzast($id) {
         <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style_print.css"/>
     </head>
     <body>
-        <?php foreach ($_POST['print'] as $rid => $rcl): ?>
-            <?php pobierzzast($rid); ?>
-            <p/>
-        <?php endforeach; ?>
+        <?php if (isset($_POST['print'])): ?>
+            <?php foreach ($_POST['print'] as $rid => $rcl): ?>
+                <?php pobierzzast($rid); ?>
+                <p/>
+            <?php endforeach; ?>
+        <?php else: ?>
+                <p class="error">
+                    Brak zastępstw do wydrukowania
+                </p>
+        <?php endif; ?>
     </body>
 </html>

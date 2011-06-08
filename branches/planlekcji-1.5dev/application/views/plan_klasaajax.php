@@ -43,7 +43,7 @@ function pobierzdzien($dzien, $lekcja) {
     if ($vl != '') {
         $ret .= '<option selected>' . $vl . '</option>';
     }
-    $ret .= '<option>---</option>';
+    $ret .= '<option>---</option><optgroup label="Przedmiot - Sala - Nauczyciel">';
     foreach ($a as $rowid => $rowcol) {
         $b_table = 'planlek';
         $b_cols = array('*');
@@ -60,11 +60,11 @@ function pobierzdzien($dzien, $lekcja) {
             
         }
     }
-    $ret.='<option>---</option>';
+    $ret.='</optgroup><optgroup label="Zwykły przedmiot">';
     foreach ($isf->DbSelect('przedmioty', array('*'), 'order by przedmiot asc') as $rc => $ri) {
         $ret.='<option>' . $ri['przedmiot'] . '</option>';
     }
-    $ret.='</select>';
+    $ret.='</optgroup></select>';
     return $ret;
 }
 ?>

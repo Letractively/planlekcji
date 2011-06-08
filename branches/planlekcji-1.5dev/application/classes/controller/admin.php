@@ -125,6 +125,25 @@ class Controller_Admin extends Controller {
         Kohana_Request::factory()->redirect('default/index');
     }
 
+    public function action_planreset(){
+        if (!isset($_SESSION['valid']) || !isset($_COOKIE['PHPSESSID'])) {
+            Kohana_Request::factory()->redirect('admin/login');
+            exit;
+        }
+        if(!isset($_POST)){
+            Kohana_Request::factory()->redirect('admin/login');
+            exit;
+        }
+        $isf = new Kohana_Isf();
+        $isf->DbConnect();
+        $isf->DbDelete('planlek', 'klasa like "%"');
+        $isf->DbDelete('plan_grupy', 'klasa like "%"');
+        $isf->DbDelete('zast_id', 'zast_id like \'%\'');
+        $isf->DbDelete('zastepstwa', 'zast_id like \'%\'');
+        $isf->DbUpdate('rejestr', array('wartosc' => '0'), 'opcja="edycja_danych"');
+        Kohana_Request::factory()->redirect('default/index');
+    }
+    
     public function action_reset() {
         if (!isset($_SESSION['valid']) || !isset($_COOKIE['PHPSESSID'])) {
             Kohana_Request::factory()->redirect('admin/login');
@@ -251,7 +270,7 @@ START;
         $isf->DbUpdate('rejestr', array('wartosc' => $nazwa), 'opcja="nazwa_szkoly"');
         $isf->DbUpdate('rejestr', array('wartosc' => $text), 'opcja="index_text"', false);
 
-        Kohana_Request::factory()->redirect('admin/zmiendane');
+        Kohana_Request::factory()->redirect('default/index');
     }
 
     public function action_haslo($err=false) {

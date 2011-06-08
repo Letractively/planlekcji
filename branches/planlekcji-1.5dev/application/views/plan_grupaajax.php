@@ -24,7 +24,7 @@ function pobierzdzien($dzien, $lekcja) {
     $lek = $isf->DbSelect('planlek', array('*'), 'where lekcja="' . $lekcja . '" and dzien="' . $dzien . '" and klasa="' . $k . '"');
     $ret = '';
     $vl = '';
-    $options = '';
+    $options = '<optgroup label="Przedmiot - Sala - Nauczyciel">';
     foreach ($a as $rowid => $rowcol) {
         $b_table = 'planlek';
         $b_cols = array('*');
@@ -41,6 +41,7 @@ function pobierzdzien($dzien, $lekcja) {
             
         }
     }
+    $options .= '</optgroup>';
     if (count($lek) == 0) {
         $ilosc_grp = $isf->DbSelect('rejestr', array('*'), 'where opcja="ilosc_grup"');
         $g = $ilosc_grp[1]['wartosc'];
@@ -60,11 +61,11 @@ function pobierzdzien($dzien, $lekcja) {
             }
             $ret .= '<option>---</option>';
             $ret .= $options;
-            $ret.='<option>---</option>';
+            $ret.='<optgroup label="Zwykłe przedmioty">';
             foreach ($isf->DbSelect('przedmioty', array('*'), 'order by przedmiot asc') as $rc => $ri) {
                 $ret.='<option>' . $ri['przedmiot'] . '</option>';
             }
-            $ret.='</select></p>';
+            $ret.='</optgroup></select></p>';
         }
     } else {
         if ($vl != '---') {

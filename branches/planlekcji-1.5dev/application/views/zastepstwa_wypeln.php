@@ -6,7 +6,7 @@ function pobierznl($dzien, $lekcja) {
     $isf->DbConnect();
     $a_a = 'nl_przedm, przedmiot_sale';
     $a_b = array('nl_przedm.przedmiot', 'przedmiot_sale.sala', 'nl_przedm.nauczyciel');
-    $a_c = 'on nl_przedm.przedmiot=przedmiot_sale.przedmiot';
+    $a_c = 'on nl_przedm.przedmiot=przedmiot_sale.przedmiot order by nl_przedm.przedmiot asc';
     $res = $isf->DbSelect($a_a, $a_b, $a_c);
     echo '<select name="zast[' . $lekcja . ']"><option selected>---</option>';
     echo '<optgroup label="Rodzaj zastępstwa"><option>lekcja wolna</option>';

@@ -18,11 +18,12 @@ $isf->JQUi_AjaxdivDoAjax('progress', URL::site('plan/grupaajax/' . $klasa), true
     <body>
         <div style="position: fixed; top: 0px; width: 100%; height: 80px; background: white;">
             <h1>
-                <br/>
                 <a href="#" onClick="document.forms['formPlan'].submit();">
                     <img src="<?php echo URL::base() ?>lib/images/save.png" alt="zapisz"/></a>
                 Edycja planu dla <?php echo $klasa; ?> (grupowy)
             </h1>
+            <br/>
+            <br/>
         </div>
         <div style="margin-top: 100px">
             <?php echo $isf->JQUi_AjaxdivCreate('progress', true, false, '<b>Przeglądarka nie obsługuje JavaScript? Spróbuj <a href="' . URL::site('plan/grupaajax/' . $klasa . '/true') . '">metodę alternatywną</a></b>'); ?>

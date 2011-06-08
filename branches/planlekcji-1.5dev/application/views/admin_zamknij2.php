@@ -1,3 +1,8 @@
+<?php
+/*
+ * Zamknięcie edycji planu
+ */
+?>
 <h1>Zamknięcie edycji planu</h1>
 <p>Czy napewno chcesz zamknąć edycję planu i mieć dostęp do wygenerowanych
     planów zajęć oraz do systemu zastępstw?</p>

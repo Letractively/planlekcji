@@ -2,6 +2,7 @@
 /*
  * Strona główna Planu Lekcji
  * 
+ * Główny szablon
  * 
  */
 ?>
@@ -31,12 +32,17 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                  style="height: 70px;"/>
         </div>
         <hr/>
+        <?php
+        /*
+         * Menu administratora (górne)
+         */
+        ?>
         <?php if (isset($_SESSION['valid']) && isset($_COOKIE['PHPSESSID'])): ?>
             <div id="menuad">
-                Witaj, <b><?php echo $_COOKIE['login']; ?></b>!&emsp;
-                <a href="<?php echo URL::site('admin/logout'); ?>">wyloguj</a>&emsp;
-                <a href="<?php echo URL::site('admin/haslo'); ?>">zmiana hasła</a>&emsp;
-                <a href="<?php echo URL::site('admin/zmiendane'); ?>">zmiana danych szkoły</a>&emsp;
+                Zalogowany jako: <b><?php echo $_COOKIE['login']; ?></b>&emsp;&emsp;&bull;
+                <a href="<?php echo URL::site('admin/logout'); ?>">wyloguj</a>&emsp;&bull;
+                <a href="<?php echo URL::site('admin/haslo'); ?>">zmiana hasła</a>&emsp;&bull;
+                <a href="<?php echo URL::site('admin/zmiendane'); ?>">ustawienia szkoły i strony głównej</a>&emsp;&bull;
                 <a class="anac" href="<?php echo url::site('admin/reset'); ?>">resetowanie systemu</a>
             </div>
             <hr/>
@@ -48,10 +54,15 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                             <img src="<?php echo URL::base(); ?>lib/images/home.png" alt="" width="24" height="24"/>Strona główna</a>
                     </p>
                     <?php
+                    /*
+                     * Część dla niezalogowanych
+                     */
+                    ?>
+                    <?php
                     if (!isset($_SESSION['valid']) || !isset($_COOKIE['PHPSESSID'])) {
                         ?>
                         <?php
-                        if ($reg[1]['wartosc'] == 1):
+                        if ($reg[1]['wartosc'] == 1): // czy jest edycja sal, przedmiotów
                             ?>
                             <p>
                                 <a href="<?php echo URL::site('admin/login'); ?>" style="font-size: 10pt; font-weight: bold;">
@@ -108,21 +119,22 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                         ?>
                         <?php if ($reg[1]['wartosc'] == 1): ?>
                             <h3>Menu administratora</h3>
-                            <ul id="menu_js">
+                            <ul>
                                 <li>
-                                    <a href="<?php echo URL::site('sale/index'); ?>">Przegląd sal</a>
+                                    <a href="<?php echo URL::site('sale/index'); ?>">Sale</a>
                                 </li>
                                 </li>
-                                <li><a href="<?php echo URL::site('przedmioty/index'); ?>">Przegląd przedmiotów</a></li>
-                                <li><a href="<?php echo URL::site('nauczyciele/index'); ?>">Przegląd nauczycieli</a></li>
-                                <li><a href="<?php echo URL::site('klasy/index'); ?>">Przegląd klas</a></li>
+                                <li><a href="<?php echo URL::site('przedmioty/index'); ?>">Przedmioty</a></li>
+                                <li><a href="<?php echo URL::site('nauczyciele/index'); ?>">Nauczyciele</a></li>
+                                <li><a href="<?php echo URL::site('klasy/index'); ?>">Klasy</a></li>
                                 <li>
-                                    <a href="<?php echo URL::site('godziny/index'); ?>">Ustawienia godzin lekcyjnych</a>
+                                    <a href="<?php echo URL::site('godziny/index'); ?>">Godziny lekcyjne i przerwy</a>
                                 </li>
-                                <li><b><a href="<?php echo URL::site('admin/zamknij'); ?>">Zamknij edycję</a></b></li>
+                                <li><b><a href="<?php echo URL::site('admin/zamknij'); ?>">Zamknięcie edycji</a></b></li>
                             </ul>
-                            <p class="info">Dopóki nie zamkniesz edycji danych, nie możesz tworzyć planów.
-                                Zamknięcie edycji oznacza <b>brak możliwości</b> ponownej edycji danych.</p>
+                            <p class="info">Dopóki nie zamkniesz edycji danych, nie będziesz mógł tworzyć planów.
+                                Zamknięcie edycji oznacza <b>brak możliwości</b> ponownej edycji danych, chyba, że
+                                wykonasz reset systemu, który wiąże się z utratą pewnych danych.</p>
                         <?php else: ?>
                             <?php if ($reg[1]['wartosc'] == 3): ?>
                                 <p>
@@ -202,7 +214,10 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
         </table>
         <hr/>
         <div id="foot">
-            <p><b>Plan lekcji</b> - <?php echo $ns[1]['wartosc']; ?></p>
+            <p>
+                <img src="<?php echo URL::base(); ?>lib/images/gplv3.png" alt="GNU GPL v3 logo"/>
+                <b>Plan lekcji</b> - <?php echo $ns[1]['wartosc']; ?> |
+                <a href="http://planlekcji.googlecode.com" target="_blank">strona projektu Plan Lekcji</a></p>
         </div>
         <?php
         if (isset($_SESSION['valid']) && isset($_COOKIE['PHPSESSID'])) {
