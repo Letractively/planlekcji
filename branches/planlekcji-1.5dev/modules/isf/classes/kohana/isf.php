@@ -221,6 +221,14 @@ class Kohana_Isf {
             return FALSE;
     }
 
+    public function detect_ie() {
+        if (isset($_SERVER['HTTP_USER_AGENT']) &&
+                (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false))
+            return true;
+        else
+            return false;
+    }
+
     /**
      * Tworzy nowy obiekt JQueryUI
      * 
@@ -590,7 +598,7 @@ class Kohana_Isf {
             $script .= '<div id="isf_adc_' . $name . '">';
         }
         if ($customtext != false) {
-            $script .= '<p>'.$customtext.'</p>';
+            $script .= '<p>' . $customtext . '</p>';
         }
         $script .= '</div>';
         if ($hiddenbtn == true) {

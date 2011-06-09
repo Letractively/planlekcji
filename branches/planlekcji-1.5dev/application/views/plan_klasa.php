@@ -7,6 +7,9 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
 
 $isf->JQUi();
 $isf->JQUi_AjaxdivDoAjax('progress', URL::site('plan/klasaajax/' . $klasa), true);
+if ($isf->detect_ie()):
+    Kohana_Request::factory()->redirect('plan/klasaajax/'.$klasa.'/true');
+endif;
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
