@@ -46,9 +46,9 @@ if (count($ctb) != 0) {
                 <h3>Plik config.php nie istnieje! Proszę go utworzyć</h3>
                 <p>Treść pliku config.php</p>
                 <pre>
-                    <?php echo '<?php'; ?>
-                                $path = '<?php echo $r; ?>';
-                    <?php echo '?>'; ?>
+                    <?php echo htmlspecialchars('<?php') . PHP_EOL; ?>
+                    <?php echo htmlspecialchars('$path = \'' . $r . '\';') . PHP_EOL; ?>
+                    <?php echo htmlspecialchars('?>'); ?>
                 </pre>
             <?php endif; ?>
         </body>
@@ -361,12 +361,13 @@ Prosze zapisac ponizsze dane, aby uzyskac dostep do panelu administratora
     Login: <b>administrator</b>
     Haslo: <b>$pass</b>
 
-Gdy plik install.php zostanie usunięty przejdz do <a href="index.php">strony glownej</a>
+<a href="index.php">Strona glowna</a>
 START;
         if ($ferr == true) {
-            echo '<br/><b>BŁĄD ZAPISU: config.php</b><br/>
-                Proszę utworzyć plik <b>config.php</b> z następującą treścią:<br/><br/>
-                <?php $path = \'' . $_POST['inpPath'] . '\'; ?>';
+            echo '<br/><b>BŁĄD ZAPISU: config.php</b><br/>Prosze utworzyc plik config.php<br/>';
+            echo htmlspecialchars('<?php') . PHP_EOL;
+            echo htmlspecialchars('$path = \'' . $r . '\';') . PHP_EOL;
+            echo htmlspecialchars('?>');
         }
         echo '</pre>';
         ?>
