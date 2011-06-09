@@ -46,9 +46,9 @@ if (count($ctb) != 0) {
                 <h3>Plik config.php nie istnieje! Proszę go utworzyć</h3>
                 <p>Treść pliku config.php</p>
                 <pre>
-                    <?php echo htmlspecialchars('<?php') . PHP_EOL; ?>
-                    <?php echo htmlspecialchars('$path = \'' . $r . '\';') . PHP_EOL; ?>
-                    <?php echo htmlspecialchars('?>'); ?>
+<?php echo htmlspecialchars('<?php') . PHP_EOL; ?>
+<?php echo htmlspecialchars('$path = \'' . $r . '\';') . PHP_EOL; ?>
+<?php echo htmlspecialchars('?>'); ?>
                 </pre>
             <?php endif; ?>
         </body>
@@ -364,10 +364,10 @@ Prosze zapisac ponizsze dane, aby uzyskac dostep do panelu administratora
 <a href="index.php">Strona glowna</a>
 START;
         if ($ferr == true) {
-            echo '<br/><b>BŁĄD ZAPISU: config.php</b><br/>Prosze utworzyc plik config.php<br/>';
-            echo htmlspecialchars('<?php') . PHP_EOL;
-            echo htmlspecialchars('$path = \'' . $r . '\';') . PHP_EOL;
-            echo htmlspecialchars('?>');
+echo '<br/><b>BŁĄD ZAPISU: config.php</b><br/>Prosze utworzyc plik config.php<br/>';
+echo htmlspecialchars('<?php') . PHP_EOL;
+echo htmlspecialchars('$path = \'' . $r . '\';') . PHP_EOL;
+echo htmlspecialchars('?>');
         }
         echo '</pre>';
         ?>
