@@ -9,6 +9,9 @@ body{
 h1{
     font-size: 18pt;
 }
+pre{
+    font-size: medium;
+}
 .anac{
     color: #009900;
     font-weight: bold;
