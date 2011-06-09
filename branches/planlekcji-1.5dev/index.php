@@ -1,13 +1,4 @@
 <?php
-
-if (!file_exists('config.php')) {
-    $fcfg = true;
-    require_once 'install.php';
-    exit;
-} else {
-    require_once 'config.php';
-}
-
 /**
  * Proszę NIE MODYFIKOWAĆ poniższego kodu
  */
@@ -36,6 +27,13 @@ if (!empty($err)) {
     chmod('/application/logs', 0777);
     chmod('/application/cache', 0777);
     die($err);
+}
+if (!file_exists('config.php')) {
+    $fcfg = true;
+    require_once 'install.php';
+    exit;
+} else {
+    require_once 'config.php';
 }
 define('HTTP_PATH', $path);
 $application = 'application';
