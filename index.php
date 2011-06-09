@@ -1,41 +1,40 @@
 <?php
 
-/*
- * Ścieżka do aplikacji w adresie URL
- * 
- * Jeżeli uruchamiasz aplikację wpisując: http://[nazwa_hosta]/, nie zmienaj
- * tej wartości, w przeciwnym razie zmień na właściwą wartość.
- * 
- */
-$path = '/';
+if (!file_exists('config.php')) {
+    $fcfg = true;
+    require_once 'install.php';
+    exit;
+} else {
+    require_once 'config.php';
+}
 
 /**
  * Proszę NIE MODYFIKOWAĆ poniższego kodu
  */
-
-if(!file_exists('index.php')){
-    die('Musisz uruchomic plik z poziomu katalogu aplikacji');
-}
 $err = '';
+
 if (phpversion() < 5.3) {
-    $err.='Wymagane jest PHP w wersji 5.3'.PHP_EOL;
+    $err.='&bull; Wymagane jest PHP w wersji 5.3<br/>';
 }
 if (!class_exists('SQLite3')) {
-    $err.='Wymagana jest obsluga SQLite3 przez PHP'.PHP_EOL;
-}
-if(!extension_loaded('gd')){
-    $err.='Wymagana jest obsługa modulu GD2'.PHP_EOL;
+    $err.='&bull; Wymagana jest obsluga SQLite3 przez PHP<br/>';
 }
 if (!is_writable(realpath('modules/isf/isf_resources'))) {
-    $err.='Katalog modules/isf/isf_resources musi byc zapisywalny'.PHP_EOL;
+    $err.='&bull; Katalog modules/isf/isf_resources musi byc zapisywalny<br/>';
 }
 if ((file_exists(realpath('modules/isf/isf_resources/default.sqlite'))) && !is_writable(realpath('modules/isf/isf_resources/default.sqlite'))) {
-    $err .= 'Plik modules/isf/isf_resources/default.sqlite musi byc zapisywalny'.PHP_EOL;
+    $err .= '&bull; Plik modules/isf/isf_resources/default.sqlite musi byc zapisywalny<br/>';
 }
 if (!is_writable(realpath('application/logs')) || !is_writable(realpath('application/cache'))) {
-    $err .= 'Katalog application/logs i application/cache musi byc zapisywalny'.PHP_EOL;
+    $err .= '&bull; Katalog application/logs i application/cache musi byc zapisywalny<br/>';
 }
 if (!empty($err)) {
+    $err .= '<p><b>Nastąpiła próba nadania praw dla plików. Proszę odświeżyć stronę,
+        jeżeli błąd występuje, proszę ręcznie zmienić prawa dla plików i katalogów</b></p>';
+    chmod('/modules/isf/isf_resources', 0777);
+    chmod('/modules/isf/isf_resources/default.sqlite', 0777);
+    chmod('/application/logs', 0777);
+    chmod('/application/cache', 0777);
     die($err);
 }
 define('HTTP_PATH', $path);
