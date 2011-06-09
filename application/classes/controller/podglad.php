@@ -45,4 +45,9 @@ class Controller_Podglad extends Controller {
         echo $view->render();
     }
     
+    public function action_zestawienie(){
+        $view = View::factory('podglad_zestawienie');
+        echo $view->render();
+    }
+    
 }

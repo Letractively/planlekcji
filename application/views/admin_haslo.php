@@ -1,8 +1,6 @@
 <?php
 /*
  * Zmiana hasła administratora
- * 
- * 
  */
 ?>
 <h1>Zmiana hasła administratora</h1>

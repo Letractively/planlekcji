@@ -1,8 +1,6 @@
 <?php
 /*
- * Logowanie administratora
- * 
- * 
+ * Logowanie administratora 
  */
 
 if(!isset($_POST['inpLogin'])){

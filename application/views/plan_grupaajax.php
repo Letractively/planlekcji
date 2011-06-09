@@ -24,7 +24,7 @@ function pobierzdzien($dzien, $lekcja) {
     $lek = $isf->DbSelect('planlek', array('*'), 'where lekcja="' . $lekcja . '" and dzien="' . $dzien . '" and klasa="' . $k . '"');
     $ret = '';
     $vl = '';
-    $options = '';
+    $options = '<optgroup label="Przedmiot - Sala - Nauczyciel">';
     foreach ($a as $rowid => $rowcol) {
         $b_table = 'planlek';
         $b_cols = array('*');
@@ -41,6 +41,7 @@ function pobierzdzien($dzien, $lekcja) {
             
         }
     }
+    $options .= '</optgroup>';
     if (count($lek) == 0) {
         $ilosc_grp = $isf->DbSelect('rejestr', array('*'), 'where opcja="ilosc_grup"');
         $g = $ilosc_grp[1]['wartosc'];
@@ -49,18 +50,22 @@ function pobierzdzien($dzien, $lekcja) {
             $i++;
             $ret .= '<p class="grplek">gr' . $i;
             $ret .= '<select style="width:200px;" name="' . $dzien . '[' . $lekcja . '][' . $i . ']">';
-            $lg = $isf->DbSelect('plan_grupy', array('*'), 'where dzien="' . $dzien . '" and lekcja="' . $lekcja . '" and grupa="' . $i . '" and klasa="'.$k.'"');
+            $lg = $isf->DbSelect('plan_grupy', array('*'), 'where dzien="' . $dzien . '" and lekcja="' . $lekcja . '" and grupa="' . $i . '" and klasa="' . $k . '"');
             if (count($lg) != 0) {
-                $vg = $lg[1]['przedmiot'] . ':' . $lg[1]['sala'] . ':' . $lg[1]['nauczyciel'];
+                if (isset($lg[1]['sala']) && isset($lg[1]['nauczyciel'])) {
+                    $vg = $lg[1]['przedmiot'] . ':' . $lg[1]['sala'] . ':' . $lg[1]['nauczyciel'];
+                } else {
+                    $vg = $lg[1]['przedmiot'];
+                }
                 $ret .= '<option selected>' . $vg . '</option>';
             }
             $ret .= '<option>---</option>';
             $ret .= $options;
-            $ret.='<option>---</option>';
+            $ret.='<optgroup label="Zwykłe przedmioty">';
             foreach ($isf->DbSelect('przedmioty', array('*'), 'order by przedmiot asc') as $rc => $ri) {
                 $ret.='<option>' . $ri['przedmiot'] . '</option>';
             }
-            $ret.='</select></p>';
+            $ret.='</optgroup></select></p>';
         }
     } else {
         if ($vl != '---') {
@@ -77,17 +82,21 @@ function pobierzdzien($dzien, $lekcja) {
     return $ret;
 }
 ?>
-<?php if ($alternative != false): ?>
-    <h3>Edycja planu grupowego dla klasy <?php echo $klasa; ?></h3>
-<?php endif; ?>
 <?php if ($ilosc_grp[1]['wartosc'] == 0): ?>
     <h3>Nie można dokonać edycji z powodu braku ustawionych grup</h3>
 <?php else: ?>
-    <form action="<?php echo URL::site('plan/grupazatw'); ?>" method="post" name="formPlan" style="margin-top: 100px;">
-        <input type="hidden" name="klasa" value="<?php echo $klasa; ?>"/>
-        <?php if ($alternative != false): ?>
-            <button type="submit" name="btnSubmit">Zapisz zmiany</button>
+    <form action="<?php echo URL::site('plan/grupazatw'); ?>" method="post" name="formPlan" name="formPlan"
+    <?php if (!isset($alternative)): ?>
+              style="margin-top: 100px;">
+              <?php else: ?>
+            >
         <?php endif; ?>
+        <?php if ($alternative != false): ?>
+            <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style.css"/>
+            <h1>Edycja planu grupowego dla klasy <?php echo $klasa; ?>
+            &emsp;<button type="submit" name="btnSubmit">Zapisz zmiany</button></h1>
+        <?php endif; ?>
+        <input type="hidden" name="klasa" value="<?php echo $klasa; ?>"/>
         <table class="przed">
             <thead style="background: #7cc1f0;">
                 <tr>
