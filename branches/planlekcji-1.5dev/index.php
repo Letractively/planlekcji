@@ -13,6 +13,11 @@ if (!class_exists('SQLite3')) {
 if (!is_writable(realpath('modules/isf/isf_resources'))) {
     $err.='&bull; Katalog modules/isf/isf_resources musi byc zapisywalny<br/>';
 }
+if(!file_exists(realpath('modules/isf/isf_resources/default.sqlite'))){
+    require_once 'modules/isf/classes/kohana/isf.php';
+    $isf = new Kohana_Isf();
+    $isf->DbConnect();
+}
 if ((file_exists(realpath('modules/isf/isf_resources/default.sqlite'))) && !is_writable(realpath('modules/isf/isf_resources/default.sqlite'))) {
     $err .= '&bull; Plik modules/isf/isf_resources/default.sqlite musi byc zapisywalny<br/>';
 }
