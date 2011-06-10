@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Proszę NIE MODYFIKOWAĆ poniższego kodu
  */
@@ -13,7 +14,7 @@ if (!class_exists('SQLite3')) {
 if (!is_writable(realpath('modules/isf/isf_resources'))) {
     $err.='&bull; Katalog modules/isf/isf_resources musi byc zapisywalny<br/>';
 }
-if(!file_exists(realpath('modules/isf/isf_resources/default.sqlite'))){
+if (!file_exists(realpath('modules/isf/isf_resources/default.sqlite'))) {
     require_once 'modules/isf/classes/kohana/isf.php';
     $isf = new Kohana_Isf();
     $isf->DbConnect();
@@ -25,16 +26,14 @@ if (!is_writable(realpath('application/logs')) || !is_writable(realpath('applica
     $err .= '&bull; Katalog application/logs i application/cache musi byc zapisywalny<br/>';
 }
 if (!empty($err)) {
-    $err .= '<p><b>Nastąpiła próba nadania praw dla plików. Proszę odświeżyć stronę,
-        jeżeli błąd występuje, proszę ręcznie zmienić prawa dla plików i katalogów</b></p>';
-    chmod('/modules/isf/isf_resources', 0777);
-    chmod('/modules/isf/isf_resources/default.sqlite', 0777);
-    chmod('/application/logs', 0777);
-    chmod('/application/cache', 0777);
+    echo '<p><b>Nastapila proba nadania praw plikom i katalogom.</b></p>';
+    echo '<pre><b>Na systemie UNIX uruchom nastepujace polecenie</b>' . PHP_EOL;
+    echo '$ cd [sciezka_do_katalogu_z_aplikacja]' . PHP_EOL;
+    echo '$ sudo php unixinstall.php</pre><p>Gdy blad wystepuje, musisz
+        recznie zmienic uprawnienia plikow i katalogow</p>';
     die($err);
 }
-if (!file_exists('config.php')) {
-    $fcfg = true;
+if (!isset($path)||!file_exists('config.php')) {
     require_once 'install.php';
     exit;
 } else {

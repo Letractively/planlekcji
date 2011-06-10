@@ -2,19 +2,9 @@
 /*
  * Plik instalacyjny Planu Lekcji
  */
-if (!file_exists('index.php')) {
-    die('Musisz uruchomic plik z poziomu katalogu aplikacji');
-}
 require_once 'modules/isf/classes/kohana/isf.php';
 $isf = new Kohana_Isf();
 $isf->DbConnect();
-$err = '';
-if (file_exists('modules/isf/isf_resources/default.sqlite') && !is_writable('modules/isf/isf_resources/default.sqlite')) {
-    $err .= 'Plik modules/isf/isf_resources/default.sqlite musi byc zapisywalny! Instalacja przerwana ';
-}
-if (!empty($err)) {
-    die($err);
-}
 $ctb = $isf->DbSelect('sqlite_master', array('*'), 'where name="rejestr"');
 if (count($ctb) != 0) {
     $res = $isf->DbSelect('rejestr', array('*'), 'where opcja="installed"');
@@ -35,9 +25,10 @@ if (count($ctb) != 0) {
         <body>
             <img src="lib/images/logo.png"/>
             <h1>Instalacja zakończona powodzeniem!</h1>
-            <h3>Usuń plik <b>install.php</b> i zaloguj się, używając
+            <h3>Usuń plik <b>install.php</b> oraz <b>unixinstall.php</b>
+                i zaloguj się, używając
                 danych podanych przez instalator</h3>
-            <?php if ($fcfg == true): ?>
+            <?php if (!file_exists('config.php')): ?>
                 <?php
                 $r = $_SERVER['REQUEST_URI'];
                 $r = str_replace('index.php', '', $r);
