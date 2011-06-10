@@ -12,7 +12,7 @@ $msg = $isf->DbSelect('rejestr', array('*'), 'where opcja="index_text"');
 <h1>
     <a href="#" onClick="document.forms['formPlan'].submit();">
         <img src="<?php echo URL::base() ?>lib/images/save.png" alt="zapisz"/></a>
-    Zmiana danych systemu Plan Lekcji
+    Ustawienia szkoły i strony głównej
 </h1>
 <form action="<?php echo URL::site('admin/dochange'); ?>" method="post" name="formPlan">
     <h3>Nazwa szkoły: <input style="width: 100%" type="text" name="inpNazwa" value="<?php echo $nazwa[1]['wartosc']; ?>"/></h3>
