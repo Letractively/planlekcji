@@ -19,22 +19,24 @@ class Kohana_Isf {
     protected $script;
     protected $jqpath;
 
-    public function DbConnect($customvars) {
-        if (isset($customvars) && is_array($customvars)) {
+    public function DbConnect($customvars=null) {
+        if (is_array($customvars)) {
             $this->dbhandle = mysql_connect($customvars['host'], $customvars['user'], $customvars['password']);
-            mysql_select_db($customvars['database']);
+            mysql_select_db($customvars['database'], $this->dbhandle);
             if (!$this->dbhandle) {
-                die('Blad polaczenia MySQL');
+                echo mysql_error($this->dbhandle);
+                die('Blad polaczenia MySQL. Jezeli aplikacja nie zostala zainstalowana, usun plik config.php');
             }
         } else {
-            if (!file_exists('../../../../config.php')) {
-                
+            if (!file_exists('config.php')) {
+                echo 'Probojesz uzyc logowania z pliku konfiguracji. config.php nie istnieje';
             } else {
-                require_once '../../../../config.php';
+                require_once 'config.php';
+                $my_cfg = $GLOBALS['my_cfg'];
                 $this->dbhandle = mysql_connect($my_cfg['host'], $my_cfg['user'], $my_cfg['password']);
-                mysql_select_db($my_cfg['database']);
+                mysql_select_db($my_cfg['database'], $this->dbhandle);
                 if (!$this->dbhandle) {
-                    die('Blad polaczenia MySQL');
+                    die('Blad polaczenia MySQL. Jezeli aplikacja nie zostala zainstalowana, usun plik config.php');
                 }
             }
         }
@@ -72,9 +74,13 @@ class Kohana_Isf {
         $exec = mysql_query($query, $this->dbhandle);
         $r = 1;
         $result = array();
-        while ($row = mysql_fetch_assoc($exec)) {
-            $result[$r] = $row;
-            $r++;
+        if (!$exec) {
+            
+        } else {
+            while ($row = mysql_fetch_assoc($exec)) {
+                $result[$r] = $row;
+                $r++;
+            }
         }
         return $result;
     }
@@ -111,7 +117,7 @@ class Kohana_Isf {
             die('Nieprawidlowy argument dla funkcji insert');
         $query = 'insert into ' . $table . ' (';
         foreach ($col_val as $col => $val) {
-            $query .= '\'' . $col . '\', ';
+            $query .= '' . $col . ', ';
         }
         $query = substr($query, 0, -2);
         $query .= ') values (';
@@ -127,10 +133,12 @@ class Kohana_Isf {
         $query = substr($query, 0, -2);
         $query .= ')';
         $res = mysql_query($query, $this->dbhandle);
-        if ($res == true)
+        if ($res == true) {
             return true;
-        else
+        } else {
+            echo mysql_error($this->dbhandle);
             return false;
+        }
     }
 
     /**
@@ -164,10 +172,12 @@ class Kohana_Isf {
         $query = substr($query, 0, -2);
         $query .= ' where ' . $cond;
 
-        if (mysql_query($query, $this->dbhandle) == true)
+        if (mysql_query($query, $this->dbhandle) == true):
             return TRUE;
-        else
+        else:
+            echo mysql_error($this->dbhandle);
             return FALSE;
+        endif;
     }
 
     /**
@@ -187,10 +197,12 @@ class Kohana_Isf {
         if (empty($table) || empty($cond))
             die('Sprawdz parametry funkcji <b>delete</b>');
         $query = 'delete from ' . $table . ' where ' . $cond;
-        if (mysql_query($query, $this->dbhandle) == true)
+        if (mysql_query($query, $this->dbhandle) == true):
             return TRUE;
-        else
+        else:
+            echo mysql_error($this->dbhandle);
             return FALSE;
+        endif;
     }
 
     /**
@@ -218,14 +230,16 @@ class Kohana_Isf {
             die('Sprawdz parametr funkcji tbl_create');
         $query = 'create table ' . $name . '(';
         foreach ($columns as $col => $type) {
-            $query .= '\'' . $col . '\' ' . $type . ', ';
+            $query .= '' . $col . ' ' . $type . ', ';
         }
         $query = substr($query, 0, -2);
         $query .= ')';
-        if (mysql_query($query, $this->dbhandle))
+        if (mysql_query($query, $this->dbhandle)):
             return TRUE;
-        else
+        else:
+            echo mysql_error($this->dbhandle);
             return FALSE;
+        endif;
     }
 
     public function detect_ie() {

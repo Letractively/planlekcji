@@ -3,13 +3,17 @@
  * Plik instalacyjny Planu Lekcji
  */
 require_once 'modules/isf/classes/kohana/isf.php';
-$isfa = new Kohana_Isf();
-$isfa->DbConnect();
-$res = $isfa->DbSelect('rejestr', array('*'), 'where opcja="installed"');
-if (count($res) >= 1) {
-    $r = 1;
-} else {
+if (!file_exists('config.php')) {
     $r = 0;
+} else {
+    $isfa = new Kohana_Isf();
+    $isfa->DbConnect();
+    $res = $isfa->DbSelect('rejestr', array('*'), 'where opcja="installed"');
+    if (count($res) >= 1) {
+        $r = 1;
+    } else {
+        $r = 0;
+    }
 }
 ?>
 <?php if ($r == 1): ?>
@@ -111,26 +115,24 @@ if (count($res) >= 1) {
         echo '<h1>Proces instalacji</h1><p class="info">Na dole strony znajduja sie dane
             do logowania!</p><pre>';
         $szkola = $_POST['inpSzkola'];
+        $isf = new Kohana_Isf();
+        $customvars = array(
+            'host' => $_POST['dbHost'],
+            'user' => $_POST['dbLogin'],
+            'password' => $_POST['dbHaslo'],
+            'database' => $_POST['dbBaza'],
+        );
+        $isf->DbConnect($customvars);
         $a = fopen('config.php', 'w');
         if (!$a) {
             $ferr = true;
         } else {
             $file = '<?php' . PHP_EOL . '$path = \'' . $_POST['inpPath'] . '\';' . PHP_EOL;
-            $file .= '$my_cfg = array(\'host\'=>\'' . $_POST['dbHost'] . '\',
-                \'user\'=>\'' . $_POST['dbUser'] . '\', \'password\'=>\'' . $_POST['dbHaslo'] . '\',
-                    \'database\'=>\'' . $_POST['dbBaza'] . '\',';
-            $file .= ');' . PHP_EOL . '?>';
+            $file .= '$my_cfg = array(\'host\'=>\'' . $_POST['dbHost'] . '\',\'user\'=>\'' . $_POST['dbLogin'] . '\', \'password\'=>\'' . $_POST['dbHaslo'] . '\',\'database\'=>\'' . $_POST['dbBaza'] . '\',';
+            $file .= ');' . PHP_EOL . '$GLOBALS[\'my_cfg\']=$my_cfg; ' . PHP_EOL . '?>';
             fputs($a, $file);
             fclose($a);
         }
-        $isf = new Kohana_Isf();
-        $customvars = array(
-            'host'=>$_POST['dbHost'],
-            'user'=>$_POST['dbLogin'],
-            'password'=>$_POST['dbHaslo'],
-            'database'=>$_POST['dbBaza'],
-        );
-        $isf->DbConnect($customvars);
         print <<< START
 
 + + + + + + + + + + + + + + + + + + + +
@@ -243,9 +245,10 @@ Tworzenie tabeli: uzytkownicy
 START;
 
         $isf->DbTblCreate('uzytkownicy', array(
-            'uid' => 'integer primary key autoincrement not null',
+            'uid' => 'integer auto_increment not null',
             'login' => 'text not null',
-            'haslo' => 'text not null'
+            'haslo' => 'text not null',
+            'PRIMARY KEY' => '(uid)',
         ));
 
         print <<< START
@@ -270,10 +273,11 @@ Tworzenie tabeli: zast_id
 START;
 
         $isf->DbTblCreate('zast_id', array(
-            'zast_id' => 'integer primary key autoincrement not null',
+            'zast_id' => 'integer not null auto_increment',
             'dzien' => 'text',
             'za_nl' => 'text',
             'info' => 'text',
+            'PRIMARY KEY' => '(zast_id)',
         ));
 
         print <<< START
