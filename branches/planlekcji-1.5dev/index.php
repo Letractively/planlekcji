@@ -33,7 +33,7 @@ if (!empty($err)) {
         recznie zmienic uprawnienia plikow i katalogow</p>';
     die($err);
 }
-if (!isset($path)||!file_exists('config.php')) {
+if (!file_exists('config.php')) {
     require_once 'install.php';
     exit;
 } else {
