@@ -32,6 +32,9 @@ $isf->DbConnect();
 <?php endswitch; ?>
 
 <?php
+/*
+ * Pobiera wszystkich nauczycieli
+ */
 $res = $isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc');
 ?>
 <?php if (count($res) == 0): ?>

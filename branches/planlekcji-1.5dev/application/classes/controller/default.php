@@ -2,7 +2,6 @@
 /**
  * Intersys - Plan Lekcji
  * 
- * Wersja pierwsza - 1.0
  * 
  * @author Michał Bocian <mhl.bocian@gmail.com>
  */
@@ -13,11 +12,15 @@ defined('SYSPATH') or die('No direct script access.');
  * Rola: Główny kontroler i domyślny podczas uruchomienia
  */
 class Controller_Default extends Controller {
-
+    /**
+     * Tworzy obiekt sesji
+     */
     public function __construct() {
         session_start();
     }
-    
+    /**
+     * Wyswietal strone glowna
+     */
     public function action_index() {
         $isf = new Kohana_Isf();
         $isf->DbConnect();

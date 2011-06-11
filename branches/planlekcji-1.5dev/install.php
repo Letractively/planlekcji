@@ -1,21 +1,33 @@
 <?php
-/*
- * Plik instalacyjny Planu Lekcji
+/**
+ * Instalator Planu Lekcji
+ * 
+ * @author Michał Bocian <mhl.bocian@gmail.com>
+ * @version 1.5
+ * @license GNU GPL v3
  */
-require_once 'modules/isf/classes/kohana/isf.php';
+require_once 'modules/isf/classes/kohana/isf.php'; # pobiera framework ISF
 $isf = new Kohana_Isf();
 $isf->DbConnect();
+/**
+ * Sprawdza czy istnieje tabela rejestr
+ */
 $ctb = $isf->DbSelect('sqlite_master', array('*'), 'where name="rejestr"');
-if (count($ctb) != 0) {
+if (count($ctb) != 0) { // gdy istnieje
     $res = $isf->DbSelect('rejestr', array('*'), 'where opcja="installed"');
     if (count($res) >= 1) {
         $r = 1;
     }
-} else {
+} else { // gdy nie istnieje
     $r = 0;
 }
 ?>
-<?php if ($r == 1): ?>
+<?php
+/**
+ * Gdy istnieje tabela rejestr, oznacza ze zostal pakiet zainstalowany
+ */
+if ($r == 1):
+    ?>
     <html>
         <head>
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -35,18 +47,30 @@ if (count($ctb) != 0) {
                 $r = str_replace('install.php', '', $r);
                 ?>
                 <h3>Plik config.php nie istnieje! Proszę go utworzyć</h3>
-                <p>Treść pliku config.php</p>
-                <pre>
-<?php echo htmlspecialchars('<?php') . PHP_EOL; ?>
-<?php echo htmlspecialchars('$path = \'' . $r . '\';') . PHP_EOL; ?>
-<?php echo htmlspecialchars('?>'); ?>
-                </pre>
+                <p>Proszę utworzyć plik <b>config.php</b> o następującej
+                treści:</p>
+                <?php
+                echo '<pre>' . htmlspecialchars('<?php') . PHP_EOL .
+                '<b>' . htmlspecialchars('$path = \'' . $r . '\';') . '</b>' . PHP_EOL .
+                htmlspecialchars('?>') . '</pre>';
+                ?>
             <?php endif; ?>
         </body>
     </html>
     <?php exit; ?>
-<?php else: ?>
-    <?php if (!isset($_POST['step2'])): ?>
+    <?php
+/**
+ * Gdy nie ma tabeli
+ */
+else:
+    ?>
+    <?php
+    /**
+     * Sprawdza czy zostal wyslany formularz instalacji
+     * -- nie
+     */
+    if (!isset($_POST['step2'])):
+        ?>
         <html>
             <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -61,7 +85,12 @@ if (count($ctb) != 0) {
             <body>
                 <img src="lib/images/logo.png"/>
                 <h1>Instalator Intersys Plan Lekcji</h1>
-                <?php if ($_SERVER['SERVER_NAME'] != 'localhost' && $_SERVER['SERVER_NAME'] != '127.0.0.1'): ?>
+                <?php
+                /**
+                 * Wymaga instalacji z hosta lokalnego
+                 */
+                if ($_SERVER['SERVER_NAME'] != 'localhost' && $_SERVER['SERVER_NAME'] != '127.0.0.1'):
+                    ?>
                     <p class="error">
                         Aplikacja może zostać zainstalowana tylko wtedy, gdy ta
                         strona jest wywołana z komputera lokalnego.
@@ -93,7 +122,12 @@ if (count($ctb) != 0) {
                 <?php endif; ?>
             </body>
         </html>
-    <?php else: ?>
+        <?php
+    /**
+     * Gdy formularz zostal wyslany
+     */
+    else:
+        ?>
         <?php
         if (empty($_POST['inpSzkola']) || $_POST['inpSzkola'] == ''):
             header('Location: install.php?err');
@@ -104,6 +138,9 @@ if (count($ctb) != 0) {
             do logowania!</p><pre>';
         $szkola = $_POST['inpSzkola'];
         $a = fopen('config.php', 'w');
+        /**
+         * Czy udalo sie utworzyc plik config.php
+         */
         if (!$a) {
             $ferr = true;
         } else {
@@ -354,11 +391,14 @@ Prosze zapisac ponizsze dane, aby uzyskac dostep do panelu administratora
 
 <a href="index.php">Strona glowna</a>
 START;
+        /**
+         * Gdy plik config.php nie zostal zapisany
+         */
         if ($ferr == true) {
-echo '<br/><b>BŁĄD ZAPISU: config.php</b><br/>Prosze utworzyc plik config.php<br/>';
-echo htmlspecialchars('<?php') . PHP_EOL;
-echo htmlspecialchars('$path = \'' . $r . '\';') . PHP_EOL;
-echo htmlspecialchars('?>');
+            echo '<br/><b>BŁĄD ZAPISU: config.php</b><br/>Prosze utworzyc plik config.php<br/>';
+            echo htmlspecialchars('<?php') . PHP_EOL;
+            echo htmlspecialchars('$path = \'' . $r . '\';') . PHP_EOL;
+            echo htmlspecialchars('?>');
         }
         echo '</pre>';
         ?>

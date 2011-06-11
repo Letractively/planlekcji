@@ -1,4 +1,16 @@
 <?php
+/**
+ * Instalator dla systemow Unixowych
+ * 
+ * Ustawia prawa dla katalogow
+ * 
+ * @author Michał Bocian <mhl.bocian@gmail.com>
+ * @license GNU GPL v3
+ * @version 1.5
+ */
+/**
+ * Wymaga uruchomienia z konsoli (CLI)
+ */
 if (isset($_SERVER['HTTP_USER_AGENT'])) {
     echo 'Uruchom ten plik z uprawnieniami administratora w konsoli';
     exit;

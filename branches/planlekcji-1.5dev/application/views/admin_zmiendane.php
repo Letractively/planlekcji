@@ -6,7 +6,9 @@
  */
 $isf = new Kohana_Isf();
 $isf->DbConnect();
+/** pobiera nazwe szkoly */
 $nazwa = $isf->DbSelect('rejestr', array('*'), 'where opcja="nazwa_szkoly"');
+/** pobiera tresc strony glownej */
 $msg = $isf->DbSelect('rejestr', array('*'), 'where opcja="index_text"');
 ?>
 <h1>

@@ -1,4 +1,8 @@
 <?php
+/**
+ * Strona ze skryptem AJAX, ktory pobiera wlasciwa
+ * strone edycji planu (klasaajax)
+ */
 $k = $klasa;
 $isf = new Kohana_Isf();
 $isf->DbConnect();

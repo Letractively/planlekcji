@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * Plik główny projektu - bootloader Kohany
+ * 
+ * @author Michał Bocian <mhl.bocian@gmail.com>
+ * @version 1.5
+ * @license GNU GPL v3
+ */
 /**
  * Proszę NIE MODYFIKOWAĆ poniższego kodu
  */

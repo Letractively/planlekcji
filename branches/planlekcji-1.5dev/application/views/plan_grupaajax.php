@@ -1,35 +1,70 @@
 <?php
 /*
- * Edycja planu lekcji
+ * Edycja planu lekcji dla grupy
  * 
  * 
  */
 $isf = new Kohana_Isf();
 $isf->DbConnect();
+// pobiera z rejestru ile jest zdefiniowanych godzin lekcyjnych
 $ilosc_lek = $isf->DbSelect('rejestr', array('wartosc'), 'where opcja="ilosc_godzin_lek"');
+// przypisanie tej zmiennej wartosci z bazy
 $ilosc_lek = $ilosc_lek[1]['wartosc'];
+// pobiera czas godzin lekcyjnych
 $lek_godziny = $isf->DbSelect('lek_godziny', array('*'));
+// zmienna w URL dla jakiej klasy jest edycja planu
 $k = $klasa;
+// ustawienie zmiennej globalnej k
 $GLOBALS['k'] = $klasa;
+// pobranie ilosci grup
 $ilosc_grp = $isf->DbSelect('rejestr', array('*'), 'where opcja="ilosc_grup"');
-
+/**
+ * Pobiera pojedyncza komorke z tabeli edycji planu
+ * W zaleznosci od sytuacji dobiera wlasciwe dane do elementow formularza
+ *
+ * @global string $k klasa
+ * @param string $dzien dzien
+ * @param int $lekcja ktora lekcja
+ * @return string Pole formularza select-option z przedmiotami
+ */
 function pobierzdzien($dzien, $lekcja) {
-    global $k;
+    global $k; // odwolanie do globalnej k
     $isf = new Kohana_Isf();
     $isf->DbConnect();
+    /**
+     * Dane do funkcji pobierajacej dane z bazy
+     * 
+     * $a_table - tabele do pobrania
+     * a_cols - kolumny do pobrania
+     * $a_cond - warunki, sortowanie, laczenie tabel
+     */
     $a_table = 'nl_klasy, nl_przedm, przedmiot_sale';
     $a_cols = array('nl_klasy.nauczyciel', 'nl_klasy.klasa', 'nl_przedm.przedmiot', 'przedmiot_sale.sala');
     $a_cond = "on nl_klasy.nauczyciel=nl_przedm.nauczyciel and przedmiot_sale.przedmiot=nl_przedm.przedmiot where nl_klasy.klasa='" . $k . "' order by nl_przedm.przedmiot asc";
+    /**
+     * Pobiera wszystkich nauczycieli uczacych klase,
+     * dla kazdego przedmiotu przypisuje przypisane przedmiotowi sale
+     */
     $a = $isf->DbSelect($a_table, $a_cols, $a_cond);
+    /** pobiera dotychczasowa przypisana lekcje dla klasy w danym dniu i danej godzinie */
     $lek = $isf->DbSelect('planlek', array('*'), 'where lekcja="' . $lekcja . '" and dzien="' . $dzien . '" and klasa="' . $k . '"');
-    $ret = '';
+    $ret = ''; // zmienna do ktorej bedzie pozniej przypisana wartosc do zwrocenia przez funkcje
     $vl = '';
+    // $options - elementy pola z przedmiotami i salami
     $options = '<optgroup label="Przedmiot - Sala - Nauczyciel">';
+    /**
+     * Dla kazdego wiersza nl-przedm-sala
+     */
     foreach ($a as $rowid => $rowcol) {
+        /**
+         * Sprawdza czy istnieje juz lekcja z danym nauczycielem lub w danej sali
+         * W zaleznosci od sytuacji dopisuje do zmiennej $options, odpowiednie
+         * dane
+         */
         $b_table = 'planlek';
         $b_cols = array('*');
         $b_cond = 'where dzien="' . $dzien . '" and lekcja="' . $lekcja . '" and ( nauczyciel="' . $rowcol['nauczyciel'] . '" or sala="' . $rowcol['sala'] . '")';
-        if (count($isf->DbSelect($b_table, $b_cols, $b_cond)) == 0) {
+        if (count($isf->DbSelect($b_table, $b_cols, $b_cond)) == 0) { //gdy nie
             $b_table = 'plan_grupy';
             $b_cols = array('*');
             $b_cond = 'where dzien="' . $dzien . '" and lekcja="' . $lekcja . '" and nauczyciel="' . $rowcol['nauczyciel'] . '" and sala!="' . $rowcol['sala'] . '"';
@@ -37,13 +72,15 @@ function pobierzdzien($dzien, $lekcja) {
                 $v = $rowcol['przedmiot'] . ':' . $rowcol['sala'] . ':' . $rowcol['nauczyciel'];
                 $options.='<option>' . $v . '</option>';
             }
-        } else {
+        } else { //gdy tak
             
         }
     }
     $options .= '</optgroup>';
-    if (count($lek) == 0) {
+    if (count($lek) == 0) { // gdy brak przypisanej lekcji dla klasy
+        // pobiera ilosc grup
         $ilosc_grp = $isf->DbSelect('rejestr', array('*'), 'where opcja="ilosc_grup"');
+        // przypisuje do zmiennej g, ilosc grup
         $g = $ilosc_grp[1]['wartosc'];
         $i = 0;
         while ($i < $g) {
