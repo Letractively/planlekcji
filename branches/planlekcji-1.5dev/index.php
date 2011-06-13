@@ -11,7 +11,7 @@
  */
 $err = '';
 
-if (phpversion() < 5.2.5) {
+if (phpversion() < '5.2.5') {
     $err.='&bull; Wymagane jest PHP w wersji 5.2.5<br/>';
 }
 if (!class_exists('PDO')||!extension_loaded('pdo_sqlite')) {
