@@ -2,7 +2,6 @@
 /**
  * Intersys - Plan Lekcji
  * 
- * Wersja pierwsza - 1.0
  * 
  * @author Michał Bocian <mhl.bocian@gmail.com>
  */
@@ -13,7 +12,9 @@ defined('SYSPATH') or die('No direct script access.');
  * Rola: Odpowiada za dostęp moduł godzin lekcyjnych
  */
 class Controller_Godziny extends Controller {
-
+    /**
+     * Tworzy obiekt sesji i sprawdza czy zalogowany
+     */
     public function __construct() {
         session_start();
         if (!isset($_SESSION['valid']) || !isset($_COOKIE['PHPSESSID'])) {
@@ -23,12 +24,17 @@ class Controller_Godziny extends Controller {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
         $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja="edycja_danych"');
+        /**
+         * Czy mozna edytowac dane
+         */
         if ($reg[1]['wartosc'] != 1) {
             echo '<h1>Edycja danych zostala zamknieta</h1>';
             exit;
         }
     }
-
+    /**
+     * Strona godzin lekcyjnych
+     */
     public function action_index() {
         $view = view::factory('main');
         $view2 = view::factory('godziny_index');
@@ -45,7 +51,9 @@ class Controller_Godziny extends Controller {
         $view->set('content', $view2->render());
         echo $view->render();
     }
-
+    /**
+     * Ustawia ilosc godzin lekcyjnych
+     */
     public function action_ustaw() {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
@@ -55,7 +63,9 @@ class Controller_Godziny extends Controller {
         $isf->DbUpdate('lek_godziny', array('godzina'=>'wymagane jest ponowne ustawienie'), 'lekcja like "%"');
         Kohana_Request::factory()->redirect('godziny/index');
     }
-
+    /**
+     * Ustawia czas godzin lekcyjnych
+     */
     public function action_lekcje() {
         $isf = new Kohana_Isf();
         $isf->DbConnect();

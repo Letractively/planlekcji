@@ -2,7 +2,6 @@
 /**
  * Intersys - Plan Lekcji
  * 
- * Wersja pierwsza - 1.0
  * 
  * @author Michał Bocian <mhl.bocian@gmail.com>
  */
@@ -13,7 +12,9 @@ defined('SYSPATH') or die('No direct script access.');
  * Rola: Odpowiada za obsługę klas
  */
 class Controller_Klasy extends Controller {
-
+    /**
+     * Sprawdza czy zalogowany
+     */
     public function __construct() {
         session_start();
         if (!isset($_SESSION['valid']) || !isset($_COOKIE['PHPSESSID'])) {
@@ -28,7 +29,9 @@ class Controller_Klasy extends Controller {
             exit;
         }
     }
-
+    /**
+     * Strona glowna
+     */
     public function action_index($err=null) {
         $view = View::factory('main');
         $view2 = View::factory('klasy_index');
@@ -38,7 +41,9 @@ class Controller_Klasy extends Controller {
         $view->set('content', $view2->render());
         echo $view->render();
     }
-
+    /**
+     * Usuwa klase $klasa
+     */
     public function action_usun($klasa) {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
@@ -46,7 +51,9 @@ class Controller_Klasy extends Controller {
         $isf->DbDelete('nl_klasy', 'klasa="' . $klasa . '"');
         Kohana_Request::factory()->redirect('klasy/index/usun');
     }
-
+    /**
+     * Dodaje klase, waliduje dane
+     */
     public function action_dodaj() {
 
         if (!isset($_POST)) {
@@ -79,7 +86,9 @@ class Controller_Klasy extends Controller {
             Kohana_Request::factory()->redirect('klasy/index/pass');
         }
     }
-
+    /**
+     * Strona grup klasowych
+     */
     public function action_grupyklasowe() {
         if (isset($_POST)) {
             $i = $_POST['grp'];

@@ -3,7 +3,6 @@
 /**
  * Intersys - Plan Lekcji
  * 
- * Wersja pierwsza - 1.0
  * 
  * @author Michał Bocian <mhl.bocian@gmail.com>
  */
@@ -119,10 +118,12 @@ class Controller_Nauczyciele extends Controller {
         } else {
             $isf = new Kohana_Isf();
             $isf->DbConnect();
-            $isf->DbDelete('nauczyciele', 'imie_naz="' . $nauczyciel . '"');
+            $nl = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\''.$nauczyciel.'\'');
+            $isf->DbDelete('nauczyciele', 'skrot="' . $nauczyciel . '"');
+            $nauczyciel = $nl[1]['imie_naz'];
             $isf->DbDelete('nl_klasy', 'nauczyciel="' . $nauczyciel . '"');
             $isf->DbDelete('nl_przedm', 'nauczyciel="' . $nauczyciel . '"');
-            Kohana_Request::factory()->redirect('nauczyciele/index/usun');
+            Kohana_Request::factory()->redirect('nauczyciele/index');
         }
     }
 

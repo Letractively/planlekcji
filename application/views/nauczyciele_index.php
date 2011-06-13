@@ -32,6 +32,9 @@ $isf->DbConnect();
 <?php endswitch; ?>
 
 <?php
+/*
+ * Pobiera wszystkich nauczycieli
+ */
 $res = $isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc');
 ?>
 <?php if (count($res) == 0): ?>
@@ -62,17 +65,17 @@ $res = $isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc');
                     </td>
                     <td
                         style="max-width: 250px; width: 100px;">
-                        <?php foreach ($isf->DbSelect('nl_klasy', array('klasa'), 'where nauczyciel="' . $rowcol['imie_naz'] . '" order by klasa asc')
-                        as $rid => $rcl): ?>
+                            <?php foreach ($isf->DbSelect('nl_klasy', array('klasa'), 'where nauczyciel="' . $rowcol['imie_naz'] . '" order by klasa asc')
+                            as $rid => $rcl): ?>
                             <?php echo $rcl['klasa']; ?>, 
                         <?php endforeach; ?>
                     </td>
                     <td>
                         <a class="anac"
-                            href="<?php echo URL::site('nauczyciele/zarzadzanie/' . $rowcol['imie_naz']); ?>">
+                           href="<?php echo URL::site('nauczyciele/zarzadzanie/' . $rowcol['imie_naz']); ?>">
                             zarządzanie</a>&emsp;
                         <a class="anac"
-                            href="<?php echo URL::site('nauczyciele/usun/' . $rowcol['imie_naz']); ?>">usuń nauczyciela</a>
+                           href="<?php echo URL::site('nauczyciele/usun/' . $rowcol['skrot']); ?>">usuń nauczyciela</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

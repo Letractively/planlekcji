@@ -2,6 +2,8 @@
 
 /**
  * Modul ISF do obslugi baz danych dla Kohana 3
+ * 
+ * Wersja 1.5: wymaga PDO
  *
  * @author Michal Bocian <mhl.bocian@gmail.com>
  */
@@ -11,7 +13,7 @@ class Kohana_Isf {
      * Zwraca wersje ISF
      */
     public function isf_version() {
-        echo '1.0.2';
+        return '1.5';
     }
 
     protected $isf_path;
@@ -19,16 +21,20 @@ class Kohana_Isf {
     protected $script;
     protected $jqpath;
 
+    public static function factory() {
+        return new Kohana_Isf();
+    }
+
     public function DbConnect($name='default') {
         $this->isf_path = realpath(__DIR__ . '/../../') .
                 DIRECTORY_SEPARATOR . 'isf_resources' . DIRECTORY_SEPARATOR;
 
-        if (!class_exists('SQLite3')) {
-            $_err = 'Aby korzystac z obslugi SQLite3, nalezy wlaczyc jego obsluge w PHP. ';
+        if (!class_exists('PDO') || !extension_loaded('pdo_sqlite')) {
+            $_err = 'Aby korzystac z obslugi PDO SQLite3, nalezy wlaczyc jego obsluge w PHP. ';
             die($_err);
         }
 
-        $this->dbhandle = new SQLite3($this->isf_path . $name . '.sqlite');
+        $this->dbhandle = new PDO('sqlite:' . $this->isf_path . $name . '.sqlite');
         if (!file_exists($this->isf_path . $name . '.sqlite'))
             die('Plik z baza danych nie istnieje! Sprawdz czy katalog ma wystarczajace uprawnienia');
     }
@@ -62,14 +68,13 @@ class Kohana_Isf {
         $query = 'select ' . $cols . ' from ' . $table;
         if ($condition != null)
             $query .= ' ' . $condition;
-        $exec = $this->dbhandle->query($query);
         $r = 1;
-        $result = array();
-        while ($row = $exec->fetchArray()) {
-            $result[$r] = $row;
+        $ret = array();
+        foreach ($this->dbhandle->query($query) as $row) {
+            $ret[$r] = $row;
             $r++;
         }
-        return $result;
+        return $ret;
     }
 
     /**
@@ -219,6 +224,14 @@ class Kohana_Isf {
             return TRUE;
         else
             return FALSE;
+    }
+
+    public function detect_ie() {
+        if (isset($_SERVER['HTTP_USER_AGENT']) &&
+                (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false))
+            return true;
+        else
+            return false;
     }
 
     /**
@@ -580,17 +593,20 @@ class Kohana_Isf {
      * @param bool $hiddenbtn Pokazanie przycisku ukrycia elementu
      * @return text Zwraca kod HTML
      */
-    public function JQUi_AjaxdivCreate($name, $progressgif=true, $hiddenbtn=false, $customtext=false) {
+    public function JQUi_AjaxdivCreate($name, $progressgif=true, $hiddenbtn=false, $customtext=false, $customload='') {
         $name = $this->hashname($name);
         $script = '<div id="isf_adiv_' . $name . '" style="display: none;">';
         if ($progressgif == true) {
-            $script .= '<div id="isf_adc_' . $name . '">Trwa ładowanie danych... 
-                <img src="' . $this->jqpath . '/css/load.gif" id="isf_adl_' . $name . '">';
+            $script .= '<div id="isf_adc_' . $name . '">';
+            $script .= '<img src="' . $this->jqpath . '/css/load.gif" id="isf_adl_' . $name . '">';
         } else {
             $script .= '<div id="isf_adc_' . $name . '">';
         }
+        if ($customload != '') {
+            $script .= ' ' . $customload . ' ';
+        }
         if ($customtext != false) {
-            $script .= '<p>'.$customtext.'</p>';
+            $script .= '<p>' . $customtext . '</p>';
         }
         $script .= '</div>';
         if ($hiddenbtn == true) {

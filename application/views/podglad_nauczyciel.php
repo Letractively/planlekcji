@@ -46,11 +46,11 @@ function pobierzdzien($dzien, $lekcja) {
                 <tr>
                     <td></td>
                     <td>Godziny</td>
-                    <td style="width: 150px;">Poniedziałek</td>
-                    <td style="width: 150px;">Wtorek</td>
-                    <td style="width: 150px;">Środa</td>
-                    <td style="width: 150px;">Czwartek</td>
-                    <td style="width: 150px;">Piątek</td>
+                    <td style="min-width: 150px; max-width: 200px;">Poniedziałek</td>
+                    <td style="min-width: 150px; max-width: 200px;">Wtorek</td>
+                    <td style="min-width: 150px; max-width: 200px;">Środa</td>
+                    <td style="min-width: 150px; max-width: 200px;">Czwartek</td>
+                    <td style="min-width: 150px; max-width: 200px;">Piątek</td>
                 </tr>
             </thead>
             <tbody>
