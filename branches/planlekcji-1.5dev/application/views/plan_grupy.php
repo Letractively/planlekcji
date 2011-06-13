@@ -37,7 +37,12 @@ endif;
             <br/>
         </div>
         <div style="margin-top: 100px">
-            <?php echo $isf->JQUi_AjaxdivCreate('progress', true, false, '<b>Przeglądarka nie obsługuje JavaScript? Spróbuj <a href="' . URL::site('plan/grupaajax/' . $klasa . '/true') . '">metodę alternatywną</a></b>'); ?>
+            <?php
+            $alternative = '<b>Przeglądarka nie obsługuje JavaScript?
+                Spróbuj <a href="' . URL::site('plan/grupaajax/' . $klasa . '/true') . '">metodę alternatywną</a></b>';
+            $customload = 'Trwa przypisywanie sal, przedmiotów i nauczycieli...';
+            echo $isf->JQUi_AjaxdivCreate('progress', true, false, $alternative, $customload);
+            ?>
         </div>
         <?php echo $isf->JQUi_MakeScript(); ?>
     </body>

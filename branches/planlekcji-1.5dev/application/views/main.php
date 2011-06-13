@@ -32,7 +32,7 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
         <?php echo $script; //wyswietla skrypt, np jquery ?>
         <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style.css"/>
     </head>
-    <body <?php echo $bodystr; //argumenty html dla tagu body  ?>>
+    <body <?php echo $bodystr; //argumenty html dla tagu body   ?>>
         <div id="top">
             <img src="<?php echo URL::base() ?>lib/images/logo.png" alt="<?php echo $ns[1]['wartosc']; ?>"
                  style="height: 70px;"/>
@@ -165,6 +165,7 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                                 </p>
                             <?php else: ?>
                                 <p class="info">System zastępstw będzie dostępny po zamknięciu edycji planów zajęć</p>
+                                <a href="<?php echo URL::site('admin/zamknij2'); ?>" class="anac">Zamknij edycję planów</a>
                             <?php endif; ?>
                             <?php if ($reg[1]['wartosc'] == 0): //gdy edycja planow ?>
                                 <h3>Edycja planów</h3>
@@ -179,14 +180,13 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                                                 <?php
                                                 $grp = $isf->DbSelect('rejestr', array('*'), 'where opcja="ilosc_grup"');
                                                 ?>
-                                                <?php if (count($grp) == 1): ?>
+                                                <?php if ($grp[1]['wartosc'] > 0): ?>
                                                     <li><a href="<?php echo URL::site('plan/grupy/' . $c['klasa']); ?>" target="_blank">Plan grupowy</a></li>
                                                 <?php endif; ?>    
                                                 <li style="list-style: none">&nbsp;</li>
                                             </ul>
                                         </li>
                                     <?php endforeach; ?>
-                                    <li><a href="<?php echo URL::site('admin/zamknij2'); ?>" class="anac">Zamknij edycję planów</a></li>
                                 </ul>
                             <?php else: ?>
                                 <p class="info">System edycji planów został zamknięty. Wymagany jest reset systemu,

@@ -1,22 +1,26 @@
 <?php
+
 /**
  * Intersys - Plan Lekcji
  * 
  * @author Michał Bocian <mhl.bocian@gmail.com>
  */
 defined('SYSPATH') or die('No direct script access.');
+
 /**
  * Kontroler: admin
  * 
  * Rola: Odpowiada za dostęp do trybu administratora
  */
 class Controller_Admin extends Controller {
+
     /**
      * Konstruktor tworzy obiekt sesji
      */
     public function __construct() {
         session_start();
     }
+
     /**
      * Akcja: index
      * Rola: uruchamia glowna strone
@@ -30,6 +34,7 @@ class Controller_Admin extends Controller {
             exit;
         }
     }
+
     /**
      * Akcja: login
      * Rola: logowanie do systemu
@@ -44,21 +49,22 @@ class Controller_Admin extends Controller {
             Kohana_Request::factory()->redirect('');
             exit;
         }
-        
+
         $view = view::factory('main');
         $view2 = view::factory('admin_login');
         /**
          * Czy poprawnie zalogowano
          */
-        if($pass=='false'){
+        if ($pass == 'false') {
             $view2->set('pass', $pass);
-        }else{
+        } else {
             $view2->set('pass', null);
         }
-        
+
         $view->set('content', $view2->render());
         echo $view->render();
     }
+
     /**
      * Akcja: dologin
      * Rola: odpowiada za walidacje danych do logowania
@@ -79,6 +85,7 @@ class Controller_Admin extends Controller {
             Kohana_Request::factory()->redirect('admin/login/false');
         }
     }
+
     /**
      * Akcja: zamknij
      * Rola: strona zamkniecia edycji sal, przedmiotow, etc
@@ -96,6 +103,7 @@ class Controller_Admin extends Controller {
         $view->set('content', $view2->render());
         echo $view->render();
     }
+
     /**
      * Akcja: zamknij2
      * Rola: strona zamkniecia edycji planow zajec
@@ -113,6 +121,7 @@ class Controller_Admin extends Controller {
         $view->set('content', $view2->render());
         echo $view->render();
     }
+
     /**
      * Akcja: zamknijconfirm
      * Rola: potwierdza zamkniecie edycji sal, przedmiotow, etc
@@ -129,6 +138,7 @@ class Controller_Admin extends Controller {
         $isf->DbUpdate('rejestr', array('wartosc' => '0'), 'opcja="edycja_danych"');
         Kohana_Request::factory()->redirect('default/index');
     }
+
     /**
      * Akcja: zamknijconfirm2
      * Rola: potwierdza zamkniecie edycji planow
@@ -145,29 +155,31 @@ class Controller_Admin extends Controller {
         $isf->DbUpdate('rejestr', array('wartosc' => '3'), 'opcja="edycja_danych"');
         Kohana_Request::factory()->redirect('default/index');
     }
+
     /**
      * Akcja: logout
      * Rola: wylogowuje
      */
     public function action_logout() {
         unset($_SESSION['valid']);
-        
+
         setcookie('login', '', time() - 3600, '/');
         setcookie('PHPSESSID', '', time() - 3600, '/');
-        
+
         session_destroy();
         Kohana_Request::factory()->redirect('default/index');
     }
+
     /**
      * Akcja: planreset
      * Rola: strona usuwania planow
      */
-    public function action_planreset(){
+    public function action_planreset() {
         if (!isset($_SESSION['valid']) || !isset($_COOKIE['PHPSESSID'])) {
             Kohana_Request::factory()->redirect('admin/login');
             exit;
         }
-        if(!isset($_POST)){
+        if (!isset($_POST)) {
             Kohana_Request::factory()->redirect('admin/login');
             exit;
         }
@@ -180,6 +192,7 @@ class Controller_Admin extends Controller {
         $isf->DbUpdate('rejestr', array('wartosc' => '0'), 'opcja="edycja_danych"');
         Kohana_Request::factory()->redirect('default/index');
     }
+
     /**
      * Akcja: reset
      * Rola: strona usuwania danych jak sale, etc
@@ -197,6 +210,7 @@ class Controller_Admin extends Controller {
         $view->set('content', $view2->render());
         echo $view->render();
     }
+
     /**
      * Akcja: doreset
      * Rola: usuwa dane jak sale, etc
@@ -226,6 +240,7 @@ class Controller_Admin extends Controller {
         }
         Kohana_Request::factory()->redirect('');
     }
+
     /**
      * Akcja: zmiendane
      * Rola: strona zmiana danych szkoly, strony glownej
@@ -300,6 +315,7 @@ START;
         $view->set('content', $view2->render());
         echo $view->render();
     }
+
     /**
      * Akcja: dochange
      * Rola: zmienia dane szkoly, strony glownej
@@ -324,6 +340,7 @@ START;
 
         Kohana_Request::factory()->redirect('default/index');
     }
+
     /**
      * Akcja: haslo
      * Rola: strona zmiany hasla
@@ -338,13 +355,14 @@ START;
 
         if ($err != false) {
             $view2->set('_tplerr', $err);
-        }else{
+        } else {
             $view2->set('_tplerr', '');
         }
 
         $view->set('content', $view2->render());
         echo $view->render();
     }
+
     /**
      * Akcja: chpass
      * Rola: zmienia haslo
@@ -362,25 +380,30 @@ START;
             $n = md5($_POST['inpNH']);
             $p = md5($_POST['inpPH']);
 
+            if (strlen($_POST['inpNH']) < 6) {
+                Kohana_Request::factory()->redirect('admin/haslo/false');
+                exit;
+            }
+
             $stare = $isf->DbSelect('uzytkownicy', array('*'), 'where login="' . $_COOKIE['login'] . '"');
             $stare = $stare[1]['haslo'];
-            
-            if(strlen($s)<6||strlen($n)<6||strlen($p)<6){
+
+            if (strlen($s) < 6 || strlen($n) < 6 || strlen($p) < 6) {
                 Kohana_Request::factory()->redirect('admin/haslo/false');
                 exit;
             }
-            
-            if ($s != $stare){
+
+            if ($s != $stare) {
                 Kohana_Request::factory()->redirect('admin/haslo/false');
                 exit;
             }
-            
-            if ($n != $p){
+
+            if ($n != $p) {
                 Kohana_Request::factory()->redirect('admin/haslo/false');
                 exit;
             }
-            
-            $isf->DbUpdate('uzytkownicy', array('haslo'=>$n), 'login="' . $_COOKIE['login'] . '"');
+
+            $isf->DbUpdate('uzytkownicy', array('haslo' => $n), 'login="' . $_COOKIE['login'] . '"');
             Kohana_Request::factory()->redirect('admin/haslo/pass');
         }
     }

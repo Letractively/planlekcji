@@ -593,14 +593,17 @@ class Kohana_Isf {
      * @param bool $hiddenbtn Pokazanie przycisku ukrycia elementu
      * @return text Zwraca kod HTML
      */
-    public function JQUi_AjaxdivCreate($name, $progressgif=true, $hiddenbtn=false, $customtext=false) {
+    public function JQUi_AjaxdivCreate($name, $progressgif=true, $hiddenbtn=false, $customtext=false, $customload='') {
         $name = $this->hashname($name);
         $script = '<div id="isf_adiv_' . $name . '" style="display: none;">';
         if ($progressgif == true) {
-            $script .= '<div id="isf_adc_' . $name . '">Trwa ładowanie danych... 
-                <img src="' . $this->jqpath . '/css/load.gif" id="isf_adl_' . $name . '">';
+            $script .= '<div id="isf_adc_' . $name . '">';
+            $script .= '<img src="' . $this->jqpath . '/css/load.gif" id="isf_adl_' . $name . '">';
         } else {
             $script .= '<div id="isf_adc_' . $name . '">';
+        }
+        if ($customload != '') {
+            $script .= ' ' . $customload . ' ';
         }
         if ($customtext != false) {
             $script .= '<p>' . $customtext . '</p>';

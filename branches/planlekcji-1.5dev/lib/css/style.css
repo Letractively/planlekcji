@@ -6,6 +6,9 @@ body{
 .ui-button-text-only .ui-button-text {
     padding: 0.3em 1em;
 }
+input{
+    border: 1px solid;
+}
 h1{
     font-size: 18pt;
 }
