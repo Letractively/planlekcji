@@ -117,3 +117,12 @@ function pobierzdzien($dzien, $lekcja) {
         </tbody>
     </table>
 </form>
+<script type="text/javascript">
+    function confirmation(){
+        var answer = confirm("Czy chcesz zapisać, usuwając jednocześnie plan dla grup?");
+        if(answer){
+            document.forms['formPlan'].submit();
+        }else{
+        }
+    }
+</script>

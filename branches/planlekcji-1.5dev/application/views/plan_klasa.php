@@ -25,7 +25,7 @@ endif;
     <body>
         <div style="position: fixed; top: 0px; width: 100%; height: 80px; background: white;">
             <h1>
-                <a href="#" onClick="document.forms['formPlan'].submit();">
+                <a href="#" onClick="confirmation();">
                     <img src="<?php echo URL::base() ?>lib/images/save.png" alt="zapisz"/></a>
                 Edycja planu dla <?php echo $klasa; ?>
             </h1>

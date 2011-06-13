@@ -1,11 +1,8 @@
 <?php
-$isf = new Kohana_Isf();
-$GLOBALS['zast_id'] = $zast_id;
 
-function pobierznl($lekcja) {
+function pobierznl($lekcja, $id) {
     $isf = new Kohana_Isf();
     $isf->DbConnect();
-    $id = $GLOBALS['zast_id'];
 
 
     $res = $isf->DbSelect('zastepstwa', array('*'), 'where zast_id=\'' . $id . '\' and lekcja=\'' . $lekcja . '\'');
@@ -20,20 +17,37 @@ function pobierznl($lekcja) {
     }
 }
 
-function pobierzdzien($dzien, $nauczyciel) {
+function pobierzdzien($id) {
     $isf = new Kohana_Isf();
     $isf->DbConnect();
-    echo '<table class="przed"><thead style="background: #6699ff">
-        <tr><td></td><td>Godzina</td><td>Lekcja</td></tr></thead>';
+    $nl = $isf->DbSelect('zast_id', array('*'), 'where zast_id=\'' . $id . '\'');
+    $nauczyciel = $nl[1]['za_nl'];
+
+    $enpl_days = array(
+        'Monday' => 'Poniedziałek',
+        'Tuesday' => 'Wtorek',
+        'Wednesday' => 'Środa',
+        'Thursday' => 'Czwartek',
+        'Friday' => 'Piątek',
+        'Saturday' => 'Sobota',
+        'Sunday' => 'Niedziela',
+    );
+    $day = date('l', strtotime($nl[1]['dzien']));
+    $dzien = $enpl_days[$day];
+
+    echo '<table class="przed" style="width: 400px"><thead style="background: #6699ff;">
+            <tr><td colspan=3><h1>Zastępstwo za ' . $nauczyciel . '</h1>
+                <h3>' . $dzien . ' - ' . $nl[1]['dzien'] . '</h3></td></tr>
+        <tr><td width=25></td><td>Lekcja</td></tr></thead>';
     foreach ($isf->DbSelect('lek_godziny', array('*')) as $rowid => $rowcol) {
         $lek_nr = $rowid;
-        echo '<tr><td>' . $rowid . '</td><td>' . $rowcol['godzina'] . '</td><td>';
+        echo '<tr><td>' . $rowid . '</td><td>';
         $res = $isf->DbSelect('planlek', array('*'), 'where nauczyciel=\'' . $nauczyciel . '\'
             and dzien=\'' . $dzien . '\' and lekcja=\'' . $rowid . '\'');
         if (count($res) == 1) {
             echo '<p class="grplek">
                 <b>' . $res[1]['klasa'] . '</b> - ';
-            pobierznl($lek_nr);
+            pobierznl($lek_nr, $id);
             echo '</p></td></tr>';
         }
         if (count($res) == 0) {
@@ -43,7 +57,7 @@ function pobierzdzien($dzien, $nauczyciel) {
                 foreach ($res as $rowid => $rowcol) {
                     echo '<p class="grplek">
                 <b>' . $rowcol['klasa'] . ' gr ' . $rowcol['grupa'] . '</b> - ';
-                    pobierznl($lek_nr);
+                    pobierznl($lek_nr, $id);
                 }
                 echo '</p></td></tr>';
             } else {
@@ -53,12 +67,13 @@ function pobierzdzien($dzien, $nauczyciel) {
     }
     echo '</table>';
 }
+
+function pobierzzast($id) {
+    pobierzdzien($id);
+}
+
 ?>
-<h1>
-    Zastępstwo za <?php echo $nauczyciel; ?>
-</h1>
-<h3>W dniu <?php echo $data; ?> (<?php echo $dzien; ?>)</h3>
-<?php if ($komentarz != null): ?>
-    <p><b>Komentarz: </b><i><?php echo $komentarz; ?></i></p>
-<?php endif; ?>
-<?php pobierzdzien($dzien, $nauczyciel); ?>
+<p>
+<h3><a href="<?php echo URL::site('zastepstwa/index'); ?>">Powrót do zastępstw</a></h3>
+</p>
+<?php pobierzzast($zast_id); ?>

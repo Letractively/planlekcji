@@ -11,11 +11,11 @@
  */
 $err = '';
 
-if (phpversion() < 5.3) {
-    $err.='&bull; Wymagane jest PHP w wersji 5.3<br/>';
+if (phpversion() < 5.2.5) {
+    $err.='&bull; Wymagane jest PHP w wersji 5.2.5<br/>';
 }
-if (!class_exists('SQLite3')) {
-    $err.='&bull; Wymagana jest obsluga SQLite3 przez PHP<br/>';
+if (!class_exists('PDO')||!extension_loaded('pdo_sqlite')) {
+    $err.='&bull; Wymagana jest obsluga PDO SQLite3 przez PHP<br/>';
 }
 if (!is_writable(realpath('modules/isf/isf_resources'))) {
     $err.='&bull; Katalog modules/isf/isf_resources musi byc zapisywalny<br/>';
@@ -32,12 +32,13 @@ if (!is_writable(realpath('application/logs')) || !is_writable(realpath('applica
     $err .= '&bull; Katalog application/logs i application/cache musi byc zapisywalny<br/>';
 }
 if (!empty($err)) {
-    echo '<p><b>Nastapila proba nadania praw plikom i katalogom.</b></p>';
+    echo $err;
+    echo '<p><b>Jezeli blad dotyczy uprawnien plikow:</b></p>';
     echo '<pre><b>Na systemie UNIX uruchom nastepujace polecenie</b>' . PHP_EOL;
     echo '$ cd [sciezka_do_katalogu_z_aplikacja]' . PHP_EOL;
     echo '$ sudo php unixinstall.php</pre><p>Gdy blad wystepuje, musisz
         recznie zmienic uprawnienia plikow i katalogow</p>';
-    die($err);
+    die();
 }
 if (!file_exists('config.php')) {
     require_once 'install.php';
