@@ -3,16 +3,15 @@
 /**
  * Intersys - Plan Lekcji
  * 
- * Wersja pierwsza - 1.0
  * 
  * @author Michał Bocian <mhl.bocian@gmail.com>
  */
 defined('SYSPATH') or die('No direct script access.');
 
 /**
- * Kontroler: przedmioty
+ * Kontroler: zastepstwa
  * 
- * Rola: Odpowiada za obsługę przedmiotów
+ * Rola: Odpowiada za obsługę zastepstw
  */
 class Controller_Zastepstwa extends Controller {
 

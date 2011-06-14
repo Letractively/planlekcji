@@ -2,6 +2,8 @@
 
 /**
  * Modul ISF do obslugi baz danych dla Kohana 3
+ * 
+ * Wersja 1.5: wymaga PDO
  *
  * @author Michal Bocian <mhl.bocian@gmail.com>
  */
@@ -11,7 +13,7 @@ class Kohana_Isf {
      * Zwraca wersje ISF
      */
     public function isf_version() {
-        echo '1.0.2';
+        return '1.5';
     }
 
     protected $isf_path;
@@ -19,25 +21,36 @@ class Kohana_Isf {
     protected $script;
     protected $jqpath;
 
+    public static function factory() {
+        return new Kohana_Isf();
+    }
+
     public function DbConnect($customvars=null) {
+
+        $my_cfg = $GLOBALS['my_cfg'];
+
+        if (!class_exists('PDO') || !extension_loaded('pdo_mysql')) {
+            $_err = 'Aby korzystac z obslugi PDO MySQL, nalezy wlaczyc jego obsluge w PHP. ';
+            die($_err);
+        }
+
         if (is_array($customvars)) {
-            $this->dbhandle = mysql_connect($customvars['host'], $customvars['user'], $customvars['password']);
-            mysql_select_db($customvars['database'], $this->dbhandle);
-            if (!$this->dbhandle) {
-                echo mysql_error($this->dbhandle);
-                die('Blad polaczenia MySQL. Jezeli aplikacja nie zostala zainstalowana, usun plik config.php');
+            try {
+                $this->dbhandle = new PDO('mysql:host=' . $customvars['host'] . ';
+                    dbname=' . $customvars['database'] . '',
+                                $customvars['user'],
+                                $customvars['password']);
+            } catch (Exception $e) {
+                die($e->getMessage());
             }
         } else {
-            if (!file_exists('config.php')) {
-                echo 'Probojesz uzyc logowania z pliku konfiguracji. config.php nie istnieje';
-            } else {
-                require_once 'config.php';
-                $my_cfg = $GLOBALS['my_cfg'];
-                $this->dbhandle = mysql_connect($my_cfg['host'], $my_cfg['user'], $my_cfg['password']);
-                mysql_select_db($my_cfg['database'], $this->dbhandle);
-                if (!$this->dbhandle) {
-                    die('Blad polaczenia MySQL. Jezeli aplikacja nie zostala zainstalowana, usun plik config.php');
-                }
+            try {
+                $this->dbhandle = new PDO('mysql:host=' . $my_cfg['host'] . ';
+                    dbname=' . $my_cfg['database'] . '',
+                                $my_cfg['user'],
+                                $my_cfg['password']);
+            } catch (Exception $e) {
+                die($e->getMessage());
             }
         }
     }
@@ -71,18 +84,20 @@ class Kohana_Isf {
         $query = 'select ' . $cols . ' from ' . $table;
         if ($condition != null)
             $query .= ' ' . $condition;
-        $exec = mysql_query($query, $this->dbhandle);
         $r = 1;
-        $result = array();
-        if (!$exec) {
-            
-        } else {
-            while ($row = mysql_fetch_assoc($exec)) {
-                $result[$r] = $row;
-                $r++;
+        $ret = array();
+        try {
+            $exec = $this->dbhandle->query($query);
+            if (is_object($exec)) {
+                foreach ($exec as $row) {
+                    $ret[$r] = $row;
+                    $r++;
+                }
             }
+        } catch (Exception $e) {
+            echo $e;
         }
-        return $result;
+        return $ret;
     }
 
     /**
@@ -132,12 +147,11 @@ class Kohana_Isf {
         }
         $query = substr($query, 0, -2);
         $query .= ')';
-        $res = mysql_query($query, $this->dbhandle);
-        if ($res == true) {
-            return true;
-        } else {
-            echo mysql_error($this->dbhandle);
-            return false;
+
+        try {
+            $res = $this->dbhandle->query($query);
+        } catch (Exception $e) {
+            die($e->getMessage());
         }
     }
 
@@ -172,12 +186,11 @@ class Kohana_Isf {
         $query = substr($query, 0, -2);
         $query .= ' where ' . $cond;
 
-        if (mysql_query($query, $this->dbhandle) == true):
-            return TRUE;
-        else:
-            echo mysql_error($this->dbhandle);
-            return FALSE;
-        endif;
+        try {
+            $this->dbhandle->exec($query);
+        } catch (Exception $e) {
+            echo $e;
+        }
     }
 
     /**
@@ -197,12 +210,11 @@ class Kohana_Isf {
         if (empty($table) || empty($cond))
             die('Sprawdz parametry funkcji <b>delete</b>');
         $query = 'delete from ' . $table . ' where ' . $cond;
-        if (mysql_query($query, $this->dbhandle) == true):
-            return TRUE;
-        else:
-            echo mysql_error($this->dbhandle);
-            return FALSE;
-        endif;
+        try {
+            $this->dbhandle->exec($query);
+        } catch (Exception $e) {
+            echo $e;
+        }
     }
 
     /**
@@ -234,12 +246,11 @@ class Kohana_Isf {
         }
         $query = substr($query, 0, -2);
         $query .= ')';
-        if (mysql_query($query, $this->dbhandle)):
-            return TRUE;
-        else:
-            echo mysql_error($this->dbhandle);
-            return FALSE;
-        endif;
+        try {
+            $this->dbhandle->exec($query);
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
     }
 
     public function detect_ie() {
@@ -609,14 +620,17 @@ class Kohana_Isf {
      * @param bool $hiddenbtn Pokazanie przycisku ukrycia elementu
      * @return text Zwraca kod HTML
      */
-    public function JQUi_AjaxdivCreate($name, $progressgif=true, $hiddenbtn=false, $customtext=false) {
+    public function JQUi_AjaxdivCreate($name, $progressgif=true, $hiddenbtn=false, $customtext=false, $customload='') {
         $name = $this->hashname($name);
         $script = '<div id="isf_adiv_' . $name . '" style="display: none;">';
         if ($progressgif == true) {
-            $script .= '<div id="isf_adc_' . $name . '">Trwa ładowanie danych... 
-                <img src="' . $this->jqpath . '/css/load.gif" id="isf_adl_' . $name . '">';
+            $script .= '<div id="isf_adc_' . $name . '">';
+            $script .= '<img src="' . $this->jqpath . '/css/load.gif" id="isf_adl_' . $name . '">';
         } else {
             $script .= '<div id="isf_adc_' . $name . '">';
+        }
+        if ($customload != '') {
+            $script .= ' ' . $customload . ' ';
         }
         if ($customtext != false) {
             $script .= '<p>' . $customtext . '</p>';

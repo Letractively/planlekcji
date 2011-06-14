@@ -1,14 +1,11 @@
 <?php
-
 /**
  * Intersys - Plan Lekcji
  * 
- * Wersja pierwsza - 1.0
  * 
  * @author Michał Bocian <mhl.bocian@gmail.com>
  */
 defined('SYSPATH') or die('No direct script access.');
-
 /**
  * Kontroler: sale
  * 
@@ -42,7 +39,7 @@ class Controller_Sale extends Controller {
 
         $view = View::factory('main');
 
-        $dbres = $isf->DbSelect('sale', array('*'), 'order by abs(sala) asc');
+        $dbres = $isf->DbSelect('sale', array('*'), 'order by cast(sala as unsigned) asc');
 
         $view2 = View::factory('sale_index');
         $view2->set('res', $dbres);

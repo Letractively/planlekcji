@@ -6,8 +6,11 @@
  */
 $isf = new Kohana_Isf();
 $isf->DbConnect();
+/** pobiera ilosc godzin lekcyjnych */
 $res = $isf->DbSelect('rejestr', array('*'), 'where opcja="ilosc_godzin_lek"');
+/** pobiera dlogosc lekcji w min */
 $dlugosc = $isf->DbSelect('rejestr', array('*'), 'where opcja="dlugosc_lekcji"');
+/** gdy nie ma takiego klucza w rejestrze tworzy go i przeladowuje strone */
 if (count($res) == 0) {
     $isf->DbInsert('rejestr', array('opcja' => 'ilosc_godzin_lek', 'wartosc' => '0'));
     Kohana_Request::factory()->redirect('godziny/index');

@@ -4,24 +4,81 @@
  * 
  * 
  */
+/**
+ * Nowy obiekt frameworka
+ */
 $isf = new Kohana_Isf();
 $isf->DbConnect();
+/**
+ * Pobiera z rejestru ilość godzin lekcyjnych
+ */
 $ilosc_lek = $isf->DbSelect('rejestr', array('wartosc'), 'where opcja="ilosc_godzin_lek"');
 $ilosc_lek = $ilosc_lek[1]['wartosc'];
+/**
+ * Pobiera godziny lekcyjne
+ */
 $lek_godziny = $isf->DbSelect('lek_godziny', array('*'));
-$k = $klasa;
-$GLOBALS['k'] = $klasa;
-
+$k = $klasa; // argument funkcji w klasie kontrolera, klasa
+$GLOBALS['k'] = $klasa; // ustawienie zmiennej globalnej
+/**
+ * Pobiera i zwraca pojedyncza komorke planu lekcji
+ *
+ * @global string $k lekcje klasy do pobrania
+ * @param string $dzien dzien do pobrania
+ * @param int $lekcja lekcja do pobrania
+ * @return string Zwraca pojedyncza komorke planu
+ */
 function pobierzdzien($dzien, $lekcja) {
+    /**
+     * Ustawienie globalnej
+     */
     global $k;
+    /**
+     * Nowy obiekt frameworka
+     */
     $isf = new Kohana_Isf();
     $isf->DbConnect();
-    $a_table = 'nl_klasy, nl_przedm, przedmiot_sale';
-    $a_cols = array('nl_klasy.nauczyciel', 'nl_klasy.klasa', 'nl_przedm.przedmiot', 'przedmiot_sale.sala');
-    $a_cond = "on nl_klasy.nauczyciel=nl_przedm.nauczyciel and przedmiot_sale.przedmiot=nl_przedm.przedmiot where nl_klasy.klasa='" . $k . "' order by nl_przedm.przedmiot asc";
-    $a = $isf->DbSelect($a_table, $a_cols, $a_cond);
+    /**
+     * Pobiera wszystkich nauczycieli uczących klasę
+     */
+    $nk = $isf->DbSelect('nl_klasy', array('*'), 'where klasa=\'' . $k . '\' order by nauczyciel asc');
+    $r = 1; // wskaźnik tablicy
+    $a = array(); // zwracana tablica
+    foreach ($nk as $rowid => $rowcol) {
+        /**
+         * Pobiera przedmioty nauczane przez nauczyciela
+         */
+        $p = $isf->DbSelect('nl_przedm', array('*'), 'where nauczyciel=\'' . $rowcol['nauczyciel'] . '\'
+        order by przedmiot asc');
+
+        foreach ($p as $rid => $rcl) {
+            /**
+             * Pobiera sale dla przedmiotu
+             */
+            $sl = $isf->DbSelect('przedmiot_sale', array('*'), 'where przedmiot=\'' . $rcl['przedmiot'] . '\'
+            order by sala asc');
+
+            /**
+             * Pętla zwraca tablicę wynikową $a
+             */
+            foreach ($sl as $ri => $rc) {
+                
+                $a[$r]['nauczyciel'] = $rowcol['nauczyciel'];
+                $a[$r]['klasa'] = $rowcol['klasa'];
+                $a[$r]['przedmiot'] = $rcl['przedmiot'];
+                $a[$r]['sala'] = $rc['sala'];
+
+                $r++;
+            }
+        }
+        
+    }
+    /**
+     * Pobiera lekcję dla danej klasy, w danym dniu o danej godzinie
+     * z normalnego planu lekcji
+     */
     $lek = $isf->DbSelect('planlek', array('*'), 'where lekcja="' . $lekcja . '" and dzien="' . $dzien . '" and klasa="' . $k . '"');
-    $ret = '';
+    $ret = ''; // zmienna zawierajaca dane zwracane przez funkcję
     $vl = '';
     if (count($lek) == 0) {
         $lekx = $isf->DbSelect('plan_grupy', array('*'), 'where lekcja="' . $lekcja . '" and dzien="' . $dzien . '" and klasa="' . $k . '"');
@@ -77,7 +134,7 @@ function pobierzdzien($dzien, $lekcja) {
     <?php if ($alternative != false): ?>
         <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style.css"/>
         <h1>Edycja planu dla klasy <?php echo $klasa; ?>
-        &emsp;<button type="submit" name="btnSubmit">Zapisz zmiany</button></h1>
+            &emsp;<button type="submit" name="btnSubmit">Zapisz zmiany</button></h1>
     <?php endif; ?>
     <input type="hidden" name="klasa" value="<?php echo $klasa; ?>"/>
     <table class="przed">
@@ -117,3 +174,12 @@ function pobierzdzien($dzien, $lekcja) {
         </tbody>
     </table>
 </form>
+<script type="text/javascript">
+    function confirmation(){
+        var answer = confirm("Czy chcesz zapisać, usuwając jednocześnie plan dla grup?");
+        if(answer){
+            document.forms['formPlan'].submit();
+        }else{
+        }
+    }
+</script>

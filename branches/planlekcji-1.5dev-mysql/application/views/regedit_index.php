@@ -20,7 +20,7 @@ $isf->DbConnect();
                         <?php echo $rowcol['opcja']; ?>
                     </td>
                     <td>
-                        <input type="text" name="<?php echo $rowcol['opcja']; ?>" value="<?php echo $rowcol['wartosc']; ?>"/>
+                        <input type="text" name="<?php echo $rowcol['opcja']; ?>" value="<?php echo htmlspecialchars($rowcol['wartosc']); ?>"/>
                     </td>
                     <td>
                         <?php echo htmlspecialchars($rowcol['wartosc']); ?>

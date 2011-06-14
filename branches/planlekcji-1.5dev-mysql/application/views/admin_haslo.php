@@ -8,10 +8,6 @@
     <p class="info">
         Wszystkie pola muszą być wypełnione oraz hasło musi mieć min. 6 znaków
     </p>
-    <p>Stare hasło: <input type="password" name="inpSH"/></p>
-    <p>Nowe hasło: <input type="password" name="inpNH"/></p>
-    <p>Powtórz hasło: <input type="password" name="inpPH"/></p>
-    <a href="#" onClick="document.forms['form'].submit();">[ zmiana hasła ]</a>
     <?php
     switch ($_tplerr) {
         case 'false':
@@ -25,7 +21,7 @@
         case 'pass':
             ?>
             <p class="notice">
-                Hasło użytkownika zostało zmienione
+                Hasło użytkownika zostało zmienione pomyślnie
             </p>
             <?php
             break;
@@ -33,4 +29,23 @@
             break;
     }
     ?>
+    <table border="0">
+        <tr>
+            <td>Stare hasło</td>
+            <td><input type="password" name="inpSH"/></td>
+        </tr>
+        <tr>
+            <td>Nowe hasło</td>
+            <td><input type="password" name="inpNH"/></td>
+        </tr>
+        <tr>
+            <td>Powtórz hasło</td>
+            <td><input type="password" name="inpPH"/></td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align: right">
+                <button type="submit" name="btnSubmit">Zmień hasło</button>
+            </td>
+        </tr>
+    </table>
 </form>
