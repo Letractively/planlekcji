@@ -34,9 +34,15 @@ class Kohana_Isf {
             die($_err);
         }
 
-        $this->dbhandle = new PDO('sqlite:' . $this->isf_path . $name . '.sqlite');
+        try {
+            $this->dbhandle = new PDO('sqlite:' . $this->isf_path . $name . '.sqlite');
+        } catch (Exception $e) {
+            die($e);
+        }
+        
         if (!file_exists($this->isf_path . $name . '.sqlite'))
             die('Plik z baza danych nie istnieje! Sprawdz czy katalog ma wystarczajace uprawnienia');
+        
     }
 
     /**
