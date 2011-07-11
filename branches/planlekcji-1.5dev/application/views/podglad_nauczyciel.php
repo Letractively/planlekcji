@@ -18,14 +18,14 @@ function pobierzdzien($dzien, $lekcja) {
     $ret='';
     $r = $isf->DbSelect('planlek', array('*'), 'where nauczyciel="'.$k.'" and dzien="'.$dzien.'" and lekcja="'.$lekcja.'"');
     if(count($r)!=0){
-        echo $r[1]['przedmiot'].' (<a href="'.URL::site('podglad/klasa/'.$r[1]['klasa']).'">'.$r[1]['klasa'].'</a>) (<a href="'.URL::site('podglad/sala/'.$r[1]['sala']).'">'.$r[1]['sala'].'</a>)';
+        echo $r[1]['przedmiot'].' <a href="'.URL::site('podglad/sala/'.$r[1]['sala']).'">'.$r[1]['sala'].'</a> <a href="'.URL::site('podglad/klasa/'.$r[1]['klasa']).'">'.$r[1]['klasa'].'</a>';
     }else{
         $rn = $isf->DbSelect('plan_grupy', array('*'), 'where nauczyciel="' . $k . '" and dzien="' . $dzien . '" and lekcja="' . $lekcja . '"');
         if (count($rn) == 0) {
             echo '';
         } else {
             foreach ($rn as $rowid => $rowcol) {
-                echo '<p class="grplek">'.$rowcol['przedmiot'].' (<a href="'.URL::site('podglad/klasa/'.$rowcol['klasa']).'">'.$rowcol['klasa'].'</a> - gr'.$rowcol['grupa'].') (<a href="'.URL::site('podglad/sala/'.$rowcol['sala']).'">'.$rowcol['sala'].'</a>)</p>';
+                echo '<p class="grplek">'.$rowcol['przedmiot'].' <a href="'.URL::site('podglad/sala/'.$rowcol['sala']).'">'.$rowcol['sala'].'</a> <a href="'.URL::site('podglad/klasa/'.$rowcol['klasa']).'">'.$rowcol['klasa'].'</a> gr'.$rowcol['grupa'].'</p>';
             }
         }
     }

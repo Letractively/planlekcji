@@ -168,7 +168,7 @@ class Kohana_Isf {
         $query = substr($query, 0, -2);
         $query .= ' where ' . $cond;
 
-        if ($this->dbhandle->exec($query) == true)
+        if ($this->dbhandle->exec($query))
             return TRUE;
         else
             return FALSE;

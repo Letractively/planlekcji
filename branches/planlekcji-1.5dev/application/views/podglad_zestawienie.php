@@ -37,7 +37,7 @@ function pobierz_klasy($dzien, $lekcja) {
                     and lekcja=\'' . $lekcja . '\'');
         if (count($lek) != 0) {
             if (isset($lek[1]['sala']) && isset($lek[1]['skrot'])) {
-                echo '<b>' . $lek[1]['przedmiot'] . '</b> (<a href="' . URL::site('podglad/sala/' . $lek[1]['sala']) . '">' . $lek[1]['sala'] . '</a>) (<a href="' . URL::site('podglad/nauczyciel/' . $lek[1]['skrot']) . '">' . $lek[1]['skrot'] . '</a>)';
+                echo '<b>' . $lek[1]['przedmiot'] . '</b> <a href="' . URL::site('podglad/sala/' . $lek[1]['sala']) . '">' . $lek[1]['sala'] . '</a> <a href="' . URL::site('podglad/nauczyciel/' . $lek[1]['skrot']) . '">' . $lek[1]['skrot'] . '</a>';
             } else {
                 echo '<b>' . $lek[1]['przedmiot'] . '</b>';
             }
@@ -46,8 +46,8 @@ function pobierz_klasy($dzien, $lekcja) {
                     and lekcja=\'' . $lekcja . '\' order by grupa asc');
             foreach ($lek as $rowid => $rowcol) {
                 if (isset($rowcol['sala']) && isset($rowcol['skrot'])) {
-                    echo '<p class="grplek">gr ' . $rowcol['grupa'] . ' - <b>' . $lek[1]['przedmiot'] . '</b> (<a href="' . URL::site('podglad/sala/' . $lek[1]['sala']) . '">' . $lek[1]['sala'] . '</a>)
-                        (<a href="' . URL::site('podglad/nauczyciel/' . $lek[1]['skrot']) . '">' . $lek[1]['skrot'] . '</a>)</p>';
+                    echo '<p class="grplek">gr ' . $rowcol['grupa'] . ' - <b>' . $lek[1]['przedmiot'] . '</b> <a href="' . URL::site('podglad/sala/' . $lek[1]['sala']) . '">' . $lek[1]['sala'] . '</a>
+                        <a href="' . URL::site('podglad/nauczyciel/' . $lek[1]['skrot']) . '">' . $lek[1]['skrot'] . '</a></p>';
                 } else {
                     echo '<p class="grplek">gr ' . $rowcol['grupa'] . ' - <b>' . $rowcol['przedmiot'] . '</b></p>';
                 }

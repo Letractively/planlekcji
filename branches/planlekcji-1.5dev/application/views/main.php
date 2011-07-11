@@ -14,6 +14,8 @@
  */
 if (!isset($content))
     $content = null;
+if (!isset($_SESSION['token']))
+    $_SESSION['token'] = null;
 if (!isset($script))
     $script = null;
 if (!isset($bodystr))
@@ -32,7 +34,7 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
         <?php echo $script; //wyswietla skrypt, np jquery ?>
         <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style.css"/>
     </head>
-    <body <?php echo $bodystr; //argumenty html dla tagu body   ?>>
+    <body <?php echo $bodystr; //argumenty html dla tagu body         ?>>
         <div id="top">
             <img src="<?php echo URL::base() ?>lib/images/logo.png" alt="<?php echo $ns[1]['wartosc']; ?>"
                  style="height: 70px;"/>
@@ -43,16 +45,29 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
          * Menu administratora (górne)
          */
         ?>
-        <?php
-        //czy zalogowany
-        if (isset($_SESSION['valid']) && isset($_COOKIE['PHPSESSID'])):
+        <?php if ($_SESSION['token'] != null): ?>
+            <?php
+            $zadmin = time() + 10 * 60;
+            $toktime = strtotime($_SESSION['token_time']);
+            if ($zadmin > $toktime) {
+                $tokenizer = '<i class="error">' . $_SESSION['token_time'] . '</i>';
+            } else {
+                $tokenizer = '<i>' . $_SESSION['token_time'] . '</i>';
+            }
             ?>
             <div id="menuad">
-                Zalogowany jako: <b><?php echo $_COOKIE['login']; ?></b>&emsp;&emsp;&bull;
-                <a href="<?php echo URL::site('admin/logout'); ?>">wyloguj</a>&emsp;&bull;
-                <a href="<?php echo URL::site('admin/haslo'); ?>">zmiana hasła</a>&emsp;&bull;
-                <a href="<?php echo URL::site('admin/zmiendane'); ?>">ustawienia szkoły i strony głównej</a>&emsp;&bull;
-                <a class="anac" href="<?php echo url::site('admin/reset'); ?>">resetowanie systemu</a>
+                Zalogowany jako: <b><?php echo $_SESSION['user']; ?></b>
+                (<a href="<?php echo URL::site('admin/logout'); ?>">wyloguj</a>)
+                &emsp;&bull;
+                <b>ważność tokena:</b> <?php echo $tokenizer; ?>
+                <a href="<?php echo URL::site('admin/renew'); ?>" class="anac">odnów</a>
+                &emsp;&bull;
+                <a href="<?php echo URL::site('admin/haslo'); ?>">zmiana hasła</a>
+                <?php if ($_SESSION['user'] == 'root'): ?>
+                    &emsp;&bull;
+                    <a href="<?php echo URL::site('admin/zmiendane'); ?>">ustawienia szkoły i strony głównej</a>&emsp;&bull;
+                    <a class="anac" href="<?php echo url::site('admin/reset'); ?>">resetowanie systemu</a>
+                <?php endif; ?>
             </div>
             <hr/>
         <?php endif; ?>
@@ -68,7 +83,7 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                      */
                     ?>
                     <?php
-                    if (!isset($_SESSION['valid']) || !isset($_COOKIE['PHPSESSID'])) {
+                    if ($_SESSION['token'] == null) {
                         ?>
                         <?php
                         if ($reg[1]['wartosc'] == 1): // czy jest edycja sal, przedmiotów
@@ -127,7 +142,7 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                     } else {
                         // tresc dla zalogowanych
                         ?>
-                        <?php if ($reg[1]['wartosc'] == 1): //gdy edycja sal etc ?>
+                        <?php if ($reg[1]['wartosc'] == 1 && $_SESSION['user'] == 'root'): //gdy edycja sal etc ?>
                             <h3>Menu administratora</h3>
                             <ul>
                                 <li>
@@ -137,6 +152,7 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                                 <li><a href="<?php echo URL::site('przedmioty/index'); ?>">Przedmioty</a></li>
                                 <li><a href="<?php echo URL::site('nauczyciele/index'); ?>">Nauczyciele</a></li>
                                 <li><a href="<?php echo URL::site('klasy/index'); ?>">Klasy</a></li>
+                                <li><a href="<?php echo URL::site('admin/users'); ?>">Użytkownicy</a></li>
                                 <li>
                                     <a href="<?php echo URL::site('godziny/index'); ?>">Godziny lekcyjne i przerwy</a>
                                 </li>
@@ -146,7 +162,7 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                                 Zamknięcie edycji oznacza <b>brak możliwości</b> ponownej edycji danych, chyba, że
                                 wykonasz reset systemu, który wiąże się z utratą pewnych danych.</p>
                         <?php else: ?>
-                            <?php if ($reg[1]['wartosc'] == 3): //gdy system calkiem otwarty ?>
+                            <?php if ($reg[1]['wartosc'] == 3 && $_SESSION['user'] != 'root'): //gdy system calkiem otwarty ?>
                                 <p>
                                     <a href="<?php echo URL::site('podglad/zestawienie'); ?>" style="font-size: 10pt; font-weight: bold;" target="_blank">
                                         <img src="<?php echo URL::base(); ?>lib/images/t2.png" alt="" width="24" height="24"/> Zestawienie planów
@@ -163,11 +179,16 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                                         Przegląd zastępstw
                                     </a>
                                 </p>
-                            <?php else: ?>
+                                <p class="info">System edycji planów został zamknięty. Aby ponownie mieć dostęp do systemu,
+                                    wykonaj reset, który utraci zapisane plany oraz zastępstwa.</p>
+                            <?php endif; ?>
+                            <?php if ($reg[1]['wartosc'] == 1 && $_SESSION['user'] != 'root'): //gdy edycja sys ?>
+                                <p class="error">Witaj <b><?php echo $_SESSION['user']; ?></b>. Niestety, nie masz dostępu do
+                                    edycji sal, przedmiotów, godzin, klas i nauczycieli.</p>
+                            <?php endif; ?>
+                            <?php if ($reg[1]['wartosc'] == 0 && $_SESSION['user'] != 'root'): //gdy edycja planow ?>
                                 <p class="info">System zastępstw będzie dostępny po zamknięciu edycji planów zajęć</p>
                                 <a href="<?php echo URL::site('admin/zamknij2'); ?>" class="anac">Zamknij edycję planów</a>
-                            <?php endif; ?>
-                            <?php if ($reg[1]['wartosc'] == 0): //gdy edycja planow ?>
                                 <h3>Edycja planów</h3>
                                 <ul>
                                     <?php foreach ($isf->DbSelect('klasy', array('klasa'), 'order by klasa asc') as $r => $c): ?>
@@ -188,9 +209,12 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                                         </li>
                                     <?php endforeach; ?>
                                 </ul>
-                            <?php else: ?>
-                                <p class="info">System edycji planów został zamknięty. Wymagany jest reset systemu,
-                                    który utraci conajmniej zapisane plany oraz zastępstwa.</p>
+                            <?php endif; ?>
+                            <?php if ($reg[1]['wartosc'] != 1 && $_SESSION['user'] == 'root'): //gdy edycja sal etc ?>
+                                <p class="error">Jako <b>root</b> nie masz dostępu do edycji planów i zastępstw.
+                                    Aby powrócić do ustawień sal, przedmiotów i nauczycieli wykonaj reset systemu,
+                                    który usunie wszystkie plany.</p>
+                                <p><a href="<?php echo URL::site('admin/users'); ?>" class="anac">Generuj tokeny dla użytkowników</a></p>
                             <?php endif; ?>
                             <hr/>
                             <?php if ($reg[1]['wartosc'] == 3): // gdy edycja planow zamknieta ?>
@@ -209,7 +233,7 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                                 <h3>Plany lekcji według nauczycieli</h3>
                                 <ul>
                                     <?php foreach ($isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc') as $rw => $rc): ?>
-                                        <li>(<?php echo $rc['skrot']; ?>) <a href="<?php echo URL::site('podglad/nauczyciel/' . $rc['skrot']); ?>" target="_blank"><?php echo $rc['imie_naz']; ?></a></li>
+                                        <li><?php echo $rc['skrot']; ?> <a href="<?php echo URL::site('podglad/nauczyciel/' . $rc['skrot']); ?>" target="_blank"><?php echo $rc['imie_naz']; ?></a></li>
                                     <?php endforeach; ?>    
                                 </ul>
                             <?php else: ?>
@@ -233,7 +257,9 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
         /**
          * Skrypt JS dla menu planow
          */
-        if (isset($_SESSION['valid']) && isset($_COOKIE['PHPSESSID'])) {
+        if (!isset($_SESSION['user']))
+            $_SESSION['user'] = null;
+        if ($_SESSION['user'] != 'root') {
             $isf->JQUi();
             foreach ($isf->DbSelect('klasy', array('*')) as $rid => $rcl) {
                 $f1 = '$("#class_plan_' . $rcl['klasa'] . '").click(function(){$("#ul_classedit_' . $rcl['klasa'] . '").toggle();});';

@@ -46,6 +46,7 @@ if (!file_exists('config.php')) {
 } else {
     require_once 'config.php';
 }
+require_once 'lib/nusoap/nusoap.php';
 define('HTTP_PATH', $path);
 $application = 'application';
 $modules = 'modules';
@@ -78,3 +79,14 @@ echo Request::factory()
         ->execute()
         ->send_headers()
         ->body();
+/**
+ * Dodaje nowa wiadomosc do loga systemowego
+ *
+ * @param string $modul
+ * @param string $wiadomosc 
+ */
+function insert_log ($modul, $wiadomosc){
+    $db = new Kohana_Isf();
+    $db->DbConnect();
+    $db->DbInsert('log', array('data'=>date('d.m.Y H:i:s'),'modul'=>$modul,'wiadomosc'=>$wiadomosc));
+}

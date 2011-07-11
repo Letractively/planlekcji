@@ -48,7 +48,7 @@ if ($r == 1):
                 ?>
                 <h3>Plik config.php nie istnieje! Proszę go utworzyć</h3>
                 <p>Proszę utworzyć plik <b>config.php</b> o następującej
-                treści:</p>
+                    treści:</p>
                 <?php
                 echo '<pre>' . htmlspecialchars('<?php') . PHP_EOL .
                 '<b>' . htmlspecialchars('$path = \'' . $r . '\';') . '</b>' . PHP_EOL .
@@ -157,9 +157,6 @@ else:
 +                                     +
 + + + + + + + + + + + + + + + + + + + +
 
-
-Trwa instalacja systemu Intersys Plan Lekcji...
-
 START;
 
         print <<< START
@@ -262,7 +259,32 @@ START;
         $isf->DbTblCreate('uzytkownicy', array(
             'uid' => 'integer primary key autoincrement not null',
             'login' => 'text not null',
-            'haslo' => 'text not null'
+            'haslo' => 'text not null',
+            'webapi_token' => 'text',
+            'webapi_timestamp' => '',
+            'ilosc_prob' => ''
+        ));
+
+        print <<< START
+Tworzenie tabeli: log
+
+START;
+
+        $isf->DbTblCreate('log', array(
+            'id' => 'integer primary key autoincrement not null',
+            'data' => 'text not null',
+            'modul' => 'text not null',
+            'wiadomosc' => 'text',
+        ));
+        
+        print <<< START
+Tworzenie tabeli: tokeny
+
+START;
+
+        $isf->DbTblCreate('log', array(
+            'login' => 'text',
+            'token' => 'text',
         ));
 
         print <<< START
@@ -362,19 +384,36 @@ START;
 
         $isf->DbInsert('rejestr', array(
             'opcja' => 'app_ver',
-            'wartosc' => '1.5 testing'
+            'wartosc' => '1.5b5'
+        ));
+        
+        $isf->DbInsert('rejestr', array(
+            'opcja' => 'randtoken_version',
+            'wartosc' => '1.0b5'
         ));
 
+        $isf->DbInsert('log', array(
+            'data' => date('d.m.Y H:i:s'),
+            'modul' => 'plan.install',
+            'wiadomosc' => 'Instalacja systemu'
+        ));
+        
+        $isf->DbInsert('log', array(
+            'data' => date('d.m.Y H:i:s'),
+            'modul' => 'plan.install',
+            'wiadomosc' => 'Tworzenie administratora'
+        ));
+        
         $pass = substr(md5(@date('Y:m:d')), 0, 8);
-
+        $pass = rand(1, 100) . $pass;
         print <<< START
 Utworzenie administratora...
     
 START;
 
         $isf->DbInsert('uzytkownicy', array(
-            'login' => 'administrator',
-            'haslo' => md5($pass = (rand(1, 100) . $pass))
+            'login' => 'root',
+            'haslo' => md5('plan'.sha1('lekcji'.$pass)),
         ));
 
         print <<< START
@@ -386,7 +425,7 @@ INSTALACJA ZAKONCZONA POWODZENIEM!
         
 Prosze zapisac ponizsze dane, aby uzyskac dostep do panelu administratora
 
-    Login: <b>administrator</b>
+    Login: <b>root</b>
     Haslo: <b>$pass</b>
 
 <a href="index.php">Strona glowna</a>

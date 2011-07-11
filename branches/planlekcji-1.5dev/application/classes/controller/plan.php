@@ -17,9 +17,21 @@ class Controller_Plan extends Controller {
 
     public function __construct() {
         session_start();
-        if (!isset($_SESSION['valid']) || !isset($_COOKIE['PHPSESSID'])) {
+        try {
+            $this->wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            exit;
+        }
+        if (!isset($_SESSION['token'])) {
             Kohana_Request::factory()->redirect('admin/login');
             exit;
+        } else {
+            $auth = $this->wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
+            if ($auth == 'auth:failed') {
+                Kohana_Request::factory()->redirect('admin/login');
+                exit;
+            }
         }
         $isf = new Kohana_Isf();
         $isf->DbConnect();
