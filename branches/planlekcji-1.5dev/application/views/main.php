@@ -33,8 +33,17 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
         <title>Plan lekcji - <?php echo $ns[1]['wartosc']; ?></title>
         <?php echo $script; //wyswietla skrypt, np jquery ?>
         <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style.css"/>
+        <?php
+        if (isset($_SESSION['token'])) {
+            $zadmin = time() + 10 * 60;
+            $toktime = strtotime($_SESSION['token_time']);
+            if ($zadmin > $toktime) {
+                $bodystr = 'onLoad="alert(\'RAND_TOKEN: token wygaśnie za chwilę\\nProszę go odnowić!\');"';
+            }
+        }
+        ?>
     </head>
-    <body <?php echo $bodystr; //argumenty html dla tagu body         ?>>
+    <body <?php echo $bodystr; //argumenty html dla tagu body           ?>>
         <div id="top">
             <img src="<?php echo URL::base() ?>lib/images/logo.png" alt="<?php echo $ns[1]['wartosc']; ?>"
                  style="height: 70px;"/>
@@ -50,16 +59,16 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
             $zadmin = time() + 10 * 60;
             $toktime = strtotime($_SESSION['token_time']);
             if ($zadmin > $toktime) {
-                $tokenizer = '<i class="error">' . $_SESSION['token_time'] . '</i>';
+                $tokenizer = '<i class="error" style="text-decoration:blink;"><b>' . $_SESSION['token_time'] . '</b></i>';
             } else {
-                $tokenizer = '<i>' . $_SESSION['token_time'] . '</i>';
+                $tokenizer = '<i class="notice">' . $_SESSION['token_time'] . '</i>';
             }
             ?>
             <div id="menuad">
                 Zalogowany jako: <b><?php echo $_SESSION['user']; ?></b>
                 (<a href="<?php echo URL::site('admin/logout'); ?>">wyloguj</a>)
                 &emsp;&bull;
-                <b>ważność tokena:</b> <?php echo $tokenizer; ?>
+                <b>ważność tokena:</b> <?php echo $tokenizer; ?>&nbsp;|
                 <a href="<?php echo URL::site('admin/renew'); ?>" class="anac">odnów</a>
                 &emsp;&bull;
                 <a href="<?php echo URL::site('admin/haslo'); ?>">zmiana hasła</a>

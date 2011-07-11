@@ -61,7 +61,7 @@ function pobierz_klasy($dzien, $lekcja) {
         $lek = $isf->DbSelect('planlek', array('*'), 'where dzien==\'' . $dzien . '\' and nauczyciel=\'' . $rowcol['imie_naz'] . '\'
                     and lekcja=\'' . $lekcja . '\'');
         if (count($lek) == 1) {
-            echo '<p class="grplek"><b>' . $lek[1]['klasa'] . '</b> - ' . $lek[1]['sala'] . '</p>';
+            echo '<p class="grplek"><b>' . $lek[1]['klasa'] . '</b> <a href="' . URL::site('podglad/sala/' . $lek[1]['sala']) . '">' . $lek[1]['sala'] . '</a></p>';
         } else {
             $lek = $isf->DbSelect('plan_grupy', array('*'), 'where dzien==\'' . $dzien . '\' and nauczyciel=\'' . $rowcol['imie_naz'] . '\'
                     and lekcja=\'' . $lekcja . '\'');
@@ -70,7 +70,7 @@ function pobierz_klasy($dzien, $lekcja) {
                 foreach ($lek as $rowid => $rowcol) {
                     echo '<b>' . $rowcol['klasa'] . ' ('.$rowcol['grupa'].')</b>, ';
                 }
-                echo '</b></p><p class="grplek">' . $rowcol['sala'] . '</p>';
+                echo '</b></p><p class="grplek"><a href="' . URL::site('podglad/sala/' . $rowcol['sala']) . '">' . $rowcol['sala'] . '</a></p>';
             } else {
                 echo '---';
             }
@@ -86,9 +86,10 @@ function pobierz_dzien($dzien) {
 
     $lekcje = $isf->DbSelect('lek_godziny', array('*'));
 
-    $colspan = $GLOBALS['ilosc_klas'];
+    $colspan = $GLOBALS['ilosc_klas']+$GLOBALS['ilosc_nl'];
     echo '<tr class="zestdzien"><td colspan=2></td><td colspan="' . $colspan . '">' . $dzien . '</td>';
-    echo '<td colspan=' . $GLOBALS['ilosc_nl'] . '>' . $dzien . '</td></tr>';
+    //echo '<td colspan='.$GLOBALS['ilosc_nl'].'></td>';
+    echo '</tr>';
 
     foreach ($lekcje as $rowid => $rowcol) {
         pobierz_klasy($dzien, $rowid);

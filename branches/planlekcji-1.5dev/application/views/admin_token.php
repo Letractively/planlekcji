@@ -28,7 +28,7 @@
                         echo 'Uzytkownik nie istnieje!';
                         exit;
                     }
-                    $db->DbInsert('tokeny', array('login' => $l[1]['login'], 'token' => $ret));
+                    $db->DbInsert('tokeny', array('login' => $l[1]['login'], 'token' => md5('plan'.$ret)));
                     ?>
                     <td>
                         <h1>RAND_TOKEN</h1>
@@ -50,7 +50,7 @@
                         echo 'Uzytkownik nie istnieje!';
                         exit;
                     }
-                    $db->DbInsert('tokeny', array('login' => $l[1]['login'], 'token' => $ret));
+                    $db->DbInsert('tokeny', array('login' => $l[1]['login'], 'token' => md5('plan'.$ret)));
                     ?>
                     <td>
                         <h1>RAND_TOKEN</h1>

@@ -31,6 +31,12 @@ class Controller_Godziny extends Controller {
             exit;
         } else {
             $auth = $this->wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
+            if (strtotime($_SESSION['token_time']) < time()) {
+                $this->wsdl->call('doLogout', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
+                session_destroy();
+                Kohana_Request::factory()->redirect('admin/login/delay');
+                exit;
+            }
             if ($auth == 'auth:failed') {
                 Kohana_Request::factory()->redirect('admin/login');
                 exit;
@@ -58,6 +64,7 @@ class Controller_Godziny extends Controller {
         $isf->DbConnect();
         $res = $isf->DbSelect('rejestr', array('*'), 'where opcja="ilosc_godzin_lek"');
         $isf->JQUi();
+        $isf->JQUi_CustomFunction('$(\'#czasRZ\').timepicker({showHour:true});');
         for ($i = 1; $i <= $res[1]['wartosc']; $i++):
             $isf->JQUi_CustomFunction('$(\'#lekcja' . $i . '\').timepicker({showHour:false});');
         endfor;
@@ -92,7 +99,7 @@ class Controller_Godziny extends Controller {
         $g2;
         foreach ($_POST['lekcja'] as $nrlek => $dlprz) {
             if ($nrlek == 1) {
-                $g1 = '08:00';
+                $g1 = $_POST['czasRZ'];
             } else {
                 $g1 = explode(':', $g2);
                 $nl = $nrlek-1;

@@ -376,6 +376,11 @@ START;
             'opcja' => 'ilosc_grup',
             'wartosc' => '0'
         ));
+        
+        $isf->DbInsert('rejestr', array(
+            'opcja' => 'godz_rozp_zaj',
+            'wartosc' => '08:00'
+        ));
 
         $isf->DbInsert('rejestr', array(
             'opcja' => 'installed',

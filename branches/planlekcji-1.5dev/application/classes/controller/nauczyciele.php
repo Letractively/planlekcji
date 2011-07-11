@@ -33,6 +33,12 @@ class Controller_Nauczyciele extends Controller {
             exit;
         } else {
             $auth = $this->wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
+            if (strtotime($_SESSION['token_time']) < time()) {
+                $this->wsdl->call('doLogout', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
+                session_destroy();
+                Kohana_Request::factory()->redirect('admin/login/delay');
+                exit;
+            }
             if ($auth == 'auth:failed') {
                 Kohana_Request::factory()->redirect('admin/login');
                 exit;

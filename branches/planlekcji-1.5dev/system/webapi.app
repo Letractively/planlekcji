@@ -41,6 +41,7 @@ function doLogin($username, $password) {
 function doUserLogin($username, $password, $token) {
     $db = new Kohana_Isf();
     $db->DbConnect();
+    $token = md5('plan'.$token);
     $haslo = md5('plan' . sha1('lekcji' . $password));
     $uid = $db->DbSelect('uzytkownicy', array('*'), 'where login=\'' . $username . '\'');
     if (count($uid) != 1) {
