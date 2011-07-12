@@ -63,10 +63,14 @@
     - Poprawki w pliku readme.txt
     - Poprawki w instalatorze Unixowym
 ---
-1.5.0-62 BETA5
+1.5.0-62 PRE BETA5
     - Zarządzanie użytkownikami
     - Nowy system autoryzacji użytkowników
     - Rezygnacja z ciasteczek (login dla kompatybilności)
     - System tokenowy RAND_TOKEN
     - root:edycja danych systemu, zwykli:plany/zastępstwa
     - root:hasło, zwykli: hasło + wygenerowany token
+---
+1.5.0-63 PRE BETA5
+    - Eksporter planów lekcji do postaci statycznej (czysty HTML)
+	Użycie: php export.php http://localhost /home/user/Dokumenty/Plan

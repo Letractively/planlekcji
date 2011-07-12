@@ -15,6 +15,9 @@ if (isset($_SERVER['HTTP_USER_AGENT'])) {
     echo 'Uruchom ten plik z uprawnieniami administratora w konsoli';
     exit;
 }
+if (function_exists('posix_getuid') && posix_getuid() != 0) {
+    die('Na systemie UNIX musisz uruchomic z prawami roota');
+}
 echo 'Stosowanie uprawnien...'.PHP_EOL;
 fopen('./config.php', 'w');
 chmod('./modules/isf/isf_resources', 0777);

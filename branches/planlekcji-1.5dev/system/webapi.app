@@ -41,7 +41,7 @@ function doLogin($username, $password) {
 function doUserLogin($username, $password, $token) {
     $db = new Kohana_Isf();
     $db->DbConnect();
-    $token = md5('plan'.$token);
+    $token = md5('plan' . $token);
     $haslo = md5('plan' . sha1('lekcji' . $password));
     $uid = $db->DbSelect('uzytkownicy', array('*'), 'where login=\'' . $username . '\'');
     if (count($uid) != 1) {
@@ -52,15 +52,15 @@ function doUserLogin($username, $password, $token) {
             exit;
         }
         if ($uid[1]['haslo'] != $haslo) {
-            $nr = $uid[1]['ilosc_prob']+1;
+            $nr = $uid[1]['ilosc_prob'] + 1;
             $db->DbUpdate('uzytkownicy', array('ilosc_prob' => $nr), 'login=\'' . $username . '\'');
             return 'auth:failed';
             exit;
         }
         $tokena = $db->DbSelect('tokeny', array('*'), 'where login=\'' . $username . '\' and token=\'' . $token . '\'');
         if (count($tokena) == 0) {
-            $nr = $uid[1]['ilosc_prob']+1;
-            $db->DbUpdate('uzytkownicy', array('ilosc_prob' => $nr), 'login=\'' . $username  . '\'');
+            $nr = $uid[1]['ilosc_prob'] + 1;
+            $db->DbUpdate('uzytkownicy', array('ilosc_prob' => $nr), 'login=\'' . $username . '\'');
             return 'auth:failed';
             exit;
         } else {
@@ -69,7 +69,7 @@ function doUserLogin($username, $password, $token) {
             } else {
                 $timestamp = (time() + 3600 * 3);
                 $token_x = gentoken($uid[1]['login']);
-                $db->DbDelete('tokeny', 'login=\''.$username.'\' and token=\''.$token.'\'');
+                $db->DbDelete('tokeny', 'login=\'' . $username . '\' and token=\'' . $token . '\'');
                 $arr = array(
                     'ilosc_prob' => '0',
                     'webapi_token' => $token_x,
@@ -119,6 +119,20 @@ function doLogout($token) {
     $db->DbConnect();
     $db->DbUpdate('uzytkownicy', array('webapi_timestamp' => '', 'webapi_token' => ''), 'webapi_token=\'' . $token . '\'');
     return 'auth:logout';
+}
+
+function doAddClassroom($token, $class) {
+    if (!checkauth($token)) {
+        return 'auth:failed';
+    } else {
+        $db = new Kohana_Isf();
+        $db->DbConnect();
+        if (count($db->DbSelect('sale', array('*'), 'where sala=\'' . $class . '\'')) != 0) {
+            return 'class:exists';
+        } else {
+            $db->DbInsert('sale', array('sala' => $class));
+        }
+    }
 }
 
 function doChangePass($token, $old, $new) {
