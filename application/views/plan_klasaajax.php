@@ -43,7 +43,7 @@ function pobierzdzien($dzien, $lekcja) {
     if ($vl != '') {
         $ret .= '<option selected>' . $vl . '</option>';
     }
-    $ret .= '<option>---</option>';
+    $ret .= '<option>---</option><optgroup label="Przedmiot - Sala - Nauczyciel">';
     foreach ($a as $rowid => $rowcol) {
         $b_table = 'planlek';
         $b_cols = array('*');
@@ -60,22 +60,26 @@ function pobierzdzien($dzien, $lekcja) {
             
         }
     }
-    $ret.='<option>---</option>';
+    $ret.='</optgroup><optgroup label="Zwykły przedmiot">';
     foreach ($isf->DbSelect('przedmioty', array('*'), 'order by przedmiot asc') as $rc => $ri) {
         $ret.='<option>' . $ri['przedmiot'] . '</option>';
     }
-    $ret.='</select>';
+    $ret.='</optgroup></select>';
     return $ret;
 }
 ?>
-<?php if ($alternative != false): ?>
-    <h3>Edycja planu grupowego dla klasy <?php echo $klasa; ?></h3>
-<?php endif; ?>
-<form action="<?php echo URL::site('plan/zatwierdz'); ?>" method="post" name="formPlan" style="margin-top: 100px;">
-    <input type="hidden" name="klasa" value="<?php echo $klasa; ?>"/>
-    <?php if ($alternative != false): ?>
-        <button type="submit" name="btnSubmit">Zapisz zmiany</button>
+<form action="<?php echo URL::site('plan/zatwierdz'); ?>" method="post" name="formPlan"
+<?php if (!isset($alternative)): ?>
+          style="margin-top: 100px;">
+          <?php else: ?>
+        >
     <?php endif; ?>
+    <?php if ($alternative != false): ?>
+        <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style.css"/>
+        <h1>Edycja planu dla klasy <?php echo $klasa; ?>
+        &emsp;<button type="submit" name="btnSubmit">Zapisz zmiany</button></h1>
+    <?php endif; ?>
+    <input type="hidden" name="klasa" value="<?php echo $klasa; ?>"/>
     <table class="przed">
         <thead style="background: greenyellow;">
             <tr>
@@ -113,3 +117,12 @@ function pobierzdzien($dzien, $lekcja) {
         </tbody>
     </table>
 </form>
+<script type="text/javascript">
+    function confirmation(){
+        var answer = confirm("Czy chcesz zapisać, usuwając jednocześnie plan dla grup?");
+        if(answer){
+            document.forms['formPlan'].submit();
+        }else{
+        }
+    }
+</script>

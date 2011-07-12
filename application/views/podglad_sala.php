@@ -19,8 +19,8 @@ function pobierzdzien($dzien, $lekcja) {
     $ret = '';
     $r = $isf->DbSelect('planlek', array('*'), 'where sala="' . $k . '" and dzien="' . $dzien . '" and lekcja="' . $lekcja . '"');
     if (count($r) != 0) {
-        echo $r[1]['przedmiot'] . ' (<a href="' . URL::site('podglad/klasa/' . $r[1]['klasa']) . '">' . $r[1]['klasa'] . '</a>)
-            (<a href="' . URL::site('podglad/nauczyciel/' . $r[1]['skrot']) . '">' . $r[1]['skrot'] . '</a>)
+        echo $r[1]['przedmiot'] . ' <a href="' . URL::site('podglad/klasa/' . $r[1]['klasa']) . '">' . $r[1]['klasa'] . '</a>
+            <a href="' . URL::site('podglad/nauczyciel/' . $r[1]['skrot']) . '">' . $r[1]['skrot'] . '</a>
             ';
     } else {
         $rn = $isf->DbSelect('plan_grupy', array('*'), 'where sala="' . $k . '" and dzien="' . $dzien . '" and lekcja="' . $lekcja . '"');
@@ -29,8 +29,8 @@ function pobierzdzien($dzien, $lekcja) {
         } else {
             foreach ($rn as $rowid => $rowcol) {
                 echo '
-                    <p class="grplek">' . $rowcol['przedmiot'] . ' (<a href="' . URL::site('podglad/klasa/' . $rowcol['klasa']) . '">' . $rowcol['klasa'] . '</a> - gr' . $rowcol['grupa'] . ')
-                        (<a href="' . URL::site('podglad/nauczyciel/' . $rowcol['skrot']) . '">' . $rowcol['skrot'] . '</a>)
+                    <p class="grplek">' . $rowcol['przedmiot'] . ' <a href="' . URL::site('podglad/klasa/' . $rowcol['klasa']) . '">' . $rowcol['klasa'] . '</a> - gr' . $rowcol['grupa'] . '
+                        <a href="' . URL::site('podglad/nauczyciel/' . $rowcol['skrot']) . '">' . $rowcol['skrot'] . '</a>
                         </p>
                         ';
             }
@@ -53,11 +53,11 @@ function pobierzdzien($dzien, $lekcja) {
                 <tr>
                     <td></td>
                     <td>Godziny</td>
-                    <td style="width: 150px;">Poniedziałek</td>
-                    <td style="width: 150px;">Wtorek</td>
-                    <td style="width: 150px;">Środa</td>
-                    <td style="width: 150px;">Czwartek</td>
-                    <td style="width: 150px;">Piątek</td>
+                    <td style="min-width: 150px; max-width: 200px;">Poniedziałek</td>
+                    <td style="min-width: 150px; max-width: 200px;">Wtorek</td>
+                    <td style="min-width: 150px; max-width: 200px;">Środa</td>
+                    <td style="min-width: 150px; max-width: 200px;">Czwartek</td>
+                    <td style="min-width: 150px; max-width: 200px;">Piątek</td>
                 </tr>
             </thead>
             <tbody>

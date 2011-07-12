@@ -1,43 +1,52 @@
 <?php
-
-/*
- * Ścieżka do aplikacji w adresie URL
+/**
+ * Plik główny projektu - bootloader Kohany
  * 
- * Jeżeli uruchamiasz aplikację wpisując: http://[nazwa_hosta]/, nie zmienaj
- * tej wartości, w przeciwnym razie zmień na właściwą wartość.
- * 
+ * @author Michał Bocian <mhl.bocian@gmail.com>
+ * @version 1.5
+ * @license GNU GPL v3
  */
-$path = '/';
-
 /**
  * Proszę NIE MODYFIKOWAĆ poniższego kodu
  */
-
-if(!file_exists('index.php')){
-    die('Musisz uruchomic plik z poziomu katalogu aplikacji');
-}
 $err = '';
-if (phpversion() < 5.3) {
-    $err.='Wymagane jest PHP w wersji 5.3'.PHP_EOL;
+
+if (phpversion() < '5.2.5') {
+    $err.='&bull; Wymagane jest PHP w wersji 5.2.5<br/>';
 }
-if (!class_exists('SQLite3')) {
-    $err.='Wymagana jest obsluga SQLite3 przez PHP'.PHP_EOL;
-}
-if(!extension_loaded('gd')){
-    $err.='Wymagana jest obsługa modulu GD2'.PHP_EOL;
+if (!class_exists('PDO')||!extension_loaded('pdo_sqlite')) {
+    $err.='&bull; Wymagana jest obsluga PDO SQLite3 przez PHP<br/>';
 }
 if (!is_writable(realpath('modules/isf/isf_resources'))) {
-    $err.='Katalog modules/isf/isf_resources musi byc zapisywalny'.PHP_EOL;
+    $err.='&bull; Katalog modules/isf/isf_resources musi byc zapisywalny<br/>';
+}
+if (!file_exists(realpath('modules/isf/isf_resources/default.sqlite'))) {
+    require_once 'modules/isf/classes/kohana/isf.php';
+    $isf = new Kohana_Isf();
+    $isf->DbConnect();
 }
 if ((file_exists(realpath('modules/isf/isf_resources/default.sqlite'))) && !is_writable(realpath('modules/isf/isf_resources/default.sqlite'))) {
-    $err .= 'Plik modules/isf/isf_resources/default.sqlite musi byc zapisywalny'.PHP_EOL;
+    $err .= '&bull; Plik modules/isf/isf_resources/default.sqlite musi byc zapisywalny<br/>';
 }
 if (!is_writable(realpath('application/logs')) || !is_writable(realpath('application/cache'))) {
-    $err .= 'Katalog application/logs i application/cache musi byc zapisywalny'.PHP_EOL;
+    $err .= '&bull; Katalog application/logs i application/cache musi byc zapisywalny<br/>';
 }
 if (!empty($err)) {
-    die($err);
+    echo $err;
+    echo '<p><b>Jezeli blad dotyczy uprawnien plikow:</b></p>';
+    echo '<pre><b>Na systemie UNIX uruchom nastepujace polecenie</b>' . PHP_EOL;
+    echo '$ cd [sciezka_do_katalogu_z_aplikacja]' . PHP_EOL;
+    echo '$ sudo php unixinstall.php</pre><p>Gdy blad wystepuje, musisz
+        recznie zmienic uprawnienia plikow i katalogow</p>';
+    die();
 }
+if (!file_exists('config.php')) {
+    require_once 'install.php';
+    exit;
+} else {
+    require_once 'config.php';
+}
+require_once 'lib/nusoap/nusoap.php';
 define('HTTP_PATH', $path);
 $application = 'application';
 $modules = 'modules';
@@ -70,3 +79,14 @@ echo Request::factory()
         ->execute()
         ->send_headers()
         ->body();
+/**
+ * Dodaje nowa wiadomosc do loga systemowego
+ *
+ * @param string $modul
+ * @param string $wiadomosc 
+ */
+function insert_log ($modul, $wiadomosc){
+    $db = new Kohana_Isf();
+    $db->DbConnect();
+    $db->DbInsert('log', array('data'=>date('d.m.Y H:i:s'),'modul'=>$modul,'wiadomosc'=>$wiadomosc));
+}
