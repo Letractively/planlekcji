@@ -282,7 +282,7 @@ Tworzenie tabeli: tokeny
 
 START;
 
-        $isf->DbTblCreate('log', array(
+        $isf->DbTblCreate('tokeny', array(
             'login' => 'text',
             'token' => 'text',
         ));

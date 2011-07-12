@@ -93,7 +93,7 @@ class Controller_Klasy extends Controller {
                 exit;
             }
 
-            $m = preg_match('/([.!@#$;%^&*()_+-|])/i', $_POST['inpKlasa']);
+            $m = preg_match('/([.!@#$;%^&*()_+|])/i', $_POST['inpKlasa']);
 
             if ($m == true) {
                 Kohana_Request::factory()->redirect('klasy/index/e2');

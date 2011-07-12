@@ -1,13 +1,16 @@
 <?php
-
+date_default_timezone_set('Europe/Warsaw');
 if (isset($_SERVER['HTTP_USER_AGENT'])) {
-    die('Program do uruchomienia w konsoli');
+    die('Program do uruchomienia w konsoli'.PHP_EOL);
+}
+if(!file_exists('index.php')){
+   die('Musisz uruchomic z poziomu katalogu aplikacji'.PHP_EOL);
 }
 if (function_exists('posix_getuid') && posix_getuid() != 0) {
-    die('Na systemie UNIX musisz uruchomic z prawami roota');
+    die('Na systemie UNIX musisz uruchomic z prawami roota'.PHP_EOL);
 }
 if(!isset($argv[1])||!isset($argv[2])){
-    die('php export.php [http://adres] [adres_eksportu]');
+    die('php export.php [http://adres] [adres_eksportu]'.PHP_EOL);
 }
 require_once 'modules/isf/classes/kohana/isf.php';
 require_once 'config.php';
@@ -15,7 +18,7 @@ $GLOBALS['hostname'] = $argv[1].'/';
 $isf = new Kohana_Isf();
 $isf->DbConnect();
 if (!extension_loaded('curl')) {
-    die('Wymagana jest obsluga cURL');
+    die('Wymagana jest obsluga cURL'.PHP_EOL);
 }
 $dirp = realpath($argv[2]).DIRECTORY_SEPARATOR;
 if(!file_exists($argv[2])){
@@ -38,7 +41,7 @@ $GLOBALS['dirp']=$dirp;
 @mkdir($dirp.'nauczyciel');
 @mkdir($dirp.'klasa');
 @mkdir($dirp.'sala');
-echo 'Generowanie strony index.html' . PHP_EOL;
+echo 'Trwa kompilowanie...' . PHP_EOL;
 /**
  * Utworzenie index
  */
@@ -52,7 +55,7 @@ $file = <<<START
 <link rel="stylesheet" type="text/css" href="style.css"/>
 <title>Plan Lekcji - $title</title>
 </head>
-<body bgcolor="#b3c7e1">
+<body bgcolor="#E0FFFF">
 START;
 $file .= '<h1>Plan Lekcji - ' . $ns[1]['wartosc'] . '</h1><hr/>';
 
@@ -72,7 +75,7 @@ $file .= '<h3>Nauczyciele</h3><p class="grplek">';
 foreach ($isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc') as $rowid => $rowcol) {
     $file .= '(' . $rowcol['skrot'] . ') <a target="_blank" href="nauczyciel/' . $rowcol['skrot'] . '.html">' . $rowcol['imie_naz'] . '</a>&emsp;';
 }
-$file .= '</p>';
+$file .= '</p><h3><a href="nauczyciel/zestawienie.html">Zestawienie planów</a></h3>';
 
 $file .= '<hr style="margin-top:10px;"/><p class="grplek">Wygenerowano aplikacją Plan Lekcji, dnia ' . date('d.m.Y')."</p>";
 $file .= <<<START
@@ -85,7 +88,6 @@ fwrite($f, $file);
 function klasafile($klasa) {
     $dirp = $GLOBALS['dirp'];
     $hostname = $GLOBALS['hostname'];
-    echo 'Generowanie strony klasy ' . $klasa . PHP_EOL;
     $ch = curl_init($hostname . 'index.php/podglad/klasa/' . $klasa);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     $ret = curl_exec($ch);
@@ -93,7 +95,7 @@ function klasafile($klasa) {
     $ret = str_replace('/index.php/podglad', '..', $ret);
     $ret = str_replace('/lib/css', '..', $ret);
     $ret = str_replace('/lib/images', '..', $ret);
-    $ret = str_replace('<body>', '<body bgcolor="#b3c7e1">', $ret);
+    $ret = str_replace('<body>', '<body bgcolor="#E0FFFF">', $ret);
     $ret = preg_replace('/(nauczyciel\/)(\w+)/e', '"$1$2".".html"', $ret);
     $ret = preg_replace('/(klasa\/)(\w+)/e', '"$1$2".".html"', $ret);
     $ret = preg_replace('/(sala\/)(\w+)/e', '"$1$2".".html"', $ret);
@@ -108,7 +110,6 @@ foreach ($isf->DbSelect('klasy', array('*')) as $rid => $rcl) {
 function salafile($sala) {
     $dirp = $GLOBALS['dirp'];
     $hostname = $GLOBALS['hostname'];
-    echo 'Generowanie strony sali ' . $sala . PHP_EOL;
     $ch = curl_init($hostname . 'index.php/podglad/sala/' . $sala);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     $ret = curl_exec($ch);
@@ -116,7 +117,7 @@ function salafile($sala) {
     $ret = str_replace('/index.php/podglad', '..', $ret);
     $ret = str_replace('/lib/css', '..', $ret);
     $ret = str_replace('/lib/images', '..', $ret);
-    $ret = str_replace('<body>', '<body bgcolor="#b3c7e1">', $ret);
+    $ret = str_replace('<body>', '<body bgcolor="#E0FFFF">', $ret);
     $ret = preg_replace('/(nauczyciel\/)(\w+)/e', '"$1$2".".html"', $ret);
     $ret = preg_replace('/(klasa\/)(\w+)/e', '"$1$2".".html"', $ret);
     $ret = preg_replace('/(sala\/)(\w+)/e', '"$1$2".".html"', $ret);
@@ -131,7 +132,6 @@ foreach ($isf->DbSelect('sale', array('*')) as $rid => $rcl) {
 function nlfile($skrot) {
     $dirp = $GLOBALS['dirp'];
     $hostname = $GLOBALS['hostname'];
-    echo 'Generowanie strony nauczyciela ' . $skrot . PHP_EOL;
     $ch = curl_init($hostname . 'index.php/podglad/nauczyciel/' . $skrot);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     $ret = curl_exec($ch);
@@ -139,7 +139,7 @@ function nlfile($skrot) {
     $ret = str_replace('/index.php/podglad', '..', $ret);
     $ret = str_replace('/lib/css', '..', $ret);
     $ret = str_replace('/lib/images', '..', $ret);
-    $ret = str_replace('<body>', '<body bgcolor="#b3c7e1">', $ret);
+    $ret = str_replace('<body>', '<body bgcolor="#E0FFFF">', $ret);
     $ret = preg_replace('/(nauczyciel\/)(\w+)/e', '"$1$2".".html"', $ret);
     $ret = preg_replace('/(klasa\/)(\w+)/e', '"$1$2".".html"', $ret);
     $ret = preg_replace('/(sala\/)(\w+)/e', '"$1$2".".html"', $ret);
@@ -150,3 +150,25 @@ function nlfile($skrot) {
 foreach ($isf->DbSelect('nauczyciele', array('*')) as $rid => $rcl) {
     nlfile($rcl['skrot']);
 }
+
+function zfile() {
+    $dirp = $GLOBALS['dirp'];
+    $hostname = $GLOBALS['hostname'];
+    $ch = curl_init($hostname . 'index.php/podglad/zestawienie');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $ret = curl_exec($ch);
+    curl_close($ch);
+    $ret = str_replace('/index.php/podglad', '..', $ret);
+    $ret = str_replace('/lib/css', '..', $ret);
+    $ret = str_replace('/lib/images', '..', $ret);
+    $ret = str_replace('<body>', '<body bgcolor="#E0FFFF">', $ret);
+    $ret = preg_replace('/(nauczyciel\/)(\w+)/e', '"$1$2".".html"', $ret);
+    $ret = preg_replace('/(klasa\/)(\w+)/e', '"$1$2".".html"', $ret);
+    $ret = preg_replace('/(sala\/)(\w+)/e', '"$1$2".".html"', $ret);
+    $fh = fopen($dirp.'nauczyciel/zestawienie.html', 'w');
+    fwrite($fh, $ret);
+}
+
+zfile();
+
+echo 'Kompilacja zakonczona'.PHP_EOL;

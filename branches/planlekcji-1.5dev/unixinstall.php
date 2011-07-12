@@ -27,5 +27,6 @@ if(!file_exists('./modules/isf/isf_resources/default.sqlite')){
 chmod('./modules/isf/isf_resources/default.sqlite', 0777);
 chmod('./config.php', 0777);
 chmod('./application/logs', 0777);
+chmod('./export', 0777);
 chmod('./application/cache', 0777);
 echo 'zakonczono. Jezeli blad nadal wystepuje, prosze recznie ustawic prawa'.PHP_EOL;

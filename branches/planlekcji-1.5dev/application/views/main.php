@@ -45,8 +45,9 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
     </head>
     <body <?php echo $bodystr; //argumenty html dla tagu body           ?>>
         <div id="top">
+<a href="<?php echo URL::site(''); ?>">
             <img src="<?php echo URL::base() ?>lib/images/logo.png" alt="<?php echo $ns[1]['wartosc']; ?>"
-                 style="height: 70px;"/>
+                 style="height: 70px;"/></a>
         </div>
         <hr/>
         <?php
@@ -223,7 +224,7 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                                 <p class="error">Jako <b>root</b> nie masz dostępu do edycji planów i zastępstw.
                                     Aby powrócić do ustawień sal, przedmiotów i nauczycieli wykonaj reset systemu,
                                     który usunie wszystkie plany.</p>
-                                <p><a href="<?php echo URL::site('admin/users'); ?>" class="anac">Generuj tokeny dla użytkowników</a></p>
+                                <p><a href="<?php echo URL::site('admin/users'); ?>" class="anac">Użytkownicy i autoryzacja</a></p>
                             <?php endif; ?>
                             <hr/>
                             <?php if ($reg[1]['wartosc'] == 3): // gdy edycja planow zamknieta ?>

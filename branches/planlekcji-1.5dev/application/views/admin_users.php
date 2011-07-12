@@ -9,7 +9,7 @@ $isf->DbConnect();
     <thead style="background: #ABC6DD">
         <tr>
             <td>ID</td>
-            <td>login</td>
+            <td>login (dostępne tokeny)</td>
             <td>Stan konta</td>
             <td>Zalogowany</td>
             <td>Akcja</td>
@@ -23,8 +23,8 @@ $isf->DbConnect();
     <?php foreach ($res as $rowid => $rowcol): ?>
         <tr>
             <td><?php echo $rowcol['uid']; ?></td>
-            <td><?php echo $rowcol['login']; ?></td>
-            <?php if ($rowcol['ilosc_prob'] > 3): ?>
+            <td><?php echo $rowcol['login']; ?> (<?php echo count($isf->DbSelect('tokeny', array('*'), 'where login=\''.$rowcol['login'].'\'')); ?>)</td>
+            <?php if ($rowcol['ilosc_prob'] >= 3): ?>
                 <td><p class="error">█ zablokowany</p></td>
             <?php else: ?>
                 <td><p class="notice">█ aktywny</p></td>

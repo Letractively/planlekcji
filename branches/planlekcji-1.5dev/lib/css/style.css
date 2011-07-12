@@ -9,6 +9,9 @@ body{
 input{
     border: 1px solid;
 }
+img{
+border: 0px;
+}
 h1{
     font-size: 18pt;
 }
