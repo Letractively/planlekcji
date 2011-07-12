@@ -420,6 +420,10 @@ START;
             'login' => 'root',
             'haslo' => md5('plan'.sha1('lekcji'.$pass)),
         ));
+        
+        $token = substr(md5(time().'plan'), 0, 6);
+        
+        $isf->DbInsert('tokeny', array('login'=>'root', 'token'=>md5('plan'.$token)));
 
         print <<< START
 
@@ -432,6 +436,7 @@ Prosze zapisac ponizsze dane, aby uzyskac dostep do panelu administratora
 
     Login: <b>root</b>
     Haslo: <b>$pass</b>
+    Token (staly): <b>$token</b>
 
 <a href="index.php">Strona glowna</a>
 START;

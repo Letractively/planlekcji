@@ -148,11 +148,14 @@ class Controller_Admin extends Controller {
     public function action_dologin() {
         $login = $_POST['inpLogin'];
         $haslo = $_POST['inpHaslo'];
+        if (!isset($_POST['inpToken'])) {
+            $_POST['inpToken'] = '';
+        }
         insert_log('admin.login', 'Uzytkownik ' . $login . ' proboje sie zalogowac');
         if ($login != 'root') {
             $msg = $this->wsdl->call('doUserLogin', array('login' => $login, 'haslo' => $haslo, 'token' => $_POST['inpToken']), 'webapi.planlekcji.isf');
         } else {
-            $msg = $this->wsdl->call('doLogin', array('login' => $login, 'haslo' => $haslo), 'webapi.planlekcji.isf');
+            $msg = $this->wsdl->call('doLogin', array('login' => $login, 'haslo' => $haslo, 'token' => $_POST['inpToken']), 'webapi.planlekcji.isf');
         }
         if ($msg != 'auth:failed' && $msg != 'auth:locked') {
             $_SESSION['token'] = $msg;
@@ -498,12 +501,60 @@ START;
 
         echo $view->render();
     }
-    
-    public function action_token($user){
+
+    public function action_token($user) {
         $this->check_login();
         $view = View::factory('admin_token');
         $view->set('id', $user);
         echo $view->render();
+    }
+
+    public function action_userdel($uid) {
+        $this->check_login();
+        $isf = new Kohana_Isf();
+        $isf->DbConnect();
+        $u = $isf->DbSelect('uzytkownicy', array('*'), 'where uid=\'' . $uid . '\'');
+        $isf->DbDelete('uzytkownicy', 'uid=\'' . $uid . '\'');
+        $isf->DbDelete('tokeny', 'login=\'' . $u[1]['login'] . '\'');
+        Kohana_Request::factory()->redirect('admin/users');
+    }
+
+    public function action_adduser($err=null) {
+        $this->check_login();
+        $view = new View('main');
+        $view2 = new View('admin_adduser');
+        $view2->set('err', $err);
+        $view->set('content', $view2->render());
+
+        echo $view->render();
+    }
+
+    public function action_douseradd() {
+        $this->check_login();
+        if (!isset($_POST)) {
+            Kohana_Request::factory()->redirect('');
+            exit;
+        }
+        $isf = new Kohana_Isf();
+        $isf->DbConnect();
+        $login = $_POST['inpLogin'];
+        $haslo = $_POST['inpHaslo'];
+        $uid = $_POST['inpUid'];
+        if (strlen($login) < 5 || strlen($haslo) < 6) {
+            Kohana_Request::factory()->redirect('admin/adduser/leng');
+            exit;
+        }
+        if(preg_match('/([!@#$;%^&*()+|])/i', $login)){
+            Kohana_Request::factory()->redirect('admin/adduser/data');
+            exit;
+        }
+        $arr = array(
+            'uid' => $uid,
+            'login' => $login,
+            'haslo' => md5('plan' . sha1('lekcji' . $haslo))
+        );
+        $isf->DbInsert('uzytkownicy', $arr);
+        Kohana_Request::factory()->redirect('admin/users');
     }
 
 }

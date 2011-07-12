@@ -15,12 +15,13 @@ function checkauth($token) {
     }
 }
 
-function doLogin($username, $password) {
+function doLogin($username, $password, $token) {
     $db = new Kohana_Isf();
     $db->DbConnect();
     $haslo = md5('plan' . sha1('lekcji' . $password));
     $uid = $db->DbSelect('uzytkownicy', array('*'), 'where login=\'' . $username . '\' and haslo=\'' . $haslo . '\'');
-    if (count($uid) != 1) {
+    $tok = $db->DbSelect('tokeny', array('*'), 'where login=\'root\' and token=\''.md5('plan'.$token).'\'');
+    if (count($uid) != 1 || count($tok) != 1) {
         return 'auth:failed';
     } else {
         if ($uid[1]['webapi_timestamp'] >= time()) {

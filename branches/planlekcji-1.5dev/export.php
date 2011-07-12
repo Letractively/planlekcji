@@ -93,6 +93,7 @@ function klasafile($klasa) {
     $ret = str_replace('/index.php/podglad', '..', $ret);
     $ret = str_replace('/lib/css', '..', $ret);
     $ret = str_replace('/lib/images', '..', $ret);
+    $ret = str_replace('<body>', '<body bgcolor="#b3c7e1">', $ret);
     $ret = preg_replace('/(nauczyciel\/)(\w+)/e', '"$1$2".".html"', $ret);
     $ret = preg_replace('/(klasa\/)(\w+)/e', '"$1$2".".html"', $ret);
     $ret = preg_replace('/(sala\/)(\w+)/e', '"$1$2".".html"', $ret);
@@ -115,6 +116,7 @@ function salafile($sala) {
     $ret = str_replace('/index.php/podglad', '..', $ret);
     $ret = str_replace('/lib/css', '..', $ret);
     $ret = str_replace('/lib/images', '..', $ret);
+    $ret = str_replace('<body>', '<body bgcolor="#b3c7e1">', $ret);
     $ret = preg_replace('/(nauczyciel\/)(\w+)/e', '"$1$2".".html"', $ret);
     $ret = preg_replace('/(klasa\/)(\w+)/e', '"$1$2".".html"', $ret);
     $ret = preg_replace('/(sala\/)(\w+)/e', '"$1$2".".html"', $ret);
@@ -137,6 +139,7 @@ function nlfile($skrot) {
     $ret = str_replace('/index.php/podglad', '..', $ret);
     $ret = str_replace('/lib/css', '..', $ret);
     $ret = str_replace('/lib/images', '..', $ret);
+    $ret = str_replace('<body>', '<body bgcolor="#b3c7e1">', $ret);
     $ret = preg_replace('/(nauczyciel\/)(\w+)/e', '"$1$2".".html"', $ret);
     $ret = preg_replace('/(klasa\/)(\w+)/e', '"$1$2".".html"', $ret);
     $ret = preg_replace('/(sala\/)(\w+)/e', '"$1$2".".html"', $ret);

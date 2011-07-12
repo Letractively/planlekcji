@@ -10,7 +10,7 @@ $soapsrv = new soap_server();
 
 $soapsrv->configureWSDL('planlekcji-webapi', $namespace);
 
-$soapsrv->register('doLogin', array('username' => 'xsd:string', 'password' => 'xsd:string'), array('return' => 'xsd:string'), $namespace);
+$soapsrv->register('doLogin', array('username' => 'xsd:string', 'password' => 'xsd:string', 'token'=>'xsd:string'), array('return' => 'xsd:string'), $namespace);
 $soapsrv->register('doUserLogin', array('username' => 'xsd:string', 'password' => 'xsd:string', 'token'=>'xsd:string'), array('return' => 'xsd:string'), $namespace);
 $soapsrv->register('doShowAuthTime', array('token' => 'xsd:string'), array('return' => 'xsd:string'), $namespace);
 $soapsrv->register('doRenewToken', array('token'=>'xsd:string'), array('return'=>'xsd:string'), $namespace);
