@@ -256,7 +256,7 @@ class Controller_Admin extends Controller {
         $this->wsdl->call('doLogout', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
         unset($_SESSION['token']);
         setcookie('login', '', time() - 3600, '/');
-        insert_log('admin.chpass', 'Uzytkownik ' . $_SESSION['user'] . ' wylogowuje sie');
+        insert_log('admin.logout', 'Uzytkownik ' . $_SESSION['user'] . ' wylogowuje sie');
         session_destroy();
 
         Kohana_Request::factory()->redirect('default/index');
@@ -497,6 +497,16 @@ START;
         $this->check_login();
         $view = new View('main');
         $view2 = new View('admin_users');
+        $view->set('content', $view2->render());
+
+        echo $view->render();
+    }
+    
+    public function action_logs($page=1) {
+        $this->check_login();
+        $view = new View('main');
+        $view2 = new View('admin_logs');
+        $view2->set('page', $page);
         $view->set('content', $view2->render());
 
         echo $view->render();

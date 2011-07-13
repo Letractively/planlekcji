@@ -74,3 +74,9 @@
 1.5.0-63 PRE BETA5
     - Eksporter planów lekcji do postaci statycznej (czysty HTML)
 	Użycie: php export.php http://localhost /home/user/Dokumenty/Plan
+---
+1.5.0-68 BETA6
+    - Eksporter działa tylko w trybie przeglądraki, wymaga zalogowania, eksportuje pliki
+      do archiwum zip.
+    - Podgląd dziennika (log)
+    - Podgląd rejestru

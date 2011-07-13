@@ -4,7 +4,7 @@ $isf->DbConnect();
 ?>
 <h1>Podgląd rejestru systetmowego</h1>
 <p class="error">Modyfikacja rejestru grozi nieprawidłowym działaniem systemu!</p>
-<form action="<?php echo URL::site('regedit/zmien'); ?>" method="post">
+<!--<form action="<?php echo URL::site('regedit/zmien'); ?>" method="post">-->
     <table class="przed">
         <thead style="background: #ff6666">
             <tr>
@@ -30,5 +30,5 @@ $isf->DbConnect();
         </tbody>
     </table>
     <br/>
-    <button type="submit" name="btnSubmit">Zapisz zmiany</button>
-</form>
+    <button type="submit" name="btnSubmit">Zapisz zmiany (niefunkcjonalne)</button>
+<!--</form>-->

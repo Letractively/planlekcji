@@ -43,11 +43,11 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
         }
         ?>
     </head>
-    <body <?php echo $bodystr; //argumenty html dla tagu body           ?>>
+    <body <?php echo $bodystr; //argumenty html dla tagu body            ?>>
         <div id="top">
-<a href="<?php echo URL::site(''); ?>">
-            <img src="<?php echo URL::base() ?>lib/images/logo.png" alt="<?php echo $ns[1]['wartosc']; ?>"
-                 style="height: 70px;"/></a>
+            <a href="<?php echo URL::site(''); ?>">
+                <img src="<?php echo URL::base() ?>lib/images/logo.png" alt="<?php echo $ns[1]['wartosc']; ?>"
+                     style="height: 70px;"/></a>
         </div>
         <hr/>
         <?php
@@ -168,6 +168,10 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                                 </li>
                                 <li><b><a href="<?php echo URL::site('admin/zamknij'); ?>">Zamknięcie edycji</a></b></li>
                             </ul>
+                            <ul>
+                                <li><a href="<?php echo URL::site('admin/zamknij'); ?>">Podgląd rejestru</a></li>
+                                <li><a href="<?php echo URL::site('admin/zamknij'); ?>">Podgląd dzienników</a></li>
+                            </ul>
                             <p class="info">Dopóki nie zamkniesz edycji danych, nie będziesz mógł tworzyć planów.
                                 Zamknięcie edycji oznacza <b>brak możliwości</b> ponownej edycji danych, chyba, że
                                 wykonasz reset systemu, który wiąże się z utratą pewnych danych.</p>
@@ -221,13 +225,26 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                                 </ul>
                             <?php endif; ?>
                             <?php if ($reg[1]['wartosc'] != 1 && $_SESSION['user'] == 'root'): //gdy edycja sal etc ?>
+                                <p>
+                                    <img src="<?php echo URL::base(); ?>lib/images/t1.png" alt="" width="24" height="24"/>
+                                    <a href="<?php echo URL::site('admin/users'); ?>" class="anac">Użytkownicy i autoryzacja</a>
+                                </p>
+                                <ul>
+                                    <li><a href="<?php echo URL::site('regedit'); ?>">Podgląd rejestru</a></li>
+                                    <li><a href="<?php echo URL::site('admin/logs'); ?>">Podgląd dzienników</a></li>
+                                </ul>
                                 <p class="error">Jako <b>root</b> nie masz dostępu do edycji planów i zastępstw.
                                     Aby powrócić do ustawień sal, przedmiotów i nauczycieli wykonaj reset systemu,
                                     który usunie wszystkie plany.</p>
-                                <p><a href="<?php echo URL::site('admin/users'); ?>" class="anac">Użytkownicy i autoryzacja</a></p>
                             <?php endif; ?>
                             <hr/>
                             <?php if ($reg[1]['wartosc'] == 3): // gdy edycja planow zamknieta ?>
+                                <?php if ($_SESSION['token'] != null): ?>
+                                    <h3>
+                                        <img src="<?php echo URL::base(); ?>lib/images/save.png" alt="" width="24" height="24"/>
+                                        <a href="#" onClick="window.open('<?php echo URL::base(); ?>export.php', 'moje', 'width=500,height=500')" class="anac">Eksport planu zajęć</a>
+                                    </h3>
+                                <?php endif; ?>
                                 <h3>Plany lekcji według klas</h3>
                                 <ul>
                                     <?php foreach ($isf->DbSelect('klasy', array('*'), 'order by klasa asc') as $rw => $rc): ?>

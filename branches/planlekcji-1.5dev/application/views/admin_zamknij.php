@@ -21,7 +21,7 @@ $c = count($db->DbSelect('uzytkownicy', array('*'), 'where login != \'root\''));
 </form>
 <?php else: ?>
 <h1>Zamknięcie edycji systemu</h1>
-<p>&emsp;&bull;&nbsp;<b>Zamknięcie edycji</b> wymaga utworzenia zwykłego konta
+<p class="error">&emsp;&bull;&nbsp;<b>Zamknięcie edycji</b> wymaga utworzenia zwykłego konta
 użytkownika systemu Plan Lekcji. Konto <b>roota</b> nie jest upoważnione do
 edycji planów.</p>
 <?php endif; ?>
