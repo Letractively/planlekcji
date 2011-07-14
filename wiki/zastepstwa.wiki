@@ -1,0 +1,7 @@
+#summary O systemie zastepstw
+
+= Rodzaje zastepstw (systemowe) =
+|| lekcja wolna || odwołane ||
+
+= Przypisywanie dostępnych zajęć =
+Aktualne dostępne zajęcia, są przypisywane tylko dla nauczycieli nie uczących klasę lub grupę w danym dniu i na danej lekcji.
