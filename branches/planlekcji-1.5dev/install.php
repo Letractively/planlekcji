@@ -85,7 +85,7 @@ else:
             </head>
             <body>
                 <img src="lib/images/logo.png"/>
-                <h1>Instalator Intersys Plan Lekcji</h1>
+                <h1>Instalator pakietu Internetowy Plan Lekcji 1.5</h1>
                 <?php
                 /**
                  * Wymaga instalacji z hosta lokalnego
@@ -103,7 +103,7 @@ else:
                     $r = str_replace('install.php', '', $r);
                     $r = str_replace('?err', '', $r);
                     ?>
-                    <h3>Krok 1</h3>
+                    <h3>Krok 1 - wprowadzanie danych</h3>
                     <form action="" method="post">
                         <b>Nazwa szkoły: </b>
                         <input type="text" name="inpSzkola" size="80"/><p/>
@@ -129,335 +129,228 @@ else:
      */
     else:
         ?>
-        <?php try { ?>
-            <?php
-            if (empty($_POST['inpSzkola']) || $_POST['inpSzkola'] == ''):
-                header('Location: install.php?err');
-                exit;
-            endif;
-            echo '<link rel="stylesheet" type="text/css" href="lib/css/style.css"/>';
-            echo '<h1>Proces instalacji</h1><p class="info">Na dole strony znajduja sie dane
-            do logowania!</p><pre>';
-            $szkola = $_POST['inpSzkola'];
-            $a = fopen('config.php', 'w');
-            /**
-             * Czy udalo sie utworzyc plik config.php
-             */
-            if (!$a) {
-                $ferr = true;
-            } else {
-                $file = '<?php' . PHP_EOL . '$path = \'' . $_POST['inpPath'] . '\';' . PHP_EOL . '?>';
-                fputs($a, $file);
-                fclose($a);
-            }
-            print <<< START
-
-+ + + + + + + + + + + + + + + + + + + +
-+                                     +
-+    I   N   T   E    R   S   Y   S   +  Wersja 1.5
-+    P  L  A  N   L  E  K  C  J  I    +  UNSTABLE
-+                                     +
-+ + + + + + + + + + + + + + + + + + + +
-
-START;
-
-            print <<< START
-Tworzenie tabeli: przedmioty
-
-START;
-
-            $isf->DbTblCreate('przedmioty', array(
-                'przedmiot' => 'text not null'
-            ));
-
-            print <<< START
-Tworzenie tabeli: sale
-
-START;
-
-            $isf->DbTblCreate('sale', array(
-                'sala' => 'text not null'
-            ));
-
-            print <<< START
-Tworzenie tabeli: przedmiot_sale
-
-START;
-
-            $isf->DbTblCreate('przedmiot_sale', array(
-                'przedmiot' => 'text not null',
-                'sala' => 'text not null'
-            ));
-
-            print <<< START
-Tworzenie tabeli: klasy
-
-START;
-
-            $isf->DbTblCreate('klasy', array(
-                'klasa' => 'text not null'
-            ));
-
-            print <<< START
-Tworzenie tabeli: nauczyciele
-
-START;
-
-            $isf->DbTblCreate('nauczyciele', array(
-                'imie_naz' => 'text not null',
-                'skrot' => 'text not null'
-            ));
-
-            print <<< START
-Tworzenie tabeli: nl_przedm
-
-START;
-
-            $isf->DbTblCreate('nl_przedm', array(
-                'nauczyciel' => 'text not null',
-                'przedmiot' => 'text not null'
-            ));
-
-            print <<< START
-Tworzenie tabeli: nl_klasy
-
-START;
-
-            $isf->DbTblCreate('nl_klasy', array(
-                'nauczyciel' => 'text not null',
-                'klasa' => 'text not null'
-            ));
-
-            print <<< START
-Tworzenie tabeli: rejestr
-
-START;
-
-            $isf->DbTblCreate('rejestr', array(
-                'opcja' => 'text not null',
-                'wartosc' => 'text'
-            ));
-
-            print <<< START
-Tworzenie tabeli: planlek
-
-START;
-
-            $isf->DbTblCreate('planlek', array(
-                'dzien' => 'text',
-                'klasa' => 'text',
-                'lekcja' => 'text',
-                'przedmiot' => 'text',
-                'sala' => 'text',
-                'nauczyciel' => 'text',
-                'skrot' => 'text'
-            ));
-
-            print <<< START
-Tworzenie tabeli: uzytkownicy
-
-START;
-
-            $isf->DbTblCreate('uzytkownicy', array(
-                'uid' => 'integer primary key autoincrement not null',
-                'login' => 'text not null',
-                'haslo' => 'text not null',
-                'webapi_token' => 'text',
-                'webapi_timestamp' => '',
-                'ilosc_prob' => ''
-            ));
-
-            print <<< START
-Tworzenie tabeli: log
-
-START;
-
-            $isf->DbTblCreate('log', array(
-                'id' => 'integer primary key autoincrement not null',
-                'data' => 'text not null',
-                'modul' => 'text not null',
-                'wiadomosc' => 'text',
-            ));
-
-            print <<< START
-Tworzenie tabeli: tokeny
-
-START;
-
-            $isf->DbTblCreate('tokeny', array(
-                'login' => 'text',
-                'token' => 'text',
-            ));
-
-            print <<< START
-Tworzenie tabeli: plan_grupy
-
-START;
-
-            $isf->DbTblCreate('plan_grupy', array(
-                'dzien' => 'text',
-                'lekcja' => 'text',
-                'klasa' => 'text',
-                'grupa' => 'text',
-                'przedmiot' => 'text',
-                'nauczyciel' => 'text',
-                'skrot' => 'text',
-                'sala' => 'text'
-            ));
-
-            print <<< START
-Tworzenie tabeli: zast_id
-
-START;
-
-            $isf->DbTblCreate('zast_id', array(
-                'zast_id' => 'integer primary key autoincrement not null',
-                'dzien' => 'text',
-                'za_nl' => 'text',
-                'info' => 'text',
-            ));
-
-            print <<< START
-Tworzenie tabeli: zastepstwa
-
-START;
-
-            $isf->DbTblCreate('zastepstwa', array(
-                'zast_id' => 'text',
-                'lekcja' => 'text',
-                'przedmiot' => 'text',
-                'nauczyciel' => 'text',
-                'sala' => 'text',
-            ));
-
-            print <<< START
-Tworzenie tabeli: lek_godziny
-
-Zakonczono tworzenie bazy danych!
-
-START;
-
-            $isf->DbTblCreate('lek_godziny', array(
-                'lekcja' => 'text',
-                'godzina' => 'text',
-                'dl_prz' => 'text'
-            ));
-
-            print <<< START
-Wypelnianie rejestru...
-
-START;
-
-            $isf->DbInsert('rejestr', array(
-                'opcja' => 'edycja_danych',
-                'wartosc' => '1'
-            ));
-
-            $isf->DbInsert('rejestr', array(
-                'opcja' => 'ilosc_godzin_lek',
-                'wartosc' => '1'
-            ));
-
-            $isf->DbInsert('rejestr', array(
-                'opcja' => 'dlugosc_lekcji',
-                'wartosc' => '45'
-            ));
-
-            $isf->DbInsert('rejestr', array(
-                'opcja' => 'nazwa_szkoly',
-                'wartosc' => $szkola
-            ));
-
-            $isf->DbInsert('rejestr', array(
-                'opcja' => 'index_text',
-                'wartosc' => '<h1>Witaj w Planie Lekcji 1.5</h1><p>Na początek proszę zmienić hasła do panelu administracyjnego
-                oraz zmienić treść tej strony w górnym panelu użytkownika.</p><p>Dziękujemy za skorzystanie z systemu Plan Lekcji</p>'
-                    ), false);
-
-            $isf->DbInsert('rejestr', array(
-                'opcja' => 'ilosc_grup',
-                'wartosc' => '0'
-            ));
-
-            $isf->DbInsert('rejestr', array(
-                'opcja' => 'godz_rozp_zaj',
-                'wartosc' => '08:00'
-            ));
-
-            $isf->DbInsert('rejestr', array(
-                'opcja' => 'installed',
-                'wartosc' => '1'
-            ));
-
-            $isf->DbInsert('rejestr', array(
-                'opcja' => 'app_ver',
-                'wartosc' => '1.5b5'
-            ));
-
-            $isf->DbInsert('rejestr', array(
-                'opcja' => 'randtoken_version',
-                'wartosc' => '1.0b5'
-            ));
-
-            $isf->DbInsert('log', array(
-                'data' => date('d.m.Y H:i:s'),
-                'modul' => 'plan.install',
-                'wiadomosc' => 'Instalacja systemu'
-            ));
-
-            $isf->DbInsert('log', array(
-                'data' => date('d.m.Y H:i:s'),
-                'modul' => 'plan.install',
-                'wiadomosc' => 'Tworzenie administratora'
-            ));
-
-            $pass = substr(md5(@date('Y:m:d')), 0, 8);
-            $pass = rand(1, 100) . $pass;
-            print <<< START
-Utworzenie administratora...
-    
-START;
-
-            $isf->DbInsert('uzytkownicy', array(
-                'login' => 'root',
-                'haslo' => md5('plan' . sha1('lekcji' . $pass)),
-            ));
-
-            $token = substr(md5(time() . 'plan'), 0, 6);
-
-            $isf->DbInsert('tokeny', array('login' => 'root', 'token' => md5('plan' . $token)));
-
-            print <<< START
-
-INSTALACJA ZAKONCZONA POWODZENIEM!
-        
-* Prosze zapisac dane oraz usunac plik install.php,
-    aby kontynuowac prace z systemem
-        
-Prosze zapisac ponizsze dane, aby uzyskac dostep do panelu administratora
-
-    Login: <b>root</b>
-    Haslo: <b>$pass</b>
-    Token (staly): <b>$token</b>
-
-<a href="index.php">Strona glowna</a>
-START;
-            /**
-             * Gdy plik config.php nie zostal zapisany
-             */
-            if ($ferr == true) {
-                echo '<br/><b>BŁĄD ZAPISU: config.php</b><br/>Prosze utworzyc plik config.php<br/>';
-                echo htmlspecialchars('<?php') . PHP_EOL;
-                echo htmlspecialchars('$path = \'' . $r . '\';') . PHP_EOL;
-                echo htmlspecialchars('?>');
-            }
-            echo '</pre>';
-            ?>
         <?php
-        } catch (Exception $e) {
-            echo '<h1>Wystapil blad instalacji</h1>';
-            echo $e->getMessage();
+        if (empty($_POST['inpSzkola']) || $_POST['inpSzkola'] == ''):
+            header('Location: install.php?err');
+            exit;
+        endif;
+        $szkola = $_POST['inpSzkola'];
+        $a = fopen('config.php', 'w');
+        /**
+         * Czy udalo sie utworzyc plik config.php
+         */
+        if (!$a) {
+            $ferr = true;
+        } else {
+            $file = '<?php' . PHP_EOL . '$path = \'' . $_POST['inpPath'] . '\';' . PHP_EOL . '?>';
+            fputs($a, $file);
+            fclose($a);
         }
+
+        $isf->DbTblCreate('przedmioty', array(
+            'przedmiot' => 'text not null'
+        ));
+
+        $isf->DbTblCreate('sale', array(
+            'sala' => 'text not null'
+        ));
+
+        $isf->DbTblCreate('przedmiot_sale', array(
+            'przedmiot' => 'text not null',
+            'sala' => 'text not null'
+        ));
+
+        $isf->DbTblCreate('klasy', array(
+            'klasa' => 'text not null'
+        ));
+
+        $isf->DbTblCreate('nauczyciele', array(
+            'imie_naz' => 'text not null',
+            'skrot' => 'text not null'
+        ));
+
+        $isf->DbTblCreate('nl_przedm', array(
+            'nauczyciel' => 'text not null',
+            'przedmiot' => 'text not null'
+        ));
+
+        $isf->DbTblCreate('nl_klasy', array(
+            'nauczyciel' => 'text not null',
+            'klasa' => 'text not null'
+        ));
+
+        $isf->DbTblCreate('rejestr', array(
+            'opcja' => 'text not null',
+            'wartosc' => 'text'
+        ));
+
+        $isf->DbTblCreate('planlek', array(
+            'dzien' => 'text',
+            'klasa' => 'text',
+            'lekcja' => 'text',
+            'przedmiot' => 'text',
+            'sala' => 'text',
+            'nauczyciel' => 'text',
+            'skrot' => 'text'
+        ));
+
+        $isf->DbTblCreate('uzytkownicy', array(
+            'uid' => 'integer primary key autoincrement not null',
+            'login' => 'text not null',
+            'haslo' => 'text not null',
+            'webapi_token' => 'text',
+            'webapi_timestamp' => '',
+            'ilosc_prob' => ''
+        ));
+
+        $isf->DbTblCreate('log', array(
+            'id' => 'integer primary key autoincrement not null',
+            'data' => 'text not null',
+            'modul' => 'text not null',
+            'wiadomosc' => 'text',
+        ));
+
+        $isf->DbTblCreate('tokeny', array(
+            'login' => 'text',
+            'token' => 'text',
+        ));
+
+        $isf->DbTblCreate('plan_grupy', array(
+            'dzien' => 'text',
+            'lekcja' => 'text',
+            'klasa' => 'text',
+            'grupa' => 'text',
+            'przedmiot' => 'text',
+            'nauczyciel' => 'text',
+            'skrot' => 'text',
+            'sala' => 'text'
+        ));
+
+        $isf->DbTblCreate('zast_id', array(
+            'zast_id' => 'integer primary key autoincrement not null',
+            'dzien' => 'text',
+            'za_nl' => 'text',
+            'info' => 'text',
+        ));
+
+        $isf->DbTblCreate('zastepstwa', array(
+            'zast_id' => 'text',
+            'lekcja' => 'text',
+            'przedmiot' => 'text',
+            'nauczyciel' => 'text',
+            'sala' => 'text',
+        ));
+
+        $isf->DbTblCreate('lek_godziny', array(
+            'lekcja' => 'text',
+            'godzina' => 'text',
+            'dl_prz' => 'text'
+        ));
+
+        $isf->DbInsert('rejestr', array(
+            'opcja' => 'edycja_danych',
+            'wartosc' => '1'
+        ));
+
+        $isf->DbInsert('rejestr', array(
+            'opcja' => 'ilosc_godzin_lek',
+            'wartosc' => '1'
+        ));
+
+        $isf->DbInsert('rejestr', array(
+            'opcja' => 'dlugosc_lekcji',
+            'wartosc' => '45'
+        ));
+
+        $isf->DbInsert('rejestr', array(
+            'opcja' => 'nazwa_szkoly',
+            'wartosc' => $szkola
+        ));
+
+        $isf->DbInsert('rejestr', array(
+            'opcja' => 'index_text',
+            'wartosc' => '<h1>Witaj w Planie Lekcji 1.5</h1><p>Na początek proszę zmienić hasła do panelu administracyjnego
+                oraz zmienić treść tej strony w górnym panelu użytkownika.</p><p>Dziękujemy za skorzystanie z systemu Plan Lekcji</p>'
+                ), false);
+
+        $isf->DbInsert('rejestr', array(
+            'opcja' => 'ilosc_grup',
+            'wartosc' => '0'
+        ));
+
+        $isf->DbInsert('rejestr', array(
+            'opcja' => 'godz_rozp_zaj',
+            'wartosc' => '08:00'
+        ));
+
+        $isf->DbInsert('rejestr', array(
+            'opcja' => 'installed',
+            'wartosc' => '1'
+        ));
+
+        $isf->DbInsert('rejestr', array(
+            'opcja' => 'app_ver',
+            'wartosc' => '1.5.0 rtm 201107141355'
+        ));
+
+        $isf->DbInsert('rejestr', array(
+            'opcja' => 'randtoken_version',
+            'wartosc' => '1.5.0 rtm 201107141355'
+        ));
+
+        $isf->DbInsert('log', array(
+            'data' => date('d.m.Y H:i:s'),
+            'modul' => 'plan.install',
+            'wiadomosc' => 'Instalacja systemu'
+        ));
+
+        $isf->DbInsert('log', array(
+            'data' => date('d.m.Y H:i:s'),
+            'modul' => 'plan.install',
+            'wiadomosc' => 'Tworzenie administratora'
+        ));
+
+        $pass = substr(md5(@date('Y:m:d')), 0, 8);
+        $pass = rand(1, 100) . $pass;
+
+        $isf->DbInsert('uzytkownicy', array(
+            'login' => 'root',
+            'haslo' => md5('plan' . sha1('lekcji' . $pass)),
+        ));
+
+        $token = substr(md5(time() . 'plan'), 0, 6);
+
+        $isf->DbInsert('tokeny', array('login' => 'root', 'token' => md5('plan' . $token)));
         ?>
+        <html>
+            <head>
+                <meta charset="UTF-8"/>
+                <link rel="stylesheet" type="text/css" href="lib/css/style.css"/>
+                <title>Instalator pakietu Internetowy Plan Lekcji 1.5</title>
+            </head>
+            <body>
+                <img src="lib/images/logo.png"/>
+                <h1>Instalator pakietu Internetowy Plan Lekcji 1.5</h1><h3>Krok 2: instalacja</h3>
+                <h3>Dane administratora</h3>
+                <p><b>Login: </b>root</p>
+                <p><b>Hasło: </b><?php echo $pass; ?></p>
+                <p><b>Token: </b><?php echo $token; ?></p>
+                <p class="info">Zapamiętaj dane do logowania oraz usuń pliki <b>install.php</b> oraz <b>unixinstall.php</b>,
+                			a następnie przejdź do <a href="index.php">strony głównej</a>.</p>
+                    <?php
+                    /**
+                     * Gdy plik config.php nie zostal zapisany
+                     */
+                    if ($ferr == true) {
+                        echo '<pre><b>BŁĄD ZAPISU: config.php</b><br/>Prosze utworzyc plik config.php<br/>';
+                        echo htmlspecialchars('<?php') . PHP_EOL;
+                        echo htmlspecialchars('$path = \'' . $r . '\';') . PHP_EOL;
+                        echo htmlspecialchars('define(\'APP_PATH\', $path);') . PHP_EOL;
+                        echo htmlspecialchars('?>');
+                        echo '</pre>';
+                    }
+                    ?>
+            </body>
+        </html>
     <?php endif; ?>
 <?php endif; ?>

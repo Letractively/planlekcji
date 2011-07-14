@@ -34,6 +34,10 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
         <?php echo $script; //wyswietla skrypt, np jquery ?>
         <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style.css"/>
         <?php
+        $isf->IE9_faviconset();
+        $isf->IE9_WebAPP('Internetowy Plan Lekcji', 'Uruchom IPL 1.5', APP_PATH);
+        $isf->IE9_apptask('Logowanie', 'index.php/admin/login');
+        echo $isf->IE9_make();
         if (isset($_SESSION['token'])) {
             $zadmin = time() + 10 * 60;
             $toktime = strtotime($_SESSION['token_time']);
@@ -169,8 +173,8 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                                 <li><b><a href="<?php echo URL::site('admin/zamknij'); ?>">Zamknięcie edycji</a></b></li>
                             </ul>
                             <ul>
-                                <li><a href="<?php echo URL::site('admin/zamknij'); ?>">Podgląd rejestru</a></li>
-                                <li><a href="<?php echo URL::site('admin/zamknij'); ?>">Podgląd dzienników</a></li>
+                                <li><a href="<?php echo URL::site('regedit'); ?>">Podgląd rejestru</a></li>
+                                <li><a href="<?php echo URL::site('admin/logs'); ?>">Podgląd dzienników</a></li>
                             </ul>
                             <p class="info">Dopóki nie zamkniesz edycji danych, nie będziesz mógł tworzyć planów.
                                 Zamknięcie edycji oznacza <b>brak możliwości</b> ponownej edycji danych, chyba, że

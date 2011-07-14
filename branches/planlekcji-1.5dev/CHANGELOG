@@ -86,3 +86,9 @@
 ---
 1.5.0-70
     - Poprawki bledow, uzupelnienie dokumentacji
+---
+1.5.0-72 RTM
+    - Zgodnosc z IE9 (przypinanie kart)
+    - Poprawki w instalatorze (usuniecie rzeczy z wersji 1.0)
+    - czyszczenie kodu
+    - wydanie RTM
