@@ -1,9 +1,22 @@
 <?php
-
+/**
+ * 
+ */
+/**
+ * Zwraca token sesyjny
+ *
+ * @param string $uid login uzytkownika
+ * @return string token
+ */
 function gentoken($uid) {
-    return md5(sha1('1s#plan!!002' . $uid . 'r98mMjs7^A2b' . rand(1000, 9999)));
+    return md5(sha1('1s#plan!!002' . $uid . 'r98mMjs7^A2b' . rand(1000, 9999)).time());
 }
-
+/**
+ * Sprawdza czy uzytkownik posiada token
+ *
+ * @param string $token token sesji
+ * @return mixed true lub okiekt tabeli db 
+ */
 function checkauth($token) {
     $db = new Kohana_Isf();
     $db->DbConnect();
@@ -14,7 +27,14 @@ function checkauth($token) {
         return $res;
     }
 }
-
+/**
+ * Logowanie uzytkownika root
+ *
+ * @param string $username nazwa uzytkownika
+ * @param string $password haslo
+ * @param string $token token logowania
+ * @return string token lub auth:failed 
+ */
 function doLogin($username, $password, $token) {
     $db = new Kohana_Isf();
     $db->DbConnect();
@@ -38,7 +58,14 @@ function doLogin($username, $password, $token) {
         }
     }
 }
-
+/**
+ * Logowanie zwyklego uzytkownika
+ *
+ * @param string $username uzytkownik
+ * @param string $password haslo
+ * @param string $token token logowania
+ * @return string token lub auth:failed 
+ */
 function doUserLogin($username, $password, $token) {
     $db = new Kohana_Isf();
     $db->DbConnect();
@@ -82,7 +109,12 @@ function doUserLogin($username, $password, $token) {
         }
     }
 }
-
+/**
+ * Zwraca date wygasniecia tokena sesji
+ *
+ * @param string $token token sesji
+ * @return string auth:failed lub data wygasniecia tokena
+ */
 function doShowAuthTime($token) {
     $r = checkauth($token);
     if ($r == false) {
@@ -91,7 +123,13 @@ function doShowAuthTime($token) {
         return date('Y-m-d H:i:s', $r[1]['webapi_timestamp']);
     }
 }
-
+/**
+ * Pobiera klucz rejestru systemowego
+ *
+ * @param string $token token zalogowanego uzytkownika
+ * @param string $key nazwa klucza
+ * @return string fetch:failed lub wartosc klucza 
+ */
 function doGetRegistryKey($token, $key) {
     if (!checkauth($token)) {
         return 'auth:failed';
@@ -106,7 +144,12 @@ function doGetRegistryKey($token, $key) {
         }
     }
 }
-
+/**
+ * Odnawia token
+ *
+ * @param string $token token sesji
+ * @return string auth:renew 
+ */
 function doRenewToken($token) {
     $db = new Kohana_Isf();
     $db->DbConnect();
@@ -114,14 +157,25 @@ function doRenewToken($token) {
     $db->DbUpdate('uzytkownicy', array('webapi_timestamp' => $timestamp), 'webapi_token=\'' . $token . '\'');
     return 'auth:renew';
 }
-
+/**
+ * Wylogowuje
+ *
+ * @param string $token token sesji
+ * @return string auth:logout 
+ */
 function doLogout($token) {
     $db = new Kohana_Isf();
     $db->DbConnect();
     $db->DbUpdate('uzytkownicy', array('webapi_timestamp' => '', 'webapi_token' => ''), 'webapi_token=\'' . $token . '\'');
     return 'auth:logout';
 }
-
+/**
+ * Dodaje klase
+ *
+ * @param string $token token
+ * @param string $class nazwa klasy
+ * @return type  class:exists, class:added, auth:failed
+ */
 function doAddClassroom($token, $class) {
     if (!checkauth($token)) {
         return 'auth:failed';
@@ -132,10 +186,18 @@ function doAddClassroom($token, $class) {
             return 'class:exists';
         } else {
             $db->DbInsert('sale', array('sala' => $class));
+            return 'class:added';
         }
     }
 }
-
+/**
+ * Zmienia haslo uzytkownika
+ *
+ * @param string $token token
+ * @param string $old stare haslo
+ * @param string $new nowe haslo
+ * @return string auth:chpasswd, auth:failed 
+ */
 function doChangePass($token, $old, $new) {
     $db = new Kohana_Isf();
     $db->DbConnect();

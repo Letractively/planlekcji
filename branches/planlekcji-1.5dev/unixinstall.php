@@ -7,6 +7,7 @@
  * @author Michał Bocian <mhl.bocian@gmail.com>
  * @license GNU GPL v3
  * @version 1.5
+ * @package main\install
  */
 /**
  * Wymaga uruchomienia z konsoli (CLI)

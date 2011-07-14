@@ -5,6 +5,7 @@
  * @author Michał Bocian <mhl.bocian@gmail.com>
  * @version 1.5
  * @license GNU GPL v3
+ * @package main\index
  */
 /**
  * Proszę NIE MODYFIKOWAĆ poniższego kodu
@@ -65,7 +66,9 @@ define('MODPATH', realpath($modules) . DIRECTORY_SEPARATOR);
 define('SYSPATH', realpath($system) . DIRECTORY_SEPARATOR);
 unset($application, $modules, $system);
 if (file_exists('install' . EXT)) {
-    // Load the installation check
+    /**
+     * Sprawdza istnienie pliku install.php
+     */
     return include 'install' . EXT;
 }
 if (!defined('KOHANA_START_TIME')) {

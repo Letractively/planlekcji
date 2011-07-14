@@ -4,6 +4,8 @@
  * Intersys - Plan Lekcji
  * 
  * @author Michał Bocian <mhl.bocian@gmail.com>
+ * @license GNU GPL v3
+ * @package logic
  */
 defined('SYSPATH') or die('No direct script access.');
 

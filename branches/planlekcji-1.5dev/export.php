@@ -1,20 +1,30 @@
 <?php
-session_start();
-date_default_timezone_set('Europe/Warsaw');
 
-if (!isset($_SERVER['HTTP_USER_AGENT'])) {
-    die('Nie mozna uruchomic w konsoli');
-}
+/**
+ * Eksporter Planow Lekcji (EPL)
+ * 
+ * @author Michal Bocian <mhl.bocian@gmail.com>
+ * @license GNU GPL v3
+ * @package main\export
+ */
+session_start(); // ustawienie sesji
+date_default_timezone_set('Europe/Warsaw'); // ustawienie strefy czasowej
+
+/**
+ * Sprawadza obecnosc wymaganych modulow
+ */
 if (!extension_loaded('curl')) {
-    die('Wymagana jest obsluga cURL. <a href="index.php">Powrót</a>');
+    die('Wymagana jest obsluga cURL');
 }
 if (!class_exists('ZipArchive')) {
-    die('Wymagana jest obsluga ZipArchive. <a href="index.php">Powrót</a>');
+    die('Wymagana jest obsluga ZipArchive');
 }
 if (!is_writable('export')) {
-    die('Katalog export musi byc zapisywalny <a href="index.php">Powrót</a>');
+    die('Katalog export musi byc zapisywalny');
 }
-
+/**
+ * Dolacza niezbedne pliki
+ */
 require_once 'config.php';
 require_once 'modules/isf/classes/kohana/isf.php';
 require_once 'lib/nusoap/nusoap.php';
@@ -143,7 +153,7 @@ foreach ($isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc') as $
 }
 $file .= '</p><h3><a href="nauczyciel/zestawienie.html">Zestawienie planów</a></h3>';
 
-$file .= '<hr style="margin-top:10px;"/><p class="grplek">Wygenerowano aplikacją Plan Lekcji, dnia ' . date('d.m.Y') . "</p>";
+$file .= '<hr style="margin-top:10px;"/><p class="grplek">Wygenerowano aplikacją Plan Lekcji, dnia ' . date('d.m.Y') . '</p>';
 $file .= <<<START
 </body>
 </html>
@@ -163,6 +173,8 @@ function klasafile($klasa) {
     $ret = preg_replace('/(nauczyciel\/)(\w+)/e', '"$1$2".".html"', $ret);
     $ret = preg_replace('/(klasa\/)(\w+)/e', '"$1$2".".html"', $ret);
     $ret = preg_replace('/(sala\/)(\w+)/e', '"$1$2".".html"', $ret);
+    $ret = str_replace(array('</body>', '</html>'), '', $ret);
+    $ret .= '<hr style="margin-top:10px;"/><p class="grplek">Wygenerowano aplikacją Plan Lekcji, dnia ' . date('d.m.Y') . '</p></body></html>';
     return $ret;
 }
 
@@ -183,6 +195,8 @@ function salafile($sala) {
     $ret = preg_replace('/(nauczyciel\/)(\w+)/e', '"$1$2".".html"', $ret);
     $ret = preg_replace('/(klasa\/)(\w+)/e', '"$1$2".".html"', $ret);
     $ret = preg_replace('/(sala\/)(\w+)/e', '"$1$2".".html"', $ret);
+    $ret = str_replace(array('</body>', '</html>'), '', $ret);
+    $ret .= '<hr style="margin-top:10px;"/><p class="grplek">Wygenerowano aplikacją Plan Lekcji, dnia ' . date('d.m.Y') . '</p></body></html>';
     return $ret;
 }
 
@@ -203,6 +217,8 @@ function nlfile($skrot) {
     $ret = preg_replace('/(nauczyciel\/)(\w+)/e', '"$1$2".".html"', $ret);
     $ret = preg_replace('/(klasa\/)(\w+)/e', '"$1$2".".html"', $ret);
     $ret = preg_replace('/(sala\/)(\w+)/e', '"$1$2".".html"', $ret);
+    $ret = str_replace(array('</body>', '</html>'), '', $ret);
+    $ret .= '<hr style="margin-top:10px;"/><p class="grplek">Wygenerowano aplikacją Plan Lekcji, dnia ' . date('d.m.Y') . '</p></body></html>';
     return $ret;
 }
 
@@ -224,6 +240,8 @@ function zfile() {
     $ret = preg_replace('/(nauczyciel\/)(\w+)/e', '"$1$2".".html"', $ret);
     $ret = preg_replace('/(klasa\/)(\w+)/e', '"$1$2".".html"', $ret);
     $ret = preg_replace('/(sala\/)(\w+)/e', '"$1$2".".html"', $ret);
+    $ret = str_replace(array('</body>', '</html>'), '', $ret);
+    $ret .= '<hr style="margin-top:10px;"/><p class="grplek">Wygenerowano aplikacją Plan Lekcji, dnia ' . date('d.m.Y') . '</p></body></html>';
     return $ret;
 }
 
