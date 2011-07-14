@@ -18,6 +18,9 @@ h1{
 pre{
     font-size: 12pt;
 }
+hr{
+	margin: 10px;
+}
 .anac{
     color: #330033;
     font-weight: bold;

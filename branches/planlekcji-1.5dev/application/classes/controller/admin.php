@@ -513,6 +513,14 @@ START;
 
         echo $view->render();
     }
+    
+    public function action_dellogs(){
+        $this->check_login();
+        $isf = new Kohana_Isf();
+        $isf->DbConnect();
+        $isf->DbDelete('log', 'id like \'%\'');
+        Kohana_Request::factory()->redirect('admin/logs');
+    }
 
     public function action_token($user) {
         $this->check_login();

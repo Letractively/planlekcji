@@ -240,10 +240,8 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                             <hr/>
                             <?php if ($reg[1]['wartosc'] == 3): // gdy edycja planow zamknieta ?>
                                 <?php if ($_SESSION['token'] != null): ?>
-                                    <h3>
                                         <img src="<?php echo URL::base(); ?>lib/images/save.png" alt="" width="24" height="24"/>
                                         <a href="#" onClick="window.open('<?php echo URL::base(); ?>export.php', 'moje', 'width=500,height=500')" class="anac">Eksport planu zajęć</a>
-                                    </h3>
                                 <?php endif; ?>
                                 <h3>Plany lekcji według klas</h3>
                                 <ul>

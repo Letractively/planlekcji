@@ -370,8 +370,8 @@ START;
 
             $isf->DbInsert('rejestr', array(
                 'opcja' => 'index_text',
-                'wartosc' => '<h1>Witaj w Planie Lekcji</h1><p>Na początek proszę zmienić hasła do panelu administracyjnego
-                oraz zmienić treść tej strony w górnym panelu użytkownika.</p><p>Dziękuję za skorzystanie z systemu Plan Lekcji</p>'
+                'wartosc' => '<h1>Witaj w Planie Lekcji 1.5</h1><p>Na początek proszę zmienić hasła do panelu administracyjnego
+                oraz zmienić treść tej strony w górnym panelu użytkownika.</p><p>Dziękujemy za skorzystanie z systemu Plan Lekcji</p>'
                     ), false);
 
             $isf->DbInsert('rejestr', array(

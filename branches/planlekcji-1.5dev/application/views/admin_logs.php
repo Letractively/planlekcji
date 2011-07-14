@@ -14,6 +14,7 @@ $res = $isf->DbSelect('log', array('*'), 'order by id desc limit ' . $limit . ' 
             <td>ID</td>
             <td>Data</td>
             <td>Moduł</td>
+            <td><a href="<?php echo URL::site('admin/dellogs'); ?>">Usuń wszystkie logi</a></td>
         </tr>
     </thead>
     <?php foreach ($res as $rowid => $rowcol): ?>
@@ -24,6 +25,9 @@ $res = $isf->DbSelect('log', array('*'), 'order by id desc limit ' . $limit . ' 
             <td><i><?php echo $rowcol['wiadomosc']; ?></i></td>
         </tr>
     <?php endforeach; ?>
+    <?php if ($ile == 0): ?>
+        <tr><td colspan="4"><i>Brak dzienników aplikacji</i></td></tr>
+    <?php endif; ?>
 </table>
 <p></p>
 <p class="grplek">
@@ -35,4 +39,7 @@ $res = $isf->DbSelect('log', array('*'), 'order by id desc limit ' . $limit . ' 
             <a href="<?php echo URL::site('admin/logs/' . $i); ?>"><?php echo $i; ?></a>&emsp;
         <?php endif; ?>
     <?php endfor; ?>
+    <?php if ($ile == 0): ?>
+        <i>brak stron</i>
+    <?php endif; ?>
 </p>
