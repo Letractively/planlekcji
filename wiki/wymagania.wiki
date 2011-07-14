@@ -1,0 +1,6 @@
+#summary Wymagania jakie musi spełnić IPL
+
+ * OS: dowolny
+ * PHP: m.in. wersja 5.2.3+
+ * Moduły PHP: pdo_sqlite (SQLite wersja 3.x)
+ * Opcjonalne: cURL, ZipArchive (eksport planów zajęć)
