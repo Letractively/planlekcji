@@ -2,7 +2,6 @@
 /**
  * Intersys - Plan Lekcji
  * 
- * Wersja pierwsza - 1.0
  * 
  * @author Michał Bocian <mhl.bocian@gmail.com>
  */
@@ -42,6 +41,11 @@ class Controller_Podglad extends Controller {
         
         $view->set('skrot', $klasa);
         $view->set('klasa', $imienaz);
+        echo $view->render();
+    }
+    
+    public function action_zestawienie(){
+        $view = View::factory('podglad_zestawienie');
         echo $view->render();
     }
     
