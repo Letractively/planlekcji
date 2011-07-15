@@ -715,5 +715,91 @@ class Kohana_Isf {
             </script>';
         return $this->script;
     }
+	
+	/**
+     * Znaczniki umozliwiajace podpiecie aplikacji do paska zadan Windows 7
+     * 
+     * Tylko Internet Explorer 9
+     * 
+     * Przyklad uzycia:
+     * <code>
+     * //tworzenie obiektu np. $tools = new \isf\utils\WebResources();
+     * $tools->IE9_WebAPP('Moja strona', 'Otwórz moj¹ stronê');
+     * </code>
+     *
+     * @param text $app_name Nazwa aplikacji
+     * @param text $tooltip Opis strony
+     * @param text $s_url Adres aplikacji, domyslnie /
+     * @param array $win Wymiary okna (szer, wys)
+     */
+    public function IE9_WebAPP($app_name, $tooltip, $s_url='/', $win=array(800, 600)) {
+        $this->ie9script .= '
+            <meta name="application-name" content="' . $app_name . '"/>';
+        $this->ie9script .= '
+            <meta name="msapplication-tooltip" content="' . $tooltip . '"/>';
+        $this->ie9script .= '
+            <meta name="msapplication-starturl" content="' . $s_url . '"/>';
+        $this->ie9script .= '
+            <meta name="msapplication-window" content="width=' . $win[0] . ';height=' . $win[1] . '"/>';
+    }
+
+    /**
+     * Ustawia ikone aplikacji
+     * 
+     * Domyslnie [adres_http_aplikacji]/favicon.ico
+     * 
+     * Przyklad uzycia:
+     * <code>
+     * //tworzenie obiektu np. $tools = new \isf\utils\WebResources();
+     * $tools->favicon_set(); //ustawia domyslna sciezke
+     * </code>
+     *
+     * @param string $path Adres ikony
+     */
+    public function IE9_faviconset($path=null) {
+        if ($path == null)
+            $path = URL::base().'favicon.ico';
+        $this->ie9script .= '
+            <link rel="shortcut icon" href="' . $path . '" />';
+    }
+
+    /**
+     * Tworzy zadanie dla paska zadan Windows 7
+     * 
+     * Tylko Internet Explorer 9
+     * 
+     * Przyklad uzycia:
+     * <code>
+     * //tworzenie obiektu np. $tools = new \isf\utils\WebResources();
+     * //odwolanie do metody IE9_WebAPP
+     * $tools->IE9_apptask('Moje zadanie', '/strona.php');
+     * </code>
+     *
+     * @param text $name Nazwa zadania
+     * @param text $uri Adres pliku. Np. /index.php
+     * @param text $icon Adres ikony, domyslnie favicon.ico
+     */
+    public function IE9_apptask($name, $uri, $icon=null) {
+        if ($icon == null)
+            $icon = URL::base().'favicon.ico';
+        $this->ie9script .= '
+            <meta name="msapplication-task" content="name=' . $name . ';action-uri=' . $uri . ';icon-uri=' . $icon . '"/>';
+    }
+
+    /**
+     * Zwraca gotowy skrypt
+     * 
+     * Przyklad uzycia z <b>systemem szablonow</b>
+     * <code>
+     * //tworzenie obiektu np. $tools = new \isf\utils\WebResources();
+     * //szablon strony np. zmienna $tpl
+     * $tpl->assign('zmienna_w_head', $tools->make_script());
+     * </code>
+     *
+     * @return text Zwraca gotowy skrypt
+     */
+    public function IE9_make() {
+        return $this->ie9script;
+    }
 
 }

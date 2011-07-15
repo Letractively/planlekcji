@@ -44,7 +44,7 @@ class Controller_Sale extends Controller {
         }
         $isf = new Kohana_Isf();
         $isf->DbConnect();
-        $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja="edycja_danych"');
+        $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
         /**
          * Czy mozna edytowac dane
          */
@@ -67,7 +67,7 @@ class Controller_Sale extends Controller {
         $view2->set('_err', $err);
 
 
-        $view->set('bodystr', 'onLoad="document.forms.form1.inpSala.focus()"');
+        $view->set('bodystr', 'onLoad=\'document.forms.form1.inpSala.focus()\'');
         $view->set('content', $view2->render());
         echo $view->render();
     }
@@ -84,7 +84,7 @@ class Controller_Sale extends Controller {
 
             $view2->set('sala', $sala);
 
-            $c = count($isf->DbSelect('przedmiot_sale', array('przedmiot'), 'where sala="' . $sala . '"'));
+            $c = count($isf->DbSelect('przedmiot_sale', array('przedmiot'), 'where sala=\'' . $sala . '\''));
 
             if ($c == 0) {
                 $view2->set('ilosc_przed', 0);
@@ -92,13 +92,13 @@ class Controller_Sale extends Controller {
                 $view2->set('ilosc_przed', $c);
             }
 
-            $view2->set('sala_przedm', $isf->DbSelect('przedmiot_sale', array('przedmiot'), 'where sala="' . $sala . '"'));
+            $view2->set('sala_przedm', $isf->DbSelect('przedmiot_sale', array('przedmiot'), 'where sala=\'' . $sala . '\''));
 
             $view->set('content', $view2->render());
             echo $view->render();
         } else {
-            $isf->DbDelete('sale', 'sala="' . $sala . '"');
-            $isf->DbDelete('przedmiot_sale', 'sala="' . $sala . '"');
+            $isf->DbDelete('sale', 'sala=\'' . $sala . '\'');
+            $isf->DbDelete('przedmiot_sale', 'sala=\'' . $sala . '\'');
             Kohana_Request::factory()->redirect('sale/index/usun');
         }
     }
@@ -109,7 +109,7 @@ class Controller_Sale extends Controller {
             $isf = new Kohana_Isf();
             $isf->DbConnect();
 
-            if (count($isf->DbSelect('sale', array('*'), 'where sala="' . $_POST['inpSala'] . '"')) != 0) {
+            if (count($isf->DbSelect('sale', array('*'), 'where sala=\'' . $_POST['inpSala'] . '\'')) != 0) {
                 Kohana_Request::factory()->redirect('sale/index/e1');
                 exit;
             }
@@ -140,8 +140,8 @@ class Controller_Sale extends Controller {
         $view = view::factory('main');
         $view2 = view::factory('sale_przedmiot');
 
-        $res = $isf->DbSelect('przedmiot_sale', array('*'), 'where sala="' . $sala . '" order by przedmiot asc');
-        $prz_res = $isf->DbSelect('przedmioty', array('przedmiot'), 'except select przedmiot from przedmiot_sale where sala="' . $sala . '"');
+        $res = $isf->DbSelect('przedmiot_sale', array('*'), 'where sala=\'' . $sala . '\' order by przedmiot asc');
+        $prz_res = $isf->DbSelect('przedmioty', array('przedmiot'), 'except select przedmiot from przedmiot_sale where sala=\'' . $sala . '\'');
 
         $view2->set('sala', $sala);
         $view2->set('c', count($res));
@@ -167,7 +167,7 @@ class Controller_Sale extends Controller {
     public function action_przedusun($sala, $przedmiot) {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
-        $isf->DbDelete('przedmiot_sale', 'przedmiot="' . $przedmiot . '" and sala="' . $sala . '"');
+        $isf->DbDelete('przedmiot_sale', 'przedmiot=\'' . $przedmiot . '\' and sala=\'' . $sala . '\'');
         Kohana_Request::factory()->redirect('sale/przedmiot/' . $sala);
     }
 

@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * Plik główny projektu - bootloader Kohany
+ * 
+ * @author Michał Bocian <mhl.bocian@gmail.com>
+ * @version 1.5
+ * @license GNU GPL v3
+ * @package main\index
+ */
 /**
  * Proszę NIE MODYFIKOWAĆ poniższego kodu
  */
@@ -8,22 +15,30 @@ $err = '';
 if (phpversion() < '5.2.5') {
     $err.='&bull; Wymagane jest PHP w wersji 5.2.5<br/>';
 }
-if (!extension_loaded('pdo_mysql')||!class_exists('PDO')) {
-    $err.='&bull; Wymagana jest obsluga PDO MySQL przez PHP<br/>';
+if (!class_exists('PDO')||!extension_loaded('pdo_sqlite')) {
+    $err.='&bull; Wymagana jest obsluga PDO SQLite3 przez PHP<br/>';
+}
+if (!is_writable(realpath('modules/isf/isf_resources'))) {
+    $err.='&bull; Katalog modules/isf/isf_resources musi byc zapisywalny<br/>';
+}
+if (!file_exists(realpath('modules/isf/isf_resources/default.sqlite'))) {
+    require_once 'modules/isf/classes/kohana/isf.php';
+    $isf = new Kohana_Isf();
+    $isf->DbConnect();
+}
+if ((file_exists(realpath('modules/isf/isf_resources/default.sqlite'))) && !is_writable(realpath('modules/isf/isf_resources/default.sqlite'))) {
+    $err .= '&bull; Plik modules/isf/isf_resources/default.sqlite musi byc zapisywalny<br/>';
 }
 if (!is_writable(realpath('application/logs')) || !is_writable(realpath('application/cache'))) {
     $err .= '&bull; Katalog application/logs i application/cache musi byc zapisywalny<br/>';
-    $wt = true;
 }
 if (!empty($err)) {
     echo $err;
-    if ($wt == true) {
-        echo '<p><b>Nastapila proba nadania praw plikom i katalogom.</b></p>';
-        echo '<pre><b>Na systemie UNIX uruchom nastepujace polecenie</b>' . PHP_EOL;
-        echo '$ cd [sciezka_do_katalogu_z_aplikacja]' . PHP_EOL;
-        echo '$ sudo php unixinstall.php</pre><p>Gdy blad wystepuje, musisz
+    echo '<p><b>Jezeli blad dotyczy uprawnien plikow:</b></p>';
+    echo '<pre><b>Na systemie UNIX uruchom nastepujace polecenie</b>' . PHP_EOL;
+    echo '$ cd [sciezka_do_katalogu_z_aplikacja]' . PHP_EOL;
+    echo '$ sudo php unixinstall.php</pre><p>Gdy blad wystepuje, musisz
         recznie zmienic uprawnienia plikow i katalogow</p>';
-    }
     die();
 }
 if (!file_exists('config.php')) {
@@ -32,6 +47,7 @@ if (!file_exists('config.php')) {
 } else {
     require_once 'config.php';
 }
+require_once 'lib/nusoap/nusoap.php';
 define('HTTP_PATH', $path);
 $application = 'application';
 $modules = 'modules';
@@ -50,7 +66,9 @@ define('MODPATH', realpath($modules) . DIRECTORY_SEPARATOR);
 define('SYSPATH', realpath($system) . DIRECTORY_SEPARATOR);
 unset($application, $modules, $system);
 if (file_exists('install' . EXT)) {
-    // Load the installation check
+    /**
+     * Sprawdza istnienie pliku install.php
+     */
     return include 'install' . EXT;
 }
 if (!defined('KOHANA_START_TIME')) {
@@ -64,3 +82,14 @@ echo Request::factory()
         ->execute()
         ->send_headers()
         ->body();
+/**
+ * Dodaje nowa wiadomosc do loga systemowego
+ *
+ * @param string $modul
+ * @param string $wiadomosc 
+ */
+function insert_log ($modul, $wiadomosc){
+    $db = new Kohana_Isf();
+    $db->DbConnect();
+    $db->DbInsert('log', array('data'=>date('d.m.Y H:i:s'),'modul'=>$modul,'wiadomosc'=>$wiadomosc));
+}

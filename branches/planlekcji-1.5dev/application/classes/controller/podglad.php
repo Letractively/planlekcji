@@ -36,7 +36,7 @@ class Controller_Podglad extends Controller {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
         
-        $imienaz = $isf->DbSelect('nauczyciele', array('*'), 'where skrot="'.$klasa.'"');
+        $imienaz = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\''.$klasa.'\'');
         $imienaz = $imienaz[1]['imie_naz'];
         
         $view->set('skrot', $klasa);

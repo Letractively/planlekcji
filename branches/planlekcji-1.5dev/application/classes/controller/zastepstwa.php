@@ -50,7 +50,7 @@ class Controller_Zastepstwa extends Controller {
         }
         $isf = new Kohana_Isf();
         $isf->DbConnect();
-        $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja="edycja_danych"');
+        $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
         if ($reg[1]['wartosc'] != 3) {
             echo '<h1>Edycja danych nie zostala zamknieta</h1>';
             exit;
@@ -62,7 +62,7 @@ class Controller_Zastepstwa extends Controller {
         $this->checklogin();
         $isf = new Kohana_Isf();
         $isf->JQUi();
-        $isf->JQUi_CustomFunction('$("#inpDate").datepicker({beforeShowDay: $.datepicker.noWeekends, "dateFormat": "yy-mm-dd"});');
+        $isf->JQUi_CustomFunction('$(\'#inpDate\').datepicker({beforeShowDay: $.datepicker.noWeekends, \'dateFormat\': \'yy-mm-dd\'});');
 
         $view = view::factory('main');
         $view2 = view::factory('zastepstwa_edycja');

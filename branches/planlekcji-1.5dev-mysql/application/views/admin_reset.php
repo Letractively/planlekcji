@@ -25,15 +25,10 @@
         <input type="checkbox" name="cl"/>
     </p>
     <ul>
-        <li><b>Usuń także:</b>
-            <ul>
-                <li>zdefiniowane sale</li>
-                <li>zdefiniowani nauczyciele</li>
-                <li>zdefiniowane klasy</li>
-                <li>zdefiniowane godziny dzwonków</li>
-            </ul>
-        </li>
-        </p>
+        <li>zdefiniowane sale</li>
+        <li>zdefiniowani nauczyciele</li>
+        <li>zdefiniowane klasy</li>
+        <li>zdefiniowane godziny dzwonków</li>
     </ul>
     <button type="submit" name="btnSubmit">Usuń trwale dane systemu</button>
 </form>

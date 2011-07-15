@@ -10,6 +10,9 @@ $isf->DbConnect();
 $res = $isf->DbSelect('rejestr', array('*'), 'where opcja="ilosc_godzin_lek"');
 /** pobiera dlogosc lekcji w min */
 $dlugosc = $isf->DbSelect('rejestr', array('*'), 'where opcja="dlugosc_lekcji"');
+
+$grz = $isf->DbSelect('rejestr', array('*'), 'where opcja="godz_rozp_zaj"');
+
 /** gdy nie ma takiego klucza w rejestrze tworzy go i przeladowuje strone */
 if (count($res) == 0) {
     $isf->DbInsert('rejestr', array('opcja' => 'ilosc_godzin_lek', 'wartosc' => '0'));
@@ -43,11 +46,13 @@ if (count($res) == 0) {
         <button type="submit" name="btnSubmit">Zastosuj</button>
     </p>
 </form>
-<p class="info">Lekcja 1 rozpoczyna się o godzinie 8:00</p>
 <?php if ($res[1]['wartosc'] == 0): ?>
     <p class="info">Obecna ilość godzin lekcyjnych jest ustawiona na <b>0</b>!</p>
 <?php else: ?>
     <form action="<?php echo URL::site('godziny/lekcje'); ?>" method="post">
+        <p style="font-weight: bold;">
+            Godzina rozpoczęcia zajęć: <input type="text" name="czasRZ" id="czasRZ" value="<?php echo $grz[1]['wartosc']; ?>" size="6"/>
+        </p>
         <table class="przed">
             <thead>
                 <tr>
@@ -92,7 +97,7 @@ if (count($res) == 0) {
                 <?php endfor; ?>
             </tbody>
         </table>
-        <p>Upewnij się że wszystkie dane zostały wpisane.&nbsp;
+        <p class="info">Upewnij się że wszystkie dane zostały wpisane.&nbsp;
             <button type="submit" name="btnSubmitLek">Ustaw godziny</button></p>
     </form>
 <?php endif; ?>
