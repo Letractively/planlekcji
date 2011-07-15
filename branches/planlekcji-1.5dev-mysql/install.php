@@ -1,34 +1,22 @@
 <?php
-/**
- * Instalator Planu Lekcji
- * 
- * @author Michał Bocian <mhl.bocian@gmail.com>
- * @version 1.5
- * @license GNU GPL v3
- * @package main\install
+/*
+ * Plik instalacyjny Planu Lekcji
  */
-require_once 'modules/isf/classes/kohana/isf.php'; # pobiera framework ISF
-$isf = new Kohana_Isf();
-$isf->DbConnect();
-/**
- * Sprawdza czy istnieje tabela rejestr
- */
-$ctb = $isf->DbSelect('sqlite_master', array('*'), 'where name="rejestr"');
-if (count($ctb) != 0) { // gdy istnieje
-    $res = $isf->DbSelect('rejestr', array('*'), 'where opcja="installed"');
+require_once 'modules/isf/classes/kohana/isf.php';
+if (!file_exists('config.php')) {
+    $r = 0;
+} else {
+    $isfa = new Kohana_Isf();
+    $isfa->DbConnect();
+    $res = $isfa->DbSelect('rejestr', array('*'), 'where opcja="installed"');
     if (count($res) >= 1) {
         $r = 1;
+    } else {
+        $r = 0;
     }
-} else { // gdy nie istnieje
-    $r = 0;
 }
 ?>
-<?php
-/**
- * Gdy istnieje tabela rejestr, oznacza ze zostal pakiet zainstalowany
- */
-if ($r == 1):
-    ?>
+<?php if ($r == 1): ?>
     <html>
         <head>
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -48,30 +36,18 @@ if ($r == 1):
                 $r = str_replace('install.php', '', $r);
                 ?>
                 <h3>Plik config.php nie istnieje! Proszę go utworzyć</h3>
-                <p>Proszę utworzyć plik <b>config.php</b> o następującej
-                    treści:</p>
-                <?php
-                echo '<pre>' . htmlspecialchars('<?php') . PHP_EOL .
-                '<b>' . htmlspecialchars('$path = \'' . $r . '\';') . '</b>' . PHP_EOL .
-                htmlspecialchars('?>') . '</pre>';
-                ?>
+                <p>Treść pliku config.php</p>
+                <pre>
+                    <?php echo htmlspecialchars('<?php') . PHP_EOL; ?>
+                    <?php echo htmlspecialchars('$path = \'' . $r . '\';') . PHP_EOL; ?>
+                    <?php echo htmlspecialchars('?>'); ?>
+                </pre>
             <?php endif; ?>
         </body>
     </html>
     <?php exit; ?>
-    <?php
-/**
- * Gdy nie ma tabeli
- */
-else:
-    ?>
-    <?php
-    /**
-     * Sprawdza czy zostal wyslany formularz instalacji
-     * -- nie
-     */
-    if (!isset($_POST['step2'])):
-        ?>
+<?php else: ?>
+    <?php if (!isset($_POST['step2'])): ?>
         <html>
             <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -85,13 +61,8 @@ else:
             </head>
             <body>
                 <img src="lib/images/logo.png"/>
-                <h1>Instalator pakietu Internetowy Plan Lekcji 1.5</h1>
-                <?php
-                /**
-                 * Wymaga instalacji z hosta lokalnego
-                 */
-                if ($_SERVER['SERVER_NAME'] != 'localhost' && $_SERVER['SERVER_NAME'] != '127.0.0.1'):
-                    ?>
+                <h1>Instalator Intersys Plan Lekcji - MySQL</h1>
+                <?php if ($_SERVER['SERVER_NAME'] != 'localhost' && $_SERVER['SERVER_NAME'] != '127.0.0.1'): ?>
                     <p class="error">
                         Aplikacja może zostać zainstalowana tylko wtedy, gdy ta
                         strona jest wywołana z komputera lokalnego.
@@ -103,7 +74,7 @@ else:
                     $r = str_replace('install.php', '', $r);
                     $r = str_replace('?err', '', $r);
                     ?>
-                    <h3>Krok 1 - wprowadzanie danych</h3>
+                    <h3>Krok 1</h3>
                     <form action="" method="post">
                         <b>Nazwa szkoły: </b>
                         <input type="text" name="inpSzkola" size="80"/><p/>
@@ -115,6 +86,14 @@ else:
                             przeglądarki. System automatycznie dopasuje odpowiednią wartość.
                             Proszę nie zmieniać wartości tego pola chyba, że jest ona nieprawidłowa.
                         </p>
+                        <fieldset style="margin: 10px; max-width: 50%">
+                            <legend><b>Dane serwera MySQL</b></legend>
+                            <p><b>Host: <input type="text" name="dbHost" size="50"/></b></p>
+                            <p><b>Login: <input type="text" name="dbLogin" size="50"/></b></p>
+                            <p><b>Hasło: <input type="password" name="dbHaslo" size="50"/></b></p>
+                            <p><b>Baza danych: <input type="text" name="dbBaza" size="50"/></b>
+                                baza musi istnieć</p>
+                        </fieldset>
                         <button type="submit" name="btnSubmit">Zainstaluj aplikację</button>
                     </form>
                     <?php if (isset($_GET['err'])): ?>
@@ -123,30 +102,37 @@ else:
                 <?php endif; ?>
             </body>
         </html>
+    <?php else: ?>
         <?php
-    /**
-     * Gdy formularz zostal wyslany
-     */
-    else:
-        ?>
-        <?php
-        if (empty($_POST['inpSzkola']) || $_POST['inpSzkola'] == ''):
+        if (empty($_POST['inpSzkola']) || $_POST['inpSzkola'] == ''
+                || empty($_POST['dbLogin']) || empty($_POST['dbHaslo'])
+                || empty($_POST['dbBaza']) || empty($_POST['dbHost'])):
             header('Location: install.php?err');
             exit;
         endif;
+
+        echo '<link rel="stylesheet" type="text/css" href="lib/css/style.css"/>';
+        echo '<h1>Proces instalacji</h1><p class="info">Na dole strony znajduja sie dane
+            do logowania!</p><pre>';
         $szkola = $_POST['inpSzkola'];
+        $isf = new Kohana_Isf();
+        $customvars = array(
+            'host' => $_POST['dbHost'],
+            'user' => $_POST['dbLogin'],
+            'password' => $_POST['dbHaslo'],
+            'database' => $_POST['dbBaza'],
+        );
+        $isf->DbConnect($customvars);
         $a = fopen('config.php', 'w');
-        /**
-         * Czy udalo sie utworzyc plik config.php
-         */
         if (!$a) {
             $ferr = true;
         } else {
-            $file = '<?php' . PHP_EOL . '$path = \'' . $_POST['inpPath'] . '\';' . PHP_EOL . '?>';
+            $file = '<?php' . PHP_EOL . '$path = \'' . $_POST['inpPath'] . '\';' . PHP_EOL;
+            $file .= '$my_cfg = array(\'host\'=>\'' . $_POST['dbHost'] . '\',\'user\'=>\'' . $_POST['dbLogin'] . '\', \'password\'=>\'' . $_POST['dbHaslo'] . '\',\'database\'=>\'' . $_POST['dbBaza'] . '\',';
+            $file .= ');' . PHP_EOL . '$GLOBALS[\'my_cfg\']=$my_cfg; ' . PHP_EOL . '?>';
             fputs($a, $file);
             fclose($a);
         }
-
         $isf->DbTblCreate('przedmioty', array(
             'przedmiot' => 'text not null'
         ));

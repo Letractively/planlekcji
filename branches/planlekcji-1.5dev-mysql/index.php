@@ -15,8 +15,8 @@ $err = '';
 if (phpversion() < '5.2.5') {
     $err.='&bull; Wymagane jest PHP w wersji 5.2.5<br/>';
 }
-if (!class_exists('PDO')||!extension_loaded('pdo_sqlite')) {
-    $err.='&bull; Wymagana jest obsluga PDO SQLite3 przez PHP<br/>';
+if (!class_exists('PDO')||!extension_loaded('pdo_mysql')) {
+    $err.='&bull; Wymagana jest obsluga PDO MySQL przez PHP<br/>';
 }
 if (!is_writable(realpath('modules/isf/isf_resources'))) {
     $err.='&bull; Katalog modules/isf/isf_resources musi byc zapisywalny<br/>';
