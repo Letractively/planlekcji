@@ -142,7 +142,9 @@ else:
         if (!$a) {
             $ferr = true;
         } else {
-            $file = '<?php' . PHP_EOL . '$path = \'' . $_POST['inpPath'] . '\';' . PHP_EOL . '?>';
+            $file = '<?php' . PHP_EOL . '$path = \'' . $_POST['inpPath'] . '\';' . PHP_EOL;
+            $file .= 'define(\'APP_PATH\', $path);'. PHP_EOL;
+            $file .= '?>';
             fputs($a, $file);
             fclose($a);
         }
