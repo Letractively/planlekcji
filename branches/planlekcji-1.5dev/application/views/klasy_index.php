@@ -35,7 +35,7 @@ $isf->DbConnect();
 /** pobiera klasy w systemie */
 $res = $isf->DbSelect('klasy', array('klasa'), 'order by klasa asc');
 /** pobiera ilosc grup */
-$grp = $isf->DbSelect('rejestr', array('*'), 'where opcja="ilosc_grup"');
+$grp = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'ilosc_grup\'');
 ?>
 <?php if (count($res) == 0): ?>
     <p class="info">Brak klas w systemie</p>

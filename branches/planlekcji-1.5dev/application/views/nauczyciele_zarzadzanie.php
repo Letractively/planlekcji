@@ -12,7 +12,7 @@ $isf->DbConnect();
 <a href="<?php echo URL::site('nauczyciele/index'); ?>">[ powrót ]</a>
 
 <p><b>Nauczane klasy:</b></p>
-<?php $kls = $isf->DbSelect('nl_klasy', array('klasa'), 'where nauczyciel="' . $nauczyciel . '" order by klasa asc'); ?>
+<?php $kls = $isf->DbSelect('nl_klasy', array('klasa'), 'where nauczyciel=\'' . $nauczyciel . '\' order by klasa asc'); ?>
 <?php if (count($kls) == 0): ?>
     <p class="info">Brak nauczanych klas</p>
 <?php else: ?>
@@ -27,7 +27,7 @@ $isf->DbConnect();
 <?php endif; ?>
 
 <?php
-$klasy = $isf->DbSelect('klasy', array('klasa'), 'except select klasa from nl_klasy where nauczyciel="' . $nauczyciel . '"');
+$klasy = $isf->DbSelect('klasy', array('klasa'), 'except select klasa from nl_klasy where nauczyciel=\'' . $nauczyciel . '\'');
 ?>
 <?php if (count($klasy) == 0): ?>
     <p class="info">Brak dostępnych klas</p>
@@ -45,7 +45,7 @@ $klasy = $isf->DbSelect('klasy', array('klasa'), 'except select klasa from nl_kl
 <?php endif; ?>
 
 <p><b>Nauczane przedmioty:</b></p>
-<?php $nlp = $isf->DbSelect('nl_przedm', array('przedmiot'), 'where nauczyciel="' . $nauczyciel . '"'); ?>
+<?php $nlp = $isf->DbSelect('nl_przedm', array('przedmiot'), 'where nauczyciel=\'' . $nauczyciel . '\''); ?>
 <?php if (count($nlp) == 0): ?>
     <p class="info">Brak nauczanych przedmiotów</p>
 <?php else: ?>
@@ -57,7 +57,7 @@ $klasy = $isf->DbSelect('klasy', array('klasa'), 'except select klasa from nl_kl
     </ul>
 <?php endif; ?>
 <?php
-$przedm = $isf->DbSelect('przedmioty', array('przedmiot'), 'except select przedmiot from nl_przedm where nauczyciel="' . $nauczyciel . '"');
+$przedm = $isf->DbSelect('przedmioty', array('przedmiot'), 'except select przedmiot from nl_przedm where nauczyciel=\'' . $nauczyciel . '\' order by przedmiot asc');
 ?>
 <?php if (count($przedm) == 0): ?>
     <p class="info">Brak dostępnych przedmiotów</p>

@@ -32,7 +32,7 @@ if ($r == 1):
     <html>
         <head>
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-            <title>Instalacja Intersys Plan Lekcji</title>
+            <title>Instalacja Internetowy Plan Lekcji</title>
             <link rel="stylesheet" type="text/css" href="lib/css/style.css"/>
         </head>
         <body>
@@ -75,7 +75,7 @@ else:
         <html>
             <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-                <title>Instalacja Intersys Plan Lekcji</title>
+                <title>Instalacja Internetowy Plan Lekcji</title>
                 <link rel="stylesheet" type="text/css" href="lib/css/style.css"/>
                 <style type="text/css">
                     pre{

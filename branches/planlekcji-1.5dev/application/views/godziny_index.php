@@ -7,11 +7,11 @@
 $isf = new Kohana_Isf();
 $isf->DbConnect();
 /** pobiera ilosc godzin lekcyjnych */
-$res = $isf->DbSelect('rejestr', array('*'), 'where opcja="ilosc_godzin_lek"');
+$res = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'ilosc_godzin_lek\'');
 /** pobiera dlogosc lekcji w min */
-$dlugosc = $isf->DbSelect('rejestr', array('*'), 'where opcja="dlugosc_lekcji"');
+$dlugosc = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'dlugosc_lekcji\'');
 
-$grz = $isf->DbSelect('rejestr', array('*'), 'where opcja="godz_rozp_zaj"');
+$grz = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'godz_rozp_zaj\'');
 
 /** gdy nie ma takiego klucza w rejestrze tworzy go i przeladowuje strone */
 if (count($res) == 0) {
@@ -74,7 +74,7 @@ if (count($res) == 0) {
                             <?php echo $i; ?>
                         </td>
                         <td>
-                            <?php $godz = $isf->DbSelect('lek_godziny', array('godzina', 'dl_prz'), 'where lekcja="' . $i . '"'); ?>
+                            <?php $godz = $isf->DbSelect('lek_godziny', array('godzina', 'dl_prz'), 'where lekcja=\'' . $i . '\''); ?>
                             <input type="text" name="lekcja[<?php echo $i; ?>]" id="lekcja<?php echo $i; ?>" size="5"
                                    value="<?php
                     if (count($godz) == 0):

@@ -217,7 +217,7 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                                                     <a href="<?php echo URL::site('plan/klasa/' . $c['klasa']); ?>" target="_blank">Plan wspólny</a>
                                                 </li>
                                                 <?php
-                                                $grp = $isf->DbSelect('rejestr', array('*'), 'where opcja="ilosc_grup"');
+                                                $grp = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'ilosc_grup\'');
                                                 ?>
                                                 <?php if ($grp[1]['wartosc'] > 0): ?>
                                                     <li><a href="<?php echo URL::site('plan/grupy/' . $c['klasa']); ?>" target="_blank">Plan grupowy</a></li>

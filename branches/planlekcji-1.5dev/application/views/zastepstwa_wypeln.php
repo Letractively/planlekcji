@@ -4,10 +4,28 @@ $isf = new Kohana_Isf();
 function pobierznl($dzien, $lekcja) {
     $isf = new Kohana_Isf();
     $isf->DbConnect();
-    $a_a = 'nl_przedm, przedmiot_sale';
-    $a_b = array('nl_przedm.przedmiot', 'przedmiot_sale.sala', 'nl_przedm.nauczyciel');
-    $a_c = 'on nl_przedm.przedmiot=przedmiot_sale.przedmiot order by nl_przedm.przedmiot asc';
-    $res = $isf->DbSelect($a_a, $a_b, $a_c);
+    
+    $r=1;
+    $res=array();
+    
+    $nl_przedm=$isf->DbSelect('nl_przedm', array('*'), 'order by przedmiot asc');
+    foreach($nl_przedm as $rowid=>$rowcol){
+        
+        $przedm_sale = $isf->DbSelect('przedmiot_sale', array('*'),
+                'where przedmiot=\''.$rowcol['przedmiot'].'\' order by sala asc');
+        
+        foreach($przedm_sale as $rid=>$rcl){
+            
+            $res[$r]['przedmiot']=$rowcol['przedmiot'];
+            $res[$r]['sala']=$rcl['sala'];
+            $res[$r]['nauczyciel']=$rowcol['nauczyciel'];
+            $r++;
+            
+        }
+        
+        
+    }
+    
     echo '<select name="zast[' . $lekcja . ']"><option selected>---</option>';
     echo '<optgroup label="Rodzaj zastępstwa"><option>lekcja wolna</option>';
     echo '<option>odwołane</option></optgroup><optgroup label="Zajęcia z nauczycielem">';

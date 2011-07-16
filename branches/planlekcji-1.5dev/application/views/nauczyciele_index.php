@@ -58,14 +58,14 @@ $res = $isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc');
                             <?php echo $rowcol['imie_naz']; ?></a>
                     </td>
                     <td>
-                        <?php foreach ($isf->DbSelect('nl_przedm', array('przedmiot'), 'where nauczyciel="' . $rowcol['imie_naz'] . '"')
+                        <?php foreach ($isf->DbSelect('nl_przedm', array('przedmiot'), 'where nauczyciel=\'' . $rowcol['imie_naz'] . '\'')
                         as $rid => $rcl): ?>
                             <?php echo $rcl['przedmiot']; ?>, 
                         <?php endforeach; ?>
                     </td>
                     <td
                         style="max-width: 250px; width: 100px;">
-                            <?php foreach ($isf->DbSelect('nl_klasy', array('klasa'), 'where nauczyciel="' . $rowcol['imie_naz'] . '" order by klasa asc')
+                            <?php foreach ($isf->DbSelect('nl_klasy', array('klasa'), 'where nauczyciel=\'' . $rowcol['imie_naz'] . '\' order by klasa asc')
                             as $rid => $rcl): ?>
                             <?php echo $rcl['klasa']; ?>, 
                         <?php endforeach; ?>
