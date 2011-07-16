@@ -12,18 +12,41 @@ defined('SYSPATH') or die('No direct script access.');
  * Rola: Odpowiada za obsługę klas
  */
 class Controller_Klasy extends Controller {
+    public $wsdl;
+    
     /**
-     * Sprawdza czy zalogowany
+     * Tworzy obiekt sesji i sprawdza czy zalogowany
      */
     public function __construct() {
         session_start();
-        if (!isset($_SESSION['valid']) || !isset($_COOKIE['PHPSESSID'])) {
+        try {
+            $this->wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            exit;
+        }
+        if (!isset($_SESSION['token'])) {
             Kohana_Request::factory()->redirect('admin/login');
             exit;
+        } else {
+            $auth = $this->wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
+            if (strtotime($_SESSION['token_time']) < time()) {
+                $this->wsdl->call('doLogout', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
+                session_destroy();
+                Kohana_Request::factory()->redirect('admin/login/delay');
+                exit;
+            }
+            if ($auth == 'auth:failed') {
+                Kohana_Request::factory()->redirect('admin/login');
+                exit;
+            }
         }
         $isf = new Kohana_Isf();
         $isf->DbConnect();
-        $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja="edycja_danych"');
+        $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
+        /**
+         * Czy mozna edytowac dane
+         */
         if ($reg[1]['wartosc'] != 1) {
             echo '<h1>Edycja danych zostala zamknieta</h1>';
             exit;
@@ -37,7 +60,7 @@ class Controller_Klasy extends Controller {
         $view2 = View::factory('klasy_index');
 
         $view2->set('_err', $err);
-        $view->set('bodystr', 'onLoad="document.forms.form1.inpKlasa.focus()"');
+        $view->set('bodystr', 'onLoad=\'document.forms.form1.inpKlasa.focus()\'');
         $view->set('content', $view2->render());
         echo $view->render();
     }
@@ -47,8 +70,8 @@ class Controller_Klasy extends Controller {
     public function action_usun($klasa) {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
-        $isf->DbDelete('klasy', 'klasa="' . $klasa . '"');
-        $isf->DbDelete('nl_klasy', 'klasa="' . $klasa . '"');
+        $isf->DbDelete('klasy', 'klasa=\'' . $klasa . '\'');
+        $isf->DbDelete('nl_klasy', 'klasa=\'' . $klasa . '\'');
         Kohana_Request::factory()->redirect('klasy/index/usun');
     }
     /**
@@ -65,7 +88,7 @@ class Controller_Klasy extends Controller {
             $isf = new Kohana_Isf();
             $isf->DbConnect();
 
-            if (count($isf->DbSelect('klasy', array('*'), 'where klasa="' . $_POST['inpKlasa'] . '"')) != 0) {
+            if (count($isf->DbSelect('klasy', array('*'), 'where klasa=\'' . $_POST['inpKlasa'] . '\'')) != 0) {
                 Kohana_Request::factory()->redirect('klasy/index/e1');
                 exit;
             }
@@ -94,7 +117,7 @@ class Controller_Klasy extends Controller {
             $i = $_POST['grp'];
             $isf = new Kohana_Isf();
             $isf->DbConnect();
-            $isf->DbUpdate('rejestr', array('wartosc' => $i), 'opcja="ilosc_grup"');
+            $isf->DbUpdate('rejestr', array('wartosc' => $i), 'opcja=\'ilosc_grup\'');
         }
         Kohana_Request::factory()->redirect('klasy/index');
     }

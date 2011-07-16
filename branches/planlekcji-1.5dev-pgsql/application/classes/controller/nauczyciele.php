@@ -15,15 +15,41 @@ defined('SYSPATH') or die('No direct script access.');
  */
 class Controller_Nauczyciele extends Controller {
 
+    public $wsdl;
+    
+    /**
+     * Tworzy obiekt sesji i sprawdza czy zalogowany
+     */
     public function __construct() {
         session_start();
-        if (!isset($_SESSION['valid']) || !isset($_COOKIE['PHPSESSID'])) {
+        try {
+            $this->wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            exit;
+        }
+        if (!isset($_SESSION['token'])) {
             Kohana_Request::factory()->redirect('admin/login');
             exit;
+        } else {
+            $auth = $this->wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
+            if (strtotime($_SESSION['token_time']) < time()) {
+                $this->wsdl->call('doLogout', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
+                session_destroy();
+                Kohana_Request::factory()->redirect('admin/login/delay');
+                exit;
+            }
+            if ($auth == 'auth:failed') {
+                Kohana_Request::factory()->redirect('admin/login');
+                exit;
+            }
         }
         $isf = new Kohana_Isf();
         $isf->DbConnect();
-        $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja="edycja_danych"');
+        $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
+        /**
+         * Czy mozna edytowac dane
+         */
         if ($reg[1]['wartosc'] != 1) {
             echo '<h1>Edycja danych zostala zamknieta</h1>';
             exit;
@@ -36,7 +62,7 @@ class Controller_Nauczyciele extends Controller {
 
         $view2->set('_err', $err);
 
-        $view->set('bodystr', 'onLoad="document.forms.form1.inpName.focus()"');
+        $view->set('bodystr', 'onLoad=\'document.forms.form1.inpName.focus()\'');
         $view->set('content', $view2->render());
         echo $view->render();
     }
@@ -47,7 +73,7 @@ class Controller_Nauczyciele extends Controller {
             $isf = new Kohana_Isf();
             $isf->DbConnect();
 
-            if (count($isf->DbSelect('nauczyciele', array('*'), 'where imie_naz="' . $_POST['inpName'] . '"')) != 0) {
+            if (count($isf->DbSelect('nauczyciele', array('*'), 'where imie_naz=\'' . $_POST['inpName'] . '\'')) != 0) {
                 Kohana_Request::factory()->redirect('nauczyciele/index/e1');
                 exit;
             }
@@ -65,7 +91,7 @@ class Controller_Nauczyciele extends Controller {
             }
 
             $lit = substr($_POST['inpName'], 0, 1);
-            $rsl = $isf->DbSelect('nauczyciele', array('*'), 'where imie_naz like "' . $lit . '%"');
+            $rsl = $isf->DbSelect('nauczyciele', array('*'), 'where imie_naz like \'' . $lit . '%\'');
             $nr = count($rsl) + 1;
             $sk = strtoupper($lit.$nr);
 
@@ -83,7 +109,7 @@ class Controller_Nauczyciele extends Controller {
     public function action_zarzadzanie($nauczyciel) {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
-        $sk = $isf->DbSelect('nauczyciele', array('skrot'), 'where imie_naz="' . $nauczyciel . '"');
+        $sk = $isf->DbSelect('nauczyciele', array('skrot'), 'where imie_naz=\'' . $nauczyciel . '\'');
         $sk = $sk[1]['skrot'];
 
         $view = View::factory('main');
@@ -119,10 +145,10 @@ class Controller_Nauczyciele extends Controller {
             $isf = new Kohana_Isf();
             $isf->DbConnect();
             $nl = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\''.$nauczyciel.'\'');
-            $isf->DbDelete('nauczyciele', 'skrot="' . $nauczyciel . '"');
+            $isf->DbDelete('nauczyciele', 'skrot=\'' . $nauczyciel . '\'');
             $nauczyciel = $nl[1]['imie_naz'];
-            $isf->DbDelete('nl_klasy', 'nauczyciel="' . $nauczyciel . '"');
-            $isf->DbDelete('nl_przedm', 'nauczyciel="' . $nauczyciel . '"');
+            $isf->DbDelete('nl_klasy', 'nauczyciel=\'' . $nauczyciel . '\'');
+            $isf->DbDelete('nl_przedm', 'nauczyciel=\'' . $nauczyciel . '\'');
             Kohana_Request::factory()->redirect('nauczyciele/index');
         }
     }
@@ -142,14 +168,14 @@ class Controller_Nauczyciele extends Controller {
     public function action_klwyp($nauczyciel, $klasa) {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
-        $isf->DbDelete('nl_klasy', 'nauczyciel="' . $nauczyciel . '" and klasa="' . $klasa . '"');
+        $isf->DbDelete('nl_klasy', 'nauczyciel=\'' . $nauczyciel . '\' and klasa=\'' . $klasa . '\'');
         Kohana_Request::factory()->redirect('nauczyciele/zarzadzanie/' . $nauczyciel);
     }
 
     public function action_przwyp($nauczyciel, $przedmiot) {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
-        $isf->DbDelete('nl_przedm', 'nauczyciel="' . $nauczyciel . '" and przedmiot="' . $przedmiot . '"');
+        $isf->DbDelete('nl_przedm', 'nauczyciel=\'' . $nauczyciel . '\' and przedmiot=\'' . $przedmiot . '\'');
         Kohana_Request::factory()->redirect('nauczyciele/zarzadzanie/' . $nauczyciel);
     }
 

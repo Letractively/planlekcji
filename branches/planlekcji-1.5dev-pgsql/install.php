@@ -6,14 +6,18 @@ require_once 'modules/isf/classes/kohana/isf.php';
 if (!file_exists('config.php')) {
     $r = 0;
 } else {
-    $isfa = new Kohana_Isf();
-    $isfa->DbConnect();
-    $res = $isfa->DbSelect('rejestr', array('*'), 'where opcja=\'installed\'');
-    if (count($res) >= 1) {
-        $r = 1;
-    } else {
-        $r = 0;
-    }
+	if(!isset($my_cfg)){
+		$r = 0;
+	}else{
+		$isfa = new Kohana_Isf();
+		$isfa->DbConnect();
+		$res = $isfa->DbSelect('rejestr', array('*'), 'where opcja=\'installed\'');
+		if (count($res) >= 1) {
+			$r = 1;
+		} else {
+			$r = 0;
+		}
+	}
 }
 ?>
 <?php if ($r == 1): ?>

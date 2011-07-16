@@ -12,18 +12,39 @@ defined('SYSPATH') or die('No direct script access.');
  * Rola: Odpowiada za dostęp moduł godzin lekcyjnych
  */
 class Controller_Godziny extends Controller {
+    
+    public $wsdl;
+    
     /**
      * Tworzy obiekt sesji i sprawdza czy zalogowany
      */
     public function __construct() {
         session_start();
-        if (!isset($_SESSION['valid']) || !isset($_COOKIE['PHPSESSID'])) {
+        try {
+            $this->wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            exit;
+        }
+        if (!isset($_SESSION['token'])) {
             Kohana_Request::factory()->redirect('admin/login');
             exit;
+        } else {
+            $auth = $this->wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
+            if (strtotime($_SESSION['token_time']) < time()) {
+                $this->wsdl->call('doLogout', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
+                session_destroy();
+                Kohana_Request::factory()->redirect('admin/login/delay');
+                exit;
+            }
+            if ($auth == 'auth:failed') {
+                Kohana_Request::factory()->redirect('admin/login');
+                exit;
+            }
         }
         $isf = new Kohana_Isf();
         $isf->DbConnect();
-        $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja="edycja_danych"');
+        $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
         /**
          * Czy mozna edytowac dane
          */
@@ -41,8 +62,9 @@ class Controller_Godziny extends Controller {
 
         $isf = new Kohana_Isf();
         $isf->DbConnect();
-        $res = $isf->DbSelect('rejestr', array('*'), 'where opcja="ilosc_godzin_lek"');
+        $res = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'ilosc_godzin_lek\'');
         $isf->JQUi();
+        $isf->JQUi_CustomFunction('$(\'#czasRZ\').timepicker({showHour:true});');
         for ($i = 1; $i <= $res[1]['wartosc']; $i++):
             $isf->JQUi_CustomFunction('$(\'#lekcja' . $i . '\').timepicker({showHour:false});');
         endfor;
@@ -58,9 +80,9 @@ class Controller_Godziny extends Controller {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
         $ilosc = $_POST['iloscgodzin'];
-        $isf->DbUpdate('rejestr', array('wartosc' => $ilosc), 'opcja="ilosc_godzin_lek"');
-        $isf->DbUpdate('rejestr', array('wartosc' => $_POST['dlugosclekcji']), 'opcja="dlugosc_lekcji"');
-        $isf->DbUpdate('lek_godziny', array('godzina'=>'wymagane jest ponowne ustawienie'), 'lekcja like "%"');
+        $isf->DbUpdate('rejestr', array('wartosc' => $ilosc), 'opcja=\'ilosc_godzin_lek\'');
+        $isf->DbUpdate('rejestr', array('wartosc' => $_POST['dlugosclekcji']), 'opcja=\'dlugosc_lekcji\'');
+        $isf->DbUpdate('lek_godziny', array('godzina'=>'wymagane jest ponowne ustawienie'), 'lekcja like \'%\'');
         Kohana_Request::factory()->redirect('godziny/index');
     }
     /**
@@ -69,15 +91,15 @@ class Controller_Godziny extends Controller {
     public function action_lekcje() {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
-        $czaslek = $isf->DbSelect('rejestr', array('wartosc'), 'where opcja="dlugosc_lekcji"');
+        $czaslek = $isf->DbSelect('rejestr', array('wartosc'), 'where opcja=\'dlugosc_lekcji\'');
         $czaslek = $czaslek[1]['wartosc'];
 
-        $isf->DbDelete('lek_godziny', 'lekcja like "%"');
+        $isf->DbDelete('lek_godziny', 'lekcja like \'%\'');
         $g1;
         $g2;
         foreach ($_POST['lekcja'] as $nrlek => $dlprz) {
             if ($nrlek == 1) {
-                $g1 = '08:00';
+                $g1 = $_POST['czasRZ'];
             } else {
                 $g1 = explode(':', $g2);
                 $nl = $nrlek-1;

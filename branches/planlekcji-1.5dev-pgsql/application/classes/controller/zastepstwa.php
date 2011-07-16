@@ -26,13 +26,31 @@ class Controller_Zastepstwa extends Controller {
 
     public function checklogin() {
         session_start();
-        if (!isset($_SESSION['valid']) || !isset($_COOKIE['PHPSESSID'])) {
+        try {
+            $this->wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            exit;
+        }
+        if (!isset($_SESSION['token'])) {
             Kohana_Request::factory()->redirect('admin/login');
             exit;
+        } else {
+            $auth = $this->wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
+            if (strtotime($_SESSION['token_time']) < time()) {
+                $this->wsdl->call('doLogout', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
+                session_destroy();
+                Kohana_Request::factory()->redirect('admin/login/delay');
+                exit;
+            }
+            if ($auth == 'auth:failed') {
+                Kohana_Request::factory()->redirect('admin/login');
+                exit;
+            }
         }
         $isf = new Kohana_Isf();
         $isf->DbConnect();
-        $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja="edycja_danych"');
+        $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
         if ($reg[1]['wartosc'] != 3) {
             echo '<h1>Edycja danych nie zostala zamknieta</h1>';
             exit;
@@ -44,7 +62,7 @@ class Controller_Zastepstwa extends Controller {
         $this->checklogin();
         $isf = new Kohana_Isf();
         $isf->JQUi();
-        $isf->JQUi_CustomFunction('$("#inpDate").datepicker({beforeShowDay: $.datepicker.noWeekends, "dateFormat": "yy-mm-dd"});');
+        $isf->JQUi_CustomFunction('$(\'#inpDate\').datepicker({beforeShowDay: $.datepicker.noWeekends, \'dateFormat\': \'yy-mm-dd\'});');
 
         $view = view::factory('main');
         $view2 = view::factory('zastepstwa_edycja');
