@@ -141,7 +141,7 @@ class Controller_Sale extends Controller {
         $view2 = view::factory('sale_przedmiot');
 
         $res = $isf->DbSelect('przedmiot_sale', array('*'), 'where sala=\'' . $sala . '\' order by przedmiot asc');
-        $prz_res = $isf->DbSelect('przedmioty', array('przedmiot'), 'except select przedmiot from przedmiot_sale where sala=\'' . $sala . '\'');
+        $prz_res = $isf->DbSelect('przedmioty', array('przedmiot'), 'except select przedmiot from przedmiot_sale where sala=\'' . $sala . '\' order by przedmiot asc');
 
         $view2->set('sala', $sala);
         $view2->set('c', count($res));

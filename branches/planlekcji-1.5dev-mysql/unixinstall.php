@@ -21,11 +21,6 @@ if (function_exists('posix_getuid') && posix_getuid() != 0) {
 }
 echo 'Stosowanie uprawnien...'.PHP_EOL;
 fopen('./config.php', 'w');
-chmod('./modules/isf/isf_resources', 0777);
-if(!file_exists('./modules/isf/isf_resources/default.sqlite')){
-    fopen('./modules/isf/isf_resources/default.sqlite', 'w');
-}
-chmod('./modules/isf/isf_resources/default.sqlite', 0777);
 chmod('./config.php', 0777);
 chmod('./application/logs', 0777);
 chmod('./export', 0777);

@@ -12,7 +12,7 @@ $isf->DbConnect();
 /**
  * Pobiera z rejestru ilość godzin lekcyjnych
  */
-$ilosc_lek = $isf->DbSelect('rejestr', array('wartosc'), 'where opcja="ilosc_godzin_lek"');
+$ilosc_lek = $isf->DbSelect('rejestr', array('wartosc'), 'where opcja=\'ilosc_godzin_lek\'');
 $ilosc_lek = $ilosc_lek[1]['wartosc'];
 /**
  * Pobiera godziny lekcyjne
@@ -77,11 +77,11 @@ function pobierzdzien($dzien, $lekcja) {
      * Pobiera lekcję dla danej klasy, w danym dniu o danej godzinie
      * z normalnego planu lekcji
      */
-    $lek = $isf->DbSelect('planlek', array('*'), 'where lekcja="' . $lekcja . '" and dzien="' . $dzien . '" and klasa="' . $k . '"');
+    $lek = $isf->DbSelect('planlek', array('*'), 'where lekcja=\'' . $lekcja . '\' and dzien=\'' . $dzien . '\' and klasa=\'' . $k . '\'');
     $ret = ''; // zmienna zawierajaca dane zwracane przez funkcję
     $vl = '';
     if (count($lek) == 0) {
-        $lekx = $isf->DbSelect('plan_grupy', array('*'), 'where lekcja="' . $lekcja . '" and dzien="' . $dzien . '" and klasa="' . $k . '"');
+        $lekx = $isf->DbSelect('plan_grupy', array('*'), 'where lekcja=\'' . $lekcja . '\' and dzien=\'' . $dzien . '\' and klasa=\'' . $k . '\'');
         if (count($lekx) >= 1) {
             $ret .= '<b>[ zajęcia w grupach ]</b><br/>';
         }
@@ -96,19 +96,19 @@ function pobierzdzien($dzien, $lekcja) {
             }
         }
     }
-    $ret .= '<select style="width:200px;" name="' . $dzien . '[' . $lekcja . ']">';
+    $ret .= '<select style=\'width:200px;\' name=\'' . $dzien . '[' . $lekcja . ']\'>';
     if ($vl != '') {
         $ret .= '<option selected>' . $vl . '</option>';
     }
-    $ret .= '<option>---</option><optgroup label="Przedmiot - Sala - Nauczyciel">';
+    $ret .= '<option>---</option><optgroup label=\'Przedmiot - Sala - Nauczyciel\'>';
     foreach ($a as $rowid => $rowcol) {
         $b_table = 'planlek';
         $b_cols = array('*');
-        $b_cond = 'where dzien="' . $dzien . '" and lekcja="' . $lekcja . '" and ( nauczyciel="' . $rowcol['nauczyciel'] . '" or sala="' . $rowcol['sala'] . '")';
+        $b_cond = 'where dzien=\'' . $dzien . '\' and lekcja=\'' . $lekcja . '\' and ( nauczyciel=\'' . $rowcol['nauczyciel'] . '\' or sala=\'' . $rowcol['sala'] . '\')';
         if (count($isf->DbSelect($b_table, $b_cols, $b_cond)) == 0) {
             $b_table = 'plan_grupy';
             $b_cols = array('*');
-            $b_cond = 'where dzien="' . $dzien . '" and lekcja="' . $lekcja . '" and nauczyciel="' . $rowcol['nauczyciel'] . '"';
+            $b_cond = 'where dzien=\'' . $dzien . '\' and lekcja=\'' . $lekcja . '\' and nauczyciel=\'' . $rowcol['nauczyciel'] . '\'';
             if (count($isf->DbSelect($b_table, $b_cols, $b_cond)) == 0) {
                 $v = $rowcol['przedmiot'] . ':' . $rowcol['sala'] . ':' . $rowcol['nauczyciel'];
                 $ret.='<option>' . $v . '</option>';
@@ -117,7 +117,7 @@ function pobierzdzien($dzien, $lekcja) {
             
         }
     }
-    $ret.='</optgroup><optgroup label="Zwykły przedmiot">';
+    $ret.='</optgroup><optgroup label=\'Zwykły przedmiot\'>';
     foreach ($isf->DbSelect('przedmioty', array('*'), 'order by przedmiot asc') as $rc => $ri) {
         $ret.='<option>' . $ri['przedmiot'] . '</option>';
     }

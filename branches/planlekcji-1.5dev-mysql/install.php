@@ -8,7 +8,7 @@ if (!file_exists('config.php')) {
 } else {
     $isfa = new Kohana_Isf();
     $isfa->DbConnect();
-    $res = $isfa->DbSelect('rejestr', array('*'), 'where opcja="installed"');
+    $res = $isfa->DbSelect('rejestr', array('*'), 'where opcja=\'installed\'');
     if (count($res) >= 1) {
         $r = 1;
     } else {
@@ -110,10 +110,7 @@ if (!file_exists('config.php')) {
             header('Location: install.php?err');
             exit;
         endif;
-
-        echo '<link rel="stylesheet" type="text/css" href="lib/css/style.css"/>';
-        echo '<h1>Proces instalacji</h1><p class="info">Na dole strony znajduja sie dane
-            do logowania!</p><pre>';
+		
         $szkola = $_POST['inpSzkola'];
         $isf = new Kohana_Isf();
         $customvars = array(
@@ -129,7 +126,8 @@ if (!file_exists('config.php')) {
         } else {
             $file = '<?php' . PHP_EOL . '$path = \'' . $_POST['inpPath'] . '\';' . PHP_EOL;
             $file .= '$my_cfg = array(\'host\'=>\'' . $_POST['dbHost'] . '\',\'user\'=>\'' . $_POST['dbLogin'] . '\', \'password\'=>\'' . $_POST['dbHaslo'] . '\',\'database\'=>\'' . $_POST['dbBaza'] . '\',';
-            $file .= ');' . PHP_EOL . '$GLOBALS[\'my_cfg\']=$my_cfg; ' . PHP_EOL . '?>';
+            $file .= ');' . PHP_EOL . '$GLOBALS[\'my_cfg\']=$my_cfg; ' . PHP_EOL;
+			$file .= 'define(\'APP_PATH\', $path);'. PHP_EOL . '?>';
             fputs($a, $file);
             fclose($a);
         }
@@ -181,16 +179,16 @@ if (!file_exists('config.php')) {
         ));
 
         $isf->DbTblCreate('uzytkownicy', array(
-            'uid' => 'integer primary key autoincrement not null',
+            'uid' => 'numeric not null',
             'login' => 'text not null',
             'haslo' => 'text not null',
             'webapi_token' => 'text',
-            'webapi_timestamp' => '',
-            'ilosc_prob' => ''
+            'webapi_timestamp' => 'text',
+            'ilosc_prob' => 'numeric'
         ));
 
         $isf->DbTblCreate('log', array(
-            'id' => 'integer primary key autoincrement not null',
+            'id' => 'serial',
             'data' => 'text not null',
             'modul' => 'text not null',
             'wiadomosc' => 'text',
@@ -213,7 +211,7 @@ if (!file_exists('config.php')) {
         ));
 
         $isf->DbTblCreate('zast_id', array(
-            'zast_id' => 'integer primary key autoincrement not null',
+            'zast_id' => 'serial',
             'dzien' => 'text',
             'za_nl' => 'text',
             'info' => 'text',
@@ -300,6 +298,7 @@ if (!file_exists('config.php')) {
         $pass = rand(1, 100) . $pass;
 
         $isf->DbInsert('uzytkownicy', array(
+			'uid' => 1,
             'login' => 'root',
             'haslo' => md5('plan' . sha1('lekcji' . $pass)),
         ));

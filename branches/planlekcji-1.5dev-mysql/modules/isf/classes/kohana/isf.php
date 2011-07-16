@@ -17,7 +17,7 @@ class Kohana_Isf {
     }
 
     protected $isf_path;
-    protected $dbhandle;
+    public $dbhandle;
     protected $script;
     protected $jqpath;
 
@@ -29,14 +29,14 @@ class Kohana_Isf {
 
         $my_cfg = $GLOBALS['my_cfg'];
 
-        if (!class_exists('PDO') || !extension_loaded('pdo_mysql')) {
-            $_err = 'Aby korzystac z obslugi PDO MySQL, nalezy wlaczyc jego obsluge w PHP. ';
+        if (!class_exists('PDO') || !extension_loaded('pdo_pgsql')) {
+            $_err = 'Aby korzystac z obslugi PDO PostgreSQL, nalezy wlaczyc jego obsluge w PHP. ';
             die($_err);
         }
 
         if (is_array($customvars)) {
             try {
-                $this->dbhandle = new PDO('mysql:host=' . $customvars['host'] . ';
+                $this->dbhandle = new PDO('pgsql:host=' . $customvars['host'] . ';
                     dbname=' . $customvars['database'] . '',
                                 $customvars['user'],
                                 $customvars['password']);
@@ -45,7 +45,7 @@ class Kohana_Isf {
             }
         } else {
             try {
-                $this->dbhandle = new PDO('mysql:host=' . $my_cfg['host'] . ';
+                $this->dbhandle = new PDO('pgsql:host=' . $my_cfg['host'] . ';
                     dbname=' . $my_cfg['database'] . '',
                                 $my_cfg['user'],
                                 $my_cfg['password']);
@@ -187,7 +187,11 @@ class Kohana_Isf {
         $query .= ' where ' . $cond;
 
         try {
-            $this->dbhandle->exec($query);
+            if($this->dbhandle->exec($query)){
+				return true;
+			}else{
+				return false;
+			}
         } catch (Exception $e) {
             echo $e;
         }

@@ -15,19 +15,8 @@ $err = '';
 if (phpversion() < '5.2.5') {
     $err.='&bull; Wymagane jest PHP w wersji 5.2.5<br/>';
 }
-if (!class_exists('PDO')||!extension_loaded('pdo_mysql')) {
-    $err.='&bull; Wymagana jest obsluga PDO MySQL przez PHP<br/>';
-}
-if (!is_writable(realpath('modules/isf/isf_resources'))) {
-    $err.='&bull; Katalog modules/isf/isf_resources musi byc zapisywalny<br/>';
-}
-if (!file_exists(realpath('modules/isf/isf_resources/default.sqlite'))) {
-    require_once 'modules/isf/classes/kohana/isf.php';
-    $isf = new Kohana_Isf();
-    $isf->DbConnect();
-}
-if ((file_exists(realpath('modules/isf/isf_resources/default.sqlite'))) && !is_writable(realpath('modules/isf/isf_resources/default.sqlite'))) {
-    $err .= '&bull; Plik modules/isf/isf_resources/default.sqlite musi byc zapisywalny<br/>';
+if (!class_exists('PDO')||!extension_loaded('pdo_pgsql')) {
+    $err.='&bull; Wymagana jest obsluga PDO PostgreSQL przez PHP<br/>';
 }
 if (!is_writable(realpath('application/logs')) || !is_writable(realpath('application/cache'))) {
     $err .= '&bull; Katalog application/logs i application/cache musi byc zapisywalny<br/>';
