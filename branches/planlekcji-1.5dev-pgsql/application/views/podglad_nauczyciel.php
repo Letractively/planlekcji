@@ -6,7 +6,7 @@
  */
 $isf = new Kohana_Isf();
 $isf->DbConnect();
-$ilosc_lek = $isf->DbSelect('rejestr', array('wartosc'), 'where opcja="ilosc_godzin_lek"');
+$ilosc_lek = $isf->DbSelect('rejestr', array('wartosc'), 'where opcja=\'ilosc_godzin_lek\'');
 $ilosc_lek = $ilosc_lek[1]['wartosc'];
 $lek_godziny = $isf->DbSelect('lek_godziny', array('*'));
 $k = $klasa;
@@ -16,16 +16,16 @@ function pobierzdzien($dzien, $lekcja) {
     $isf = new Kohana_Isf();
     $isf->DbConnect();
     $ret='';
-    $r = $isf->DbSelect('planlek', array('*'), 'where nauczyciel="'.$k.'" and dzien="'.$dzien.'" and lekcja="'.$lekcja.'"');
+    $r = $isf->DbSelect('planlek', array('*'), 'where nauczyciel=\''.$k.'\' and dzien=\''.$dzien.'\' and lekcja=\''.$lekcja.'\'');
     if(count($r)!=0){
-        echo $r[1]['przedmiot'].' <a href="'.URL::site('podglad/sala/'.$r[1]['sala']).'">'.$r[1]['sala'].'</a> <a href="'.URL::site('podglad/klasa/'.$r[1]['klasa']).'">'.$r[1]['klasa'].'</a>';
+        echo $r[1]['przedmiot'].' <a href=\''.URL::site('podglad/sala/'.$r[1]['sala']).'\'>'.$r[1]['sala'].'</a> <a href=\''.URL::site('podglad/klasa/'.$r[1]['klasa']).'\'>'.$r[1]['klasa'].'</a>';
     }else{
-        $rn = $isf->DbSelect('plan_grupy', array('*'), 'where nauczyciel="' . $k . '" and dzien="' . $dzien . '" and lekcja="' . $lekcja . '"');
+        $rn = $isf->DbSelect('plan_grupy', array('*'), 'where nauczyciel=\'' . $k . '\' and dzien=\'' . $dzien . '\' and lekcja=\'' . $lekcja . '\'');
         if (count($rn) == 0) {
             echo '';
         } else {
             foreach ($rn as $rowid => $rowcol) {
-                echo '<p class="grplek">'.$rowcol['przedmiot'].' <a href="'.URL::site('podglad/sala/'.$rowcol['sala']).'">'.$rowcol['sala'].'</a> <a href="'.URL::site('podglad/klasa/'.$rowcol['klasa']).'">'.$rowcol['klasa'].'</a> gr'.$rowcol['grupa'].'</p>';
+                echo '<p class=\'grplek\'>'.$rowcol['przedmiot'].' <a href=\''.URL::site('podglad/sala/'.$rowcol['sala']).'\'>'.$rowcol['sala'].'</a> <a href=\''.URL::site('podglad/klasa/'.$rowcol['klasa']).'\'>'.$rowcol['klasa'].'</a> gr'.$rowcol['grupa'].'</p>';
             }
         }
     }

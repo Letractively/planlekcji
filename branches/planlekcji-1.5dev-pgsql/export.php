@@ -7,8 +7,9 @@
  * @license GNU GPL v3
  * @package main\export
  */
-session_start(); // ustawienie sesji
 date_default_timezone_set('Europe/Warsaw'); // ustawienie strefy czasowej
+session_start(); // ustawienie sesji
+set_time_limit(600);
 
 /**
  * Sprawadza obecnosc wymaganych modulow
@@ -29,7 +30,7 @@ require_once 'config.php';
 require_once 'modules/isf/classes/kohana/isf.php';
 require_once 'lib/nusoap/nusoap.php';
 
-$GLOBALS['hostname'] = 'http://' . $_SERVER['SERVER_NAME'] . $path;
+$GLOBALS['hostname'] = 'http://' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $path;
 $isf = new Kohana_Isf();
 $isf->DbConnect();
 
@@ -98,12 +99,7 @@ START;
 
 echo <<< START
 <pre>
-==============
-| KOMPILATOR | Wersja 1.5
-|   PLANOW   | Michal Bocian, 2011
-|   ZAJEC    | GNU GPL v3
-==============
-
+Trwa kompilacja planu zajec...
 
 START;
 
@@ -179,6 +175,9 @@ function klasafile($klasa) {
 }
 
 foreach ($isf->DbSelect('klasy', array('*')) as $rid => $rcl) {
+	echo 'Kompilowanie klasy '.$rcl['klasa'].'<br/>';
+	flush();
+	ob_flush();
     $zip->addFromString('klasa/' . $rcl['klasa'] . '.html', klasafile($rcl['klasa']));
 }
 
@@ -201,6 +200,9 @@ function salafile($sala) {
 }
 
 foreach ($isf->DbSelect('sale', array('*')) as $rid => $rcl) {
+	echo 'Kompilowanie sali '.$rcl['sala'].'<br/>';
+	flush();
+	ob_flush();
     $zip->addFromString('sala/' . $rcl['sala'] . '.html', salafile($rcl['sala']));
 }
 
@@ -223,11 +225,13 @@ function nlfile($skrot) {
 }
 
 foreach ($isf->DbSelect('nauczyciele', array('*')) as $rid => $rcl) {
+	echo 'Kompilowanie nauczyciela '.$rcl['skrot'].'<br/>';
+	flush();
+	ob_flush();
     $zip->addFromString('nauczyciel/' . $rcl['skrot'] . '.html', nlfile($rcl['skrot']));
 }
 
 function zfile() {
-    $dirp = $GLOBALS['dirp'];
     $hostname = $GLOBALS['hostname'];
     $ch = curl_init($hostname . 'index.php/podglad/zestawienie');
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -244,6 +248,8 @@ function zfile() {
     $ret .= '<hr style="margin-top:10px;"/><p class="grplek">Wygenerowano aplikacją Plan Lekcji, dnia ' . date('d.m.Y') . '</p></body></html>';
     return $ret;
 }
+
+echo 'Finalizowanie...'.PHP_EOL;
 
 $zip->addFromString('nauczyciel/zestawienie.html', zfile());
 $zip->close();

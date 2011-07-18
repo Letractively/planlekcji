@@ -8,9 +8,9 @@
  */
 
 require_once 'config.php';
+require_once 'modules/isf/classes/kohana/isf.php';
 require_once 'lib/nusoap/nusoap.php';
 require_once 'system/webapi.app';
-require_once 'modules/isf/classes/kohana/isf.php';
 
 $namespace = 'webapi.planlekcji.isf';
 

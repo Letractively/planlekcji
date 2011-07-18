@@ -65,7 +65,7 @@ if (!file_exists('config.php')) {
             </head>
             <body>
                 <img src="lib/images/logo.png"/>
-                <h1>Instalator Intersys Plan Lekcji - MySQL</h1>
+                <h1>Instalator Intersys Plan Lekcji - PostgreSQL</h1>
                 <?php if ($_SERVER['SERVER_NAME'] != 'localhost' && $_SERVER['SERVER_NAME'] != '127.0.0.1'): ?>
                     <p class="error">
                         Aplikacja może zostać zainstalowana tylko wtedy, gdy ta
@@ -91,7 +91,7 @@ if (!file_exists('config.php')) {
                             Proszę nie zmieniać wartości tego pola chyba, że jest ona nieprawidłowa.
                         </p>
                         <fieldset style="margin: 10px; max-width: 50%">
-                            <legend><b>Dane serwera MySQL</b></legend>
+                            <legend><b>Dane serwera PostgreSQL</b></legend>
                             <p><b>Host: <input type="text" name="dbHost" size="50"/></b></p>
                             <p><b>Login: <input type="text" name="dbLogin" size="50"/></b></p>
                             <p><b>Hasło: <input type="password" name="dbHaslo" size="50"/></b></p>
