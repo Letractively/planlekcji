@@ -40,7 +40,7 @@ function doLogin($username, $password, $token) {
     $db->DbConnect();
     $haslo = md5('plan' . sha1('lekcji' . $password));
     $uid = $db->DbSelect('uzytkownicy', array('*'), 'where login=\'' . $username . '\' and haslo=\'' . $haslo . '\'');
-    $tok = $db->DbSelect('tokeny', array('*'), 'where login=\'root\' and token=\''.md5('plan'.$token).'\'');
+    $tok = $db->DbSelect('tokeny', array('*'), 'where login=\'' . $username . '\' and token=\''.md5('plan'.$token).'\'');
     if (count($uid) != 1 || count($tok) != 1) {
         return 'auth:failed';
     } else {

@@ -54,7 +54,7 @@ $res = $isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc');
                 <tr>
                     <td>
                         (<?php echo $rowcol['skrot']; ?>)
-                        <a href="<?php echo URL::site('nauczyciele/zarzadzanie/' . $rowcol['imie_naz']); ?>">
+                        <a href="<?php echo URL::site('nauczyciele/zarzadzanie/' . $rowcol['skrot']); ?>">
                             <?php echo $rowcol['imie_naz']; ?></a>
                     </td>
                     <td>
@@ -72,7 +72,7 @@ $res = $isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc');
                     </td>
                     <td>
                         <a class="anac"
-                           href="<?php echo URL::site('nauczyciele/zarzadzanie/' . $rowcol['imie_naz']); ?>">
+                           href="<?php echo URL::site('nauczyciele/zarzadzanie/' . $rowcol['skrot']); ?>">
                             zarządzanie</a>&emsp;
                         <a class="anac"
                            href="<?php echo URL::site('nauczyciele/usun/' . $rowcol['skrot']); ?>">usuń nauczyciela</a>

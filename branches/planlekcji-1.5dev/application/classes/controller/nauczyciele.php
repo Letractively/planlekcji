@@ -106,16 +106,16 @@ class Controller_Nauczyciele extends Controller {
         }
     }
 
-    public function action_zarzadzanie($nauczyciel) {
+    public function action_zarzadzanie($skrot) {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
-        $sk = $isf->DbSelect('nauczyciele', array('skrot'), 'where imie_naz=\'' . $nauczyciel . '\'');
-        $sk = $sk[1]['skrot'];
+        $nauczyciel = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\'' . $skrot . '\'');
+        $nauczyciel = $nauczyciel[1]['imie_naz'];
 
         $view = View::factory('main');
         $view2 = View::factory('nauczyciele_zarzadzanie');
         $view2->set('nauczyciel', $nauczyciel);
-        $view2->set('nskr', $sk);
+        $view2->set('nskr', $skrot);
 
         $view->set('content', $view2->render());
         echo $view->render();
@@ -154,7 +154,8 @@ class Controller_Nauczyciele extends Controller {
     }
 
     public function action_dodprzed() {
-        $naucz = $_POST['Nauczyciel'];
+        $skr = $_POST['skrot'];
+		$naucz = $_POST['nauczyciel'];
         $przedmiot = $_POST['selPrzedm'];
         $isf = new Kohana_Isf();
         $isf->DbConnect();
@@ -162,7 +163,7 @@ class Controller_Nauczyciele extends Controller {
             'nauczyciel' => $naucz,
             'przedmiot' => $przedmiot
         ));
-        Kohana_Request::factory()->redirect('nauczyciele/zarzadzanie/' . $naucz);
+        Kohana_Request::factory()->redirect('nauczyciele/zarzadzanie/' . $skr);
     }
 
     public function action_klwyp($nauczyciel, $klasa) {
@@ -175,7 +176,9 @@ class Controller_Nauczyciele extends Controller {
     public function action_przwyp($nauczyciel, $przedmiot) {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
-        $isf->DbDelete('nl_przedm', 'nauczyciel=\'' . $nauczyciel . '\' and przedmiot=\'' . $przedmiot . '\'');
+		$nl = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\''.$nauczyciel.'\'');
+		$nl = $nl[1]['imie_naz'];
+        $isf->DbDelete('nl_przedm', 'nauczyciel=\'' . $nl . '\' and przedmiot=\'' . $przedmiot . '\'');
         Kohana_Request::factory()->redirect('nauczyciele/zarzadzanie/' . $nauczyciel);
     }
 

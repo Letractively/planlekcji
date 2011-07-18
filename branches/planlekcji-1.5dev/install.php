@@ -292,12 +292,12 @@ else:
 
         $isf->DbInsert('rejestr', array(
             'opcja' => 'app_ver',
-            'wartosc' => '1.5.0 rtm 201107141355'
+            'wartosc' => '1.5 dev classic'
         ));
 
         $isf->DbInsert('rejestr', array(
             'opcja' => 'randtoken_version',
-            'wartosc' => '1.5.0 rtm 201107141355'
+            'wartosc' => '1.5 dev classic'
         ));
 
         $isf->DbInsert('log', array(

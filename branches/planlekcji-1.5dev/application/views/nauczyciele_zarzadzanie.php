@@ -20,21 +20,22 @@ $isf->DbConnect();
         <?php foreach ($kls as $r => $c): ?>
             <li>
                 <?php echo $c['klasa']; ?>
-                <a href="<?php echo URL::site('nauczyciele/klwyp/' . $nauczyciel . '/' . $c['klasa']); ?>">[ wypisz ]</a>
+                <a href="<?php echo URL::site('nauczyciele/klwyp/' . $nskr . '/' . $c['klasa']); ?>">[ wypisz ]</a>
             </li>
         <?php endforeach; ?>
     </ul>
 <?php endif; ?>
 
 <?php
-$klasy = $isf->DbSelect('klasy', array('klasa'), 'except select klasa from nl_klasy where nauczyciel=\'' . $nauczyciel . '\'');
+$klasy = $isf->DbSelect('klasy', array('klasa'), 'except select klasa from nl_klasy where nauczyciel=\'' . $nauczyciel . '\' order by klasa asc');
 ?>
 <?php if (count($klasy) == 0): ?>
     <p class="info">Brak dostępnych klas</p>
 <?php else: ?>
     <form action="<?php echo URL::site('nauczyciele/dodklasa') ?>" method="post">
         <b>Wybierz klasę: </b>
-        <input type="hidden" name="Nauczyciel" value="<?php echo $nauczyciel; ?>"/>
+        <input type="hidden" name="nauczyciel" value="<?php echo $nauczyciel; ?>"/>
+		<input type="hidden" name="skrot" value="<?php echo $nskr; ?>"/>
         <select name="selKlasy">
             <?php foreach ($klasy as $sid => $scol): ?>
                 <option><?php echo $scol['klasa']; ?></option>
@@ -52,7 +53,7 @@ $klasy = $isf->DbSelect('klasy', array('klasa'), 'except select klasa from nl_kl
     <ul>
         <?php foreach ($nlp as $r => $c): ?>
             <li><?php echo $c['przedmiot']; ?> <a
-                    href="<?php echo URL::site('nauczyciele/przwyp/' . $nauczyciel . '/' . $c['przedmiot']); ?>">[ wypisz ]</a></li>
+                    href="<?php echo URL::site('nauczyciele/przwyp/' . $nskr . '/' . $c['przedmiot']); ?>">[ wypisz ]</a></li>
             <?php endforeach; ?>
     </ul>
 <?php endif; ?>
@@ -64,7 +65,8 @@ $przedm = $isf->DbSelect('przedmioty', array('przedmiot'), 'except select przedm
 <?php else: ?>
     <form action="<?php echo URL::site('nauczyciele/dodprzed') ?>" method="post">
         <b>Wybierz przedmiot: </b>
-        <input type="hidden" name="Nauczyciel" value="<?php echo $nauczyciel; ?>"/>
+        <input type="hidden" name="skrot" value="<?php echo $nskr; ?>"/>
+		<input type="hidden" name="nauczyciel" value="<?php echo $nauczyciel; ?>"/>
         <select name="selPrzedm">
             <?php foreach ($przedm as $sid => $scol): ?>
                 <option><?php echo $scol['przedmiot']; ?></option>

@@ -12,7 +12,7 @@ $isf->DbConnect();
 <a href="<?php echo URL::site('przedmioty/index'); ?>">[ powrót ]</a>
 
 <p><b>Nauczyciele uczący:</b></p>
-<?php $prs = $isf->DbSelect('nl_przedm', array('*'), 'where przedmiot="' . $przedmiot . '" order by przedmiot asc'); ?>
+<?php $prs = $isf->DbSelect('nl_przedm', array('*'), 'where przedmiot=\'' . $przedmiot . '\' order by przedmiot asc'); ?>
 <?php if (count($prs) == 0): ?>
     <p class="info">Brak nauczycieli uczących tego przedmiotu</p>
 <?php else: ?>
@@ -24,7 +24,7 @@ $isf->DbConnect();
     </ul>
 <?php endif; ?>
 <p><b>Przypisanie nauczyciela</b></p>
-<?php $prz = $isf->DbSelect('nauczyciele', array('imie_naz'), 'except select nauczyciel from nl_przedm where przedmiot="' . $przedmiot . '"'); ?>
+<?php $prz = $isf->DbSelect('nauczyciele', array('imie_naz'), 'except select nauczyciel from nl_przedm where przedmiot=\'' . $przedmiot . '\''); ?>
 <form action="<?php echo url::site('przedmioty/nlprzyp'); ?>" method="post">
     <input type="hidden" name="przedmiot" value="<?php echo $przedmiot; ?>"/>
     <select name="selNaucz">
