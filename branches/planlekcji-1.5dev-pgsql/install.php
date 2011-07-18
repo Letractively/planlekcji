@@ -278,12 +278,12 @@ if (!file_exists('config.php')) {
 
         $isf->DbInsert('rejestr', array(
             'opcja' => 'app_ver',
-            'wartosc' => '1.5.0 rtm 201107141355'
+            'wartosc' => '1.5 dev pgsql'
         ));
 
         $isf->DbInsert('rejestr', array(
             'opcja' => 'randtoken_version',
-            'wartosc' => '1.5.0 rtm 201107141355'
+            'wartosc' => '1.5 dev pgsql'
         ));
 
         $isf->DbInsert('log', array(
