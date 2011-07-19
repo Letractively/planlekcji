@@ -1,19 +1,28 @@
 <?php
+
 /**
  * Intersys - Plan Lekcji
  * 
- * 
- * @author Michał Bocian <mhl.bocian@gmail.com>
+ * @author Michal Bocian <mhl.bocian@gmail.com>
+ * @license GNU GPL v3
+ * @package logic
  */
 defined('SYSPATH') or die('No direct script access.');
+
 /**
- * Kontroler: klasy
  * 
- * Rola: Odpowiada za obsługę klas
+ * Odpowiada za obsluge klas
+ * 
+ * @package klasy
  */
 class Controller_Klasy extends Controller {
+
+    /**
+     *
+     * @var nusoap_client instancja klasy nusoap
+     */
     public $wsdl;
-    
+
     /**
      * Tworzy obiekt sesji i sprawdza czy zalogowany
      */
@@ -52,6 +61,7 @@ class Controller_Klasy extends Controller {
             exit;
         }
     }
+
     /**
      * Strona glowna
      */
@@ -64,8 +74,11 @@ class Controller_Klasy extends Controller {
         $view->set('content', $view2->render());
         echo $view->render();
     }
+
     /**
-     * Usuwa klase $klasa
+     * Usuwa klase
+     *
+     * @param string $klasa klasa
      */
     public function action_usun($klasa) {
         $isf = new Kohana_Isf();
@@ -74,6 +87,7 @@ class Controller_Klasy extends Controller {
         $isf->DbDelete('nl_klasy', 'klasa=\'' . $klasa . '\'');
         Kohana_Request::factory()->redirect('klasy/index/usun');
     }
+
     /**
      * Dodaje klase, waliduje dane
      */
@@ -109,6 +123,7 @@ class Controller_Klasy extends Controller {
             Kohana_Request::factory()->redirect('klasy/index/pass');
         }
     }
+
     /**
      * Strona grup klasowych
      */

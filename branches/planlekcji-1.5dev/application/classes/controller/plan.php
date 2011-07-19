@@ -3,18 +3,29 @@
 /**
  * Intersys - Plan Lekcji
  * 
- * 
- * @author Michał Bocian <mhl.bocian@gmail.com>
+ * @author Michal Bocian <mhl.bocian@gmail.com>
+ * @license GNU GPL v3
+ * @package logic
  */
 defined('SYSPATH') or die('No direct script access.');
 
 /**
- * Kontroler: plan
  * 
- * Rola: Odpowiada za obsługę planów zajęć
+ * Odpowiada za obsluge planow zajec
+ * 
+ * @package plan
  */
 class Controller_Plan extends Controller {
 
+    /**
+     *
+     * @var nusoap_client instancja klasy nusoap
+     */
+    protected $wsdl;
+
+    /**
+     * Sprawdza zalogowanie uzytkownika
+     */
     public function __construct() {
         session_start();
         try {
@@ -48,18 +59,37 @@ class Controller_Plan extends Controller {
         }
     }
 
+    /**
+     * Wyswietla edycje planu dla klasy AJAX
+     *
+     * @param string $klasa klasa
+     */
     public function action_klasa($klasa) {
         $view = view::factory('plan_klasa');
         $view->set('klasa', $klasa);
         echo $view->render();
     }
 
+    /**
+     * Wyswietla plan grupowy dla klasy AJAX
+     *
+     * @param string $klasa klasa
+     */
     public function action_grupy($klasa) {
         $view = view::factory('plan_grupy');
         $view->set('klasa', $klasa);
         echo $view->render();
     }
 
+    /**
+     * Wyswietla tresc strony dla wywolania AJAX
+     * 
+     * W przypadku przegladarki Internet Explorer wyswietlany jest ten
+     * surowy szablon
+     *
+     * @param string $klasa klasa
+     * @param boolean $alternative wyswietlanie klasycznej strony
+     */
     public function action_klasaajax($klasa, $alternative=false) {
         $view = view::factory('plan_klasaajax');
         $view->set('alternative', $alternative);
@@ -67,13 +97,24 @@ class Controller_Plan extends Controller {
         echo $view->render();
     }
 
+    /**
+     * Wyswietla tresc strony dla wywolania AJAX
+     * 
+     * W przypadku przegladarki Internet Explorer wyswietlany jest ten
+     * surowy szablon
+     * 
+     * @param string $klasa klasa
+     * @param boolean $alternative wyswietlanie klasycznej strony
+     */
     public function action_grupaajax($klasa, $alternative=false) {
         $view = view::factory('plan_grupaajax');
         $view->set('alternative', $alternative);
         $view->set('klasa', $klasa);
         echo $view->render();
     }
-
+    /**
+     * Wprowadza zmiany do planu klasy
+     */
     public function action_zatwierdz() {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
@@ -231,7 +272,9 @@ class Controller_Plan extends Controller {
 
         echo '<html><head><script type=\'text/javascript\'>window.close();</script></head><body><a href=\'' . URL::site('') . '\'>[ powrót ]</a></body></html>';
     }
-
+    /**
+     * Wprowadza zmiany do planu grupowego
+     */
     public function action_grupazatw() {
         $isf = new Kohana_Isf();
         $isf->DbConnect();

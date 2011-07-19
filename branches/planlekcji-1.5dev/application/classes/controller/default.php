@@ -3,20 +3,28 @@
 /**
  * Intersys - Plan Lekcji
  * 
- * 
- * @author Michał Bocian <mhl.bocian@gmail.com>
+ * @author Michal Bocian <mhl.bocian@gmail.com>
+ * @license GNU GPL v3
+ * @package logic
  */
 defined('SYSPATH') or die('No direct script access.');
 
 /**
- * Kontroler: default
  * 
- * Rola: Główny kontroler i domyślny podczas uruchomienia
+ * Glowny kontroler i domyslny podczas uruchomienia
+ * 
+ * @package default
  */
 class Controller_Default extends Controller {
 
     /**
-     * Tworzy obiekt sesji
+     *
+     * @var nusoap_client instancja klasy nusoap
+     */
+    public $wsdl;
+
+    /**
+     * Tworzy obiekt sesji i sprawdza system RAND_TOKEN
      */
     public function __construct() {
         session_start();
@@ -37,7 +45,7 @@ class Controller_Default extends Controller {
     }
 
     /**
-     * Wyswietal strone glowna
+     * Wyswietla strone glowna
      */
     public function action_index() {
         $isf = new Kohana_Isf();

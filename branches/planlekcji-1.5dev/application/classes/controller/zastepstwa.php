@@ -3,18 +3,29 @@
 /**
  * Intersys - Plan Lekcji
  * 
- * 
- * @author Michał Bocian <mhl.bocian@gmail.com>
+ * @author Michal Bocian <mhl.bocian@gmail.com>
+ * @license GNU GPL v3
+ * @package logic
  */
 defined('SYSPATH') or die('No direct script access.');
 
 /**
- * Kontroler: zastepstwa
  * 
- * Rola: Odpowiada za obsługę zastepstw
+ * Odpowiada za obsluge zastepstw
+ * 
+ * @package zastepstwa
  */
 class Controller_Zastepstwa extends Controller {
 
+    /**
+     *
+     * @var nusoap_client instancja klasy NuSOAP
+     */
+    public $wsdl;
+
+    /**
+     * Wyswietlenie strony glownej zastepstw
+     */
     public function action_index() {
         session_start();
         $view = view::factory('main');
@@ -24,6 +35,9 @@ class Controller_Zastepstwa extends Controller {
         echo $view->render();
     }
 
+    /**
+     * Sprawdza zalogowanie uzytkownka
+     */
     public function checklogin() {
         session_start();
         try {
@@ -56,7 +70,11 @@ class Controller_Zastepstwa extends Controller {
             exit;
         }
     }
-
+    /**
+     * Strona tworzenia zastepstw
+     *
+     * @param string $blad kod bledu
+     */
     public function action_edycja($blad=false) {
 
         $this->checklogin();
@@ -72,7 +90,9 @@ class Controller_Zastepstwa extends Controller {
         $view->set('content', $view2->render());
         echo $view->render();
     }
-
+    /**
+     * Strona wypelnienia konkretnego zastepstwa
+     */
     public function action_wypeln() {
         $this->checklogin();
         if (!isset($_POST)) {
@@ -122,7 +142,11 @@ class Controller_Zastepstwa extends Controller {
         $view->set('content', $view2->render());
         echo $view->render();
     }
-
+    /**
+     * Strona przegladu zastepstwa
+     *
+     * @param integer $id numer zastepstwa
+     */
     public function action_przeglad($id) {
         session_start();
         $view = view::factory('main');
@@ -152,7 +176,9 @@ class Controller_Zastepstwa extends Controller {
         $view->set('content', $view2->render());
         echo $view->render();
     }
-
+    /**
+     * Wprowadza zastepstwo do systemu
+     */
     public function action_zatwierdz() {
         $this->checklogin();
         if (!isset($_POST)) {
@@ -193,21 +219,28 @@ class Controller_Zastepstwa extends Controller {
 
         Kohana_Request::factory()->redirect('zastepstwa/index');
     }
-    
-    public function action_usun($id){
+    /**
+     * Usuwa zastepstwo
+     * 
+     * @param integer $id numer zastepstwa
+     */
+    public function action_usun($id) {
         $this->checklogin();
         $isf = new Kohana_Isf();
         $isf->DbConnect();
-        $isf->DbDelete('zast_id', 'zast_id=\''.$id.'\'');
-        $isf->DbDelete('zastepstwa', 'zast_id=\''.$id.'\'');
-        
+        $isf->DbDelete('zast_id', 'zast_id=\'' . $id . '\'');
+        $isf->DbDelete('zastepstwa', 'zast_id=\'' . $id . '\'');
+
         Kohana_Request::factory()->redirect('zastepstwa/index');
-        
     }
-    
-    public function action_drukuj(){
+    /**
+     * Strona wyswietla wiele zastepstw
+     * 
+     * Umozliwia wydrukowanie ich
+     */
+    public function action_drukuj() {
         $this->checklogin();
-        if(!isset($_POST)){
+        if (!isset($_POST)) {
             Request::factory()->redirect('default/index');
             exit;
         }

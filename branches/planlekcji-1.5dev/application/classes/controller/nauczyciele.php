@@ -3,20 +3,26 @@
 /**
  * Intersys - Plan Lekcji
  * 
- * 
- * @author Michał Bocian <mhl.bocian@gmail.com>
+ * @author Michal Bocian <mhl.bocian@gmail.com>
+ * @license GNU GPL v3
+ * @package logic
  */
 defined('SYSPATH') or die('No direct script access.');
 
 /**
- * Kontroler: nauczyciele
  * 
- * Rola: Odpowiada za obsługę nauczycieli
+ * Odpowiada za obsluge nauczycieli
+ * 
+ * @package nauczyciele
  */
 class Controller_Nauczyciele extends Controller {
 
+    /**
+     *
+     * @var nusoap_client instancja klasy nusoap
+     */
     public $wsdl;
-    
+
     /**
      * Tworzy obiekt sesji i sprawdza czy zalogowany
      */
@@ -56,6 +62,11 @@ class Controller_Nauczyciele extends Controller {
         }
     }
 
+    /**
+     * Wyswietla strone z nauczycielami
+     *
+     * @param string $err kod bledu w szablonie
+     */
     public function action_index($err=null) {
         $view = View::factory('main');
         $view2 = View::factory('nauczyciele_index');
@@ -67,6 +78,9 @@ class Controller_Nauczyciele extends Controller {
         echo $view->render();
     }
 
+    /**
+     * Dodaje nauczyciela
+     */
     public function action_dodaj() {
         if (isset($_POST)) {
 
@@ -93,7 +107,7 @@ class Controller_Nauczyciele extends Controller {
             $lit = substr($_POST['inpName'], 0, 1);
             $rsl = $isf->DbSelect('nauczyciele', array('*'), 'where imie_naz like \'' . $lit . '%\'');
             $nr = count($rsl) + 1;
-            $sk = strtoupper($lit.$nr);
+            $sk = strtoupper($lit . $nr);
 
             $isf->DbInsert('nauczyciele', array(
                 'imie_naz' => $_POST['inpName'],
@@ -106,6 +120,11 @@ class Controller_Nauczyciele extends Controller {
         }
     }
 
+    /**
+     * Strona zarzadzania nauczycielem
+     *
+     * @param string $skrot kod nauczyciela
+     */
     public function action_zarzadzanie($skrot) {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
@@ -121,6 +140,9 @@ class Controller_Nauczyciele extends Controller {
         echo $view->render();
     }
 
+    /**
+     * Przypisuje nauczycielowi klase
+     */
     public function action_dodklasa() {
         $naucz = $_POST['Nauczyciel'];
         $klasa = $_POST['selKlasy'];
@@ -133,6 +155,12 @@ class Controller_Nauczyciele extends Controller {
         Kohana_Request::factory()->redirect('nauczyciele/zarzadzanie/' . $naucz);
     }
 
+    /**
+     * Usuwa nauczyciela
+     *
+     * @param string $nauczyciel kod nauczyciela
+     * @param boolean $confirm czy usunac
+     */
     public function action_usun($nauczyciel, $confirm=false) {
         if ($confirm == false) {
             $view = view::factory('main');
@@ -144,7 +172,7 @@ class Controller_Nauczyciele extends Controller {
         } else {
             $isf = new Kohana_Isf();
             $isf->DbConnect();
-            $nl = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\''.$nauczyciel.'\'');
+            $nl = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\'' . $nauczyciel . '\'');
             $isf->DbDelete('nauczyciele', 'skrot=\'' . $nauczyciel . '\'');
             $nauczyciel = $nl[1]['imie_naz'];
             $isf->DbDelete('nl_klasy', 'nauczyciel=\'' . $nauczyciel . '\'');
@@ -153,9 +181,12 @@ class Controller_Nauczyciele extends Controller {
         }
     }
 
+    /**
+     * Przypisuje przedmiot nauczycielowi
+     */
     public function action_dodprzed() {
         $skr = $_POST['skrot'];
-		$naucz = $_POST['nauczyciel'];
+        $naucz = $_POST['nauczyciel'];
         $przedmiot = $_POST['selPrzedm'];
         $isf = new Kohana_Isf();
         $isf->DbConnect();
@@ -166,6 +197,12 @@ class Controller_Nauczyciele extends Controller {
         Kohana_Request::factory()->redirect('nauczyciele/zarzadzanie/' . $skr);
     }
 
+    /**
+     * Wypisuje klase nauczycielowi
+     *
+     * @param string $nauczyciel kod nauczyciela
+     * @param string $klasa klasa klasa
+     */
     public function action_klwyp($nauczyciel, $klasa) {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
@@ -173,11 +210,17 @@ class Controller_Nauczyciele extends Controller {
         Kohana_Request::factory()->redirect('nauczyciele/zarzadzanie/' . $nauczyciel);
     }
 
+    /**
+     * Wypisuje przedmiot nauczycielowi
+     *
+     * @param string $nauczyciel kod nauczyciela
+     * @param string $przedmiot przedmiot do wypisania
+     */
     public function action_przwyp($nauczyciel, $przedmiot) {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
-		$nl = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\''.$nauczyciel.'\'');
-		$nl = $nl[1]['imie_naz'];
+        $nl = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\'' . $nauczyciel . '\'');
+        $nl = $nl[1]['imie_naz'];
         $isf->DbDelete('nl_przedm', 'nauczyciel=\'' . $nl . '\' and przedmiot=\'' . $przedmiot . '\'');
         Kohana_Request::factory()->redirect('nauczyciele/zarzadzanie/' . $nauczyciel);
     }

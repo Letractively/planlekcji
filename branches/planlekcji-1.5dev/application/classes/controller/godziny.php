@@ -1,20 +1,28 @@
 <?php
+
 /**
  * Intersys - Plan Lekcji
  * 
- * 
- * @author Michał Bocian <mhl.bocian@gmail.com>
+ * @author Michal Bocian <mhl.bocian@gmail.com>
+ * @license GNU GPL v3
+ * @package logic
  */
 defined('SYSPATH') or die('No direct script access.');
+
 /**
- * Kontroler: godziny
  * 
- * Rola: Odpowiada za dostęp moduł godzin lekcyjnych
+ * Przetwarzanie godzin lekcyjnych
+ * 
+ * @package godziny
  */
 class Controller_Godziny extends Controller {
-    
+
+    /**
+     *
+     * @var nusoap_client instancja klasy nusoap
+     */
     public $wsdl;
-    
+
     /**
      * Tworzy obiekt sesji i sprawdza czy zalogowany
      */
@@ -53,6 +61,7 @@ class Controller_Godziny extends Controller {
             exit;
         }
     }
+
     /**
      * Strona godzin lekcyjnych
      */
@@ -73,6 +82,7 @@ class Controller_Godziny extends Controller {
         $view->set('content', $view2->render());
         echo $view->render();
     }
+
     /**
      * Ustawia ilosc godzin lekcyjnych
      */
@@ -82,9 +92,10 @@ class Controller_Godziny extends Controller {
         $ilosc = $_POST['iloscgodzin'];
         $isf->DbUpdate('rejestr', array('wartosc' => $ilosc), 'opcja=\'ilosc_godzin_lek\'');
         $isf->DbUpdate('rejestr', array('wartosc' => $_POST['dlugosclekcji']), 'opcja=\'dlugosc_lekcji\'');
-        $isf->DbUpdate('lek_godziny', array('godzina'=>'wymagane jest ponowne ustawienie'), 'lekcja like \'%\'');
+        $isf->DbUpdate('lek_godziny', array('godzina' => 'wymagane jest ponowne ustawienie'), 'lekcja like \'%\'');
         Kohana_Request::factory()->redirect('godziny/index');
     }
+
     /**
      * Ustawia czas godzin lekcyjnych
      */
@@ -102,7 +113,7 @@ class Controller_Godziny extends Controller {
                 $g1 = $_POST['czasRZ'];
             } else {
                 $g1 = explode(':', $g2);
-                $nl = $nrlek-1;
+                $nl = $nrlek - 1;
                 $cp = explode(':', $_POST['lekcja'][$nl]);
                 $g1 = date('H:i', mktime($g1[0], $g1[1] + $cp[1]));
             }
@@ -110,9 +121,9 @@ class Controller_Godziny extends Controller {
             $g2 = date('H:i', mktime($g2[0], $g2[1] + $czaslek));
             $res = $g1 . ' - ' . $g2;
             $isf->DbInsert('lek_godziny', array(
-                'lekcja'=>$nrlek,
-                'godzina'=>$res,
-                'dl_prz'=>$dlprz,
+                'lekcja' => $nrlek,
+                'godzina' => $res,
+                'dl_prz' => $dlprz,
             ));
         }
         Kohana_Request::factory()->redirect('godziny/index');

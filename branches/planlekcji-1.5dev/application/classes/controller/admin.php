@@ -1,18 +1,18 @@
 <?php
-
 /**
  * Intersys - Plan Lekcji
  * 
- * @author Michał Bocian <mhl.bocian@gmail.com>
+ * @author Michal Bocian <mhl.bocian@gmail.com>
  * @license GNU GPL v3
  * @package logic
  */
 defined('SYSPATH') or die('No direct script access.');
 
 /**
- * Kontroler: admin
  * 
- * Rola: Odpowiada za dostęp do trybu administratora
+ * Odpowiada za dostep do trybu administratora
+ * 
+ * @package admin
  */
 class Controller_Admin extends Controller {
 
@@ -104,8 +104,7 @@ class Controller_Admin extends Controller {
     }
 
     /**
-     * Akcja: index
-     * Rola: uruchamia glowna strone
+     * uruchamia glowna strone
      */
     public function action_index() {
         if ($this->check_user_login() == true) {
@@ -118,8 +117,7 @@ class Controller_Admin extends Controller {
     }
 
     /**
-     * Akcja: login
-     * Rola: logowanie do systemu
+     * logowanie do systemu
      *
      * @param boolean $pass poprawnosc logowania
      */
@@ -144,8 +142,7 @@ class Controller_Admin extends Controller {
     }
 
     /**
-     * Akcja: dologin
-     * Rola: odpowiada za walidacje danych do logowania
+     * odpowiada za walidacje danych do logowania
      */
     public function action_dologin() {
         $login = $_POST['inpLogin'];
@@ -181,8 +178,7 @@ class Controller_Admin extends Controller {
     }
 
     /**
-     * Akcja: zamknij
-     * Rola: strona zamkniecia edycji sal, przedmiotow, etc
+     * strona zamkniecia edycji sal, przedmiotow, etc
      */
     public function action_zamknij() {
 
@@ -196,8 +192,7 @@ class Controller_Admin extends Controller {
     }
 
     /**
-     * Akcja: zamknij2
-     * Rola: strona zamkniecia edycji planow zajec
+     * strona zamkniecia edycji planow zajec
      */
     public function action_zamknij2() {
 
@@ -209,7 +204,9 @@ class Controller_Admin extends Controller {
         $view->set('content', $view2->render());
         echo $view->render();
     }
-
+    /**
+     * Odnawia token
+     */
     public function action_renew() {
 
         $this->check_user_login();
@@ -221,8 +218,7 @@ class Controller_Admin extends Controller {
     }
 
     /**
-     * Akcja: zamknijconfirm
-     * Rola: potwierdza zamkniecie edycji sal, przedmiotow, etc
+     * potwierdza zamkniecie edycji sal, przedmiotow, etc
      */
     public function action_zamknijconfirm() {
 
@@ -236,8 +232,7 @@ class Controller_Admin extends Controller {
     }
 
     /**
-     * Akcja: zamknijconfirm2
-     * Rola: potwierdza zamkniecie edycji planow
+     * potwierdza zamkniecie edycji planow
      */
     public function action_zamknijconfirm2() {
 
@@ -251,8 +246,7 @@ class Controller_Admin extends Controller {
     }
 
     /**
-     * Akcja: logout
-     * Rola: wylogowuje
+     * wylogowuje
      */
     public function action_logout() {
         $this->wsdl->call('doLogout', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
@@ -265,8 +259,7 @@ class Controller_Admin extends Controller {
     }
 
     /**
-     * Akcja: planreset
-     * Rola: strona usuwania planow
+     * strona usuwania planow
      */
     public function action_planreset() {
 
@@ -287,8 +280,7 @@ class Controller_Admin extends Controller {
     }
 
     /**
-     * Akcja: reset
-     * Rola: strona usuwania danych jak sale, etc
+     * strona usuwania danych jak sale, etc
      */
     public function action_reset() {
 
@@ -304,8 +296,7 @@ class Controller_Admin extends Controller {
     }
 
     /**
-     * Akcja: doreset
-     * Rola: usuwa dane jak sale, etc
+     * usuwa dane jak sale, etc
      */
     public function action_doreset() {
 
@@ -333,8 +324,7 @@ class Controller_Admin extends Controller {
     }
 
     /**
-     * Akcja: zmiendane
-     * Rola: strona zmiana danych szkoly, strony glownej
+     * strona zmiana danych szkoly, strony glownej
      */
     public function action_zmiendane() {
 
@@ -406,8 +396,7 @@ START;
     }
 
     /**
-     * Akcja: dochange
-     * Rola: zmienia dane szkoly, strony glownej
+     * zmienia dane szkoly, strony glownej
      */
     public function action_dochange() {
 
@@ -430,8 +419,7 @@ START;
     }
 
     /**
-     * Akcja: haslo
-     * Rola: strona zmiany hasla
+     * strona zmiany hasla
      */
     public function action_haslo($err=false) {
 
@@ -451,8 +439,7 @@ START;
     }
 
     /**
-     * Akcja: chpass
-     * Rola: zmienia haslo
+     * zmienia haslo
      */
     public function action_chpass() {
         $this->check_user_login();
@@ -492,8 +479,8 @@ START;
     }
 
     /**
-     * Akcja: users
-     * Rola: zarzadzanie uzytkownikami
+     * 
+     * Wyswietla strone z uzytkownikami
      */
     public function action_users() {
         $this->check_login();
@@ -503,7 +490,11 @@ START;
 
         echo $view->render();
     }
-    
+    /**
+     * Wyswietla strone logow systemowych
+     *
+     * @param integer $page strona logow
+     */
     public function action_logs($page=1) {
         $this->check_login();
         $view = new View('main');
@@ -513,7 +504,10 @@ START;
 
         echo $view->render();
     }
-    
+    /**
+     * 
+     * Usuwa wszystkie logi systemowe
+     */
     public function action_dellogs(){
         $this->check_login();
         $isf = new Kohana_Isf();
@@ -521,14 +515,24 @@ START;
         $isf->dbhandle->exec('delete from log');
         Kohana_Request::factory()->redirect('admin/logs');
     }
-
+    /**
+     * 
+     * Wywietla strone generujaca tokeny dla uzytkownika o danym numerze id
+     *
+     * @param integer $user id uzytkownika
+     */
     public function action_token($user) {
         $this->check_login();
         $view = View::factory('admin_token');
         $view->set('id', $user);
         echo $view->render();
     }
-
+    /**
+     * 
+     * Usuwa uzytkownika o numerze id
+     *
+     * @param integer $uid numer uzytkownika
+     */
     public function action_userdel($uid) {
         $this->check_login();
         $isf = new Kohana_Isf();
@@ -538,7 +542,12 @@ START;
         $isf->DbDelete('tokeny', 'login=\'' . $u[1]['login'] . '\'');
         Kohana_Request::factory()->redirect('admin/users');
     }
-
+    /**
+     * 
+     * Wyswietla strone dodawania uzytkownika
+     *
+     * @param string $err kod bledu do szablonu
+     */
     public function action_adduser($err=null) {
         $this->check_login();
         $view = new View('main');
@@ -548,7 +557,10 @@ START;
 
         echo $view->render();
     }
-
+    /**
+     * 
+     * Dodaje uzytkownika
+     */
     public function action_douseradd() {
         $this->check_login();
         if (!isset($_POST)) {
