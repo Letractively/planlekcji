@@ -22,6 +22,9 @@ if (count($ctb) != 0) { // gdy istnieje
 } else { // gdy nie istnieje
     $r = 0;
 }
+if (isset($_GET['reinstall'])) {
+    $r = 0;
+}
 ?>
 <?php
 /**
@@ -34,28 +37,50 @@ if ($r == 1):
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
             <title>Instalacja Internetowy Plan Lekcji</title>
             <link rel="stylesheet" type="text/css" href="lib/css/style.css"/>
+            <style type="text/css">
+                span{
+                    font-size: 10pt;
+                }
+            </style>
         </head>
         <body>
-            <img src="lib/images/logo.png"/>
-            <h1>Instalacja zakończona powodzeniem!</h1>
-            <h3>Usuń plik <b>install.php</b> oraz <b>unixinstall.php</b>
+            <img src="lib/images/logo.png" style="height: 80px;"/>
+            <h1 class="notice">Instalacja zakończona powodzeniem!</h1>
+            <p class="info">Usuń plik <b>install.php</b> oraz <b>unixinstall.php</b>
                 i zaloguj się, używając
-                danych podanych przez instalator</h3>
+                danych podanych przez instalator</p>
             <?php if (!file_exists('config.php')): ?>
                 <?php
                 $r = $_SERVER['REQUEST_URI'];
                 $r = str_replace('index.php', '', $r);
                 $r = str_replace('install.php', '', $r);
+                $r = str_replace('?reinstall', '', $r);
                 ?>
-                <h3>Plik config.php nie istnieje! Proszę go utworzyć</h3>
-                <p>Proszę utworzyć plik <b>config.php</b> o następującej
-                    treści:</p>
-                <?php
-                echo '<pre>' . htmlspecialchars('<?php') . PHP_EOL .
-                '<b>' . htmlspecialchars('$path = \'' . $r . '\';') . '</b>' . PHP_EOL .
-                htmlspecialchars('?>') . '</pre>';
-                ?>
+                <fieldset style="max-width: 50%;">
+                    <legend>
+                        <p class="error">
+                            Błąd zapisu pliku <b>config.php</b>
+                        </p>
+                    </legend>
+                    <?php
+                    $str = <<< START
+   <?php
+   \$path = '$r';
+   define('APP_PATH', \$path);
+   ?>
+START;
+                    highlight_string($str);
+                    ?>
+                    <p>Proszę utworzyć plik config.php w katalogu głównym
+                        aplikacji o powyższej treści.</p>
+                </fieldset>
             <?php endif; ?>
+            <div id="foot">
+                <p>
+                    <img src="lib/images/gplv3.png" alt="GNU GPL v3 logo"/>
+                    <b>Plan lekcji</b> |
+                    <a href="http://planlekcji.googlecode.com" target="_blank">strona projektu Plan Lekcji</a></p>
+            </div>
         </body>
     </html>
     <?php exit; ?>
@@ -97,11 +122,16 @@ else:
                         strona jest wywołana z komputera lokalnego.
                     </p>
                 <?php else: ?>
+                    <?php if (isset($_GET['reinstall'])): ?>
+                        <p class="info">Reinstalacja usunie wszystkich użytkowników, wszystkie dane
+                            systemu zostaną zachowane.</p>
+                    <?php endif; ?>
                     <?php
                     $r = $_SERVER['REQUEST_URI'];
                     $r = str_replace('index.php', '', $r);
                     $r = str_replace('install.php', '', $r);
                     $r = str_replace('?err', '', $r);
+                    $r = str_replace('?reinstall', '', $r);
                     ?>
                     <h3>Krok 1 - wprowadzanie danych</h3>
                     <form action="" method="post">
@@ -143,12 +173,18 @@ else:
             $ferr = true;
         } else {
             $file = '<?php' . PHP_EOL . '$path = \'' . $_POST['inpPath'] . '\';' . PHP_EOL;
-            $file .= 'define(\'APP_PATH\', $path);'. PHP_EOL;
+            $file .= 'define(\'APP_PATH\', $path);' . PHP_EOL;
             $file .= '?>';
             fputs($a, $file);
             fclose($a);
         }
-
+        /**
+         * Gdy instalacja awaryjna (na istniejaca instalacje),
+         * wowczas usuwa starych uzytkownikow
+         */
+        $isf->DbDelete('rejestr', 'opcja like \'%\'');
+        $isf->DbDelete('uzytkownicy', 'login like \'%\'');
+        $isf->DbDelete('tokeny', 'token like \'%\'');
         $isf->DbTblCreate('przedmioty', array(
             'przedmiot' => 'text not null'
         ));
@@ -329,29 +365,55 @@ else:
                 <meta charset="UTF-8"/>
                 <link rel="stylesheet" type="text/css" href="lib/css/style.css"/>
                 <title>Instalator pakietu Internetowy Plan Lekcji 1.5</title>
+                <style type="text/css">
+                    span{
+                        font-size: 10pt;
+                    }
+                </style>
             </head>
             <body>
-                <img src="lib/images/logo.png"/>
+                <img src="lib/images/logo.png" style="height: 80px;"/>
                 <h1>Instalator pakietu Internetowy Plan Lekcji 1.5</h1><h3>Krok 2: instalacja</h3>
-                <h3>Dane administratora</h3>
-                <p><b>Login: </b>root</p>
-                <p><b>Hasło: </b><?php echo $pass; ?></p>
-                <p><b>Token: </b><?php echo $token; ?></p>
-                <p class="info">Zapamiętaj dane do logowania oraz usuń pliki <b>install.php</b> oraz <b>unixinstall.php</b>,
-                			a następnie przejdź do <a href="index.php">strony głównej</a>.</p>
+                <fieldset style="max-width: 50%;">
+                    <legend>Dane administratora</legend>
+                    <p><b>Login: </b>root</p>
+                    <p><b>Hasło: </b><?php echo $pass; ?></p>
+                    <p><b>Token: </b><?php echo $token; ?></p>
+                    <p class="info">Zapamiętaj dane do logowania oraz usuń pliki <b>install.php</b> oraz <b>unixinstall.php</b>,
+                        a następnie przejdź do <a href="index.php">strony głównej</a>.</p>
+                </fieldset>
+                <?php if (!file_exists('config.php')): ?>
                     <?php
-                    /**
-                     * Gdy plik config.php nie zostal zapisany
-                     */
-                    if ($ferr == true) {
-                        echo '<pre><b>BŁĄD ZAPISU: config.php</b><br/>Prosze utworzyc plik config.php<br/>';
-                        echo htmlspecialchars('<?php') . PHP_EOL;
-                        echo htmlspecialchars('$path = \'' . $r . '\';') . PHP_EOL;
-                        echo htmlspecialchars('define(\'APP_PATH\', $path);') . PHP_EOL;
-                        echo htmlspecialchars('?>');
-                        echo '</pre>';
-                    }
+                    $r = $_SERVER['REQUEST_URI'];
+                    $r = str_replace('index.php', '', $r);
+                    $r = str_replace('install.php', '', $r);
+                    $r = str_replace('?reinstall', '', $r);
                     ?>
+                    <fieldset style="max-width: 50%;">
+                        <legend>
+                            <p class="error">
+                                Błąd zapisu pliku <b>config.php</b>
+                            </p>
+                        </legend>
+                        <?php
+                        $str = <<< START
+   <?php
+   \$path = '$r';
+   define('APP_PATH', \$path);
+   ?>
+START;
+                        highlight_string($str);
+                        ?>
+                        <p>Proszę utworzyć plik config.php w katalogu głównym
+                            aplikacji o powyższej treści.</p>
+                    </fieldset>
+                <?php endif; ?>
+                <div id="foot">
+                    <p>
+                        <img src="lib/images/gplv3.png" alt="GNU GPL v3 logo"/>
+                        <b>Plan lekcji</b> |
+                        <a href="http://planlekcji.googlecode.com" target="_blank">strona projektu Plan Lekcji</a></p>
+                </div>
             </body>
         </html>
     <?php endif; ?>
