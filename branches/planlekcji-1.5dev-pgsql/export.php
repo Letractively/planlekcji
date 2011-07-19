@@ -175,9 +175,9 @@ function klasafile($klasa) {
 }
 
 foreach ($isf->DbSelect('klasy', array('*')) as $rid => $rcl) {
-	echo 'Kompilowanie klasy '.$rcl['klasa'].'<br/>';
-	flush();
-	ob_flush();
+    echo 'Kompilowanie klasy ' . $rcl['klasa'] . '<br/>';
+    flush();
+    ob_flush();
     $zip->addFromString('klasa/' . $rcl['klasa'] . '.html', klasafile($rcl['klasa']));
 }
 
@@ -200,9 +200,9 @@ function salafile($sala) {
 }
 
 foreach ($isf->DbSelect('sale', array('*')) as $rid => $rcl) {
-	echo 'Kompilowanie sali '.$rcl['sala'].'<br/>';
-	flush();
-	ob_flush();
+    echo 'Kompilowanie sali ' . $rcl['sala'] . '<br/>';
+    flush();
+    ob_flush();
     $zip->addFromString('sala/' . $rcl['sala'] . '.html', salafile($rcl['sala']));
 }
 
@@ -225,9 +225,9 @@ function nlfile($skrot) {
 }
 
 foreach ($isf->DbSelect('nauczyciele', array('*')) as $rid => $rcl) {
-	echo 'Kompilowanie nauczyciela '.$rcl['skrot'].'<br/>';
-	flush();
-	ob_flush();
+    echo 'Kompilowanie nauczyciela ' . $rcl['skrot'] . '<br/>';
+    flush();
+    ob_flush();
     $zip->addFromString('nauczyciel/' . $rcl['skrot'] . '.html', nlfile($rcl['skrot']));
 }
 
@@ -249,7 +249,7 @@ function zfile() {
     return $ret;
 }
 
-echo 'Finalizowanie...'.PHP_EOL;
+echo 'Finalizowanie...' . PHP_EOL;
 
 $zip->addFromString('nauczyciel/zestawienie.html', zfile());
 $zip->close();

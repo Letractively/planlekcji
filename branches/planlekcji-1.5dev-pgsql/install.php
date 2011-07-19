@@ -6,18 +6,18 @@ require_once 'modules/isf/classes/kohana/isf.php';
 if (!file_exists('config.php')) {
     $r = 0;
 } else {
-	if(!isset($my_cfg)){
-		$r = 0;
-	}else{
-		$isfa = new Kohana_Isf();
-		$isfa->DbConnect();
-		$res = $isfa->DbSelect('rejestr', array('*'), 'where opcja=\'installed\'');
-		if (count($res) >= 1) {
-			$r = 1;
-		} else {
-			$r = 0;
-		}
-	}
+    if (!isset($my_cfg)) {
+        $r = 0;
+    } else {
+        $isfa = new Kohana_Isf();
+        $isfa->DbConnect();
+        $res = $isfa->DbSelect('rejestr', array('*'), 'where opcja=\'installed\'');
+        if (count($res) >= 1) {
+            $r = 1;
+        } else {
+            $r = 0;
+        }
+    }
 }
 ?>
 <?php if ($r == 1): ?>
@@ -28,25 +28,46 @@ if (!file_exists('config.php')) {
             <link rel="stylesheet" type="text/css" href="lib/css/style.css"/>
         </head>
         <body>
-            <img src="lib/images/logo.png"/>
-            <h1>Instalacja zakończona powodzeniem!</h1>
-            <h3>Usuń plik <b>install.php</b> oraz <b>unixinstall.php</b>
+            <img src="lib/images/logo.png" style="height: 80px;"/>
+            <h1 class="notice">Instalacja zakończona powodzeniem!</h1>
+            <p class="info">Usuń plik <b>install.php</b> oraz <b>unixinstall.php</b>
                 i zaloguj się, używając
-                danych podanych przez instalator</h3>
+                danych podanych przez instalator</p>
             <?php if (!file_exists('config.php')): ?>
                 <?php
                 $r = $_SERVER['REQUEST_URI'];
                 $r = str_replace('index.php', '', $r);
                 $r = str_replace('install.php', '', $r);
                 ?>
-                <h3>Plik config.php nie istnieje! Proszę go utworzyć</h3>
-                <p>Treść pliku config.php</p>
-                <pre>
-                    <?php echo htmlspecialchars('<?php') . PHP_EOL; ?>
-                    <?php echo htmlspecialchars('$path = \'' . $r . '\';') . PHP_EOL; ?>
-                    <?php echo htmlspecialchars('?>'); ?>
-                </pre>
+                <fieldset style="max-width: 50%;">
+                    <legend>
+                        <p class="error">
+                            Błąd zapisu pliku <b>config.php</b>
+                        </p>
+                    </legend>
+                    <?php
+                    $str = <<< START
+   <?php
+   \$path = '$r';
+   define('APP_PATH', \$path);
+   \$my_cfg['host'] = ''; // nazwa hosta bazy danych PostgreSQL
+   \$my_cfg['database'] = ''; // nazwa bazy danych
+   \$my_cfg['user'] = ''; // nazwa uzytkownika bazy
+   \$my_cfg['password'] = ''; // haslo bazy danych
+   ?>
+START;
+                    highlight_string($str);
+                    ?>
+                    <p>Proszę utworzyć plik config.php w katalogu głównym
+                        aplikacji o powyższej treści.</p>
+                </fieldset>
             <?php endif; ?>
+            <div id="foot">
+                <p>
+                    <img src="lib/images/gplv3.png" alt="GNU GPL v3 logo"/>
+                    <b>Plan lekcji</b> |
+                    <a href="http://planlekcji.googlecode.com" target="_blank">strona projektu Plan Lekcji</a></p>
+            </div>
         </body>
     </html>
     <?php exit; ?>
@@ -114,7 +135,7 @@ if (!file_exists('config.php')) {
             header('Location: install.php?err');
             exit;
         endif;
-		
+
         $szkola = $_POST['inpSzkola'];
         $isf = new Kohana_Isf();
         $customvars = array(
@@ -131,10 +152,17 @@ if (!file_exists('config.php')) {
             $file = '<?php' . PHP_EOL . '$path = \'' . $_POST['inpPath'] . '\';' . PHP_EOL;
             $file .= '$my_cfg = array(\'host\'=>\'' . $_POST['dbHost'] . '\',\'user\'=>\'' . $_POST['dbLogin'] . '\', \'password\'=>\'' . $_POST['dbHaslo'] . '\',\'database\'=>\'' . $_POST['dbBaza'] . '\',';
             $file .= ');' . PHP_EOL . '$GLOBALS[\'my_cfg\']=$my_cfg; ' . PHP_EOL;
-			$file .= 'define(\'APP_PATH\', $path);'. PHP_EOL . '?>';
+            $file .= 'define(\'APP_PATH\', $path);' . PHP_EOL . '?>';
             fputs($a, $file);
             fclose($a);
         }
+        /**
+         * Gdy instalacja awaryjna (na istniejaca instalacje),
+         * wowczas usuwa starych uzytkownikow
+         */
+        $isf->DbDelete('rejestr', 'opcja like \'%\'');
+        $isf->DbDelete('uzytkownicy', 'login like \'%\'');
+        $isf->DbDelete('tokeny', 'token like \'%\'');
         $isf->DbTblCreate('przedmioty', array(
             'przedmiot' => 'text not null'
         ));
@@ -302,7 +330,7 @@ if (!file_exists('config.php')) {
         $pass = rand(1, 100) . $pass;
 
         $isf->DbInsert('uzytkownicy', array(
-			'uid' => 1,
+            'uid' => 1,
             'login' => 'root',
             'haslo' => md5('plan' . sha1('lekcji' . $pass)),
         ));
@@ -316,29 +344,58 @@ if (!file_exists('config.php')) {
                 <meta charset="UTF-8"/>
                 <link rel="stylesheet" type="text/css" href="lib/css/style.css"/>
                 <title>Instalator pakietu Internetowy Plan Lekcji 1.5</title>
+                <style type="text/css">
+                    span{
+                        font-size: 10pt;
+                    }
+                </style>
             </head>
             <body>
-                <img src="lib/images/logo.png"/>
+                <img src="lib/images/logo.png" style="height: 80px;"/>
                 <h1>Instalator pakietu Internetowy Plan Lekcji 1.5</h1><h3>Krok 2: instalacja</h3>
-                <h3>Dane administratora</h3>
-                <p><b>Login: </b>root</p>
-                <p><b>Hasło: </b><?php echo $pass; ?></p>
-                <p><b>Token: </b><?php echo $token; ?></p>
-                <p class="info">Zapamiętaj dane do logowania oraz usuń pliki <b>install.php</b> oraz <b>unixinstall.php</b>,
-                			a następnie przejdź do <a href="index.php">strony głównej</a>.</p>
+                <fieldset style="max-width: 50%;">
+                    <legend>Dane administratora</legend>
+                    <p><b>Login: </b>root</p>
+                    <p><b>Hasło: </b><?php echo $pass; ?></p>
+                    <p><b>Token: </b><?php echo $token; ?></p>
+                    <p class="info">Zapamiętaj dane do logowania oraz usuń pliki <b>install.php</b> oraz <b>unixinstall.php</b>,
+                        a następnie przejdź do <a href="index.php">strony głównej</a>.</p>
+                </fieldset>
+                <?php if (!file_exists('config.php')): ?>
                     <?php
-                    /**
-                     * Gdy plik config.php nie zostal zapisany
-                     */
-                    if ($ferr == true) {
-                        echo '<pre><b>BŁĄD ZAPISU: config.php</b><br/>Prosze utworzyc plik config.php<br/>';
-                        echo htmlspecialchars('<?php') . PHP_EOL;
-                        echo htmlspecialchars('$path = \'' . $r . '\';') . PHP_EOL;
-                        echo htmlspecialchars('define(\'APP_PATH\', $path);') . PHP_EOL;
-                        echo htmlspecialchars('?>');
-                        echo '</pre>';
-                    }
+                    $r = $_SERVER['REQUEST_URI'];
+                    $r = str_replace('index.php', '', $r);
+                    $r = str_replace('install.php', '', $r);
                     ?>
+                    <fieldset style="max-width: 50%;">
+                        <legend>
+                            <p class="error">
+                                Błąd zapisu pliku <b>config.php</b>
+                            </p>
+                        </legend>
+                        <?php
+                        $str = <<< START
+   <?php
+   \$path = '$r';
+   define('APP_PATH', \$path);
+   \$my_cfg['host'] = ''; // nazwa hosta bazy danych PostgreSQL
+   \$my_cfg['database'] = ''; // nazwa bazy danych
+   \$my_cfg['user'] = ''; // nazwa uzytkownika bazy
+   \$my_cfg['password'] = ''; // haslo bazy danych
+   ?>
+START;
+                        highlight_string($str);
+                        ?>
+                        <p>Proszę utworzyć plik config.php w katalogu głównym
+                            aplikacji o powyższej treści.</p>
+                    </fieldset>
+                <?php endif; ?>
+                <div id="foot">
+                    <p>
+                        <img src="lib/images/gplv3.png" alt="GNU GPL v3 logo"/>
+                        <b>Plan lekcji</b> |
+                        <a href="http://planlekcji.googlecode.com" target="_blank">strona projektu Plan Lekcji</a></p>
+                </div>
             </body>
         </html>
     <?php endif; ?>
