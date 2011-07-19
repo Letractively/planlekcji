@@ -1,20 +1,24 @@
 <?php
-
 /**
  * Intersys - Plan Lekcji
  * 
- * 
- * @author Michał Bocian <mhl.bocian@gmail.com>
+ * @author Michal Bocian <mhl.bocian@gmail.com>
+ * @license GNU GPL v3
+ * @package logic
  */
 defined('SYSPATH') or die('No direct script access.');
 
 /**
- * Kontroler: regedit
  * 
- * Rola: Rejestr systemowy
+ * Rejestr systemowy
+ * 
+ * @package regedit
  */
 class Controller_Regedit extends Controller {
-
+    /**
+     *
+     * @var nusoap_client instancja klasy NuSOAP
+     */
     public $wsdl;
 
     /**
@@ -45,7 +49,9 @@ class Controller_Regedit extends Controller {
             }
         }
     }
-
+    /**
+     * Strona glowna rejestru
+     */
     public function action_index() {
         $view = view::factory('main');
         $view2 = view::factory('regedit_index');

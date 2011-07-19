@@ -2,17 +2,22 @@
 /**
  * Intersys - Plan Lekcji
  * 
- * 
- * @author Michał Bocian <mhl.bocian@gmail.com>
+ * @author Michal Bocian <mhl.bocian@gmail.com>
+ * @license GNU GPL v3
+ * @package logic
  */
 defined('SYSPATH') or die('No direct script access.');
 /**
- * Kontroler: sale
  * 
- * Rola: Odpowiada za obsługę sal lekcyjnych
+ * Odpowiada za obssluge sal lekcyjnych
+ * 
+ * @package sale
  */
 class Controller_Sale extends Controller {
-
+    /**
+     *
+     * @var nusoap_client instancja klasy NuSOAP
+     */
     public $wsdl;
     
     /**
@@ -53,14 +58,18 @@ class Controller_Sale extends Controller {
             exit;
         }
     }
-
+    /**
+     * Wyswietla strone glowna z salami
+     *
+     * @param string $err kod bledu
+     */
     public function action_index($err=null) {
         $isf = new Isf();
         $isf->DbConnect();
 
         $view = View::factory('main');
 
-        $dbres = $isf->DbSelect('sale', array('*'), 'order by cast(sala as numeric) asc');
+        $dbres = $isf->DbSelect('sale', array('*'), 'order by sala asc');
 
         $view2 = View::factory('sale_index');
         $view2->set('res', $dbres);
@@ -71,7 +80,12 @@ class Controller_Sale extends Controller {
         $view->set('content', $view2->render());
         echo $view->render();
     }
-
+    /**
+     * Usuwa sale
+     *
+     * @param string $sala sala
+     * @param mixed $usun czy usunac
+     */
     public function action_usun($sala, $usun=null) {
 
         $isf = new Isf();
@@ -102,7 +116,9 @@ class Controller_Sale extends Controller {
             Kohana_Request::factory()->redirect('sale/index/usun');
         }
     }
-
+    /**
+     * Dodaje sale
+     */
     public function action_dodaj() {
         if (isset($_POST)) {
 
@@ -132,7 +148,11 @@ class Controller_Sale extends Controller {
 
         Kohana_Request::factory()->redirect('sale/index');
     }
-
+    /**
+     * Strona przypisania sali przedmiotow
+     *
+     * @param string $sala sala
+     */
     public function action_przedmiot($sala) {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
@@ -151,7 +171,9 @@ class Controller_Sale extends Controller {
         $view->set('content', $view2->render());
         echo $view->render();
     }
-
+    /**
+     * Dodaje do sali przedmiot
+     */
     public function action_dodajprzedm() {
         $sala = $_POST['formSala'];
         $przedmiot = $_POST['selPrzed'];
@@ -163,7 +185,12 @@ class Controller_Sale extends Controller {
         ));
         Kohana_Request::factory()->redirect('sale/przedmiot/' . $sala);
     }
-
+    /**
+     * Usuwa przypisanie sali przedmiotu
+     *
+     * @param string $sala sala
+     * @param string $przedmiot przedmiot
+     */
     public function action_przedusun($sala, $przedmiot) {
         $isf = new Kohana_Isf();
         $isf->DbConnect();

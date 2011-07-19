@@ -1,20 +1,27 @@
 <?php
+
 /**
  * Intersys - Plan Lekcji
  * 
- * 
- * @author Michał Bocian <mhl.bocian@gmail.com>
+ * @author Michal Bocian <mhl.bocian@gmail.com>
+ * @license GNU GPL v3
+ * @package logic
  */
 defined('SYSPATH') or die('No direct script access.');
+
 /**
- * Kontroler: przedmioty
  * 
- * Rola: Odpowiada za obsługę przedmiotów
+ * Odpowiada za obluge przedmiotow
+ * 
+ * @package przedmioty
  */
 class Controller_Przedmioty extends Controller {
-
+    /**
+     *
+     * @var nusoap_client instancja klasy nusoap
+     */
     public $wsdl;
-    
+
     /**
      * Tworzy obiekt sesji i sprawdza czy zalogowany
      */
@@ -53,7 +60,11 @@ class Controller_Przedmioty extends Controller {
             exit;
         }
     }
-
+    /**
+     * Wyswietla strone przedmiotow
+     *
+     * @param string $err kod bledu
+     */
     public function action_index($err=null) {
 
         $isf = new Kohana_Isf();
@@ -61,15 +72,20 @@ class Controller_Przedmioty extends Controller {
 
         $view = view::factory('main');
         $view2 = view::factory('przedmioty_index');
-        
+
         $view2->set('_err', $err);
         $view2->set('res', $isf->DbSelect('przedmioty', array('przedmiot'), 'order by przedmiot asc'));
-        
+
         $view->set('bodystr', 'onLoad=\'document.forms.form1.inpPrzedmiot.focus()\'');
         $view->set('content', $view2->render());
         echo $view->render();
     }
-
+    /**
+     * Usuwa przedmiot
+     *
+     * @param string $przedmiot przedmiot
+     * @param mixed $usun czy usunac przedmiot
+     */
     public function action_usun($przedmiot, $usun=null) {
 
         $isf = new Isf();
@@ -98,7 +114,9 @@ class Controller_Przedmioty extends Controller {
             Kohana_Request::factory()->redirect('przedmioty/index');
         }
     }
-
+    /**
+     * Dodaje przedmiot
+     */
     public function action_dodaj() {
         if (isset($_POST)) {
 
@@ -131,7 +149,11 @@ class Controller_Przedmioty extends Controller {
             Kohana_Request::factory()->redirect('');
         }
     }
-
+    /**
+     * Wyswietla strone przypisania sali do przedmiotu
+     *
+     * @param string $przedmiot nazwa przedmiotu
+     */
     public function action_sale($przedmiot) {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
@@ -150,7 +172,9 @@ class Controller_Przedmioty extends Controller {
         $view->set('content', $view2->render());
         echo $view->render();
     }
-
+    /**
+     * Przypisuje sale do przedmiotu
+     */
     public function action_dodajsale() {
         $przedmiot = $_POST['formPrzedmiot'];
         $sala = $_POST['selSale'];
@@ -162,14 +186,23 @@ class Controller_Przedmioty extends Controller {
         ));
         Kohana_Request::factory()->redirect('przedmioty/sale/' . $przedmiot);
     }
-
+    /**
+     * Usuwa przypisana sale do przedmiotu
+     *
+     * @param string $przedmiot przedmiot
+     * @param string $sala sala
+     */
     public function action_przypisusun($przedmiot, $sala) {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
         $isf->DbDelete('przedmiot_sale', 'przedmiot=\'' . $przedmiot . '\' and sala=\'' . $sala . '\'');
         Kohana_Request::factory()->redirect('przedmioty/sale/' . $przedmiot);
     }
-
+    /**
+     * Strona zarzadzania przedmiotem
+     *
+     * @param string $przedmiot przedmiot
+     */
     public function action_zarzadzanie($przedmiot) {
         $view = view::factory('main');
         $view2 = view::factory('przedmioty_zarzadzanie');
@@ -179,14 +212,21 @@ class Controller_Przedmioty extends Controller {
         $view->set('content', $view2->render());
         echo $view->render();
     }
-
+    /**
+     * Wypisuje nauczyciela z przedmiotu
+     *
+     * @param string $przedmiot przedmiot
+     * @param string $nauczyciel nauczyciel
+     */
     public function action_wypisz($przedmiot, $nauczyciel) {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
         $isf->DbDelete('nl_przedm', 'nauczyciel=\'' . $nauczyciel . '\' and przedmiot=\'' . $przedmiot . '\'');
         Kohana_Request::factory()->redirect('przedmioty/zarzadzanie/' . $przedmiot);
     }
-
+    /**
+     * Przypisuje nauczyciela do przedmiotu
+     */
     public function action_nlprzyp() {
         $nauczyciel = $_POST['selNaucz'];
         $przedm = $_POST['przedmiot'];
