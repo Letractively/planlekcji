@@ -144,15 +144,17 @@ class Controller_Nauczyciele extends Controller {
      * Przypisuje nauczycielowi klase
      */
     public function action_dodklasa() {
-        $naucz = $_POST['Nauczyciel'];
+        $naucz = $_POST['nauczyciel'];
         $klasa = $_POST['selKlasy'];
         $isf = new Kohana_Isf();
         $isf->DbConnect();
+        $nl = $isf->DbSelect('nauczyciele', array('*'), 'where imie_naz=\''.$naucz.'\'');
+        $nl = $nl[1]['skrot'];
         $isf->DbInsert('nl_klasy', array(
             'nauczyciel' => $naucz,
             'klasa' => $klasa
         ));
-        Kohana_Request::factory()->redirect('nauczyciele/zarzadzanie/' . $naucz);
+        Kohana_Request::factory()->redirect('nauczyciele/zarzadzanie/' . $nl);
     }
 
     /**
@@ -206,7 +208,9 @@ class Controller_Nauczyciele extends Controller {
     public function action_klwyp($nauczyciel, $klasa) {
         $isf = new Kohana_Isf();
         $isf->DbConnect();
-        $isf->DbDelete('nl_klasy', 'nauczyciel=\'' . $nauczyciel . '\' and klasa=\'' . $klasa . '\'');
+        $nl = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\''.$nauczyciel.'\'');
+        $nl = $nl[1]['imie_naz'];
+        $isf->DbDelete('nl_klasy', 'nauczyciel=\'' . $nl . '\' and klasa=\'' . $klasa . '\'');
         Kohana_Request::factory()->redirect('nauczyciele/zarzadzanie/' . $nauczyciel);
     }
 
