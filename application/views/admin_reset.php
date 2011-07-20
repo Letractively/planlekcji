@@ -1,28 +1,34 @@
 <?php
 /*
  * Resetowanie systemu Plan Lekcji
- * 
- * 
  */
 ?>
 <h1>Resetowanie systemu Plan lekcji</h1>
-<p>Jest to operacja polegająca na częściowym, bądź całkowitym usunięciu
-wprowadzonych dancyh.</p>
-<p style="font-weight: bold; color: red;">
-    Jest to operacja nieodwracalna!
+<p>Jest to operacja polegająca na usunięciu wszystkich danych, w zależności
+    od dokonanego wyboru</p>
+<h3>&bull; Usuń tylko plany zajęć oraz zastępstwa</h3>
+<p class="info">
+    Ta opcja różni się od poniższej powrotem do edycji planów zajęć
+<form action="<?php echo url::site('admin/planreset'); ?>" method="post">
+    <button type="submit" name="btnSubmit">Usuń tylko dane planów zajęć i zastępstw</button>
+</form>
 </p>
+<h3>&bull; Czyszczenie danych systemowych</h3>
+<p class="info">Opcja spowoduje usunięcie danych i powrót do edycji systemu</p>
 <form action="<?php echo url::site('admin/doreset'); ?>" method="post">
-    <p><b>Zostaną usunięte dane z następujących elementów:</b></p>
+    <p><b>Elementy do usunięcia</b></p>
     <ul>
         <li>Dane planów zajęć</li>
-        <li><b>Usuń także:</b>
-            <ul>
-                <li>zdefiniowane sale</li>
-                <li>zdefiniowani nauczyciele</li>
-                <li>zdefiniowane klasy</li>
-                <li>zdefiniowane godziny dzwonków</li>
-            </ul>
-            <b>Chcę usunąć powyższe elementy:</b> <input type="checkbox" name="cl"/></li>
     </ul>
-    <button type="submit" name="btnSubmit">Zrozumiałem i chcę usunąć dane</button>
+    <p>
+        <b>Opcjonalne elementy do usunięcia</b>&emsp;
+        <input type="checkbox" name="cl"/>
+    </p>
+    <ul>
+        <li>zdefiniowane sale</li>
+        <li>zdefiniowani nauczyciele</li>
+        <li>zdefiniowane klasy</li>
+        <li>zdefiniowane godziny dzwonków</li>
+    </ul>
+    <button type="submit" name="btnSubmit">Usuń trwale dane systemu</button>
 </form>
