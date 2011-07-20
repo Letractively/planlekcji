@@ -19,6 +19,9 @@ if (!file_exists('config.php')) {
         }
     }
 }
+if (isset($_GET['reinstall'])) {
+    $r = 0;
+}
 ?>
 <?php if ($r == 1): ?>
     <html>
@@ -38,6 +41,7 @@ if (!file_exists('config.php')) {
                 $r = $_SERVER['REQUEST_URI'];
                 $r = str_replace('index.php', '', $r);
                 $r = str_replace('install.php', '', $r);
+                $r = str_replace('?reinstall', '', $r);
                 ?>
                 <fieldset style="max-width: 50%;">
                     <legend>
@@ -93,11 +97,16 @@ START;
                         strona jest wywołana z komputera lokalnego.
                     </p>
                 <?php else: ?>
+                    <?php if (isset($_GET['reinstall'])): ?>
+                        <p class="info">Reinstalacja usunie wszystkich użytkowników, wszystkie dane
+                            systemu zostaną zachowane.</p>
+                    <?php endif; ?>
                     <?php
                     $r = $_SERVER['REQUEST_URI'];
                     $r = str_replace('index.php', '', $r);
                     $r = str_replace('install.php', '', $r);
                     $r = str_replace('?err', '', $r);
+                    $r = str_replace('?reinstall', '', $r);
                     ?>
                     <h3>Krok 1</h3>
                     <form action="" method="post">
@@ -366,6 +375,7 @@ START;
                     $r = $_SERVER['REQUEST_URI'];
                     $r = str_replace('index.php', '', $r);
                     $r = str_replace('install.php', '', $r);
+                    $r = str_replace('?reinstall', '', $r);
                     ?>
                     <fieldset style="max-width: 50%;">
                         <legend>
