@@ -2,26 +2,24 @@
 /*
  * Plik instalacyjny Planu Lekcji
  */
-if(!file_exists('index.php')){
-    die('Musisz uruchomic plik z poziomu katalogu aplikacji');
-}
 require_once 'modules/isf/classes/kohana/isf.php';
-$isf = new Kohana_Isf();
-$isf->DbConnect();
-$err = '';
-if (file_exists('modules/isf/isf_resources/default.sqlite') && !is_writable('modules/isf/isf_resources/default.sqlite')) {
-    $err .= 'Plik modules/isf/isf_resources/default.sqlite musi byc zapisywalny! Instalacja przerwana ';
-}
-if (!empty($err)) {
-    die($err);
-}
-$ctb = $isf->DbSelect('sqlite_master', array('*'), 'where name="rejestr"');
-if (count($ctb) != 0) {
-    $res = $isf->DbSelect('rejestr', array('*'), 'where opcja="installed"');
-    if (count($res) >= 1) {
-        $r = 1;
-    }
+if (!file_exists('config.php')) {
+    $r = 0;
 } else {
+    if (!isset($my_cfg)) {
+        $r = 0;
+    } else {
+        $isfa = new Kohana_Isf();
+        $isfa->DbConnect();
+        $res = $isfa->DbSelect('rejestr', array('*'), 'where opcja=\'installed\'');
+        if (count($res) >= 1) {
+            $r = 1;
+        } else {
+            $r = 0;
+        }
+    }
+}
+if (isset($_GET['reinstall'])) {
     $r = 0;
 }
 ?>
@@ -33,15 +31,52 @@ if (count($ctb) != 0) {
             <link rel="stylesheet" type="text/css" href="lib/css/style.css"/>
         </head>
         <body>
-            <img src="lib/images/logo.png"/>
-            <h1>Instalacja zakończona powodzeniem!</h1>
-            <h3>Usuń plik <b>install.php</b> i zaloguj się, używając
-                danych podanych przez instalator</h3>
+            <img src="lib/images/logo.png" style="height: 80px;"/>
+            <h1 class="notice">Instalacja zakończona powodzeniem!</h1>
+            <p class="info">Usuń plik <b>install.php</b> oraz <b>unixinstall.php</b>
+                i zaloguj się, używając
+                danych podanych przez instalator</p>
+            <?php if (!file_exists('config.php')): ?>
+                <?php
+                $r = $_SERVER['REQUEST_URI'];
+                $r = str_replace('index.php', '', $r);
+                $r = str_replace('install.php', '', $r);
+                $r = str_replace('?reinstall', '', $r);
+                ?>
+                <fieldset style="max-width: 50%;">
+                    <legend>
+                        <p class="error">
+                            Błąd zapisu pliku <b>config.php</b>
+                        </p>
+                    </legend>
+                    <?php
+                    $str = <<< START
+   <?php
+   \$path = '$r';
+   define('APP_PATH', \$path);
+   \$my_cfg['host'] = ''; // nazwa hosta bazy danych PostgreSQL
+   \$my_cfg['database'] = ''; // nazwa bazy danych
+   \$my_cfg['user'] = ''; // nazwa uzytkownika bazy
+   \$my_cfg['password'] = ''; // haslo bazy danych
+   ?>
+START;
+                    highlight_string($str);
+                    ?>
+                    <p>Proszę utworzyć plik config.php w katalogu głównym
+                        aplikacji o powyższej treści.</p>
+                </fieldset>
+            <?php endif; ?>
+            <div id="foot">
+                <p>
+                    <img src="lib/images/gplv3.png" alt="GNU GPL v3 logo"/>
+                    <b>Plan lekcji</b> |
+                    <a href="http://planlekcji.googlecode.com" target="_blank">strona projektu Plan Lekcji</a></p>
+            </div>
         </body>
     </html>
     <?php exit; ?>
 <?php else: ?>
-    <?php if (isset($_SERVER['HTTP_USER_AGENT'])): ?>
+    <?php if (!isset($_POST['step2'])): ?>
         <html>
             <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -55,126 +90,124 @@ if (count($ctb) != 0) {
             </head>
             <body>
                 <img src="lib/images/logo.png"/>
-                <h1>Instalator Intersys Plan Lekcji</h1>
-                <h3 class="notice">Uruchom plik install.php w konsoli z poziomu katalogu aplikacji</h3>
-                <?php if (PHP_OS == "WINNT"): ?>
-                    <p><b>Na systemie Windows, gdy ścieżka do PHP istnieje w zmiennej PATH</b></p>
-                    <pre>
-<b>C:\></b> cd <?php echo __DIR__.DIRECTORY_SEPARATOR ?><br/>
-<b><?php echo __DIR__.DIRECTORY_SEPARATOR ?>></b> php install.php
-                    </pre>
+                <h1>Instalator Intersys Plan Lekcji - PostgreSQL</h1>
+                <?php if ($_SERVER['SERVER_NAME'] != 'localhost' && $_SERVER['SERVER_NAME'] != '127.0.0.1'): ?>
+                    <p class="error">
+                        Aplikacja może zostać zainstalowana tylko wtedy, gdy ta
+                        strona jest wywołana z komputera lokalnego.
+                    </p>
                 <?php else: ?>
-                    <p><b>Na systemie UNIX</b></p>
-                    <pre>
-<b></b> cd <?php echo __DIR__.DIRECTORY_SEPARATOR ?> $<br/>
-<b><?php echo __DIR__.DIRECTORY_SEPARATOR ?> $</b> php install.php
-                    </pre>
+                    <?php if (isset($_GET['reinstall'])): ?>
+                        <p class="info">Reinstalacja usunie wszystkich użytkowników, wszystkie dane
+                            systemu zostaną zachowane.</p>
+                    <?php endif; ?>
+                    <?php
+                    $r = $_SERVER['REQUEST_URI'];
+                    $r = str_replace('index.php', '', $r);
+                    $r = str_replace('install.php', '', $r);
+                    $r = str_replace('?err', '', $r);
+                    $r = str_replace('?reinstall', '', $r);
+                    ?>
+                    <h3>Krok 1</h3>
+                    <form action="" method="post">
+                        <b>Nazwa szkoły: </b>
+                        <input type="text" name="inpSzkola" size="80"/><p/>
+                        <b>Ścieżka aplikacji*: </b>
+                        <input type="text" name="inpPath" size="50" value="<?php echo $r; ?>"/>
+                        <input type="hidden" name="step2" value="true"/><p/>
+                        <p class="info">
+                            Ścieżka aplikacji to ciąg znaków po nazwie hosta w pasku adresu
+                            przeglądarki. System automatycznie dopasuje odpowiednią wartość.
+                            Proszę nie zmieniać wartości tego pola chyba, że jest ona nieprawidłowa.
+                        </p>
+                        <fieldset style="margin: 10px; max-width: 50%">
+                            <legend><b>Dane serwera PostgreSQL</b></legend>
+                            <p><b>Host: <input type="text" name="dbHost" size="50"/></b></p>
+                            <p><b>Login: <input type="text" name="dbLogin" size="50"/></b></p>
+                            <p><b>Hasło: <input type="password" name="dbHaslo" size="50"/></b></p>
+                            <p><b>Baza danych: <input type="text" name="dbBaza" size="50"/></b>
+                                baza musi istnieć</p>
+                        </fieldset>
+                        <button type="submit" name="btnSubmit">Zainstaluj aplikację</button>
+                    </form>
+                    <?php if (isset($_GET['err'])): ?>
+                        <p class="error">Żadne pole nie może być puste!</p>
+                    <?php endif; ?>
                 <?php endif; ?>
-                <p class="info">Więcej informacji w dokumentacji projektu</p>
             </body>
         </html>
     <?php else: ?>
         <?php
-        print <<< START
+        if (empty($_POST['inpSzkola']) || $_POST['inpSzkola'] == ''
+                || empty($_POST['dbLogin']) || empty($_POST['dbHaslo'])
+                || empty($_POST['dbBaza']) || empty($_POST['dbHost'])):
+            header('Location: install.php?err');
+            exit;
+        endif;
 
-+ + + + + + + + + + + + + + + + + + + +
-+                                     +
-+    I   N   T   E    R   S   Y   S   +  Wersja 1.0
-+    P  L  A  N   L  E  K  C  J  I    + 
-+                                     +
-+ + + + + + + + + + + + + + + + + + + +
-
-Prosze podac nazwe szkoly: 
-START;
-        $szkola = fopen('php://stdin', 'r');
-        $szkola = trim(fgets($szkola));
-        print <<< START
-
-Dziekuje, trwa instalacja systemu Intersys Plan Lekcji...
-
-START;
-
-        print <<< START
-Tworzenie tabeli: przedmioty
-
-START;
-
+        $szkola = $_POST['inpSzkola'];
+        $isf = new Kohana_Isf();
+        $customvars = array(
+            'host' => $_POST['dbHost'],
+            'user' => $_POST['dbLogin'],
+            'password' => $_POST['dbHaslo'],
+            'database' => $_POST['dbBaza'],
+        );
+        $isf->DbConnect($customvars);
+        $a = fopen('config.php', 'w');
+        if (!$a) {
+            $ferr = true;
+        } else {
+            $file = '<?php' . PHP_EOL . '$path = \'' . $_POST['inpPath'] . '\';' . PHP_EOL;
+            $file .= '$my_cfg = array(\'host\'=>\'' . $_POST['dbHost'] . '\',\'user\'=>\'' . $_POST['dbLogin'] . '\', \'password\'=>\'' . $_POST['dbHaslo'] . '\',\'database\'=>\'' . $_POST['dbBaza'] . '\',';
+            $file .= ');' . PHP_EOL . '$GLOBALS[\'my_cfg\']=$my_cfg; ' . PHP_EOL;
+            $file .= 'define(\'APP_PATH\', $path);' . PHP_EOL . '?>';
+            fputs($a, $file);
+            fclose($a);
+        }
+        /**
+         * Gdy instalacja awaryjna (na istniejaca instalacje),
+         * wowczas usuwa starych uzytkownikow
+         */
+        $isf->DbDelete('rejestr', 'opcja like \'%\'');
+        $isf->DbDelete('uzytkownicy', 'login like \'%\'');
+        $isf->DbDelete('tokeny', 'token like \'%\'');
         $isf->DbTblCreate('przedmioty', array(
             'przedmiot' => 'text not null'
         ));
 
-        print <<< START
-Tworzenie tabeli: sale
-
-START;
-
         $isf->DbTblCreate('sale', array(
             'sala' => 'text not null'
         ));
-
-        print <<< START
-Tworzenie tabeli: przedmiot_sale
-
-START;
 
         $isf->DbTblCreate('przedmiot_sale', array(
             'przedmiot' => 'text not null',
             'sala' => 'text not null'
         ));
 
-        print <<< START
-Tworzenie tabeli: klasy
-
-START;
-
         $isf->DbTblCreate('klasy', array(
             'klasa' => 'text not null'
         ));
-
-        print <<< START
-Tworzenie tabeli: nauczyciele
-
-START;
 
         $isf->DbTblCreate('nauczyciele', array(
             'imie_naz' => 'text not null',
             'skrot' => 'text not null'
         ));
 
-        print <<< START
-Tworzenie tabeli: nl_przedm
-
-START;
-
         $isf->DbTblCreate('nl_przedm', array(
             'nauczyciel' => 'text not null',
             'przedmiot' => 'text not null'
         ));
-
-        print <<< START
-Tworzenie tabeli: nl_klasy
-
-START;
 
         $isf->DbTblCreate('nl_klasy', array(
             'nauczyciel' => 'text not null',
             'klasa' => 'text not null'
         ));
 
-        print <<< START
-Tworzenie tabeli: rejestr
-
-START;
-
         $isf->DbTblCreate('rejestr', array(
             'opcja' => 'text not null',
             'wartosc' => 'text'
         ));
-
-        print <<< START
-Tworzenie tabeli: planlek
-
-START;
 
         $isf->DbTblCreate('planlek', array(
             'dzien' => 'text',
@@ -186,21 +219,26 @@ START;
             'skrot' => 'text'
         ));
 
-        print <<< START
-Tworzenie tabeli: uzytkownicy
-
-START;
-
         $isf->DbTblCreate('uzytkownicy', array(
-            'uid' => 'integer primary key autoincrement not null',
+            'uid' => 'numeric not null',
             'login' => 'text not null',
-            'haslo' => 'text not null'
+            'haslo' => 'text not null',
+            'webapi_token' => 'text',
+            'webapi_timestamp' => 'text',
+            'ilosc_prob' => 'numeric'
         ));
 
-        print <<< START
-Tworzenie tabeli: plan_grupy
+        $isf->DbTblCreate('log', array(
+            'id' => 'serial',
+            'data' => 'text not null',
+            'modul' => 'text not null',
+            'wiadomosc' => 'text',
+        ));
 
-START;
+        $isf->DbTblCreate('tokeny', array(
+            'login' => 'text',
+            'token' => 'text',
+        ));
 
         $isf->DbTblCreate('plan_grupy', array(
             'dzien' => 'text',
@@ -213,23 +251,26 @@ START;
             'sala' => 'text'
         ));
 
-        print <<< START
-Tworzenie tabeli: lek_godziny
+        $isf->DbTblCreate('zast_id', array(
+            'zast_id' => 'serial',
+            'dzien' => 'text',
+            'za_nl' => 'text',
+            'info' => 'text',
+        ));
 
-Zakonczono tworzenie bazy danych!
-
-START;
+        $isf->DbTblCreate('zastepstwa', array(
+            'zast_id' => 'text',
+            'lekcja' => 'text',
+            'przedmiot' => 'text',
+            'nauczyciel' => 'text',
+            'sala' => 'text',
+        ));
 
         $isf->DbTblCreate('lek_godziny', array(
             'lekcja' => 'text',
             'godzina' => 'text',
             'dl_prz' => 'text'
         ));
-
-        print <<< START
-Wypelnianie rejestru...
-
-START;
 
         $isf->DbInsert('rejestr', array(
             'opcja' => 'edycja_danych',
@@ -253,8 +294,8 @@ START;
 
         $isf->DbInsert('rejestr', array(
             'opcja' => 'index_text',
-            'wartosc' => '<h1>Witaj w Planie Lekcji</h1><p>Na początek proszę zmienić hasła do panelu administracyjnego
-                oraz zmienić treść tej strony w górnym panelu użytkownika.</p><p>Dziękuję za skorzystanie z Plan Lekcji 1.0</p>'
+            'wartosc' => '<h1>Witaj w Planie Lekcji 1.5</h1><p>Na początek proszę zmienić hasła do panelu administracyjnego
+                oraz zmienić treść tej strony w górnym panelu użytkownika.</p><p>Dziękujemy za skorzystanie z systemu Plan Lekcji</p>'
                 ), false);
 
         $isf->DbInsert('rejestr', array(
@@ -263,43 +304,109 @@ START;
         ));
 
         $isf->DbInsert('rejestr', array(
+            'opcja' => 'godz_rozp_zaj',
+            'wartosc' => '08:00'
+        ));
+
+        $isf->DbInsert('rejestr', array(
             'opcja' => 'installed',
             'wartosc' => '1'
         ));
-        
+
         $isf->DbInsert('rejestr', array(
             'opcja' => 'app_ver',
-            'wartosc' => '1.0'
+            'wartosc' => '1.5 dev pgsql'
+        ));
+
+        $isf->DbInsert('rejestr', array(
+            'opcja' => 'randtoken_version',
+            'wartosc' => '1.5 dev pgsql'
+        ));
+
+        $isf->DbInsert('log', array(
+            'data' => date('d.m.Y H:i:s'),
+            'modul' => 'plan.install',
+            'wiadomosc' => 'Instalacja systemu'
+        ));
+
+        $isf->DbInsert('log', array(
+            'data' => date('d.m.Y H:i:s'),
+            'modul' => 'plan.install',
+            'wiadomosc' => 'Tworzenie administratora'
         ));
 
         $pass = substr(md5(@date('Y:m:d')), 0, 8);
-
-        print <<< START
-Utworzenie administratora...
-    
-START;
+        $pass = rand(1, 100) . $pass;
 
         $isf->DbInsert('uzytkownicy', array(
-            'login' => 'administrator',
-            'haslo' => md5($pass = (rand(1, 100) . $pass))
+            'uid' => 1,
+            'login' => 'root',
+            'haslo' => md5('plan' . sha1('lekcji' . $pass)),
         ));
 
-        print <<< START
+        $token = substr(md5(time() . 'plan'), 0, 6);
 
-INSTALACJA ZAKONCZONA POWODZENIEM!
-        
-* Prosze zapisac dane oraz usunac plik install.php,
-    aby kontynuowac prace z systemem
-* Jezeli dostep do aplikacji jest poprzez inny adres niz http://[nazwa_hosta]/,
-    prosze zmienic zmienna \$path w pliku index.php
-* Dostep do panelu administracyjnego: http://[...]/index.php/admin
-        
-Prosze zapisac ponizsze dane, aby uzyskac dostep do panelu administratora
-
-    Login: administrator
-    Haslo: $pass
-
-START;
+        $isf->DbInsert('tokeny', array('login' => 'root', 'token' => md5('plan' . $token)));
         ?>
+        <html>
+            <head>
+                <meta charset="UTF-8"/>
+                <link rel="stylesheet" type="text/css" href="lib/css/style.css"/>
+                <title>Instalator pakietu Internetowy Plan Lekcji 1.5</title>
+                <style type="text/css">
+                    span{
+                        font-size: 10pt;
+                    }
+                </style>
+            </head>
+            <body>
+                <img src="lib/images/logo.png" style="height: 80px;"/>
+                <h1>Instalator pakietu Internetowy Plan Lekcji 1.5</h1><h3>Krok 2: instalacja</h3>
+                <fieldset style="max-width: 50%;">
+                    <legend>Dane administratora</legend>
+                    <p><b>Login: </b>root</p>
+                    <p><b>Hasło: </b><?php echo $pass; ?></p>
+                    <p><b>Token: </b><?php echo $token; ?></p>
+                    <p class="info">Zapamiętaj dane do logowania oraz usuń pliki <b>install.php</b> oraz <b>unixinstall.php</b>,
+                        a następnie przejdź do <a href="index.php">strony głównej</a>.</p>
+                </fieldset>
+                <?php if (!file_exists('config.php')): ?>
+                    <?php
+                    $r = $_SERVER['REQUEST_URI'];
+                    $r = str_replace('index.php', '', $r);
+                    $r = str_replace('install.php', '', $r);
+                    $r = str_replace('?reinstall', '', $r);
+                    ?>
+                    <fieldset style="max-width: 50%;">
+                        <legend>
+                            <p class="error">
+                                Błąd zapisu pliku <b>config.php</b>
+                            </p>
+                        </legend>
+                        <?php
+                        $str = <<< START
+   <?php
+   \$path = '$r';
+   define('APP_PATH', \$path);
+   \$my_cfg['host'] = ''; // nazwa hosta bazy danych PostgreSQL
+   \$my_cfg['database'] = ''; // nazwa bazy danych
+   \$my_cfg['user'] = ''; // nazwa uzytkownika bazy
+   \$my_cfg['password'] = ''; // haslo bazy danych
+   ?>
+START;
+                        highlight_string($str);
+                        ?>
+                        <p>Proszę utworzyć plik config.php w katalogu głównym
+                            aplikacji o powyższej treści.</p>
+                    </fieldset>
+                <?php endif; ?>
+                <div id="foot">
+                    <p>
+                        <img src="lib/images/gplv3.png" alt="GNU GPL v3 logo"/>
+                        <b>Plan lekcji</b> |
+                        <a href="http://planlekcji.googlecode.com" target="_blank">strona projektu Plan Lekcji</a></p>
+                </div>
+            </body>
+        </html>
     <?php endif; ?>
 <?php endif; ?>

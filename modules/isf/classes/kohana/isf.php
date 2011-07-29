@@ -2,6 +2,8 @@
 
 /**
  * Modul ISF do obslugi baz danych dla Kohana 3
+ * 
+ * Wersja 1.5: wymaga PDO
  *
  * @author Michal Bocian <mhl.bocian@gmail.com>
  */
@@ -11,26 +13,46 @@ class Kohana_Isf {
      * Zwraca wersje ISF
      */
     public function isf_version() {
-        echo '1.0.2';
+        return '1.5';
     }
 
     protected $isf_path;
-    protected $dbhandle;
+    public $dbhandle;
     protected $script;
     protected $jqpath;
 
-    public function DbConnect($name='default') {
-        $this->isf_path = realpath(__DIR__ . '/../../') .
-                DIRECTORY_SEPARATOR . 'isf_resources' . DIRECTORY_SEPARATOR;
+    public static function factory() {
+        return new Kohana_Isf();
+    }
 
-        if (!class_exists('SQLite3')) {
-            $_err = 'Aby korzystac z obslugi SQLite3, nalezy wlaczyc jego obsluge w PHP. ';
+    public function DbConnect($customvars=null) {
+
+        $my_cfg = $GLOBALS['my_cfg'];
+
+        if (!class_exists('PDO') || !extension_loaded('pdo_pgsql')) {
+            $_err = 'Aby korzystac z obslugi PDO PostgreSQL, nalezy wlaczyc jego obsluge w PHP. ';
             die($_err);
         }
 
-        $this->dbhandle = new SQLite3($this->isf_path . $name . '.sqlite');
-        if (!file_exists($this->isf_path . $name . '.sqlite'))
-            die('Plik z baza danych nie istnieje! Sprawdz czy katalog ma wystarczajace uprawnienia');
+        if (is_array($customvars)) {
+            try {
+                $this->dbhandle = new PDO('pgsql:host=' . $customvars['host'] . ';
+                    dbname=' . $customvars['database'] . '',
+                                $customvars['user'],
+                                $customvars['password']);
+            } catch (Exception $e) {
+                die($e->getMessage());
+            }
+        } else {
+            try {
+                $this->dbhandle = new PDO('pgsql:host=' . $my_cfg['host'] . ';
+                    dbname=' . $my_cfg['database'] . '',
+                                $my_cfg['user'],
+                                $my_cfg['password']);
+            } catch (Exception $e) {
+                die($e->getMessage());
+            }
+        }
     }
 
     /**
@@ -62,14 +84,20 @@ class Kohana_Isf {
         $query = 'select ' . $cols . ' from ' . $table;
         if ($condition != null)
             $query .= ' ' . $condition;
-        $exec = $this->dbhandle->query($query);
         $r = 1;
-        $result = array();
-        while ($row = $exec->fetchArray()) {
-            $result[$r] = $row;
-            $r++;
+        $ret = array();
+        try {
+            $exec = $this->dbhandle->query($query);
+            if (is_object($exec)) {
+                foreach ($exec as $row) {
+                    $ret[$r] = $row;
+                    $r++;
+                }
+            }
+        } catch (Exception $e) {
+            echo $e;
         }
-        return $result;
+        return $ret;
     }
 
     /**
@@ -104,7 +132,7 @@ class Kohana_Isf {
             die('Nieprawidlowy argument dla funkcji insert');
         $query = 'insert into ' . $table . ' (';
         foreach ($col_val as $col => $val) {
-            $query .= '\'' . $col . '\', ';
+            $query .= '' . $col . ', ';
         }
         $query = substr($query, 0, -2);
         $query .= ') values (';
@@ -119,11 +147,12 @@ class Kohana_Isf {
         }
         $query = substr($query, 0, -2);
         $query .= ')';
-        $res = $this->dbhandle->exec($query);
-        if ($res == true)
-            return true;
-        else
-            return false;
+
+        try {
+            $res = $this->dbhandle->query($query);
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
     }
 
     /**
@@ -157,10 +186,15 @@ class Kohana_Isf {
         $query = substr($query, 0, -2);
         $query .= ' where ' . $cond;
 
-        if ($this->dbhandle->exec($query) == true)
-            return TRUE;
-        else
-            return FALSE;
+        try {
+            if($this->dbhandle->exec($query)){
+				return true;
+			}else{
+				return false;
+			}
+        } catch (Exception $e) {
+            echo $e;
+        }
     }
 
     /**
@@ -180,10 +214,11 @@ class Kohana_Isf {
         if (empty($table) || empty($cond))
             die('Sprawdz parametry funkcji <b>delete</b>');
         $query = 'delete from ' . $table . ' where ' . $cond;
-        if ($this->dbhandle->exec($query) == true)
-            return TRUE;
-        else
-            return FALSE;
+        try {
+            $this->dbhandle->exec($query);
+        } catch (Exception $e) {
+            echo $e;
+        }
     }
 
     /**
@@ -211,14 +246,23 @@ class Kohana_Isf {
             die('Sprawdz parametr funkcji tbl_create');
         $query = 'create table ' . $name . '(';
         foreach ($columns as $col => $type) {
-            $query .= '\'' . $col . '\' ' . $type . ', ';
+            $query .= '' . $col . ' ' . $type . ', ';
         }
         $query = substr($query, 0, -2);
         $query .= ')';
-        if ($this->dbhandle->exec($query))
-            return TRUE;
+        try {
+            $this->dbhandle->exec($query);
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+    }
+
+    public function detect_ie() {
+        if (isset($_SERVER['HTTP_USER_AGENT']) &&
+                (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false))
+            return true;
         else
-            return FALSE;
+            return false;
     }
 
     /**
@@ -580,17 +624,20 @@ class Kohana_Isf {
      * @param bool $hiddenbtn Pokazanie przycisku ukrycia elementu
      * @return text Zwraca kod HTML
      */
-    public function JQUi_AjaxdivCreate($name, $progressgif=true, $hiddenbtn=false, $customtext=false) {
+    public function JQUi_AjaxdivCreate($name, $progressgif=true, $hiddenbtn=false, $customtext=false, $customload='') {
         $name = $this->hashname($name);
         $script = '<div id="isf_adiv_' . $name . '" style="display: none;">';
         if ($progressgif == true) {
-            $script .= '<div id="isf_adc_' . $name . '">Trwa Å‚adowanie danych... 
-                <img src="' . $this->jqpath . '/css/load.gif" id="isf_adl_' . $name . '">';
+            $script .= '<div id="isf_adc_' . $name . '">';
+            $script .= '<img src="' . $this->jqpath . '/css/load.gif" id="isf_adl_' . $name . '">';
         } else {
             $script .= '<div id="isf_adc_' . $name . '">';
         }
+        if ($customload != '') {
+            $script .= ' ' . $customload . ' ';
+        }
         if ($customtext != false) {
-            $script .= '<p>'.$customtext.'</p>';
+            $script .= '<p>' . $customtext . '</p>';
         }
         $script .= '</div>';
         if ($hiddenbtn == true) {
@@ -671,6 +718,92 @@ class Kohana_Isf {
             });
             </script>';
         return $this->script;
+    }
+	
+	/**
+     * Znaczniki umozliwiajace podpiecie aplikacji do paska zadan Windows 7
+     * 
+     * Tylko Internet Explorer 9
+     * 
+     * Przyklad uzycia:
+     * <code>
+     * //tworzenie obiektu np. $tools = new \isf\utils\WebResources();
+     * $tools->IE9_WebAPP('Moja strona', 'Otwórz moj¹ stronê');
+     * </code>
+     *
+     * @param text $app_name Nazwa aplikacji
+     * @param text $tooltip Opis strony
+     * @param text $s_url Adres aplikacji, domyslnie /
+     * @param array $win Wymiary okna (szer, wys)
+     */
+    public function IE9_WebAPP($app_name, $tooltip, $s_url='/', $win=array(800, 600)) {
+        $this->ie9script .= '
+            <meta name="application-name" content="' . $app_name . '"/>';
+        $this->ie9script .= '
+            <meta name="msapplication-tooltip" content="' . $tooltip . '"/>';
+        $this->ie9script .= '
+            <meta name="msapplication-starturl" content="' . $s_url . '"/>';
+        $this->ie9script .= '
+            <meta name="msapplication-window" content="width=' . $win[0] . ';height=' . $win[1] . '"/>';
+    }
+
+    /**
+     * Ustawia ikone aplikacji
+     * 
+     * Domyslnie [adres_http_aplikacji]/favicon.ico
+     * 
+     * Przyklad uzycia:
+     * <code>
+     * //tworzenie obiektu np. $tools = new \isf\utils\WebResources();
+     * $tools->favicon_set(); //ustawia domyslna sciezke
+     * </code>
+     *
+     * @param string $path Adres ikony
+     */
+    public function IE9_faviconset($path=null) {
+        if ($path == null)
+            $path = URL::base().'favicon.ico';
+        $this->ie9script .= '
+            <link rel="shortcut icon" href="' . $path . '" />';
+    }
+
+    /**
+     * Tworzy zadanie dla paska zadan Windows 7
+     * 
+     * Tylko Internet Explorer 9
+     * 
+     * Przyklad uzycia:
+     * <code>
+     * //tworzenie obiektu np. $tools = new \isf\utils\WebResources();
+     * //odwolanie do metody IE9_WebAPP
+     * $tools->IE9_apptask('Moje zadanie', '/strona.php');
+     * </code>
+     *
+     * @param text $name Nazwa zadania
+     * @param text $uri Adres pliku. Np. /index.php
+     * @param text $icon Adres ikony, domyslnie favicon.ico
+     */
+    public function IE9_apptask($name, $uri, $icon=null) {
+        if ($icon == null)
+            $icon = URL::base().'favicon.ico';
+        $this->ie9script .= '
+            <meta name="msapplication-task" content="name=' . $name . ';action-uri=' . $uri . ';icon-uri=' . $icon . '"/>';
+    }
+
+    /**
+     * Zwraca gotowy skrypt
+     * 
+     * Przyklad uzycia z <b>systemem szablonow</b>
+     * <code>
+     * //tworzenie obiektu np. $tools = new \isf\utils\WebResources();
+     * //szablon strony np. zmienna $tpl
+     * $tpl->assign('zmienna_w_head', $tools->make_script());
+     * </code>
+     *
+     * @return text Zwraca gotowy skrypt
+     */
+    public function IE9_make() {
+        return $this->ie9script;
     }
 
 }

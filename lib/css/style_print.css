@@ -1,21 +1,7 @@
 body{
-    font: 80% sans-serif;
-    margin: 20px;
-    max-width: 100%;
-}
-img{
-    border: 0px;
-}
-.ui-button-text-only .ui-button-text {
-    padding: 0.3em 1em;
-}
-input{
-    border: 1px solid;
+    font: 70% sans-serif;
 }
 h1{
-    font-size: 18pt;
-}
-pre{
     font-size: 12pt;
 }
 .anac{
@@ -23,7 +9,7 @@ pre{
     font-weight: bold;
 }
 h3{
-    font-size: 11pt;
+    font-size: 10pt;
 }
 a{
     color: blue;
@@ -49,7 +35,7 @@ table{
     font-size: 10pt;
 }
 td{
-    padding: 5px;
+    padding: 10px;
 }
 thead{
     font-weight: bold;
@@ -58,7 +44,7 @@ thead{
     font-style: italic;
 }
 .grplek{
-    font-size: 9pt;
+    font-size: 10pt;
     margin: 0px;
 }
 .ui-timepicker-div .ui-widget-header{ margin-bottom: 8px; }
@@ -94,13 +80,13 @@ table.przed {
 }
 table.przed th {
 	border-width: 1px;
-	padding: 3px;
+	padding: 2px;
 	border-style: solid;
 	border-color: black;
 }
 table.przed td {
 	border-width: 1px;
-	padding: 3px;
+	padding: 2px;
 	border-style: solid;
 	border-color: black;
 }
