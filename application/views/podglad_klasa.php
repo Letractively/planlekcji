@@ -6,7 +6,7 @@
  */
 $isf = new Kohana_Isf();
 $isf->DbConnect();
-$ilosc_lek = $isf->DbSelect('rejestr', array('wartosc'), 'where opcja="ilosc_godzin_lek"');
+$ilosc_lek = $isf->DbSelect('rejestr', array('wartosc'), 'where opcja=\'ilosc_godzin_lek\'');
 $ilosc_lek = $ilosc_lek[1]['wartosc'];
 $lek_godziny = $isf->DbSelect('lek_godziny', array('*'));
 $k = $klasa;
@@ -17,15 +17,15 @@ function pobierzdzien($dzien, $lekcja) {
     $isf = new Kohana_Isf();
     $isf->DbConnect();
     $ret = '';
-    $r = $isf->DbSelect('planlek', array('*'), 'where klasa="' . $k . '" and dzien="' . $dzien . '" and lekcja="' . $lekcja . '"');
+    $r = $isf->DbSelect('planlek', array('*'), 'where klasa=\'' . $k . '\' and dzien=\'' . $dzien . '\' and lekcja=\'' . $lekcja . '\'');
     if (count($r) != 0) {
         if (empty($r[1]['sala'])) {
             echo $r[1]['przedmiot'];
         } else {
-            echo '' . $r[1]['przedmiot'] . ' (<a href="' . URL::site('podglad/sala/' . $r[1]['sala']) . '">' . $r[1]['sala'] . '</a>) (<a href="' . URL::site('podglad/nauczyciel/' . $r[1]['skrot']) . '">' . $r[1]['skrot'] . '</a>)';
+            echo '' . $r[1]['przedmiot'] . ' <a href=\'' . URL::site('podglad/sala/' . $r[1]['sala']) . '\'>' . $r[1]['sala'] . '</a> <a href=\'' . URL::site('podglad/nauczyciel/' . $r[1]['skrot']) . '\'>' . $r[1]['skrot'] . '</a>';
         }
     } else {
-        $rn = $isf->DbSelect('plan_grupy', array('*'), 'where klasa="' . $k . '" and dzien="' . $dzien . '" and lekcja="' . $lekcja . '"');
+        $rn = $isf->DbSelect('plan_grupy', array('*'), 'where klasa=\'' . $k . '\' and dzien=\'' . $dzien . '\' and lekcja=\'' . $lekcja . '\'');
         if (count($rn) == 0) {
             echo '';
         } else {
@@ -33,9 +33,9 @@ function pobierzdzien($dzien, $lekcja) {
                 if ($rowcol['sala'] == '' || empty($rowcol['sala'])) {
                     $sstr = '';
                 } else {
-                    $sstr = '(<a href="' . URL::site('podglad/sala/' . $rowcol['sala']) . '">' . $rowcol['sala'] . '</a>) (<a href="' . URL::site('podglad/nauczyciel/' . $rowcol['skrot']) . '">' . $rowcol['skrot'] . '</a>)';
+                    $sstr = '<a href=\'' . URL::site('podglad/sala/' . $rowcol['sala']) . '\'>' . $rowcol['sala'] . '</a> <a href=\'' . URL::site('podglad/nauczyciel/' . $rowcol['skrot']) . '\'>' . $rowcol['skrot'] . '</a>';
                 }
-                echo '<p class="grplek">gr ' . $rowcol['grupa'] . ' - ' . $rowcol['przedmiot'] . ' ' . $sstr . '</p>';
+                echo '<p class=\'grplek\'>gr ' . $rowcol['grupa'] . ' - ' . $rowcol['przedmiot'] . ' ' . $sstr . '</p>';
             }
         }
     }
@@ -56,11 +56,11 @@ function pobierzdzien($dzien, $lekcja) {
                 <tr>
                     <td></td>
                     <td>Godziny</td>
-                    <td style="width: 150px;">Poniedziałek</td>
-                    <td style="width: 150px;">Wtorek</td>
-                    <td style="width: 150px;">Środa</td>
-                    <td style="width: 150px;">Czwartek</td>
-                    <td style="width: 150px;">Piątek</td>
+                    <td style="min-width: 150px; max-width: 200px;">Poniedziałek</td>
+                    <td style="min-width: 150px; max-width: 200px;">Wtorek</td>
+                    <td style="min-width: 150px; max-width: 200px;">Środa</td>
+                    <td style="min-width: 150px; max-width: 200px;">Czwartek</td>
+                    <td style="min-width: 150px; max-width: 200px;">Piątek</td>
                 </tr>
             </thead>
             <tbody>
