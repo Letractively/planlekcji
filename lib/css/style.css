@@ -6,33 +6,18 @@ body{
 .ui-button-text-only .ui-button-text {
     padding: 0.3em 1em;
 }
-input{
-    border: 1px solid;
-}
-img{
-border: 0px;
-}
 h1{
     font-size: 18pt;
 }
-pre{
-    font-size: 12pt;
-}
-hr{
-	margin: 10px;
-}
 .anac{
-    color: #330033;
+    color: #009900;
     font-weight: bold;
 }
 h3{
-    font-size: 11pt;
+    font-size: 12pt;
 }
 a{
     color: blue;
-}
-label{
-    font-weight: bold;
 }
 a:hover{
     color: #ff3300
@@ -83,10 +68,7 @@ hr{
     width: 100%;
 }
 .notice{
-    color: darkgreen;
-}
-.hlt{
-    color: #f6bc3e;
+    color: #009900;
 }
 .error{
     color: red;
@@ -114,10 +96,4 @@ table.main {
     border-width: 0px;
     width: 100%;
     max-width: 100%;
-}
-
-tr.zestdzien{
-    background: #ffff99;
-    font-weight: bold;
-    text-align: center;
 }

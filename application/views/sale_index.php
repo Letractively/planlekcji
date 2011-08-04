@@ -47,7 +47,7 @@ $isf->DbConnect();
                 <tr>
                     <td><?php echo $rowcol['sala']; ?></td>
                     <td>
-                        <?php foreach ($isf->DbSelect('przedmiot_sale', array('przedmiot'), 'where sala=\'' . $rowcol['sala'] . '\'')
+                        <?php foreach ($isf->DbSelect('przedmiot_sale', array('przedmiot'), 'where sala="' . $rowcol['sala'] . '"')
                         as $rid => $rcl): ?>
                             <?php echo $rcl['przedmiot']; ?>,&nbsp;
                         <?php endforeach; ?>

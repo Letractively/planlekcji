@@ -4,84 +4,27 @@
  * 
  * 
  */
-/**
- * Nowy obiekt frameworka
- */
 $isf = new Kohana_Isf();
 $isf->DbConnect();
-/**
- * Pobiera z rejestru ilość godzin lekcyjnych
- */
-$ilosc_lek = $isf->DbSelect('rejestr', array('wartosc'), 'where opcja=\'ilosc_godzin_lek\'');
+$ilosc_lek = $isf->DbSelect('rejestr', array('wartosc'), 'where opcja="ilosc_godzin_lek"');
 $ilosc_lek = $ilosc_lek[1]['wartosc'];
-/**
- * Pobiera godziny lekcyjne
- */
 $lek_godziny = $isf->DbSelect('lek_godziny', array('*'));
-$k = $klasa; // argument funkcji w klasie kontrolera, klasa
-$GLOBALS['k'] = $klasa; // ustawienie zmiennej globalnej
-/**
- * Pobiera i zwraca pojedyncza komorke planu lekcji
- *
- * @global string $k lekcje klasy do pobrania
- * @param string $dzien dzien do pobrania
- * @param int $lekcja lekcja do pobrania
- * @return string Zwraca pojedyncza komorke planu
- */
+$k = $klasa;
+$GLOBALS['k'] = $klasa;
+
 function pobierzdzien($dzien, $lekcja) {
-    /**
-     * Ustawienie globalnej
-     */
     global $k;
-    /**
-     * Nowy obiekt frameworka
-     */
     $isf = new Kohana_Isf();
     $isf->DbConnect();
-    /**
-     * Pobiera wszystkich nauczycieli uczących klasę
-     */
-    $nk = $isf->DbSelect('nl_klasy', array('*'), 'where klasa=\'' . $k . '\' order by nauczyciel asc');
-    $r = 1; // wskaźnik tablicy
-    $a = array(); // zwracana tablica
-    foreach ($nk as $rowid => $rowcol) {
-        /**
-         * Pobiera przedmioty nauczane przez nauczyciela
-         */
-        $p = $isf->DbSelect('nl_przedm', array('*'), 'where nauczyciel=\'' . $rowcol['nauczyciel'] . '\'
-        order by przedmiot asc');
-
-        foreach ($p as $rid => $rcl) {
-            /**
-             * Pobiera sale dla przedmiotu
-             */
-            $sl = $isf->DbSelect('przedmiot_sale', array('*'), 'where przedmiot=\'' . $rcl['przedmiot'] . '\'
-            order by sala asc');
-
-            /**
-             * Pętla zwraca tablicę wynikową $a
-             */
-            foreach ($sl as $ri => $rc) {
-                
-                $a[$r]['nauczyciel'] = $rowcol['nauczyciel'];
-                $a[$r]['klasa'] = $rowcol['klasa'];
-                $a[$r]['przedmiot'] = $rcl['przedmiot'];
-                $a[$r]['sala'] = $rc['sala'];
-
-                $r++;
-            }
-        }
-        
-    }
-    /**
-     * Pobiera lekcję dla danej klasy, w danym dniu o danej godzinie
-     * z normalnego planu lekcji
-     */
-    $lek = $isf->DbSelect('planlek', array('*'), 'where lekcja=\'' . $lekcja . '\' and dzien=\'' . $dzien . '\' and klasa=\'' . $k . '\'');
-    $ret = ''; // zmienna zawierajaca dane zwracane przez funkcję
+    $a_table = 'nl_klasy, nl_przedm, przedmiot_sale';
+    $a_cols = array('nl_klasy.nauczyciel', 'nl_klasy.klasa', 'nl_przedm.przedmiot', 'przedmiot_sale.sala');
+    $a_cond = "on nl_klasy.nauczyciel=nl_przedm.nauczyciel and przedmiot_sale.przedmiot=nl_przedm.przedmiot where nl_klasy.klasa='" . $k . "' order by nl_przedm.przedmiot asc";
+    $a = $isf->DbSelect($a_table, $a_cols, $a_cond);
+    $lek = $isf->DbSelect('planlek', array('*'), 'where lekcja="' . $lekcja . '" and dzien="' . $dzien . '" and klasa="' . $k . '"');
+    $ret = '';
     $vl = '';
     if (count($lek) == 0) {
-        $lekx = $isf->DbSelect('plan_grupy', array('*'), 'where lekcja=\'' . $lekcja . '\' and dzien=\'' . $dzien . '\' and klasa=\'' . $k . '\'');
+        $lekx = $isf->DbSelect('plan_grupy', array('*'), 'where lekcja="' . $lekcja . '" and dzien="' . $dzien . '" and klasa="' . $k . '"');
         if (count($lekx) >= 1) {
             $ret .= '<b>[ zajęcia w grupach ]</b><br/>';
         }
@@ -96,19 +39,19 @@ function pobierzdzien($dzien, $lekcja) {
             }
         }
     }
-    $ret .= '<select style=\'width:200px;\' name=\'' . $dzien . '[' . $lekcja . ']\'>';
+    $ret .= '<select style="width:200px;" name="' . $dzien . '[' . $lekcja . ']">';
     if ($vl != '') {
         $ret .= '<option selected>' . $vl . '</option>';
     }
-    $ret .= '<option>---</option><optgroup label=\'Przedmiot - Sala - Nauczyciel\'>';
+    $ret .= '<option>---</option><optgroup label="Przedmiot - Sala - Nauczyciel">';
     foreach ($a as $rowid => $rowcol) {
         $b_table = 'planlek';
         $b_cols = array('*');
-        $b_cond = 'where dzien=\'' . $dzien . '\' and lekcja=\'' . $lekcja . '\' and ( nauczyciel=\'' . $rowcol['nauczyciel'] . '\' or sala=\'' . $rowcol['sala'] . '\')';
+        $b_cond = 'where dzien="' . $dzien . '" and lekcja="' . $lekcja . '" and ( nauczyciel="' . $rowcol['nauczyciel'] . '" or sala="' . $rowcol['sala'] . '")';
         if (count($isf->DbSelect($b_table, $b_cols, $b_cond)) == 0) {
             $b_table = 'plan_grupy';
             $b_cols = array('*');
-            $b_cond = 'where dzien=\'' . $dzien . '\' and lekcja=\'' . $lekcja . '\' and nauczyciel=\'' . $rowcol['nauczyciel'] . '\'';
+            $b_cond = 'where dzien="' . $dzien . '" and lekcja="' . $lekcja . '" and nauczyciel="' . $rowcol['nauczyciel'] . '"';
             if (count($isf->DbSelect($b_table, $b_cols, $b_cond)) == 0) {
                 $v = $rowcol['przedmiot'] . ':' . $rowcol['sala'] . ':' . $rowcol['nauczyciel'];
                 $ret.='<option>' . $v . '</option>';
@@ -117,7 +60,7 @@ function pobierzdzien($dzien, $lekcja) {
             
         }
     }
-    $ret.='</optgroup><optgroup label=\'Zwykły przedmiot\'>';
+    $ret.='</optgroup><optgroup label="Zwykły przedmiot">';
     foreach ($isf->DbSelect('przedmioty', array('*'), 'order by przedmiot asc') as $rc => $ri) {
         $ret.='<option>' . $ri['przedmiot'] . '</option>';
     }
@@ -125,18 +68,14 @@ function pobierzdzien($dzien, $lekcja) {
     return $ret;
 }
 ?>
-<form action="<?php echo URL::site('plan/zatwierdz'); ?>" method="post" name="formPlan"
-<?php if (!isset($alternative)): ?>
-          style="margin-top: 100px;">
-          <?php else: ?>
-        >
-    <?php endif; ?>
-    <?php if ($alternative != false): ?>
-        <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style.css"/>
-        <h1>Edycja planu dla klasy <?php echo $klasa; ?>
-            &emsp;<button type="submit" name="btnSubmit">Zapisz zmiany</button></h1>
-    <?php endif; ?>
+<?php if ($alternative != false): ?>
+    <h3>Edycja planu grupowego dla klasy <?php echo $klasa; ?></h3>
+<?php endif; ?>
+<form action="<?php echo URL::site('plan/zatwierdz'); ?>" method="post" name="formPlan" style="margin-top: 100px;">
     <input type="hidden" name="klasa" value="<?php echo $klasa; ?>"/>
+    <?php if ($alternative != false): ?>
+        <button type="submit" name="btnSubmit">Zapisz zmiany</button>
+    <?php endif; ?>
     <table class="przed">
         <thead style="background: greenyellow;">
             <tr>
@@ -174,12 +113,3 @@ function pobierzdzien($dzien, $lekcja) {
         </tbody>
     </table>
 </form>
-<script type="text/javascript">
-    function confirmation(){
-        var answer = confirm("Czy chcesz zapisać, usuwając jednocześnie plan dla grup?");
-        if(answer){
-            document.forms['formPlan'].submit();
-        }else{
-        }
-    }
-</script>

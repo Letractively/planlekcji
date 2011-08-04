@@ -10,7 +10,7 @@
     Klasa: <input type="text" name="inpKlasa"/>&nbsp;
     <button type="submit" name="btnSubmit">Dodaj klasę</button>
 </form>
-<?php /** kody bledow */ ?>
+
 <?php switch ($_err): ?>
 <?php case 'e1': ?>
 <p class="error">Klasa już istnieje</p>
@@ -32,10 +32,8 @@
 <?php
 $isf = new Kohana_Isf();
 $isf->DbConnect();
-/** pobiera klasy w systemie */
 $res = $isf->DbSelect('klasy', array('klasa'), 'order by klasa asc');
-/** pobiera ilosc grup */
-$grp = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'ilosc_grup\'');
+$grp = $isf->DbSelect('rejestr', array('*'), 'where opcja="ilosc_grup"');
 ?>
 <?php if (count($res) == 0): ?>
     <p class="info">Brak klas w systemie</p>

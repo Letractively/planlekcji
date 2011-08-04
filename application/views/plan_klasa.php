@@ -1,8 +1,4 @@
 <?php
-/**
- * Strona ze skryptem AJAX, ktory pobiera wlasciwa
- * strone edycji planu (klasaajax)
- */
 $k = $klasa;
 $isf = new Kohana_Isf();
 $isf->DbConnect();
@@ -11,9 +7,6 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
 
 $isf->JQUi();
 $isf->JQUi_AjaxdivDoAjax('progress', URL::site('plan/klasaajax/' . $klasa), true);
-if ($isf->detect_ie()):
-    Kohana_Request::factory()->redirect('plan/klasaajax/' . $klasa . '/true');
-endif;
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -25,7 +18,7 @@ endif;
     <body>
         <div style="position: fixed; top: 0px; width: 100%; height: 80px; background: white;">
             <h1>
-                <a href="#" onClick="confirmation();">
+                <a href="#" onClick="document.forms['formPlan'].submit();">
                     <img src="<?php echo URL::base() ?>lib/images/save.png" alt="zapisz"/></a>
                 Edycja planu dla <?php echo $klasa; ?>
             </h1>
@@ -33,12 +26,7 @@ endif;
             <br/>
         </div>
         <div style="margin-top: 120px">
-            <?php
-            $alternative = '<b>Przeglądarka nie obsługuje JavaScript?
-                Spróbuj <a href="' . URL::site('plan/klasaajax/' . $klasa . '/true') . '">metodę alternatywną</a></b>';
-            $customload = 'Trwa przypisywanie sal, przedmiotów i nauczycieli...';
-            echo $isf->JQUi_AjaxdivCreate('progress', true, false, $alternative, $customload);
-            ?>
+            <?php echo $isf->JQUi_AjaxdivCreate('progress', true, false, '<b>Przeglądarka nie obsługuje JavaScript? Spróbuj <a href="' . URL::site('plan/klasaajax/' . $klasa . '/true') . '">metodę alternatywną</a></b>'); ?>
         </div>
         <?php echo $isf->JQUi_MakeScript(); ?>
     </body>

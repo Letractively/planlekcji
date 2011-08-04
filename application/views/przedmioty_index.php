@@ -49,14 +49,14 @@ $isf->DbConnect();
                     <td><a href="<?php echo URL::site('przedmioty/zarzadzanie/'.$rowcol['przedmiot']); ?>"><?php echo $rowcol['przedmiot']; ?></a></td>
                     <td> 
                         <i>
-                        <?php foreach ($isf->DbSelect('przedmiot_sale', array('sala'), 'where przedmiot=\''.$rowcol['przedmiot'].'\' order by sala asc')
+                        <?php foreach ($isf->DbSelect('przedmiot_sale', array('sala'), 'where przedmiot="'.$rowcol['przedmiot'].'" order by sala asc')
                                 as $rid=>$rcl): ?>
                         <?php echo $rcl['sala']; ?>; 
                         <?php endforeach; ?>
                         </i>
                     </td>
                     <td> 
-                        <?php foreach ($isf->DbSelect('nl_przedm', array('nauczyciel'), 'where przedmiot=\''.$rowcol['przedmiot'].'\' order by nauczyciel asc')
+                        <?php foreach ($isf->DbSelect('nl_przedm', array('nauczyciel'), 'where przedmiot="'.$rowcol['przedmiot'].'" order by nauczyciel asc')
                                 as $rid=>$rcl): ?>
                         <?php echo $rcl['nauczyciel']; ?>;&nbsp;
                         <?php endforeach; ?>
