@@ -2,33 +2,64 @@
 /*
  * Resetowanie systemu Plan Lekcji
  */
+$isf = new Kohana_Isf();
+$isf->DbConnect();
+$res = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
+$res = $res[1]['wartosc'];
 ?>
-<h1>Resetowanie systemu Plan lekcji</h1>
-<p>Jest to operacja polegająca na usunięciu wszystkich danych, w zależności
-    od dokonanego wyboru</p>
-<h3>&bull; Usuń tylko plany zajęć oraz zastępstwa</h3>
-<p class="info">
-    Ta opcja różni się od poniższej powrotem do edycji planów zajęć
-<form action="<?php echo url::site('admin/planreset'); ?>" method="post">
-    <button type="submit" name="btnSubmit">Usuń tylko dane planów zajęć i zastępstw</button>
-</form>
-</p>
-<h3>&bull; Czyszczenie danych systemowych</h3>
-<p class="info">Opcja spowoduje usunięcie danych i powrót do edycji systemu</p>
-<form action="<?php echo url::site('admin/doreset'); ?>" method="post">
-    <p><b>Elementy do usunięcia</b></p>
-    <ul>
-        <li>Dane planów zajęć</li>
-    </ul>
-    <p>
-        <b>Opcjonalne elementy do usunięcia</b>&emsp;
-        <input type="checkbox" name="cl"/>
-    </p>
-    <ul>
-        <li>zdefiniowane sale</li>
-        <li>zdefiniowani nauczyciele</li>
-        <li>zdefiniowane klasy</li>
-        <li>zdefiniowane godziny dzwonków</li>
-    </ul>
-    <button type="submit" name="btnSubmit">Usuń trwale dane systemu</button>
-</form>
+<table border="0">
+    <thead>
+        <tr>
+            <?php if ($res != 1): ?>
+                <td style="min-width: 50%; width: 50%; max-width: 50%">
+                    <h3>Usunięcie planów zajęć</h3>
+                </td>
+            <?php endif; ?>
+            <td style="min-width: 50%; width: 50%; max-width: 50%">
+                <h3>Czyszczenie danych systemu</h3>
+            </td>
+        </tr>
+    </thead>
+    <tr>
+        <?php if ($res != 1): ?>
+            <td valign="top">
+                <div class="ui-state-highlight ui-corner-all" style="margin: 5px; padding: 0pt 0.7em;">
+                    <p>
+                        <span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span>
+                        Ta opcja powoduje usunięcie wszystkich planów zajęć oraz zastępstw. W przypadku systemu
+                        otwartego dla innych, następuje również ponownie powrót do edycji planów zajęć. Sale,
+                        przedmioty, klasy i inne ustawienia pozostają nienaruszone.
+                    </p>
+                </div>
+                <form action="<?php echo url::site('admin/planreset'); ?>" method="post">
+                    <button type="submit" name="btnSubmit" class="button-jq ui-state-default ui-button" style="margin: 5px;">
+                        Usuń tylko dane planów zajęć i zastępstw
+                    </button>
+                </form>
+            </td>
+        <?php endif; ?>
+        <td valign="top">
+            <div class="ui-state-highlight ui-corner-all" style="margin: 5px; padding: 0pt 0.7em;">
+                <p>
+                    <span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span>
+                    Ta opcja powoduje zupełnie czyszczenie systemu z wszelkich dancyh wprowadzonych przez użytkownika.
+                    Gdy opcja <b>wyczyść cały system</b>, nie jest zaznaczona, wówczas usunięciu ulegną tylko
+                    plany zajęć i zastępstwa i nastąpi powrót do trybu edycji danych systemu, osiągalny tylko z menu
+                    administratora systemu.
+                </p>
+            </div>
+            <form action="<?php echo url::site('admin/doreset'); ?>" method="post">
+                <div class="ui-state-error ui-corner-all" style="margin: 5px; padding: 0pt 0.7em;">
+                    <p>
+                    <p><b>Wyczyść cały system </b><input type="checkbox" name="cl"/></p>
+                    <span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
+                    Operacja jest nieodwracalna
+                    </p>
+                </div>
+                <button type="submit" name="btnSubmit" class="button-jq ui-state-default ui-button" style="margin: 5px;">
+                    Usuń trwale dane systemu
+                </button>
+            </form>
+        </td>
+    </tr>
+</table>

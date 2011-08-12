@@ -7,12 +7,6 @@
 $isf = new Kohana_Isf();
 $isf->DbConnect();
 ?>
-<h1>Zarządzanie przedmiotami</h1>
-<form action="<?php echo URL::site('przedmioty/dodaj'); ?>" method="post" name="form1">
-    Przedmiot: <input type="text" name="inpPrzedmiot"/>&nbsp;
-    <button type="submit" name="btnSubmit">Dodaj przedmiot</button>
-</form>
-
 <?php switch ($_err): ?>
 <?php case 'e1': ?>
 <p class="error">Wybrany przedmiot już istnieje</p>
@@ -34,9 +28,17 @@ $isf->DbConnect();
 <?php if (count($res) == 0): ?>
     <p class="info">Brak zdefiniowanych przedmiotów. Dodaj nowy przedmiot.</p>
 <?php else: ?>
-    <table class="przed">
+    <table style="width: 100%;">
         <thead>
-            <tr style="height: 30px; font-weight: bold;">
+            <tr>
+                <td colspan="4" style="background-color: tan; text-align: center;">
+                    <form action="<?php echo URL::site('przedmioty/dodaj'); ?>" method="post" name="form1">
+                        Przedmiot: <input type="text" name="inpPrzedmiot"/>&nbsp;
+                        <button type="submit" name="btnSubmit">Dodaj przedmiot</button>
+                    </form>
+                </td>
+            </tr>
+            <tr style="height: 30px; font-weight: bold; background-color: darkgray;">
                 <td style="width: 100px;">Przedmiot</td>
                 <td style="width: 150px; max-width: 200px;">Przypisane sale</td>
                 <td>Nauczyciele uczący</td>
@@ -45,26 +47,29 @@ $isf->DbConnect();
         </thead>
         <tbody>
             <?php foreach ($res as $rowid => $rowcol): ?>
-                <tr>
-                    <td><a href="<?php echo URL::site('przedmioty/zarzadzanie/'.$rowcol['przedmiot']); ?>"><?php echo $rowcol['przedmiot']; ?></a></td>
-                    <td> 
-                        <i>
-                        <?php foreach ($isf->DbSelect('przedmiot_sale', array('sala'), 'where przedmiot=\''.$rowcol['przedmiot'].'\' order by sala asc')
-                                as $rid=>$rcl): ?>
-                        <?php echo $rcl['sala']; ?>; 
-                        <?php endforeach; ?>
-                        </i>
-                    </td>
-                    <td> 
-                        <?php foreach ($isf->DbSelect('nl_przedm', array('nauczyciel'), 'where przedmiot=\''.$rowcol['przedmiot'].'\' order by nauczyciel asc')
-                                as $rid=>$rcl): ?>
-                        <?php echo $rcl['nauczyciel']; ?>;&nbsp;
-                        <?php endforeach; ?>
-                    </td>
-                    <td>&nbsp;<a class="anac" href="<?php echo URL::site('przedmioty/sale/' . $rowcol['przedmiot']); ?>">sale</a>&emsp;
-                        <a class="anac" href="<?php echo URL::site('przedmioty/zarzadzanie/'.$rowcol['przedmiot']); ?>">zarządzanie</a>&emsp;
-                        <a class="anac" href="<?php echo URL::site('przedmioty/usun/' . $rowcol['przedmiot']); ?>">usuń przedmiot
+                <tr valign="top">
+                    <td>
+                        &bull;
+                        <a href="<?php echo URL::site('przedmioty/zarzadzanie/' . $rowcol['przedmiot']); ?>">
+                            <?php echo $rowcol['przedmiot']; ?>
                         </a>
+                    </td>
+                    <td style="background-color: tan;"> 
+                        <?php foreach ($isf->DbSelect('przedmiot_sale', array('sala'), 'where przedmiot=\'' . $rowcol['przedmiot'] . '\' order by sala asc')
+                        as $rid => $rcl): ?>
+                            <?php echo $rcl['sala']; ?>&nbsp;
+                        <?php endforeach; ?>
+                    </td>
+                    <td> 
+                        <?php foreach ($isf->DbSelect('nl_przedm', array('nauczyciel'), 'where przedmiot=\'' . $rowcol['przedmiot'] . '\' order by nauczyciel asc')
+                        as $rid => $rcl): ?>
+                            &bull; <?php echo $rcl['nauczyciel']; ?><br/>
+                        <?php endforeach; ?>
+                    </td>
+                    <td>
+                        &bull; <a href="<?php echo URL::site('przedmioty/sale/' . $rowcol['przedmiot']); ?>">sale</a><br/>
+                        &bull; <a href="<?php echo URL::site('przedmioty/zarzadzanie/' . $rowcol['przedmiot']); ?>">zarządzanie</a><br/>
+                        &bull; <a href="<?php echo URL::site('przedmioty/usun/' . $rowcol['przedmiot']); ?>">usuń przedmiot</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
