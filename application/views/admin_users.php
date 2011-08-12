@@ -2,11 +2,9 @@
 $isf = new Kohana_Isf();
 $isf->DbConnect();
 ?>
-<h1>Zarządzanie użytkownikami</h1>
-<h3><a href="<?php echo URL::site('admin/adduser'); ?>">Dodaj użytkownika</a></h3>
 <?php $res = $isf->DbSelect('uzytkownicy', array('*'), 'where login != \'root\''); ?>
-<table class="przed">
-    <thead style="background: #ABC6DD">
+<table style="width: 100%;">
+    <thead style="background-color: tan">
         <tr>
             <td>ID</td>
             <td>login (dostępne tokeny)</td>
@@ -15,15 +13,17 @@ $isf->DbConnect();
             <td>Akcja</td>
         </tr>
     </thead>
-    <?php if (count($res) == 0): ?>
-        <tr>
-            <td colspan="5"><p class="error" style="text-align: center; text-decoration: blink;">Brak użytkowników w bazie</p></td>
-        </tr>
-    <?php endif; ?>
+    <tr>
+        <td colspan="5" style="text-align: center;">
+            <a href="<?php echo URL::site('admin/adduser'); ?>" id="btnCUser" style="margin: 5px;">
+                Dodaj użytkownika
+            </a>
+        </td>
+    </tr>
     <?php foreach ($res as $rowid => $rowcol): ?>
         <tr>
             <td><?php echo $rowcol['uid']; ?></td>
-            <td><?php echo $rowcol['login']; ?> (<?php echo count($isf->DbSelect('tokeny', array('*'), 'where login=\''.$rowcol['login'].'\'')); ?>)</td>
+            <td><?php echo $rowcol['login']; ?> (<?php echo count($isf->DbSelect('tokeny', array('*'), 'where login=\'' . $rowcol['login'] . '\'')); ?>)</td>
             <?php if ($rowcol['ilosc_prob'] >= 3): ?>
                 <td><p class="error">█ zablokowany</p></td>
             <?php else: ?>
@@ -35,19 +35,30 @@ $isf->DbConnect();
                 <td><p class="notice">█ zalogowany</p></td>
             <?php endif; ?>
             <td>
-                <a href="#" onClick="deluser(<?php echo $rowcol['uid']; ?>);">usuń</a>&emsp;
+                &bull; <a href="#" onClick="deluser(<?php echo $rowcol['uid']; ?>);">usuń</a><br/>
                 <?php if ($rowcol['ilosc_prob'] > 3): ?>
-                    <a href="<?php echo URL::site('admin/userdel/' . $rowcol['uid']); ?>" class="error">odblokuj</a>&emsp;
+                    &bull; <a href="<?php echo URL::site('admin/userublock/' . $rowcol['uid']); ?>" class="error">odblokuj</a><br/>
                 <?php endif; ?>
-                <a href="<?php echo URL::site('admin/token/' . $rowcol['uid']); ?>" target="_blank">generuj tokeny</a>
+                &bull; <a href="<?php echo URL::site('admin/token/' . $rowcol['uid']); ?>" target="_blank">generuj tokeny</a>
             </td>
         </tr>
     <?php endforeach; ?>
+    <?php if (count($res) == 0): ?>
+        <tr>
+            <td colspan="5" style="text-align: center; ">
+                <?php if (count($res) == 0): ?>
+                    <div class="ui-state-highlight ui-corner-all" style="margin-bottom: 10px; padding: 0pt 0.7em; max-width: 100%;">
+                        <p class="info">
+                            <span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span>
+                            Dopóki nie utworzysz innych użytkowników, dostęp do edycji planu lekcji i zastępstw będzie
+                            niedostępny. Użytkonik <b>root</b> nie ma dostępu do tej części aplikacji.
+                        </p>
+                    </div>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endif; ?>
 </table>
-<?php if (count($res) == 0): ?>
-<p class="info">Dopóki nie utworzysz innych użytkowników, dostęp do edycji planu lekcji i zastępstw będzie
-    niedostępny. Użytkonik <b>root</b> nie ma dostępu do tej części aplikacji.</p>
-<?php endif; ?>
 <script type="text/javascript">
     function deluser(n){
         var answer = confirm("Czy napewno chcesz usunąć użytkownika nr "+n+"?");

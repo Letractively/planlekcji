@@ -17,7 +17,7 @@ if (isset($_SERVER['KOHANA_ENV'])) {
 Kohana::init(array(
     'base_url' => HTTP_PATH,
 ));
-Kohana::$log->attach(new Log_File(APPPATH . 'logs'));
+//Kohana::$log->attach(new Log_File(APPPATH . 'logs'));
 Kohana::$config->attach(new Config_File);
 Kohana::modules(array(
     'isf' => MODPATH . 'isf', // ISFramework for Kohana

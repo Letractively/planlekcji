@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Intersys - Plan Lekcji
  * 
@@ -187,6 +188,10 @@ class Controller_Admin extends Controller {
         $view = view::factory('main');
         $view2 = view::factory('admin_zamknij');
 
+        $isf = new Kohana_Isf();
+        $isf->JQUi();
+
+        $view->set('script', $isf->JQUi_MakeScript());
         $view->set('content', $view2->render());
         echo $view->render();
     }
@@ -204,6 +209,7 @@ class Controller_Admin extends Controller {
         $view->set('content', $view2->render());
         echo $view->render();
     }
+
     /**
      * Odnawia token
      */
@@ -288,9 +294,13 @@ class Controller_Admin extends Controller {
 
         $isf = new Kohana_Isf();
         $isf->DbConnect();
+
+        $isf->JQUi();
+
         $view = view::factory('main');
         $view2 = view::factory('admin_reset');
 
+        $view->set('script', $isf->JQUi_MakeScript());
         $view->set('content', $view2->render());
         echo $view->render();
     }
@@ -484,12 +494,17 @@ START;
      */
     public function action_users() {
         $this->check_login();
+        $isf = new Kohana_Isf();
         $view = new View('main');
         $view2 = new View('admin_users');
+        $isf->JQUi();
+        $isf->JQUi_ButtonCreate('btnCUser');
+        $view->set('script', $isf->JQUi_MakeScript());
         $view->set('content', $view2->render());
 
         echo $view->render();
     }
+
     /**
      * Wyswietla strone logow systemowych
      *
@@ -504,17 +519,19 @@ START;
 
         echo $view->render();
     }
+
     /**
      * 
      * Usuwa wszystkie logi systemowe
      */
-    public function action_dellogs(){
+    public function action_dellogs() {
         $this->check_login();
         $isf = new Kohana_Isf();
         $isf->DbConnect();
-        $isf->dbhandle->exec('delete from log');
+        $isf->DbDelete('log', 'id like \'%\'');
         Kohana_Request::factory()->redirect('admin/logs');
     }
+
     /**
      * 
      * Wywietla strone generujaca tokeny dla uzytkownika o danym numerze id
@@ -527,6 +544,7 @@ START;
         $view->set('id', $user);
         echo $view->render();
     }
+
     /**
      * 
      * Usuwa uzytkownika o numerze id
@@ -542,6 +560,7 @@ START;
         $isf->DbDelete('tokeny', 'login=\'' . $u[1]['login'] . '\'');
         Kohana_Request::factory()->redirect('admin/users');
     }
+
     /**
      * 
      * Wyswietla strone dodawania uzytkownika
@@ -557,6 +576,7 @@ START;
 
         echo $view->render();
     }
+
     /**
      * 
      * Dodaje uzytkownika
@@ -576,7 +596,7 @@ START;
             Kohana_Request::factory()->redirect('admin/adduser/leng');
             exit;
         }
-        if(preg_match('/([!@#$;%^&*()+|])/i', $login)){
+        if (preg_match('/([!@#$;%^&*()+|])/i', $login)) {
             Kohana_Request::factory()->redirect('admin/adduser/data');
             exit;
         }
@@ -586,6 +606,17 @@ START;
             'haslo' => md5('plan' . sha1('lekcji' . $haslo))
         );
         $isf->DbInsert('uzytkownicy', $arr);
+        Kohana_Request::factory()->redirect('admin/users');
+    }
+    /**
+     * Odblokowuje uzytkownika
+     *
+     * @param integer $uid ID uzytkownika
+     */
+    public function action_userublock($uid){
+        $db = new Kohana_Isf();
+        $db->DbConnect();
+        $db->DbUpdate('uzytkownicy', array('ilosc_prob'=>'0'), 'uid=\''.$uid.'\'');
         Kohana_Request::factory()->redirect('admin/users');
     }
 

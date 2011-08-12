@@ -7,12 +7,6 @@
 $isf = new Kohana_Isf();
 $isf->DbConnect();
 ?>
-<h1>Zarządzanie nauczycielami</h1>
-<form action="<?php echo URL::site('nauczyciele/dodaj'); ?>" method="post" name="form1">
-    Imię i nazwisko: <input type="text" name="inpName"/>&nbsp;
-    <button type="submit" name="btnSubmit">Dodaj nauczyciela</button>
-</form>
-
 <?php switch ($_err): ?>
 <?php case 'e1': ?>
 <p class="error">Nauczyciel już istnieje</p>
@@ -40,9 +34,17 @@ $res = $isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc');
 <?php if (count($res) == 0): ?>
     <p class="info">Brak nauczycieli w systemie.</p>
 <?php else: ?>
-    <table class="przed">
+    <table style="width: 100%;">
         <thead>
-            <tr style="height: 30px; font-weight: bold;">
+            <tr>
+                <td colspan="4" style="background-color: tan; text-align: center;">
+                    <form action="<?php echo URL::site('nauczyciele/dodaj'); ?>" method="post" name="form1">
+                        Imię i nazwisko: <input type="text" name="inpName"/>&nbsp;
+                        <button type="submit" name="btnSubmit">Dodaj nauczyciela</button>
+                    </form>
+                </td>
+            </tr>
+            <tr style="height: 30px; font-weight: bold; background-color: darkgray;">
                 <td>Imię i nazwisko</td>
                 <td>Przedmioty</td>
                 <td>Klasy</td>
@@ -71,11 +73,11 @@ $res = $isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc');
                         <?php endforeach; ?>
                     </td>
                     <td>
-                        <a class="anac"
-                           href="<?php echo URL::site('nauczyciele/zarzadzanie/' . $rowcol['skrot']); ?>">
-                            zarządzanie</a>&emsp;
-                        <a class="anac"
-                           href="<?php echo URL::site('nauczyciele/usun/' . $rowcol['skrot']); ?>">usuń nauczyciela</a>
+                        &bull; <a href="<?php echo URL::site('nauczyciele/zarzadzanie/' . $rowcol['skrot']); ?>">
+                            zarządzanie</a><br/>
+                        &bull; <a href="<?php echo URL::site('nauczyciele/usun/' . $rowcol['skrot']); ?>">
+                            usuń nauczyciela
+                        </a>
                     </td>
                 </tr>
             <?php endforeach; ?>

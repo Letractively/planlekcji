@@ -9,17 +9,27 @@ body{
 input{
     border: 1px solid;
 }
+#mainw{
+    max-height: 100%;
+    
+}
+.button-jq { 
+    outline: 0; 
+    margin:0 4px 0 0; 
+    padding: .4em 1em; 
+    text-decoration:none !important; 
+    cursor:pointer; 
+    position: relative; 
+    text-align: center;
+}
 img{
-border: 0px;
+    border: 0px;
 }
 h1{
     font-size: 18pt;
 }
-pre{
-    font-size: 12pt;
-}
 hr{
-	margin: 10px;
+    margin: 10px;
 }
 .anac{
     color: #330033;
@@ -30,6 +40,13 @@ h3{
 }
 a{
     color: blue;
+}
+a:visited{
+    color: blue;
+}
+a:hover{
+    background-color: #ffff99;
+    color: red;
 }
 label{
     font-weight: bold;
@@ -75,12 +92,10 @@ thead{
 select{
     margin: 5px;
 }
-hr{
-    height: 1px;
-    border: 0;
-    color: #333;
-    background-color: #333;
-    width: 100%;
+hr {
+    height: 0;
+    border-top: 0px none;
+    border-bottom: 1px dotted #000;
 }
 .notice{
     color: darkgreen;
@@ -92,23 +107,23 @@ hr{
     color: red;
 }
 table.przed {
-	border-width: 0px;
-	border-spacing: 0px;
-	border-style: solid;
-	border-color: green;
-	border-collapse: collapse;
+    border-width: 0px;
+    border-spacing: 0px;
+    border-style: solid;
+    border-color: green;
+    border-collapse: collapse;
 }
 table.przed th {
-	border-width: 1px;
-	padding: 3px;
-	border-style: solid;
-	border-color: black;
+    border-width: 1px;
+    padding: 3px;
+    border-style: solid;
+    border-color: black;
 }
 table.przed td {
-	border-width: 1px;
-	padding: 3px;
-	border-style: solid;
-	border-color: black;
+    border-width: 1px;
+    padding: 3px;
+    border-style: solid;
+    border-color: black;
 }
 table.main {
     border-width: 0px;
