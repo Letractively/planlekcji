@@ -47,7 +47,7 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
         }
         ?>
     </head>
-    <body <?php echo $bodystr; //argumenty html dla tagu body                        ?>>
+    <body <?php echo $bodystr; //argumenty html dla tagu body                         ?>>
         <div id="mainw">
             <table class="main">
                 <tr style="vertical-align: top">
@@ -195,6 +195,21 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                                             </li>
                                         <?php endforeach; ?>
                                     </ul>
+                                    <?php
+                                    /**
+                                     * Skrypt JS dla menu planow
+                                     */
+                                    if (!isset($_SESSION['user']))
+                                        $_SESSION['user'] = null;
+                                    if ($_SESSION['user'] != 'root') {
+                                        $isf->JQUi();
+                                        foreach ($isf->DbSelect('klasy', array('*')) as $rid => $rcl) {
+                                            $f1 = '$("#class_plan_' . $rcl['klasa'] . '").click(function(){$("#ul_classedit_' . $rcl['klasa'] . '").toggle();});';
+                                            $isf->JQUi_CustomFunction($f1);
+                                        }
+                                        echo $isf->JQUi_MakeScript();
+                                    }
+                                    ?>
                                 <?php endif; ?>
                                 <?php if ($reg[1]['wartosc'] != 1 && $_SESSION['user'] == 'root'): //gdy edycja sal etc ?>
                                     <p>
@@ -310,21 +325,6 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                     <b>Plan lekcji</b> - <?php echo $ns[1]['wartosc']; ?> |
                     <a href="http://planlekcji.googlecode.com" target="_blank">strona projektu Plan Lekcji</a></p>
             </div>
-            <?php
-            /**
-             * Skrypt JS dla menu planow
-             */
-            if (!isset($_SESSION['user']))
-                $_SESSION['user'] = null;
-            if ($_SESSION['user'] != 'root') {
-                $isf->JQUi();
-                foreach ($isf->DbSelect('klasy', array('*')) as $rid => $rcl) {
-                    $f1 = '$("#class_plan_' . $rcl['klasa'] . '").click(function(){$("#ul_classedit_' . $rcl['klasa'] . '").toggle();});';
-                    $isf->JQUi_CustomFunction($f1);
-                }
-                echo $isf->JQUi_MakeScript();
-            }
-            ?>
         </div>
     </body>
 </html>

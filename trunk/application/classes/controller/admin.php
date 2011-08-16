@@ -138,6 +138,10 @@ class Controller_Admin extends Controller {
             $view2->set('pass', '');
         }
 
+        $isf = new Kohana_Isf();
+        $isf->JQUi();
+
+        $view->set('script', $isf->JQUi_MakeScript());
         $view->set('content', $view2->render());
         echo $view->render();
     }
@@ -151,7 +155,6 @@ class Controller_Admin extends Controller {
         if (!isset($_POST['inpToken'])) {
             $_POST['inpToken'] = '';
         }
-        insert_log('admin.login', 'Uzytkownik ' . $login . ' proboje sie zalogowac');
         if ($login != 'root') {
             $msg = $this->wsdl->call('doUserLogin', array('login' => $login, 'haslo' => $haslo, 'token' => $_POST['inpToken']), 'webapi.planlekcji.isf');
         } else {
@@ -171,9 +174,11 @@ class Controller_Admin extends Controller {
             if ($msg == 'auth:locked') {
                 Kohana_Request::factory()->post('inpLogin', $login);
                 Kohana_Request::factory()->redirect('admin/login/locked');
+                insert_log('admin.login', 'Nieudana próba zalogowania zablokowanego użytkownika ' . $login);
             } else {
                 Kohana_Request::factory()->post('inpLogin', $login);
                 Kohana_Request::factory()->redirect('admin/login/false');
+                insert_log('admin.login', 'Nieudana próba zalogowania użytkownika ' . $login);
             }
         }
     }
@@ -219,7 +224,7 @@ class Controller_Admin extends Controller {
         insert_log('admin.renewtoken', 'Uzytkownik ' . $_SESSION['user'] . ' odnowil token');
         $this->wsdl->call('doRenewToken', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
         $_SESSION['token_time'] = $this->wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
-
+        insert_log('randtoken.renew', 'Odnownienie tokena użytkownika ' . $login);
         Request::factory()->redirect('');
     }
 
@@ -233,6 +238,7 @@ class Controller_Admin extends Controller {
             $isf = new Kohana_Isf();
             $isf->DbConnect();
             $isf->DbUpdate('rejestr', array('wartosc' => '0'), 'opcja=\'edycja_danych\'');
+            insert_log('admin.zamknij', 'Zamknięcie edycji systemu');
             Kohana_Request::factory()->redirect('default/index');
         }
     }
@@ -247,6 +253,7 @@ class Controller_Admin extends Controller {
             $isf = new Kohana_Isf();
             $isf->DbConnect();
             $isf->DbUpdate('rejestr', array('wartosc' => '3'), 'opcja=\'edycja_danych\'');
+            insert_log('admin.zamknij', 'Zamknięcie edycji planów');
             Kohana_Request::factory()->redirect('default/index');
         }
     }
@@ -258,7 +265,7 @@ class Controller_Admin extends Controller {
         $this->wsdl->call('doLogout', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
         unset($_SESSION['token']);
         setcookie('login', '', time() - 3600, '/');
-        insert_log('admin.logout', 'Uzytkownik ' . $_SESSION['user'] . ' wylogowuje sie');
+        insert_log('admin.logout', 'Uzytkownik ' . $_SESSION['user'] . ' wylogował się');
         session_destroy();
 
         Kohana_Request::factory()->redirect('default/index');
@@ -608,15 +615,16 @@ START;
         $isf->DbInsert('uzytkownicy', $arr);
         Kohana_Request::factory()->redirect('admin/users');
     }
+
     /**
      * Odblokowuje uzytkownika
      *
      * @param integer $uid ID uzytkownika
      */
-    public function action_userublock($uid){
+    public function action_userublock($uid) {
         $db = new Kohana_Isf();
         $db->DbConnect();
-        $db->DbUpdate('uzytkownicy', array('ilosc_prob'=>'0'), 'uid=\''.$uid.'\'');
+        $db->DbUpdate('uzytkownicy', array('ilosc_prob' => '0'), 'uid=\'' . $uid . '\'');
         Kohana_Request::factory()->redirect('admin/users');
     }
 
