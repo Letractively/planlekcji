@@ -38,12 +38,22 @@ $grp = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'ilosc_grup\'');
             <?php if (count($res) == 0): ?>
                 <h3>Brak klas w systemie</h3>
             <?php else: ?>
-                <h3>Klasy w systemie</h3>
-                <table>
+                <table width="100%">
+                    <thead style="text-align: center;">
+                        <tr style="background-color: tan;">
+                            <td colspan="2">Zarządzanie klasami</td>
+                        </tr>
+                        <tr style="background-color: darkgray;">
+                            <td width="20%">Klasa</td>
+                            <td></td>
+                        </tr>
+                    </thead>
                     <?php foreach ($res as $rowid => $rowcol): ?>
                         <tr>
                             <td><?php echo $rowcol['klasa']; ?></td>
-                            <td><a href="<?php echo URL::site('klasy/usun/' . $rowcol['klasa']); ?>">usuń</a></td>
+                            <td>
+                                &bull; <a href="<?php echo URL::site('klasy/usun/' . $rowcol['klasa']); ?>">usuń</a>
+                            </td>
                         </tr>
 
                     <?php endforeach; ?>
