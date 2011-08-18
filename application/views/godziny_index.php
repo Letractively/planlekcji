@@ -28,7 +28,7 @@ if (count($res) == 0) {
                 <form action="<?php echo URL::site('godziny/lekcje'); ?>" method="post">
                     <table style="width:100%;">
                         <thead>
-                            <tr>
+                            <tr style="background-color: tan;">
                                 <td colspan="3" style="text-align: center;">
                                     <p>
                                         Godzina rozpoczęcia zajęć:
@@ -36,7 +36,7 @@ if (count($res) == 0) {
                                     </p>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr style="background-color: darkgray;">
                                 <td>
 
                                 </td>

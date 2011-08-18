@@ -13,35 +13,55 @@ $enpl_days = array(
     'Sunday' => 'Niedziela',
 );
 ?>
-<h1>
-    Zastępstwa
-</h1>
-<p>
-    <font class="notice">█ nadchodzące</font>&emsp;
-    <font class="hlt">█ dzisiejsze</font>&emsp;
-    <font class="error">█ minione</font>&emsp;
-    <?php if (isset($_COOKIE['PHPSESSID']) && isset($_COOKIE['login'])): ?>
-        <a href="#" onClick="document.forms['print'].submit();">
-            <img src="<?php echo URL::base(); ?>lib/images/printer.png" width="16" height="16"/>
-            Wydrukuj zaznaczone zastępstwa</a>
-    <?php endif; ?>
-</p>
 <form name="print" action="<?php echo URL::site('zastepstwa/drukuj'); ?>" method="post">
-    <table class="przed">
-        <thead style="background: #6699ff">
-            <tr>
+    <table class="przed" width="100%">
+        <thead style="text-align: center;">
+            <tr style="background-color: tan;">
+                <td colspan="
+                <?php if (isset($_SESSION['token'])): ?>
+                        5
+                    <?php else: ?>
+                        4
+                    <?php endif; ?>">
+                    Zarządzanie zastępstwami
+                </td>
+            <tr style="background-color: darkgray;">
                 <td>Data</td>
                 <td>Za nauczyciela</td>
                 <td>Dodatkowe informacje</td>
                 <td></td>
-                <?php if (isset($_COOKIE['PHPSESSID']) && isset($_COOKIE['login'])): ?>
+                <?php if (isset($_SESSION['token'])): ?>
                     <td><img src="<?php echo URL::base(); ?>lib/images/printer.png" width="16" height="16"/></td>
                 <?php endif; ?>
+            </tr>
+            <tr>
+                <td colspan="
+                <?php if (isset($_SESSION['token'])): ?>
+                        5
+                    <?php else: ?>
+                        4
+                    <?php endif; ?>">
+                    <p>
+                        <font class="notice">█ nadchodzące</font>&emsp;
+                        <font class="hlt">█ dzisiejsze</font>&emsp;
+                        <font class="error">█ minione</font>&emsp;
+                        <?php if (isset($_SESSION['token'])): ?>
+                            <a href="#" onClick="document.forms['print'].submit();">
+                                <img src="<?php echo URL::base(); ?>lib/images/printer.png" width="16" height="16"/>
+                                Wydrukuj zaznaczone zastępstwa</a>
+                        <?php endif; ?>
+                    </p>
+                </td>
             </tr>
         </thead>
         <?php if ($ile == 0): ?>
             <tr>
-                <td colspan="4">
+                <td colspan="
+                <?php if (isset($_SESSION['token'])): ?>
+                        5
+                    <?php else: ?>
+                        4
+                    <?php endif; ?>">
                     <p class="info" style="text-align: center">
                         Brak zastępstw
                     </p>
@@ -77,12 +97,12 @@ $enpl_days = array(
                     <td><?php echo $rowcol['za_nl']; ?></td>
                     <td><?php echo $rowcol['info']; ?></td>
                     <td>
-                        &nbsp;&emsp;<a href="<?php echo URL::site('zastepstwa/przeglad/' . $rowcol['zast_id']); ?>">[otwórz]</a>&emsp;&nbsp;
-                        <?php if (isset($_COOKIE['PHPSESSID']) && isset($_COOKIE['login'])): ?>
-                            &nbsp;&emsp;<a href="#" onClick="confirmation(<?php echo $rowcol['zast_id']; ?>)">[usuń]</a>&emsp;&nbsp;
+                        &bull; <a href="<?php echo URL::site('zastepstwa/przeglad/' . $rowcol['zast_id']); ?>">otwórz</a>&emsp;
+                        <?php if (isset($_SESSION['token'])): ?>
+                            &bull; <a href="#" onClick="confirmation(<?php echo $rowcol['zast_id']; ?>)">usuń</a>
                         <?php endif; ?>
                     </td>
-                    <?php if (isset($_COOKIE['PHPSESSID']) && isset($_COOKIE['login'])): ?>
+                    <?php if (isset($_SESSION['token'])): ?>
                         <td>
                             <?php if ($rowcol['dzien'] >= $today): ?>
                                 <input type="checkbox" name="print[<?php echo $rowcol['zast_id']; ?>]" value="on" />

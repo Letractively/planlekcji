@@ -110,7 +110,7 @@ function pobierz_dzien($dzien) {
     </head>
     <body>
         <h1><a href="#" onClick="window.print();"><img border="0" src="<?php echo URL::base() ?>lib/images/printer.png" alt="[drukuj plan]"/></a>
-            Plan lekcji ogólny</h1>
+            Zestawienie planów lekcji</h1>
         <table class="przed">
             <thead style="background: #ccffcc; text-align: center">
                 <?php pobierz_naglowki(); ?>

@@ -66,7 +66,7 @@ class Controller_Zastepstwa extends Controller {
         $isf->DbConnect();
         $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
         if ($reg[1]['wartosc'] != 3) {
-            echo '<h1>Edycja danych nie zostala zamknieta</h1>';
+            echo '<h1>Edycja planow nie zostala zamknieta</h1>';
             exit;
         }
     }
@@ -181,7 +181,7 @@ class Controller_Zastepstwa extends Controller {
      */
     public function action_zatwierdz() {
         $this->checklogin();
-        if (!isset($_POST)) {
+        if (!isset($_POST)||!isset($_POST['zast'])) {
             Request::factory()->redirect('default/index');
             exit;
         }

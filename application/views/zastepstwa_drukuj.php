@@ -87,7 +87,10 @@ function pobierzzast($id) {
             <?php endforeach; ?>
         <?php else: ?>
                 <p class="error">
-                    Brak zastępstw do wydrukowania
+                    Brak zastępstw do wydrukowania.
+                </p>
+                <p>
+                    <a href="<?php echo URL::site('zastepstwa/index'); ?>">Powrót</a>
                 </p>
         <?php endif; ?>
     </body>
