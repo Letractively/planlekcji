@@ -67,9 +67,11 @@ function pobierz_klasy($dzien, $lekcja) {
                     and lekcja=\'' . $lekcja . '\'');
             if (count($lek) > 0) {
                 echo '<p class=\'grplek\'><b>';
+                $stg = '';
                 foreach ($lek as $rowid => $rowcol) {
-                    echo '<b>' . $rowcol['klasa'] . ' ('.$rowcol['grupa'].')</b>, ';
+                    $stg .= '' . $rowcol['klasa'] . '/'.$rowcol['grupa'].', ';
                 }
+                echo substr($stg, 0, -2);
                 echo '</b></p><p class=\'grplek\'><a href=\'' . URL::site('podglad/sala/' . $rowcol['sala']) . '\'>' . $rowcol['sala'] . '</a></p>';
             } else {
                 echo '---';

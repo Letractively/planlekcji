@@ -1,8 +1,8 @@
 <?php
 /*
- * Strona główna Planu Lekcji
+ * Strona glowna Planu Lekcji
  * 
- * Główny szablon
+ * @author Michal Bocian <mhl.bocian@gmail.com>
  * 
  */
 ?>
@@ -47,7 +47,7 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
         }
         ?>
     </head>
-    <body <?php echo $bodystr; //argumenty html dla tagu body                                   ?>>
+    <body <?php echo $bodystr; //argumenty html dla tagu body                                          ?>>
         <div id="mainw">
             <table class="main">
                 <tr style="vertical-align: top">
@@ -166,11 +166,6 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                                                 <a href="<?php echo URL::site('godziny/index'); ?>">Godziny lekcyjne i przerwy</a>
                                             </td>
                                         </tr>
-                                        <tr style="background-color: lightsalmon;">
-                                            <td>
-                                                <a href="<?php echo URL::site('admin/zamknij'); ?>">Zamknięcie edycji</a>
-                                            </td>
-                                        </tr>
                                         <tr>
                                             <td>
                                                 <a href="<?php echo URL::site('regedit'); ?>">Podgląd rejestru</a>
@@ -181,11 +176,16 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                                                 <a href="<?php echo URL::site('admin/logs'); ?>">Podgląd dzienników</a>
                                             </td>
                                         </tr>
+                                        <tr style="background-color: tan">
+                                            <td>
+                                                <a href="<?php echo URL::site('admin/zamknij'); ?>">Zamknięcie edycji</a>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
-                                <p class="info">Dopóki nie zamkniesz edycji danych, nie będziesz mógł tworzyć planów.
-                                    Zamknięcie edycji oznacza <b>brak możliwości</b> ponownej edycji danych, chyba, że
-                                    wykonasz reset systemu, który wiąże się z utratą pewnych danych.</p>
+                                <p class="info">System aktualnie umożliwia edycję takich danych, jak sale, przedmioty,
+                                nauczyciele i inne. Dopóki nie zamkniesz systemu, edycja planów zajęć nie będzie dostępna.
+                                Późniejszy powrót do tej strony jest możliwy poprzez opcję <b>Wyczyść system</b>.</p>
                             <?php else: ?>
                                 <?php if ($reg[1]['wartosc'] == 3 && $_SESSION['user'] != 'root'): //gdy system calkiem otwarty ?>
                                     <p>
@@ -205,10 +205,6 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                                         <a href="<?php echo URL::site('zastepstwa/index'); ?>" style="font-size: 10pt; font-weight: bold;">
                                             Przegląd zastępstw
                                         </a>
-                                    </p>
-                                    <p>
-                                        <img src="<?php echo URL::base(); ?>lib/images/save.png" alt="" width="24" height="24"/>
-                                        <a href="#" onClick="window.open('<?php echo URL::base(); ?>export.php', 'moje', 'width=500,height=500,scrollbars=1')" class="anac">Eksport planu zajęć</a>
                                     </p>
                                     <p class="info">System edycji planów został zamknięty. Aby ponownie mieć dostęp do systemu,
                                         wykonaj reset, który utraci zapisane plany oraz zastępstwa.</p>
@@ -269,15 +265,15 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                                 <?php if ($reg[1]['wartosc'] != 1 && $_SESSION['user'] == 'root'): //gdy edycja planow i zamkn sys ?>
                                     <p>
                                         <img src="<?php echo URL::base(); ?>lib/images/keys.gif" alt="" width="24" height="24"/>
-                                        <a href="<?php echo URL::site('admin/users'); ?>" class="anac">Użytkownicy i autoryzacja</a>
+                                        <a href="<?php echo URL::site('admin/users'); ?>" >Użytkownicy i autoryzacja</a>
                                     </p>
                                     <p>
                                         <img src="<?php echo URL::base(); ?>lib/images/registry.png" alt="" width="24" height="24"/>
-                                        <a href="<?php echo URL::site('regedit'); ?>" class="anac">Podgląd rejestru</a>
+                                        <a href="<?php echo URL::site('regedit'); ?>" >Podgląd rejestru</a>
                                     </p>
                                     <p>
                                         <img src="<?php echo URL::base(); ?>lib/images/notes.png" alt="" width="24" height="24"/>
-                                        <a href="<?php echo URL::site('admin/logs'); ?>" class="anac">Podgląd dzienników</a>
+                                        <a href="<?php echo URL::site('admin/logs'); ?>" >Podgląd dzienników</a>
                                     </p>
                                     <p class="info">Jako <b>root</b> nie masz dostępu do edycji planów i zastępstw.
                                         Aby powrócić do ustawień sal, przedmiotów i nauczycieli wykonaj reset systemu,
@@ -341,6 +337,12 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                                         </a>
                                     </li>
                                     <li>
+                                        <a href="<?php echo URL::site('admin/haslo'); ?>">
+                                            <img src="<?php echo URL::base() ?>lib/images/keys.gif" alt=""/>
+                                            Zmień moje hasło
+                                        </a>
+                                    </li>
+                                    <li>
                                         <a href="<?php echo URL::site('admin/logout'); ?>">
                                             <img src="<?php echo URL::base() ?>lib/images/keygenoff.gif" alt=""/>
                                             Wyloguj mnie
@@ -351,12 +353,18 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                                     </li>
                                 </ul>
                             </fieldset>
-                            <p>
-                                <a href="<?php echo URL::site('admin/haslo'); ?>">
-                                    <img src="<?php echo URL::base() ?>lib/images/keys.gif" alt=""/>
-                                    Zmień moje hasło
-                                </a>
-                            </p>
+                            <?php if ($reg[1]['wartosc'] == 3 && isset($_SESSION['token'])): ?>
+                                <p>
+                                    <img src="<?php echo URL::base(); ?>lib/images/save.png" alt="" width="16" height="16"/>
+                                    <a href="#" onClick="window.open('<?php echo URL::base(); ?>export.php', 'moje', 'width=500,height=500,scrollbars=1')" >Eksport planu zajęć</a>
+                                </p>
+                            <?php endif; ?>
+                            <?php if ($reg[1]['wartosc'] == 3 && $_SESSION['user'] == 'root'): ?>
+                                <p>
+                                    <img src="<?php echo URL::base(); ?>lib/images/registry.png" alt="" width="16" height="16"/>
+                                    <a href="#" onClick="window.open('<?php echo URL::base(); ?>generator.php', 'moje', 'width=500,height=500,scrollbars=1')" >Generator planu zajęć (BETA)</a>
+                                </p>
+                            <?php endif; ?>
                             <?php if ($_SESSION['user'] == 'root'): ?>
                                 <p>
                                     <a href="<?php echo URL::site('admin/zmiendane'); ?>">
@@ -365,10 +373,14 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                                     </a>
                                 </p>
                                 <p>
-                                    <a class="anac" href="<?php echo url::site('admin/reset'); ?>">
+                                    <a  href="<?php echo url::site('admin/reset'); ?>">
                                         <img src="<?php echo URL::base() ?>lib/images/warn.gif" alt=""/>
                                         Wyczyść system
                                     </a>
+                                </p>
+                                <p>
+                                    <img src="<?php echo URL::base(); ?>lib/images/save.png" alt="" width="16" height="16"/>
+                                    <a href="#" onClick="window.open('<?php echo URL::base(); ?>tools/backup.php', 'moje', 'width=500,height=500,scrollbars=1')" >Kopia zapasowa systemu</a>
                                 </p>
                             <?php endif; ?>
                         </td>
