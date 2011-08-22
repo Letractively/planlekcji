@@ -224,7 +224,7 @@ class Controller_Admin extends Controller {
         insert_log('admin.renewtoken', 'Uzytkownik ' . $_SESSION['user'] . ' odnowil token');
         $this->wsdl->call('doRenewToken', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
         $_SESSION['token_time'] = $this->wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
-        insert_log('randtoken.renew', 'Odnownienie tokena użytkownika ' . $login);
+        insert_log('randtoken.renew', 'Odnownienie tokena użytkownika ' . $_SESSION['user']);
         Request::factory()->redirect('');
     }
 

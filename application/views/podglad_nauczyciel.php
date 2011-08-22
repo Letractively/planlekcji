@@ -25,7 +25,7 @@ function pobierzdzien($dzien, $lekcja) {
             echo '';
         } else {
             foreach ($rn as $rowid => $rowcol) {
-                echo '<p class=\'grplek\'>'.$rowcol['przedmiot'].' <a href=\''.URL::site('podglad/sala/'.$rowcol['sala']).'\'>'.$rowcol['sala'].'</a> <a href=\''.URL::site('podglad/klasa/'.$rowcol['klasa']).'\'>'.$rowcol['klasa'].'</a> gr'.$rowcol['grupa'].'</p>';
+                echo '<p class=\'grplek\'>'.$rowcol['przedmiot'].' <a href=\''.URL::site('podglad/sala/'.$rowcol['sala']).'\'>'.$rowcol['sala'].'</a> <a href=\''.URL::site('podglad/klasa/'.$rowcol['klasa']).'\'>'.$rowcol['klasa'].'</a>/'.$rowcol['grupa'].'</p>';
             }
         }
     }

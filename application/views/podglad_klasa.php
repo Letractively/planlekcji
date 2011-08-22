@@ -35,7 +35,7 @@ function pobierzdzien($dzien, $lekcja) {
                 } else {
                     $sstr = '<a href=\'' . URL::site('podglad/sala/' . $rowcol['sala']) . '\'>' . $rowcol['sala'] . '</a> <a href=\'' . URL::site('podglad/nauczyciel/' . $rowcol['skrot']) . '\'>' . $rowcol['skrot'] . '</a>';
                 }
-                echo '<p class=\'grplek\'>gr ' . $rowcol['grupa'] . ' - ' . $rowcol['przedmiot'] . ' ' . $sstr . '</p>';
+                echo '<p class=\'grplek\'>' . $rowcol['grupa'] . ' - ' . $rowcol['przedmiot'] . ' ' . $sstr . '</p>';
             }
         }
     }

@@ -143,7 +143,7 @@ function doGetRegistryKey($token, $key) {
     } else {
         $db = new Kohana_Isf();
         $db->DbConnect();
-        $res = $Db->DbSelect('rejestr', array('*'), 'where opcja=\'' . $key . '\'');
+        $res = $db->DbSelect('rejestr', array('*'), 'where opcja=\'' . $key . '\'');
         if (count($res) == 0) {
             return 'fetch:failed';
         } else {
