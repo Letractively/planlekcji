@@ -4,7 +4,7 @@ $isf->DbConnect();
 ?>
 <?php $res = $isf->DbSelect('uzytkownicy', array('*'), 'where login != \'root\''); ?>
 <table style="width: 100%;">
-    <thead style="background-color: tan">
+    <thead class="a_odd">
         <tr>
             <td>ID</td>
             <td>login (dostępne tokeny)</td>

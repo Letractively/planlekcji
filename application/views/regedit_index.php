@@ -4,12 +4,12 @@ $isf->DbConnect();
 ?>
 <table>
     <thead style="text-align: center;">
-        <tr style="background-color: tan">
+        <tr class="a_odd">
             <td colspan="2">
                 Zarządzanie rejestrem systemowym
             </td>
         </tr>
-        <tr style="background-color: darkgray">
+        <tr class="a_even">
             <td>Klucz</td>
             <td>Obecne ustawienie</td>
         </tr>

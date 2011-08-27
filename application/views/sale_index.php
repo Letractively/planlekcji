@@ -30,7 +30,7 @@ $isf->DbConnect();
 <?php else: ?>
     <table style="width: 100%;">
         <thead>
-            <tr style="background: tan;">
+            <tr class="a_odd">
                 <td colspan="3" style="text-align: center;">
                     <form action="<?php echo URL::site('sale/dodaj'); ?>" method="post" name="form1">
                         Sala: <input type="text" name="inpSala"/>&nbsp;
@@ -38,7 +38,7 @@ $isf->DbConnect();
                     </form>
                 </td>
             </tr>
-            <tr style="height: 30px; font-weight: bold; background: darkgrey;">
+            <tr class="a_even">
                 <td style="width: 100px;">Numer sali</td>
                 <td>Przedmioty</td>
                 <td style="width: 200px;"></td>
@@ -55,8 +55,8 @@ $isf->DbConnect();
                         <?php endforeach; ?>
                     </td>
                     <td>
-                        <a class="anac" href="<?php echo URL::site('sale/przedmiot/' . $rowcol['sala']); ?>">przedmioty</a>&emsp;
-                        <a class="anac" href="<?php echo URL::site('sale/usun/' . $rowcol['sala']); ?>">usuń salę</a>
+                        &bull; <a href="<?php echo URL::site('sale/przedmiot/' . $rowcol['sala']); ?>">przedmioty</a><br/>
+                        &bull; <a href="<?php echo URL::site('sale/usun/' . $rowcol['sala']); ?>">usuń salę</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

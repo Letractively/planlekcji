@@ -28,7 +28,7 @@ if (count($res) == 0) {
                 <form action="<?php echo URL::site('godziny/lekcje'); ?>" method="post">
                     <table style="width:100%;">
                         <thead>
-                            <tr style="background-color: tan;">
+                            <tr class="a_odd">
                                 <td colspan="3" style="text-align: center;">
                                     <p>
                                         Godzina rozpoczęcia zajęć:
@@ -36,7 +36,7 @@ if (count($res) == 0) {
                                     </p>
                                 </td>
                             </tr>
-                            <tr style="background-color: darkgray;">
+                            <tr class="a_even">
                                 <td>
 
                                 </td>
@@ -50,7 +50,12 @@ if (count($res) == 0) {
                         </thead>
                         <tbody>
                             <?php for ($i = 1; $i <= $res[1]['wartosc']; $i++): ?>
-                                <tr>
+                                <?php if ($i % 2 == 0): ?>
+                                    <?php $class = " class='a_even'"; ?>
+                                <?php else: ?>
+                                    <?php $class = ""; ?>
+                                <?php endif; ?>
+                                <tr <?php echo $class; ?>>
                                     <td>
                                         <?php echo $i; ?>
                                     </td>
@@ -81,7 +86,7 @@ if (count($res) == 0) {
                             <tr>
                                 <td colspan="3" style="text-align: center">
                                     <p>
-                                        <button type="submit" name="btnSubmitLek" class="button-jq ui-state-default ui-button" style="margin: 5px;">
+                                        <button type="submit" name="btnSubmitLek" class="button-jq ui-state-default ui-button">
                                             Ustaw godziny
                                         </button>
                                     </p>
@@ -117,7 +122,7 @@ if (count($res) == 0) {
                     </select>
                     min
                 </p>
-                <button type="submit" name="btnSubmit" class="button-jq ui-state-default ui-button" style="margin: 5px;">
+                <button type="submit" name="btnSubmit" class="button-jq ui-state-default ui-button">
                     Zastosuj ustawienia
                 </button>
             </form>

@@ -26,6 +26,8 @@ $isf->DbConnect();
 $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
 /** pobiera nazwe szkoly */
 $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
+$appver = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'app_ver\'');
+$appver = $appver[1]['wartosc'];
 ?>
 <html>
     <head>
@@ -47,18 +49,25 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
         }
         ?>
     </head>
-    <body <?php echo $bodystr; //argumenty html dla tagu body                                          ?>>
+    <body <?php echo $bodystr; //argumenty html dla tagu body                                                      ?>>
         <div id="mainw">
             <table class="main">
                 <tr style="vertical-align: top">
-                    <td style="width: 20%">
-                        <a href="<?php echo URL::site(''); ?>">
-                            <img src="<?php echo URL::base() ?>lib/images/logo.png" alt="<?php echo $ns[1]['wartosc']; ?>"
-                                 style="height: 70px;"/></a>
-                        <p>
-                            <a href="<?php echo URL::site('default/index'); ?>" style="font-size: 10pt; font-weight: bold;">
-                                <img src="<?php echo URL::base(); ?>lib/images/home.png" alt="" width="24" height="24"/>Strona główna</a>
-                        </p>
+                    <td style="width: 20%; padding-right: 10px;" class="a_light_menu">
+                        <div class="app_info">
+                            <a href="<?php echo URL::site('default/index'); ?>">
+                                <img src="<?php echo URL::base(); ?>lib/images/home.png" alt="" width="24" height="24"/></a>
+                            Plan Lekcji
+
+                        </div>
+                        <div class="app_ver">
+                            <?php echo $appver; ?>
+                        </div>
+                        <?php if (preg_match('#dev#', $appver)): ?>
+                            <div class="a_error" style="width: 100%; font-size: x-small;">
+                                Używasz wersji rozwojowej systemu
+                            </div>
+                        <?php endif; ?>
                         <?php
                         /*
                          * Część dla niezalogowanych
@@ -128,64 +137,64 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                             <?php if ($reg[1]['wartosc'] == 1 && $_SESSION['user'] == 'root'): //gdy edycja sal etc ?>
 
                                 <table border="0" width="100%">
-                                    <thead style="background-color: tan;">
+                                    <thead class="a_odd">
                                         <tr style="text-align: center;">
                                             <td colspan="2">
-                                                <b>Menu administratora</b>
+                                                Menu administratora
                                             </td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <a href="<?php echo URL::site('sale/index'); ?>">Sale</a>
+                                                &bull; <a href="<?php echo URL::site('sale/index'); ?>">Sale</a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <a href="<?php echo URL::site('przedmioty/index'); ?>">Przedmioty</a>
+                                                &bull; <a href="<?php echo URL::site('przedmioty/index'); ?>">Przedmioty</a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <a href="<?php echo URL::site('nauczyciele/index'); ?>">Nauczyciele</a>
+                                                &bull; <a href="<?php echo URL::site('nauczyciele/index'); ?>">Nauczyciele</a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <a href="<?php echo URL::site('klasy/index'); ?>">Klasy</a>
+                                                &bull; <a href="<?php echo URL::site('klasy/index'); ?>">Klasy</a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <a href="<?php echo URL::site('admin/users'); ?>">Użytkownicy</a>
+                                                &bull; <a href="<?php echo URL::site('admin/users'); ?>">Użytkownicy</a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <a href="<?php echo URL::site('godziny/index'); ?>">Godziny lekcyjne i przerwy</a>
+                                                &bull; <a href="<?php echo URL::site('godziny/index'); ?>">Godziny lekcyjne i przerwy</a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <a href="<?php echo URL::site('regedit'); ?>">Podgląd rejestru</a>
+                                                &bull; <a href="<?php echo URL::site('regedit'); ?>">Podgląd rejestru</a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <a href="<?php echo URL::site('admin/logs'); ?>">Podgląd dzienników</a>
+                                                &bull; <a href="<?php echo URL::site('admin/logs'); ?>">Podgląd dzienników</a>
                                             </td>
                                         </tr>
-                                        <tr style="background-color: tan">
+                                        <tr>
                                             <td>
-                                                <a href="<?php echo URL::site('admin/zamknij'); ?>">Zamknięcie edycji</a>
+                                                &bull; <b><a href="<?php echo URL::site('admin/zamknij'); ?>">Zamknięcie edycji</a></b>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                                 <p class="info">System aktualnie umożliwia edycję takich danych, jak sale, przedmioty,
-                                nauczyciele i inne. Dopóki nie zamkniesz systemu, edycja planów zajęć nie będzie dostępna.
-                                Późniejszy powrót do tej strony jest możliwy poprzez opcję <b>Wyczyść system</b>.</p>
+                                    nauczyciele i inne. Dopóki nie zamkniesz systemu, edycja planów zajęć nie będzie dostępna.
+                                    Późniejszy powrót do tej strony jest możliwy poprzez opcję <b>Wyczyść system</b>.</p>
                             <?php else: ?>
                                 <?php if ($reg[1]['wartosc'] == 3 && $_SESSION['user'] != 'root'): //gdy system calkiem otwarty ?>
                                     <p>
@@ -386,11 +395,9 @@ $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
                         </td>
                     <?php endif; ?>
             </table>
-            <div id="foot">
-                <p>
-                    <img src="<?php echo URL::base(); ?>lib/images/gplv3.png" alt="GNU GPL v3 logo"/>
-                    <b>Plan lekcji</b> - <?php echo $ns[1]['wartosc']; ?> |
-                    <a href="http://planlekcji.googlecode.com" target="_blank">strona projektu Plan Lekcji</a></p>
+            <div id="foot" class="a_light_menu">
+                <b>Plan lekcji</b> - <?php echo $ns[1]['wartosc']; ?> |
+                <a href="http://planlekcji.googlecode.com" target="_blank">strona projektu Plan Lekcji</a>
             </div>
         </div>
     </body>

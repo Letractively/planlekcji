@@ -40,16 +40,23 @@ $grp = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'ilosc_grup\'');
             <?php else: ?>
                 <table width="100%">
                     <thead style="text-align: center;">
-                        <tr style="background-color: tan;">
+                        <tr class="a_odd">
                             <td colspan="2">Zarządzanie klasami</td>
                         </tr>
-                        <tr style="background-color: darkgray;">
+                        <tr class="a_even">
                             <td width="20%">Klasa</td>
                             <td></td>
                         </tr>
                     </thead>
+                    <?php $i=0; ?>
                     <?php foreach ($res as $rowid => $rowcol): ?>
-                        <tr>
+                        <?php $i++; ?>
+                        <?php if ($i % 2 == 0): ?>
+                            <?php $class = " class='a_even'"; ?>
+                        <?php else: ?>
+                            <?php $class = ""; ?>
+                        <?php endif; ?>
+                        <tr <?php echo $class; ?>>
                             <td><?php echo $rowcol['klasa']; ?></td>
                             <td>
                                 &bull; <a href="<?php echo URL::site('klasy/usun/' . $rowcol['klasa']); ?>">usuń</a>

@@ -10,8 +10,8 @@ $res = $isf->DbSelect('log', array('*'), 'order by id desc limit ' . $limit . ' 
 <table style="width: 100%;">
     <thead>
         <tr>
-            <td colspan="4" style="background: tan; text-align: center;">
-                <a href="<?php echo URL::site('admin/dellogs'); ?>">
+            <td class="a_odd" colspan="5" style="text-align: center;">
+                <a href="<?php echo URL::site('admin/dellogs'); ?>" class="anodd">
                     Usuń wszystkie logi
                 </a>
             </td>
@@ -35,15 +35,15 @@ $res = $isf->DbSelect('log', array('*'), 'order by id desc limit ' . $limit . ' 
         <tr><td colspan="4"><i>Brak dzienników aplikacji</i></td></tr>
     <?php endif; ?>
     <tr>
-        <td colspan="4" style="text-align: center; background-color: tan;">
+        <td colspan="4" style="text-align: center;" class="a_odd">
             <p></p>
             <p class="grplek">
-                <b>Strona: </b>
+                <b>Strona: </b>&emsp;
                 <?php for ($i = 1; $i <= $ile; $i++): ?>
                     <?php if ($page == $i): ?>
-                        <?php echo $i; ?>&emsp;
+                        <b><?php echo $i; ?>&emsp;</b>
                     <?php else: ?>
-                        <a href="<?php echo URL::site('admin/logs/' . $i); ?>"><?php echo $i; ?></a>&emsp;
+                        <a class="anodd" href="<?php echo URL::site('admin/logs/' . $i); ?>"><?php echo $i; ?></a>&emsp;
                     <?php endif; ?>
                 <?php endfor; ?>
                 <?php if ($ile == 0): ?>
