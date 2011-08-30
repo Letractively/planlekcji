@@ -16,7 +16,7 @@ if (!isset($_POST['doBackup'])) {
     <title>Kopia zapasowa systemu</title>
 </head>
 <body>
-<h1>Kopia zapasowa systemu</h1>
+<h1>Kopia zapasowa systemu <img src="../lib/images/betasign.png" alt="" height="12"/></h1>
 <p>System wykona cały zrzut danych systemowych do pliku XML.</p>
 <form action="$phpself" method="post">
     <button type="submit" name="doBackup">Rozpocznij kopię zapasową</button>

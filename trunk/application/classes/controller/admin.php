@@ -37,7 +37,6 @@ class Controller_Admin extends Controller {
      * Konstruktor tworzy obiekt sesji
      */
     public function __construct() {
-        session_start();
         try {
             $this->wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
         } catch (Exception $e) {

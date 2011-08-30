@@ -27,7 +27,6 @@ class Controller_Godziny extends Controller {
      * Tworzy obiekt sesji i sprawdza czy zalogowany
      */
     public function __construct() {
-        session_start();
         try {
             $this->wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
         } catch (Exception $e) {

@@ -1,0 +1,47 @@
+.a_odd{
+    background-color: darkorange;
+    margin-top: 0px;
+    padding: 5px;
+}
+
+a.anodd{
+    color: white;
+}
+a.a_odd:link{
+    color: white;
+}
+a.anodd:active{
+    color: white;
+}
+a.anodd:visited{
+    color: white;
+}
+.a_light_menu{
+    background-color: #eddecc;
+    margin-top: 0px;
+    padding: 5px;
+}
+.a_even{
+    background-color: #fadfa4;
+    margin-top: 0px;
+    padding: 5px;
+}
+.app_info{
+    width:100%;
+    background-color: darkorange;
+    margin-top: 0px;
+    padding: 5px;
+    font-size: x-large;
+    text-shadow: gray 1px 1px 3px;
+    font-style: italic;
+    font-weight: bolder;
+    color: white;
+}
+.app_ver{
+    width:100%;
+    background-color: #fadfa4;
+    margin-top: 0px;
+    padding: 5px;
+    font-size: x-small;
+    text-align: right;
+}

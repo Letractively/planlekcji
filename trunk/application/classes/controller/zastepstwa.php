@@ -27,7 +27,6 @@ class Controller_Zastepstwa extends Controller {
      * Wyswietlenie strony glownej zastepstw
      */
     public function action_index() {
-        session_start();
         $view = view::factory('main');
         $view2 = view::factory('zastepstwa_index');
 
