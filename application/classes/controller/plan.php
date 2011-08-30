@@ -27,7 +27,6 @@ class Controller_Plan extends Controller {
      * Sprawdza zalogowanie uzytkownika
      */
     public function __construct() {
-        session_start();
         try {
             $this->wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
         } catch (Exception $e) {

@@ -18,7 +18,6 @@ class Controller_Podglad extends Controller {
      * Wywoluje sesje
      */
     public function __construct() {
-        session_start();
     }
     /**
      * Wyswietla plan dla klasy

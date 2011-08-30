@@ -27,7 +27,6 @@ class Controller_Default extends Controller {
      * Tworzy obiekt sesji i sprawdza system RAND_TOKEN
      */
     public function __construct() {
-        session_start();
         if (isset($_SESSION['token'])) {
             try {
                 $this->wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
@@ -57,6 +56,15 @@ class Controller_Default extends Controller {
 
         $view->set('content', $content);
         echo $view->render();
+    }
+    
+    public function action_look(){
+        if(!isset($_POST)){
+            Kohana_Request::factory()->redirect();
+            exit;
+        }
+        $_SESSION['app_theme']=$_POST['look'];
+        Kohana_Request::factory()->redirect($_POST['site']);
     }
 
 }

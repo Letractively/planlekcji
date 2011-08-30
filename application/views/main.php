@@ -35,6 +35,7 @@ $appver = $appver[1]['wartosc'];
         <title>Plan lekcji - <?php echo $ns[1]['wartosc']; ?></title>
         <?php echo $script; //wyswietla skrypt, np jquery ?>
         <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style.css"/>
+        <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/themes/<?php echo $_SESSION['app_theme']; ?>.css"/>
         <?php
         $isf->IE9_faviconset();
         $isf->IE9_WebAPP('Internetowy Plan Lekcji', 'Uruchom IPL 1.5', APP_PATH);
@@ -49,7 +50,12 @@ $appver = $appver[1]['wartosc'];
         }
         ?>
     </head>
-    <body <?php echo $bodystr; //argumenty html dla tagu body                                                      ?>>
+    <body <?php echo $bodystr; //argumenty html dla tagu body     ?>>
+        <?php if (Kohana_Isf::factory()->detect_ie()): ?>
+            <div class="a_error" style="width: 100%">
+                Ta aplikacja jest niezgodna z przeglądarką Internet Explorer. Przepraszamy!
+            </div>
+        <?php endif; ?>
         <div id="mainw">
             <table class="main">
                 <tr style="vertical-align: top">
@@ -60,14 +66,27 @@ $appver = $appver[1]['wartosc'];
                             Plan Lekcji
 
                         </div>
-                        <div class="app_ver">
-                            <?php echo $appver; ?>
-                        </div>
                         <?php if (preg_match('#dev#', $appver)): ?>
                             <div class="a_error" style="width: 100%; font-size: x-small;">
                                 Używasz wersji rozwojowej systemu
                             </div>
                         <?php endif; ?>
+                        <div class="app_ver">
+                            <?php echo $appver; ?><br/>
+                            <form action="<?php echo URL::site('default/look'); ?>" method="post" onchange="document.forms['lookf'].submit();" id="lookf" name="lookf">
+                                Wybierz wygląd:
+                                <select name="look">
+                                    <?php foreach (App_Globals::getThemes() as $theme): ?>
+                                        <?php if ($_SESSION['app_theme'] == $theme): ?>
+                                            <option selected><?php echo $theme; ?></option>
+                                        <?php else: ?>
+                                            <option><?php echo $theme; ?></option>    
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </select>
+                                <input type="hidden" name="site" value="<?php echo str_replace('index.php/', '', $_SERVER['REQUEST_URI']); ?>"/>
+                            </form>
+                        </div>
                         <?php
                         /*
                          * Część dla niezalogowanych
@@ -135,15 +154,10 @@ $appver = $appver[1]['wartosc'];
                             // tresc dla zalogowanych
                             ?>
                             <?php if ($reg[1]['wartosc'] == 1 && $_SESSION['user'] == 'root'): //gdy edycja sal etc ?>
-
+                                <div class="a_odd" style="width: 100%;">
+                                    &emsp;Menu administratora
+                                </div>
                                 <table border="0" width="100%">
-                                    <thead class="a_odd">
-                                        <tr style="text-align: center;">
-                                            <td colspan="2">
-                                                Menu administratora
-                                            </td>
-                                        </tr>
-                                    </thead>
                                     <tbody>
                                         <tr>
                                             <td>
@@ -231,7 +245,7 @@ $appver = $appver[1]['wartosc'];
                                     </div>
 
                                     <table border="0" width="100%">
-                                        <thead style="background-color: lightgray; text-align: center;">
+                                        <thead class="a_odd" style="text-align: center;">
                                             <tr>
                                                 <td colspan="2">
                                                     Edycja planów
@@ -244,9 +258,9 @@ $appver = $appver[1]['wartosc'];
                                             </tr>
                                         </thead>
                                         <?php foreach ($isf->DbSelect('klasy', array('klasa'), 'order by klasa asc') as $r => $c): ?>
-                                            <tr valign="top">
-                                                <td style="background-color: #ccccff;"><b><?php echo $c['klasa']; ?></b></td>
-                                                <td style="background-color: #DDD;">
+                                            <tr valign="center">
+                                                <td class="a_odd" style="text-align: center;"><b><?php echo $c['klasa']; ?></b></td>
+                                                <td>
                                                     &bull; <a href="<?php echo URL::site('plan/klasa/' . $c['klasa']); ?>" target="_blank">Plan wspólny</a><br/>
                                                     <?php
                                                     $grp = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'ilosc_grup\'');
@@ -388,8 +402,25 @@ $appver = $appver[1]['wartosc'];
                                     </a>
                                 </p>
                                 <p>
+                                    Narzędzia <img src="<?php echo URL::base(); ?>lib/images/betasign.png" alt="" height="12"/>
+                                </p>
+                                <p>
                                     <img src="<?php echo URL::base(); ?>lib/images/save.png" alt="" width="16" height="16"/>
                                     <a href="#" onClick="window.open('<?php echo URL::base(); ?>tools/backup.php', 'moje', 'width=500,height=500,scrollbars=1')" >Kopia zapasowa systemu</a>
+                                </p>
+                            <?php endif; ?>
+                            <?php if ($_SESSION['user'] != 'root' && $reg[1]['wartosc'] == 0): ?>
+                                <p>
+                                    Narzędzia <img src="<?php echo URL::base(); ?>lib/images/betasign.png" alt="" height="12"/>
+                                </p>
+                                <p>
+                                    <img src="<?php echo URL::base() ?>lib/images/warn.gif" alt=""/>
+                                    <a href="#" onClick="window.open('<?php echo URL::base(); ?>generator.php', 'moje', 'width=500,height=500,scrollbars=1')" >
+                                        Generator planów zajęć [P]
+                                    </a>
+                                </p>
+                                <p>
+                                    <i>[P] - prototyp</i>
                                 </p>
                             <?php endif; ?>
                         </td>

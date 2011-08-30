@@ -16,7 +16,7 @@ $res = $isf->DbSelect('log', array('*'), 'order by id desc limit ' . $limit . ' 
                 </a>
             </td>
         </tr>
-        <tr style="background-color: darkgray;">
+        <tr class="a_odd">
             <td>ID</td>
             <td>Data</td>
             <td>Moduł</td>

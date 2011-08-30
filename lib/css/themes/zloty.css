@@ -1,0 +1,41 @@
+.a_odd{
+    background-color: gold;
+    margin-top: 0px;
+    padding: 5px;
+}
+
+a.anodd{
+}
+a.a_odd:link{
+}
+a.anodd:active{
+}
+a.anodd:visited{
+}
+.a_light_menu{
+    margin-top: 0px;
+    padding: 5px;
+}
+.a_even{
+    background-color: lightyellow;
+    margin-top: 0px;
+    padding: 5px;
+}
+.app_info{
+    width:100%;
+    background-color: gold;
+    margin-top: 0px;
+    padding: 5px;
+    font-size: x-large;
+    text-shadow: gray 1px 1px 3px;
+    font-style: italic;
+    font-weight: bolder;
+}
+.app_ver{
+    width:100%;
+    background-color: lightyellow;
+    margin-top: 0px;
+    padding: 5px;
+    font-size: x-small;
+    text-align: right;
+}
