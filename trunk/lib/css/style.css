@@ -6,6 +6,15 @@ body{
 .ui-button-text-only .ui-button-text {
     padding: 0.3em 1em;
 }
+.app_info{
+    font-size: large;
+}
+.app_ver{
+    font-size: x-small;
+}
+.a_klasy{
+    line-height: 200%;
+}
 input{
     border: 1px solid;
 }
@@ -66,9 +75,6 @@ li{
 #middle{
     margin-top: 15px;
     margin-bottom: 15px;
-}
-#foot{
-    margin-top: 15px;
 }
 table{
     font-size: 10pt;

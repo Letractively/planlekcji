@@ -38,7 +38,6 @@ class Controller_Zastepstwa extends Controller {
      * Sprawdza zalogowanie uzytkownka
      */
     public function checklogin() {
-        session_start();
         try {
             $this->wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
         } catch (Exception $e) {

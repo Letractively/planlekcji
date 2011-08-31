@@ -3,7 +3,6 @@
     margin-top: 0px;
     padding: 5px;
 }
-
 a.anodd{
     color: white;
 }
@@ -17,7 +16,7 @@ a.anodd:visited{
     color: white;
 }
 .a_light_menu{
-    background-color: #eddecc;
+    background-color: #f4f4ba;
     margin-top: 0px;
     padding: 5px;
 }
@@ -31,7 +30,6 @@ a.anodd:visited{
     background-color: darkorange;
     margin-top: 0px;
     padding: 5px;
-    font-size: x-large;
     text-shadow: gray 1px 1px 3px;
     font-style: italic;
     font-weight: bolder;
@@ -42,6 +40,5 @@ a.anodd:visited{
     background-color: #fadfa4;
     margin-top: 0px;
     padding: 5px;
-    font-size: x-small;
     text-align: right;
 }

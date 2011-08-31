@@ -50,292 +50,75 @@ $appver = $appver[1]['wartosc'];
         }
         ?>
     </head>
-    <body <?php echo $bodystr; //argumenty html dla tagu body     ?>>
+    <body <?php echo $bodystr; ?>>
+
         <?php if (Kohana_Isf::factory()->detect_ie()): ?>
+            <!-- pasek o niezgodnosci -->
             <div class="a_error" style="width: 100%">
                 Ta aplikacja jest niezgodna z przeglądarką Internet Explorer. Przepraszamy!
             </div>
         <?php endif; ?>
+
         <div id="mainw">
             <table class="main">
                 <tr style="vertical-align: top">
                     <td style="width: 20%; padding-right: 10px;" class="a_light_menu">
+
                         <div class="app_info">
                             <a href="<?php echo URL::site('default/index'); ?>">
                                 <img src="<?php echo URL::base(); ?>lib/images/home.png" alt="" width="24" height="24"/></a>
                             Plan Lekcji
-
                         </div>
+
                         <?php if (preg_match('#dev#', $appver)): ?>
                             <div class="a_error" style="width: 100%; font-size: x-small;">
                                 Używasz wersji rozwojowej systemu
                             </div>
                         <?php endif; ?>
-                        <div class="app_ver">
-                            <?php echo $appver; ?><br/>
-                            <form action="<?php echo URL::site('default/look'); ?>" method="post" onchange="document.forms['lookf'].submit();" id="lookf" name="lookf">
-                                Wybierz wygląd:
-                                <select name="look">
-                                    <?php foreach (App_Globals::getThemes() as $theme): ?>
-                                        <?php if ($_SESSION['app_theme'] == $theme): ?>
-                                            <option selected><?php echo $theme; ?></option>
-                                        <?php else: ?>
-                                            <option><?php echo $theme; ?></option>    
-                                        <?php endif; ?>
-                                    <?php endforeach; ?>
-                                </select>
-                                <input type="hidden" name="site" value="<?php echo str_replace('index.php/', '', $_SERVER['REQUEST_URI']); ?>"/>
-                            </form>
-                        </div>
-                        <?php
-                        /*
-                         * Część dla niezalogowanych
-                         */
-                        ?>
-                        <?php
-                        if ($_SESSION['token'] == null) {
-                            ?>
-                            <?php
-                            if ($reg[1]['wartosc'] == 1): // czy jest edycja sal, przedmiotów
-                                ?>
-                                <p>
-                                    <a href="<?php echo URL::site('admin/login'); ?>" style="font-size: 10pt; font-weight: bold;">
-                                        <img src="<?php echo URL::base(); ?>lib/images/t1.png" alt="" width="24" height="24"/> Administracja
-                                    </a>
-                                </p>
-                                <p class="info">System będzie niedostępny, dopóki opcja edycji sal, przedmiotów, itp.
-                                    będzie <b>włączona</b>.</p>
-                                <?php
-                            else:
-                                ?>
-                                <p>
-                                    <a href="<?php echo URL::site('admin/login'); ?>" style="font-size: 10pt; font-weight: bold;">
-                                        <img src="<?php echo URL::base(); ?>lib/images/t1.png" alt="" width="24" height="24"/> Administracja
-                                    </a>
-                                </p>
-                                <?php if ($reg[1]['wartosc'] == 3): //gdy system jest calkowicie otwarty bez edycji sal, czy planow ?>
-                                    <p>
-                                        <a href="<?php echo URL::site('zastepstwa/index'); ?>" style="font-size: 10pt; font-weight: bold;">
-                                            <img src="<?php echo URL::base(); ?>lib/images/notes.png" alt="" width="24" height="24"/> Zastępstwa
-                                        </a>
-                                    </p>
-                                    <hr/>
-                                    <p>
-                                        <img src="<?php echo URL::base(); ?>lib/images/t2.png" alt="" width="24" height="24"/>
-                                        <a href="<?php echo URL::site('podglad/zestawienie'); ?>" style="font-size: 10pt; font-weight: bold;" target="_blank">
-                                            Zestawienie planów
-                                        </a>
-                                    </p>
-                                    <h3>Plany lekcji według klas</h3>
-                                    <ul>
-                                        <?php foreach ($isf->DbSelect('klasy', array('*'), 'order by klasa asc') as $rw => $rc): ?>
-                                            <li><a target="_blank" href="<?php echo URL::site('podglad/klasa/' . $rc['klasa']); ?>"><?php echo $rc['klasa']; ?></a></li>
-                                        <?php endforeach; ?>
-                                    </ul>
-                                    <h3>Plany lekcji według sali</h3>
-                                    <ul>
-                                        <?php foreach ($isf->DbSelect('sale', array('*'), 'order by sala asc') as $rw => $rc): ?>
-                                            <li><a target="_blank" href="<?php echo URL::site('podglad/sala/' . $rc['sala']); ?>"><?php echo $rc['sala']; ?></a></li>
-                                        <?php endforeach; ?>    
-                                    </ul>
-                                    <h3>Plany lekcji według nauczycieli</h3>
-                                    <ul>
-                                        <?php foreach ($isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc') as $rw => $rc): ?>
-                                            <li>(<?php echo $rc['skrot']; ?>) <a href="<?php echo URL::site('podglad/nauczyciel/' . $rc['skrot']); ?>" target="_blank"><?php echo $rc['imie_naz']; ?></a></li>
-                                        <?php endforeach; ?>    
-                                    </ul>
-                                <?php else: ?>
-                                    <p class="info">Dopóki system edycji planów będzie otwarty, nie ma możliwości
-                                        podglądu planu zajęć oraz zastępstw.</p>
-                                <?php endif; ?>
-                            <?php
-                            endif;
-                        } else {
-                            // tresc dla zalogowanych
-                            ?>
-                            <?php if ($reg[1]['wartosc'] == 1 && $_SESSION['user'] == 'root'): //gdy edycja sal etc ?>
-                                <div class="a_odd" style="width: 100%;">
-                                    &emsp;Menu administratora
-                                </div>
-                                <table border="0" width="100%">
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                &bull; <a href="<?php echo URL::site('sale/index'); ?>">Sale</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                &bull; <a href="<?php echo URL::site('przedmioty/index'); ?>">Przedmioty</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                &bull; <a href="<?php echo URL::site('nauczyciele/index'); ?>">Nauczyciele</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                &bull; <a href="<?php echo URL::site('klasy/index'); ?>">Klasy</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                &bull; <a href="<?php echo URL::site('admin/users'); ?>">Użytkownicy</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                &bull; <a href="<?php echo URL::site('godziny/index'); ?>">Godziny lekcyjne i przerwy</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                &bull; <a href="<?php echo URL::site('regedit'); ?>">Podgląd rejestru</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                &bull; <a href="<?php echo URL::site('admin/logs'); ?>">Podgląd dzienników</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                &bull; <b><a href="<?php echo URL::site('admin/zamknij'); ?>">Zamknięcie edycji</a></b>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <p class="info">System aktualnie umożliwia edycję takich danych, jak sale, przedmioty,
-                                    nauczyciele i inne. Dopóki nie zamkniesz systemu, edycja planów zajęć nie będzie dostępna.
-                                    Późniejszy powrót do tej strony jest możliwy poprzez opcję <b>Wyczyść system</b>.</p>
+
+                        <?php if ($_SESSION['token'] == null): ?>
+                            <!-- menu dla niezalogowanych -->
+                            <?php echo View::factory()->render('_menu'); ?>
+                        <?php else: ?>
+
+                            <?php if (App_Globals::getSysLv() == 1 && $_SESSION['user'] == 'root'): //gdy edycja sal etc  ?>
+                                <!-- menu dla roota -->
+                                <?php echo View::factory()->render('_menu_root_1'); ?>
                             <?php else: ?>
-                                <?php if ($reg[1]['wartosc'] == 3 && $_SESSION['user'] != 'root'): //gdy system calkiem otwarty ?>
-                                    <p>
-                                        <a href="<?php echo URL::site('podglad/zestawienie'); ?>" style="font-size: 10pt; font-weight: bold;" target="_blank">
-                                            <img src="<?php echo URL::base(); ?>lib/images/t2.png" alt="" width="24" height="24"/> Zestawienie planów
-                                        </a>
-                                    </p>
-                                    <hr/>
-                                    <p>
-                                        <img src="<?php echo URL::base(); ?>lib/images/notes.png" alt="" width="24" height="24"/>
-                                        <a href="<?php echo URL::site('zastepstwa/edycja'); ?>" style="font-size: 10pt; font-weight: bold;">
-                                            Nowe zastępstwo
-                                        </a>
-                                    </p>
-                                    <p>
-                                        <img src="<?php echo URL::base(); ?>lib/images/notes.png" alt="" width="24" height="24"/>
-                                        <a href="<?php echo URL::site('zastepstwa/index'); ?>" style="font-size: 10pt; font-weight: bold;">
-                                            Przegląd zastępstw
-                                        </a>
-                                    </p>
-                                    <p class="info">System edycji planów został zamknięty. Aby ponownie mieć dostęp do systemu,
-                                        wykonaj reset, który utraci zapisane plany oraz zastępstwa.</p>
+
+                                <?php if (App_Globals::getSysLv() == 3 && $_SESSION['user'] != 'root'): //gdy system calkiem otwarty ?>
+                                    <!-- menu uzytkownika -->
+                                    <?php echo View::factory()->render('_menu_user_3'); ?>
                                 <?php endif; ?>
+
                                 <?php if ($reg[1]['wartosc'] == 1 && $_SESSION['user'] != 'root'): //gdy edycja sys ?>
+                                    <!-- uzytkownik -->
                                     <p class="error">Witaj <b><?php echo $_SESSION['user']; ?></b>. Niestety, nie masz dostępu do
                                         edycji sal, przedmiotów, godzin, klas i nauczycieli.</p>
                                 <?php endif; ?>
-                                <?php if ($reg[1]['wartosc'] == 0 && $_SESSION['user'] != 'root'): //gdy edycja planow ?>
 
-                                    <div class="ui-state-highlight ui-corner-all" style="margin-bottom: 10px; padding: 0pt 0.7em; max-width: 100%;">
-                                        <p class="info">
-                                            <span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span>
-                                            System zastępstw będzie dostępny po zamknięciu edycji planów zajęć</p>
-                                    </div>
-
-                                    <table border="0" width="100%">
-                                        <thead class="a_odd" style="text-align: center;">
-                                            <tr>
-                                                <td colspan="2">
-                                                    Edycja planów
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2">
-                                                    <a href="<?php echo URL::site('admin/zamknij2'); ?>" id="closebtn">Zamknij edycję planów</a>
-                                                </td>
-                                            </tr>
-                                        </thead>
-                                        <?php foreach ($isf->DbSelect('klasy', array('klasa'), 'order by klasa asc') as $r => $c): ?>
-                                            <tr valign="center">
-                                                <td class="a_odd" style="text-align: center;"><b><?php echo $c['klasa']; ?></b></td>
-                                                <td>
-                                                    &bull; <a href="<?php echo URL::site('plan/klasa/' . $c['klasa']); ?>" target="_blank">Plan wspólny</a><br/>
-                                                    <?php
-                                                    $grp = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'ilosc_grup\'');
-                                                    ?>
-                                                    <?php if ($grp[1]['wartosc'] > 0): ?>
-                                                        &bull; <a href="<?php echo URL::site('plan/grupy/' . $c['klasa']); ?>" target="_blank">Plan grupowy</a>
-                                                    <?php endif; ?>    
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </table>
-                                    <?php
-                                    /**
-                                     * Skrypt JS dla menu planow
-                                     */
-                                    if (!isset($_SESSION['user']))
-                                        $_SESSION['user'] = null;
-                                    if ($_SESSION['user'] != 'root') {
-                                        $isf->JQUi();
-                                        $isf->JQUi_ButtonCreate('closebtn');
-                                        echo $isf->JQUi_MakeScript();
-                                    }
-                                    ?>
+                                <?php if ($reg[1]['wartosc'] == 0 && $_SESSION['user'] != 'root'): //gdy edycja planow ?>  
+                                    <!-- uzytkownik -->
+                                    <?php echo View::factory()->render('_menu_user_0'); ?>
                                 <?php endif; ?>
+
                                 <?php if ($reg[1]['wartosc'] != 1 && $_SESSION['user'] == 'root'): //gdy edycja planow i zamkn sys ?>
-                                    <p>
-                                        <img src="<?php echo URL::base(); ?>lib/images/keys.gif" alt="" width="24" height="24"/>
-                                        <a href="<?php echo URL::site('admin/users'); ?>" >Użytkownicy i autoryzacja</a>
-                                    </p>
-                                    <p>
-                                        <img src="<?php echo URL::base(); ?>lib/images/registry.png" alt="" width="24" height="24"/>
-                                        <a href="<?php echo URL::site('regedit'); ?>" >Podgląd rejestru</a>
-                                    </p>
-                                    <p>
-                                        <img src="<?php echo URL::base(); ?>lib/images/notes.png" alt="" width="24" height="24"/>
-                                        <a href="<?php echo URL::site('admin/logs'); ?>" >Podgląd dzienników</a>
-                                    </p>
-                                    <p class="info">Jako <b>root</b> nie masz dostępu do edycji planów i zastępstw.
-                                        Aby powrócić do ustawień sal, przedmiotów i nauczycieli wykonaj reset systemu,
-                                        który usunie wszystkie plany.</p>
+                                    <!-- menu dla root -->
+                                    <?php echo View::factory()->render('_menu_close_root'); ?>
                                 <?php endif; ?>
+
                                 <hr/>
-                                <?php if ($reg[1]['wartosc'] == 3): // gdy edycja planow zamknieta ?>
-                                    <h3>Plany lekcji według klas</h3>
-                                    <ul>
-                                        <?php foreach ($isf->DbSelect('klasy', array('*'), 'order by klasa asc') as $rw => $rc): ?>
-                                            <li><a href="<?php echo URL::site('podglad/klasa/' . $rc['klasa']); ?>" target="_blank"><?php echo $rc['klasa']; ?></a></li>
-                                        <?php endforeach; ?>
-                                    </ul>
-                                    <h3>Plany lekcji według sali</h3>
-                                    <ul>
-                                        <?php foreach ($isf->DbSelect('sale', array('*'), 'order by sala asc') as $rw => $rc): ?>
-                                            <li><a href="<?php echo URL::site('podglad/sala/' . $rc['sala']); ?>" target="_blank"><?php echo $rc['sala']; ?></a></li>
-                                        <?php endforeach; ?>    
-                                    </ul>
-                                    <h3>Plany lekcji według nauczycieli</h3>
-                                    <ul>
-                                        <?php foreach ($isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc') as $rw => $rc): ?>
-                                            <li><?php echo $rc['skrot']; ?> <a href="<?php echo URL::site('podglad/nauczyciel/' . $rc['skrot']); ?>" target="_blank"><?php echo $rc['imie_naz']; ?></a></li>
-                                        <?php endforeach; ?>    
-                                    </ul>
-                                <?php else: ?>
-                                    <p class="info">Podgląd planów będzie dostępny po zamknięciu edycji planów zajęć.</p>
-                                <?php endif; ?>
+
+                                <!-- plany lekcji -->
+                                <?php echo View::factory()->render('_menu_plany'); ?>
+
                             <?php endif; ?>
-                        <?php } ?>
+                        <?php endif; ?>
                     </td>
                     <td valign="top" style="width: 60%;">
                         <?php echo $content; ?>
                     </td>
-                    <?php
-                    /*
-                     * Menu administratora (górne)
-                     */
-                    ?>
+                    <!-- menu uzytkownika (boczne) -->
                     <?php if ($_SESSION['token'] != null): ?>
                         <?php
                         $zadmin = time() + 10 * 60;
@@ -382,12 +165,6 @@ $appver = $appver[1]['wartosc'];
                                     <a href="#" onClick="window.open('<?php echo URL::base(); ?>export.php', 'moje', 'width=500,height=500,scrollbars=1')" >Eksport planu zajęć</a>
                                 </p>
                             <?php endif; ?>
-                            <?php if ($reg[1]['wartosc'] == 3 && $_SESSION['user'] == 'root'): ?>
-                                <p>
-                                    <img src="<?php echo URL::base(); ?>lib/images/registry.png" alt="" width="16" height="16"/>
-                                    <a href="#" onClick="window.open('<?php echo URL::base(); ?>generator.php', 'moje', 'width=500,height=500,scrollbars=1')" >Generator planu zajęć (BETA)</a>
-                                </p>
-                            <?php endif; ?>
                             <?php if ($_SESSION['user'] == 'root'): ?>
                                 <p>
                                     <a href="<?php echo URL::site('admin/zmiendane'); ?>">
@@ -402,8 +179,14 @@ $appver = $appver[1]['wartosc'];
                                     </a>
                                 </p>
                                 <p>
-                                    Narzędzia <img src="<?php echo URL::base(); ?>lib/images/betasign.png" alt="" height="12"/>
+                                    <img src="<?php echo URL::base(); ?>lib/images/betasign.png" alt="" height="12"/>
                                 </p>
+                                <?php if ($reg[1]['wartosc'] == 0 && $_SESSION['user'] == 'root'): ?>
+                                    <p>
+                                        <img src="<?php echo URL::base(); ?>lib/images/registry.png" alt="" width="16" height="16"/>
+                                        <a href="#" onClick="window.open('<?php echo URL::base(); ?>generator.php', 'moje', 'width=500,height=500,scrollbars=1')" >Generator planu zajęć</a>
+                                    </p>
+                                <?php endif; ?>
                                 <p>
                                     <img src="<?php echo URL::base(); ?>lib/images/save.png" alt="" width="16" height="16"/>
                                     <a href="#" onClick="window.open('<?php echo URL::base(); ?>tools/backup.php', 'moje', 'width=500,height=500,scrollbars=1')" >Kopia zapasowa systemu</a>
@@ -411,25 +194,47 @@ $appver = $appver[1]['wartosc'];
                             <?php endif; ?>
                             <?php if ($_SESSION['user'] != 'root' && $reg[1]['wartosc'] == 0): ?>
                                 <p>
-                                    Narzędzia <img src="<?php echo URL::base(); ?>lib/images/betasign.png" alt="" height="12"/>
+                                    <img src="<?php echo URL::base(); ?>lib/images/betasign.png" alt="" height="12"/>
                                 </p>
                                 <p>
                                     <img src="<?php echo URL::base() ?>lib/images/warn.gif" alt=""/>
                                     <a href="#" onClick="window.open('<?php echo URL::base(); ?>generator.php', 'moje', 'width=500,height=500,scrollbars=1')" >
-                                        Generator planów zajęć [P]
+                                        Generator planów zajęć
                                     </a>
-                                </p>
-                                <p>
-                                    <i>[P] - prototyp</i>
                                 </p>
                             <?php endif; ?>
                         </td>
                     <?php endif; ?>
+                <tr class="app_ver">
+                    <td colspan="
+                    <?php if ($_SESSION['token'] == null): ?>
+                            2
+                        <?php else: ?>
+                            3
+                        <?php endif; ?>
+                        ">
+                        <div>
+                            <form action="<?php echo URL::site('default/look'); ?>" method="post" onchange="document.forms['lookf'].submit();" id="lookf" name="lookf">
+                                Wybierz wygląd:
+                                <select name="look">
+                                    <?php foreach (App_Globals::getThemes() as $theme): ?>
+                                        <?php if ($_SESSION['app_theme'] == $theme): ?>
+                                            <option selected><?php echo $theme; ?></option>
+                                        <?php else: ?>
+                                            <option><?php echo $theme; ?></option>    
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </select>
+                                <input type="hidden" name="site" value="<?php echo str_replace('index.php/', '', $_SERVER['REQUEST_URI']); ?>"/>
+                            </form>
+                            <div id="foot">
+                                <b>Plan lekcji </b><?php echo $appver; ?> - <?php echo $ns[1]['wartosc']; ?> |
+                                <a href="http://planlekcji.googlecode.com" target="_blank">strona projektu Plan Lekcji</a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
             </table>
-            <div id="foot" class="a_light_menu">
-                <b>Plan lekcji</b> - <?php echo $ns[1]['wartosc']; ?> |
-                <a href="http://planlekcji.googlecode.com" target="_blank">strona projektu Plan Lekcji</a>
-            </div>
         </div>
     </body>
 </html>
