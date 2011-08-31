@@ -16,7 +16,7 @@ $enpl_days = array(
 <form name="print" action="<?php echo URL::site('zastepstwa/drukuj'); ?>" method="post">
     <table class="przed" width="100%">
         <thead style="text-align: center;">
-            <tr style="background-color: tan;">
+            <tr class="a_odd">
                 <td colspan="
                 <?php if (isset($_SESSION['token'])): ?>
                         5
@@ -25,7 +25,7 @@ $enpl_days = array(
                     <?php endif; ?>">
                     Zarządzanie zastępstwami
                 </td>
-            <tr style="background-color: darkgray;">
+            <tr class="a_even">
                 <td>Data</td>
                 <td>Za nauczyciela</td>
                 <td>Dodatkowe informacje</td>

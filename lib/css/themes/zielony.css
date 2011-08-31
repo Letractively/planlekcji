@@ -1,20 +1,20 @@
 .a_odd{
-    background-color: #84cb39;
+    background-color: #9cc36f;
     margin-top: 0px;
     padding: 5px;
 }
 
 a.anodd{
-    color: white;
+    color: lightgoldenrodyellow;
 }
 a.a_odd:link{
-    color: white;
+    color: lightgoldenrodyellow;
 }
 a.anodd:active{
-    color: white;
+    color: lightgoldenrodyellow;
 }
 a.anodd:visited{
-    color: white;
+    color: lightgoldenrodyellow;
 }
 .a_light_menu{
     background-color: #dffcc0;
@@ -28,11 +28,10 @@ a.anodd:visited{
 }
 .app_info{
     width:100%;
-    background-color: #84cb39;
+    background-color: #9cc36f;
     margin-top: 0px;
     padding: 5px;
-    font-size: x-large;
-    text-shadow: gray 1px 1px 3px;
+    text-shadow: black 1px 1px 3px;
     font-style: italic;
     font-weight: bolder;
     color: white;
@@ -42,6 +41,5 @@ a.anodd:visited{
     background-color: #c1ec95;
     margin-top: 0px;
     padding: 5px;
-    font-size: x-small;
     text-align: right;
 }

@@ -26,7 +26,6 @@ a.anodd:visited{
     background-color: gold;
     margin-top: 0px;
     padding: 5px;
-    font-size: x-large;
     text-shadow: gray 1px 1px 3px;
     font-style: italic;
     font-weight: bolder;
@@ -36,6 +35,5 @@ a.anodd:visited{
     background-color: lightyellow;
     margin-top: 0px;
     padding: 5px;
-    font-size: x-small;
     text-align: right;
 }
