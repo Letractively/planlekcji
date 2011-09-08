@@ -7,56 +7,23 @@ if (!isset($_POST['inpLogin'])) {
     $_POST['inpLogin'] = null;
 }
 ?>
-<div class="a_odd" style="width: 100%;">
-    Logowanie metodą RAND_TOKEN
-</div>
-
+<h1>Logowanie do systemu</h1>
+<h3>Za pomocą metody RAND_TOKEN</h3>
+<?php if ($pass == 'false'): ?>
+    <p class="error">Nie udało się zalogować do systemu</p>
+<?php endif; ?>
+<?php if ($pass == 'locked'): ?>
+    <p class="error"><b>Konto jest zablokowane</b>. Skontaktuj się z administratorem</p>
+<?php endif; ?>
+<?php if ($pass == 'delay'): ?>
+    <p class="error"><b>RAND_TOKEN:</b> token wygasł</p>
+<?php endif; ?>
 <form action="<?php echo url::site('admin/dologin'); ?>" method="post" name="lgn">
-    <div class="a_light_menu" style="width: 100%;">
-        <table border="0">
-            <tbody>
-                <tr>
-                    <td>Login</td>
-                    <td><input style="width: 150px;" type="text" name="inpLogin" value="<?php echo $_POST['inpLogin']; ?>"/></td>
-                </tr>
-                <tr>
-                    <td>Hasło</td>
-                    <td><input style="width: 150px;" type="password" name="inpHaslo"/></td>
-                </tr>
-                <tr>
-                    <td>Token sesji</td>
-                    <td><input style="width: 150px;" type="text" name="inpToken"/></td>
-                </tr>
-                <?php if ($pass == 'false'): ?>
-                    <tr class="a_error">
-                        <td colspan="2">
-                            Nie udało się zalogować do systemu
-                        </td>
-                    </tr>
-                <?php endif; ?>
-                <?php if ($pass == 'locked'): ?>
-                    <tr class="a_error">
-                        <td colspan="2">
-                            Twoje konto jest zablokowane
-                        </td>
-                    </tr>
-                <?php endif; ?>
-                <?php if ($pass == 'delay'): ?>
-                    <tr class="a_error">
-                        <td colspan="2">
-                            Twój token wygasł
-                        </td>
-                    </tr>
-                <?php endif; ?>
-                <tr style="text-align: center">
-                    <td colspan="2">
-                        <button type="submit" name="btnSubmit" id="btnSubmit">Zaloguj</button>&emsp;
-                        <button type="reset" name="btnReset" id="btnReset">Wyczyść dane</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <label>Login</label> <input style="width: 150px;" type="text" name="inpLogin" value="<?php echo $_POST['inpLogin']; ?>"/><br/><br/>
+    <label>Hasło</label> <input style="width: 150px;" type="password" name="inpHaslo"/><br/><br/>
+    <label>Token</label> <input style="width: 150px;" type="text" name="inpToken"/>&emsp;
+    <button type="submit" name="btnSubmit">Zaloguj</button>
+    <p class="info">Token jest wymagany wobec wszystkich użytkowników razem z hasłem podstawowym.
+        Każdy token można użyć <b>tylko raz</b>, jednak można go przedłużać na następne 3 godziny.
+        Standardowa ważność po zalogowaniu to 3 godziny.</p>
 </form>
-
-

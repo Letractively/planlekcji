@@ -31,14 +31,14 @@ $isf->DbConnect();
     <table style="width: 100%;">
         <thead>
             <tr>
-                <td colspan="4" class="a_odd" style="text-align: center;">
+                <td colspan="4" style="background-color: tan; text-align: center;">
                     <form action="<?php echo URL::site('przedmioty/dodaj'); ?>" method="post" name="form1">
                         Przedmiot: <input type="text" name="inpPrzedmiot"/>&nbsp;
                         <button type="submit" name="btnSubmit">Dodaj przedmiot</button>
                     </form>
                 </td>
             </tr>
-            <tr class="a_even">
+            <tr style="height: 30px; font-weight: bold; background-color: darkgray;">
                 <td style="width: 100px;">Przedmiot</td>
                 <td style="width: 150px; max-width: 200px;">Przypisane sale</td>
                 <td>Nauczyciele uczący</td>
@@ -46,22 +46,15 @@ $isf->DbConnect();
             </tr>
         </thead>
         <tbody>
-            <?php $i = 0; ?>
             <?php foreach ($res as $rowid => $rowcol): ?>
-                <?php $i++; ?>
-                <?php if ($i % 2 == 0): ?>
-                    <?php $class = " class='a_even'"; ?>
-                <?php else: ?>
-                    <?php $class = ""; ?>
-                <?php endif; ?>
-                <tr valign="top" <?php echo $class; ?>>
+                <tr valign="top">
                     <td>
                         &bull;
                         <a href="<?php echo URL::site('przedmioty/zarzadzanie/' . $rowcol['przedmiot']); ?>">
                             <?php echo $rowcol['przedmiot']; ?>
                         </a>
                     </td>
-                    <td> 
+                    <td style="background-color: tan;"> 
                         <?php foreach ($isf->DbSelect('przedmiot_sale', array('sala'), 'where przedmiot=\'' . $rowcol['przedmiot'] . '\' order by sala asc')
                         as $rid => $rcl): ?>
                             <?php echo $rcl['sala']; ?>&nbsp;

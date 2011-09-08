@@ -1,9 +1,7 @@
 <?php
-
 /**
  * 
  */
-
 /**
  * Zwraca token sesyjny
  *
@@ -11,9 +9,8 @@
  * @return string token
  */
 function gentoken($uid) {
-    return md5(sha1('1s#plan!!002' . $uid . 'r98mMjs7^A2b' . rand(1000, 9999)) . time());
+    return md5(sha1('1s#plan!!002' . $uid . 'r98mMjs7^A2b' . rand(1000, 9999)).time());
 }
-
 /**
  * Sprawdza czy uzytkownik posiada token
  *
@@ -30,7 +27,6 @@ function checkauth($token) {
         return $res;
     }
 }
-
 /**
  * Logowanie uzytkownika root
  *
@@ -44,7 +40,7 @@ function doLogin($username, $password, $token) {
     $db->DbConnect();
     $haslo = md5('plan' . sha1('lekcji' . $password));
     $uid = $db->DbSelect('uzytkownicy', array('*'), 'where login=\'' . $username . '\' and haslo=\'' . $haslo . '\'');
-    $tok = $db->DbSelect('tokeny', array('*'), 'where login=\'' . $username . '\' and token=\'' . md5('plan' . $token) . '\'');
+    $tok = $db->DbSelect('tokeny', array('*'), 'where login=\'' . $username . '\' and token=\''.md5('plan'.$token).'\'');
     if (count($uid) != 1 || count($tok) != 1) {
         return 'auth:failed';
     } else {
@@ -62,7 +58,6 @@ function doLogin($username, $password, $token) {
         }
     }
 }
-
 /**
  * Logowanie zwyklego uzytkownika
  *
@@ -114,7 +109,6 @@ function doUserLogin($username, $password, $token) {
         }
     }
 }
-
 /**
  * Zwraca date wygasniecia tokena sesji
  *
@@ -129,7 +123,6 @@ function doShowAuthTime($token) {
         return date('Y-m-d H:i:s', $r[1]['webapi_timestamp']);
     }
 }
-
 /**
  * Pobiera klucz rejestru systemowego
  *
@@ -143,7 +136,7 @@ function doGetRegistryKey($token, $key) {
     } else {
         $db = new Kohana_Isf();
         $db->DbConnect();
-        $res = $db->DbSelect('rejestr', array('*'), 'where opcja=\'' . $key . '\'');
+        $res = $Db->DbSelect('rejestr', array('*'), 'where opcja=\'' . $key . '\'');
         if (count($res) == 0) {
             return 'fetch:failed';
         } else {
@@ -151,7 +144,6 @@ function doGetRegistryKey($token, $key) {
         }
     }
 }
-
 /**
  * Odnawia token
  *
@@ -165,7 +157,6 @@ function doRenewToken($token) {
     $db->DbUpdate('uzytkownicy', array('webapi_timestamp' => $timestamp), 'webapi_token=\'' . $token . '\'');
     return 'auth:renew';
 }
-
 /**
  * Wylogowuje
  *
@@ -178,7 +169,6 @@ function doLogout($token) {
     $db->DbUpdate('uzytkownicy', array('webapi_timestamp' => '', 'webapi_token' => ''), 'webapi_token=\'' . $token . '\'');
     return 'auth:logout';
 }
-
 /**
  * Dodaje klase
  *
@@ -195,16 +185,11 @@ function doAddClassroom($token, $class) {
         if (count($db->DbSelect('sale', array('*'), 'where sala=\'' . $class . '\'')) != 0) {
             return 'class:exists';
         } else {
-            if (preg_match('/([.!@#$;%^&*()_+|])/i', $class)) {
-                return 'class:nameerror';
-            } else {
-                $db->DbInsert('sale', array('sala' => $class));
-                return 'class:added';
-            }
+            $db->DbInsert('sale', array('sala' => $class));
+            return 'class:added';
         }
     }
 }
-
 /**
  * Zmienia haslo uzytkownika
  *

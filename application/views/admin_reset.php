@@ -42,8 +42,7 @@ $res = $res[1]['wartosc'];
             <div class="ui-state-highlight ui-corner-all" style="margin: 5px; padding: 0pt 0.7em;">
                 <p>
                     <span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span>
-                    Ta opcja powoduje czyszczenie planów zajęć i zastępstw oraz powrót do możlwiości edycji
-                    takich danych jak sale, przedmioty, nauczyciele itp.
+                    Ta opcja powoduje zupełnie czyszczenie systemu z wszelkich dancyh wprowadzonych przez użytkownika.
                     Gdy opcja <b>wyczyść cały system</b>, nie jest zaznaczona, wówczas usunięciu ulegną tylko
                     plany zajęć i zastępstwa i nastąpi powrót do trybu edycji danych systemu, osiągalny tylko z menu
                     administratora systemu.
@@ -58,7 +57,7 @@ $res = $res[1]['wartosc'];
                     </p>
                 </div>
                 <button type="submit" name="btnSubmit" class="button-jq ui-state-default ui-button" style="margin: 5px;">
-                    Wyczyść dane systemu
+                    Usuń trwale dane systemu
                 </button>
             </form>
         </td>

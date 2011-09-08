@@ -27,6 +27,7 @@ class Controller_Zastepstwa extends Controller {
      * Wyswietlenie strony glownej zastepstw
      */
     public function action_index() {
+        session_start();
         $view = view::factory('main');
         $view2 = view::factory('zastepstwa_index');
 
@@ -38,6 +39,7 @@ class Controller_Zastepstwa extends Controller {
      * Sprawdza zalogowanie uzytkownka
      */
     public function checklogin() {
+        session_start();
         try {
             $this->wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
         } catch (Exception $e) {
@@ -64,7 +66,7 @@ class Controller_Zastepstwa extends Controller {
         $isf->DbConnect();
         $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
         if ($reg[1]['wartosc'] != 3) {
-            echo '<h1>Edycja planow nie zostala zamknieta</h1>';
+            echo '<h1>Edycja danych nie zostala zamknieta</h1>';
             exit;
         }
     }
@@ -179,7 +181,7 @@ class Controller_Zastepstwa extends Controller {
      */
     public function action_zatwierdz() {
         $this->checklogin();
-        if (!isset($_POST)||!isset($_POST['zast'])) {
+        if (!isset($_POST)) {
             Request::factory()->redirect('default/index');
             exit;
         }

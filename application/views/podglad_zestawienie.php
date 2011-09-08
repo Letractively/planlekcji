@@ -67,11 +67,9 @@ function pobierz_klasy($dzien, $lekcja) {
                     and lekcja=\'' . $lekcja . '\'');
             if (count($lek) > 0) {
                 echo '<p class=\'grplek\'><b>';
-                $stg = '';
                 foreach ($lek as $rowid => $rowcol) {
-                    $stg .= '' . $rowcol['klasa'] . '/'.$rowcol['grupa'].', ';
+                    echo '<b>' . $rowcol['klasa'] . ' ('.$rowcol['grupa'].')</b>, ';
                 }
-                echo substr($stg, 0, -2);
                 echo '</b></p><p class=\'grplek\'><a href=\'' . URL::site('podglad/sala/' . $rowcol['sala']) . '\'>' . $rowcol['sala'] . '</a></p>';
             } else {
                 echo '---';
@@ -112,7 +110,7 @@ function pobierz_dzien($dzien) {
     </head>
     <body>
         <h1><a href="#" onClick="window.print();"><img border="0" src="<?php echo URL::base() ?>lib/images/printer.png" alt="[drukuj plan]"/></a>
-            Zestawienie planów lekcji</h1>
+            Plan lekcji ogólny</h1>
         <table class="przed">
             <thead style="background: #ccffcc; text-align: center">
                 <?php pobierz_naglowki(); ?>

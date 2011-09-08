@@ -37,14 +37,14 @@ $res = $isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc');
     <table style="width: 100%;">
         <thead>
             <tr>
-                <td colspan="4" class="a_odd" style="text-align: center;">
+                <td colspan="4" style="background-color: tan; text-align: center;">
                     <form action="<?php echo URL::site('nauczyciele/dodaj'); ?>" method="post" name="form1">
                         Imię i nazwisko: <input type="text" name="inpName"/>&nbsp;
                         <button type="submit" name="btnSubmit">Dodaj nauczyciela</button>
                     </form>
                 </td>
             </tr>
-            <tr class="a_even">
+            <tr style="height: 30px; font-weight: bold; background-color: darkgray;">
                 <td>Imię i nazwisko</td>
                 <td>Przedmioty</td>
                 <td>Klasy</td>
@@ -52,15 +52,8 @@ $res = $isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc');
             </tr>
         </thead>
         <tbody>
-            <?php $i=0; ?>
             <?php foreach ($res as $rowid => $rowcol): ?>
-                <?php $i++; ?>
-                <?php if ($i % 2 == 0): ?>
-                    <?php $class = " class='a_even'"; ?>
-                <?php else: ?>
-                    <?php $class = ""; ?>
-                <?php endif; ?>
-                <tr <?php echo $class; ?>>
+                <tr>
                     <td>
                         (<?php echo $rowcol['skrot']; ?>)
                         <a href="<?php echo URL::site('nauczyciele/zarzadzanie/' . $rowcol['skrot']); ?>">

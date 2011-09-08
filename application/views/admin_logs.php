@@ -10,28 +10,21 @@ $res = $isf->DbSelect('log', array('*'), 'order by id desc limit ' . $limit . ' 
 <table style="width: 100%;">
     <thead>
         <tr>
-            <td class="a_odd" colspan="5" style="text-align: center;">
-                <a href="<?php echo URL::site('admin/dellogs'); ?>" class="anodd">
+            <td colspan="4" style="background: tan; text-align: center;">
+                <a href="<?php echo URL::site('admin/dellogs'); ?>">
                     Usuń wszystkie logi
                 </a>
             </td>
         </tr>
-        <tr class="a_even">
+        <tr style="background-color: darkgray;">
             <td>ID</td>
             <td>Data</td>
             <td>Moduł</td>
             <td></td>
         </tr>
     </thead>
-    <?php $i=0; ?>
     <?php foreach ($res as $rowid => $rowcol): ?>
-        <?php $i++; ?>
-        <?php if ($i % 2 == 0): ?>
-            <?php $class = " class='a_even'"; ?>
-        <?php else: ?>
-            <?php $class = ""; ?>
-        <?php endif; ?>
-        <tr <?php echo $class; ?>>
+        <tr>
             <td><?php echo $rowcol['id']; ?></td>
             <td><?php echo $rowcol['data']; ?></td>
             <td><?php echo $rowcol['modul']; ?></td>
@@ -42,15 +35,15 @@ $res = $isf->DbSelect('log', array('*'), 'order by id desc limit ' . $limit . ' 
         <tr><td colspan="4"><i>Brak dzienników aplikacji</i></td></tr>
     <?php endif; ?>
     <tr>
-        <td colspan="4" style="text-align: center;" class="a_odd">
+        <td colspan="4" style="text-align: center; background-color: tan;">
             <p></p>
             <p class="grplek">
-                <b>Strona: </b>&emsp;
+                <b>Strona: </b>
                 <?php for ($i = 1; $i <= $ile; $i++): ?>
                     <?php if ($page == $i): ?>
-                        <b><?php echo $i; ?>&emsp;</b>
+                        <?php echo $i; ?>&emsp;
                     <?php else: ?>
-                        <a class="anodd" href="<?php echo URL::site('admin/logs/' . $i); ?>"><?php echo $i; ?></a>&emsp;
+                        <a href="<?php echo URL::site('admin/logs/' . $i); ?>"><?php echo $i; ?></a>&emsp;
                     <?php endif; ?>
                 <?php endfor; ?>
                 <?php if ($ile == 0): ?>
