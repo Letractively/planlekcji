@@ -16,15 +16,22 @@ $res = $isf->DbSelect('log', array('*'), 'order by id desc limit ' . $limit . ' 
                 </a>
             </td>
         </tr>
-        <tr class="a_odd">
+        <tr class="a_even">
             <td>ID</td>
             <td>Data</td>
             <td>Moduł</td>
             <td></td>
         </tr>
     </thead>
+    <?php $i=0; ?>
     <?php foreach ($res as $rowid => $rowcol): ?>
-        <tr>
+        <?php $i++; ?>
+        <?php if ($i % 2 == 0): ?>
+            <?php $class = " class='a_even'"; ?>
+        <?php else: ?>
+            <?php $class = ""; ?>
+        <?php endif; ?>
+        <tr <?php echo $class; ?>>
             <td><?php echo $rowcol['id']; ?></td>
             <td><?php echo $rowcol['data']; ?></td>
             <td><?php echo $rowcol['modul']; ?></td>
