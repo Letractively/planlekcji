@@ -28,6 +28,7 @@ $GLOBALS['k'] = $klasa; // ustawienie zmiennej globalnej
  * @param int $lekcja lekcja do pobrania
  * @return string Zwraca pojedyncza komorke planu
  */
+
 function pobierzdzien($dzien, $lekcja) {
     /**
      * Ustawienie globalnej
@@ -62,7 +63,7 @@ function pobierzdzien($dzien, $lekcja) {
              * Pętla zwraca tablicę wynikową $a
              */
             foreach ($sl as $ri => $rc) {
-                
+
                 $a[$r]['nauczyciel'] = $rowcol['nauczyciel'];
                 $a[$r]['klasa'] = $rowcol['klasa'];
                 $a[$r]['przedmiot'] = $rcl['przedmiot'];
@@ -71,7 +72,6 @@ function pobierzdzien($dzien, $lekcja) {
                 $r++;
             }
         }
-        
     }
     /**
      * Pobiera lekcję dla danej klasy, w danym dniu o danej godzinie
@@ -138,7 +138,7 @@ function pobierzdzien($dzien, $lekcja) {
     <?php endif; ?>
     <input type="hidden" name="klasa" value="<?php echo $klasa; ?>"/>
     <table class="przed">
-        <thead style="background: greenyellow;">
+        <thead class="a_odd">
             <tr>
                 <td></td>
                 <td>Godziny</td>
@@ -151,21 +151,32 @@ function pobierzdzien($dzien, $lekcja) {
         </thead>
         <tbody>
             <?php for ($i = 1; $i <= $ilosc_lek; $i++): ?>
-                <tr>
+                <?php if ($i % 2 == 0): ?>
+                    <?php $str = "class=\"a_even\""; ?>
+                <?php else: ?>
+                    <?php $str = ""; ?>
+                <?php endif; ?>
+                <tr <?php echo $str; ?>>
                     <td><?php echo $i; ?></td>
+
                     <td><?php echo $lek_godziny[$i]['godzina']; ?></td>
+
                     <td>
                         <?php echo pobierzdzien('Poniedziałek', $i); ?>
                     </td>
+
                     <td>
                         <?php echo pobierzdzien('Wtorek', $i); ?>
                     </td>
+
                     <td>
                         <?php echo pobierzdzien('Środa', $i); ?>
                     </td>
+
                     <td>
                         <?php echo pobierzdzien('Czwartek', $i); ?>
                     </td>
+
                     <td>
                         <?php echo pobierzdzien('Piątek', $i); ?>
                     </td>

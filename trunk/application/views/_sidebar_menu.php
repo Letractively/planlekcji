@@ -32,8 +32,6 @@
             <?php echo View::factory()->render('_menu_close_root'); ?>
         <?php endif; ?>
 
-        <hr/>
-
         <!-- plany lekcji -->
         <?php echo View::factory()->render('_menu_plany'); ?>
 

@@ -627,4 +627,53 @@ START;
         Kohana_Request::factory()->redirect('admin/users');
     }
 
+    public function action_backup() {
+        $view = new View('main');
+        $view2 = new View('admin_backup');
+        $view->set('content', $view2->render());
+        echo $view->render();
+    }
+
+    public function action_dobackup() {
+
+        $isf = new Kohana_Isf();
+        $isf->DbConnect();
+        $xml = new XMLWriter();
+        $xml->openMemory();
+        $xml->startDocument('1.0', 'UTF-8');
+        $xml->setIndent(4);
+        $xml->writeComment('---WYGENEROWANO APLIKACJA BACKUP PLAN LEKCJI');
+        $xml->writeComment('---WERSJA: testing, dnia ' . date('d.m.Y'));
+        $xml->startElement('backup');
+        foreach ($isf->DbSelect('sqlite_master', array('name'), 'where type=\'table\' order by name') as $row) {
+            $xml->startElement('table');
+            $xml->startAttribute('name');
+            $xml->text($row['name']);
+            $xml->endAttribute();
+
+            foreach ($isf->DbSelect($row['name'], array('*')) as $rowx) {
+                $xml->startElement('row');
+                foreach ($rowx as $attr => $value) {
+                    if (!is_numeric($attr)) {
+                        $xml->startElement($attr);
+                        $xml->text($value);
+                        $xml->endElement();
+                    }
+                }
+                $xml->endElement();
+            }
+            $xml->endAttribute();
+            $xml->endElement();
+        }
+        $xml->endElement();
+        $xml->endDocument();
+
+        header("Content-Type: application/force-download");
+        header("Content-Type: application/octet-stream");
+        header("Content-Type: application/download");
+        header("Content-Disposition: attachment; filename=backup.xml;");
+
+        echo $xml->flush();
+    }
+
 }

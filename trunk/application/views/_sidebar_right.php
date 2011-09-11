@@ -38,12 +38,6 @@ if ($zadmin > $toktime) {
             </li>
         </ul>
     </fieldset>
-    <?php if (App_Globals::getSysLv() == 3 && isset($_SESSION['token'])): ?>
-        <p>
-            <img src="<?php echo URL::base(); ?>lib/images/save.png" alt="" width="16" height="16"/>
-            <a href="#" onClick="window.open('<?php echo URL::base(); ?>export.php', 'moje', 'width=500,height=500,scrollbars=1')" >Eksport planu zajęć</a>
-        </p>
-    <?php endif; ?>
     <?php if ($_SESSION['user'] == 'root'): ?>
         <p>
             <a href="<?php echo URL::site('admin/zmiendane'); ?>">
@@ -57,6 +51,16 @@ if ($zadmin > $toktime) {
                 Wyczyść system
             </a>
         </p>
+        <?php if (App_Globals::getSysLv() == 3 && isset($_SESSION['token'])): ?>
+            <p>
+                <img src="<?php echo URL::base(); ?>lib/images/save.png" alt="" width="16" height="16"/>
+                <a href="#" onClick="window.open('<?php echo URL::base(); ?>export.php', 'moje', 'width=500,height=500,scrollbars=1')" >Eksport planu zajęć</a>
+            </p>
+        <?php endif; ?>
+        <p>
+            <img src="<?php echo URL::base(); ?>lib/images/save.png" alt="" width="16" height="16"/>
+            <a href="<?php echo URL::site('admin/backup'); ?>">Kopia zapasowa systemu</a>
+        </p>
         <p>
             <img src="<?php echo URL::base(); ?>lib/images/betasign.png" alt="" height="12"/>
         </p>
@@ -66,10 +70,6 @@ if ($zadmin > $toktime) {
                 <a href="#" onClick="window.open('<?php echo URL::base(); ?>generator.php', 'moje', 'width=500,height=500,scrollbars=1')" >Generator planu zajęć</a>
             </p>
         <?php endif; ?>
-        <p>
-            <img src="<?php echo URL::base(); ?>lib/images/save.png" alt="" width="16" height="16"/>
-            <a href="#" onClick="window.open('<?php echo URL::base(); ?>tools/backup.php', 'moje', 'width=500,height=500,scrollbars=1')" >Kopia zapasowa systemu</a>
-        </p>
     <?php endif; ?>
     <?php if ($_SESSION['user'] != 'root' && App_Globals::getSysLv() == 0): ?>
         <p>
