@@ -19,27 +19,22 @@ endif;
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/themes/<?php echo $_SESSION['app_theme']; ?>.css"/>
         <title>Plan lekcji - <?php echo $ns[1]['wartosc']; ?></title>
         <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style.css"/>
     </head>
     <body>
-        <div style="position: fixed; top: 0px; width: 100%; height: 80px; background: white;">
-            <h1>
-                <a href="#" onClick="confirmation();">
-                    <img src="<?php echo URL::base() ?>lib/images/save.png" alt="zapisz"/></a>
-                Edycja planu dla <?php echo $klasa; ?>
-            </h1>
-            <p class="error">&bull; Zapisanie planu spowoduje usunięcie planu dla grup dla danej klasy</p>
-            <br/>
-        </div>
-        <div style="margin-top: 120px">
-            <?php
-            $alternative = '<b>Przeglądarka nie obsługuje JavaScript?
+        <h1>
+            <a href="#" onClick="confirmation();">
+                <img src="<?php echo URL::base() ?>lib/images/save.png" alt="zapisz"/></a>
+            Edycja planu dla <?php echo $klasa; ?>
+        </h1>
+        <?php
+        $alternative = '<b>Przeglądarka nie obsługuje JavaScript?
                 Spróbuj <a href="' . URL::site('plan/klasaajax/' . $klasa . '/true') . '">metodę alternatywną</a></b>';
-            $customload = 'Trwa przypisywanie sal, przedmiotów i nauczycieli...';
-            echo $isf->JQUi_AjaxdivCreate('progress', true, false, $alternative, $customload);
-            ?>
-        </div>
+        $customload = ' Trwa przypisywanie sal, przedmiotów i nauczycieli...';
+        echo $isf->JQUi_AjaxdivCreate('progress', true, false, $alternative, $customload);
+        ?>
         <?php echo $isf->JQUi_MakeScript(); ?>
     </body>
 </html>

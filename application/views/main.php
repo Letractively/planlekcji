@@ -19,13 +19,23 @@ if (!isset($bodystr))
     $bodystr = null;
 $appver = App_Globals::getRegistryKey('app_ver');
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Plan lekcji - <?php echo App_Globals::getRegistryKey('nazwa_szkoly'); ?></title>
         <!-- [SEKCJA]: JavaScript -->
         <?php echo $script; ?>
+        <script type="text/javascript">
+            function ipl_togglediv(id) {
+                var e = document.getElementById(id);
+                if(e.style.display == '')
+                    e.style.display = 'none';
+                else
+                    e.style.display = '';
+            }
+
+        </script>
         <!-- [/SEKCJA] -->
         <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style.css"/>
         <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/themes/<?php echo $_SESSION['app_theme']; ?>.css"/>
@@ -35,6 +45,10 @@ $appver = App_Globals::getRegistryKey('app_ver');
         $isf->IE9_faviconset();
         $isf->IE9_WebAPP('Internetowy Plan Lekcji', 'Uruchom IPL 1.5', APP_PATH);
         $isf->IE9_apptask('Logowanie', 'index.php/admin/login');
+        if (App_Globals::getSysLv() == 3) {
+            $isf->IE9_apptask('Zestawienie planów', 'index.php/podglad/zestawienie');
+            $isf->IE9_apptask('Zastępstwa', 'index.php/zastepstwa/index');
+        }
         echo $isf->IE9_make();
         if (isset($_SESSION['token'])) {
             $zadmin = time() + 10 * 60;
@@ -47,14 +61,6 @@ $appver = App_Globals::getRegistryKey('app_ver');
         <!-- [/SEKCJA] -->
     </head>
     <body <?php echo $bodystr; ?>>
-
-        <?php if (Kohana_Isf::factory()->detect_ie()): ?>
-            <!-- [SEKCJA]: KOD DLA INTERNET EXPLORER -->
-            <div class="a_error" style="width: 100%">
-                Ta aplikacja jest niezgodna z przeglądarką Internet Explorer. Przepraszamy!
-            </div>
-            <!-- [/SEKCJA] -->
-        <?php endif; ?>
         <!-- [SEKCJA]: STRONA GŁÓWNA -->
         <div id="mainw">
             <table class="main">
@@ -74,10 +80,13 @@ $appver = App_Globals::getRegistryKey('app_ver');
                         <?php endif; ?>
 
                         <?php echo View::factory()->render('_sidebar_menu'); ?>
+                        <p class="app_ver">
+                            <a href="#" onClick="ipl_togglediv('ipl_tr_bottom');">Pokaż informacje o systemie</a>
+                        </p>
                     </td>
                     <!-- [/SEKCJA] -->
                     <!-- [SEKCJA]: PANEL TRESCI -->
-                    <td valign="top" style="width: 60%;">
+                    <td valign="top" style="width: 60%; margin-top: 0px; padding-top: 0px;">
                         <?php echo $content; ?>
                     </td>
                     <!-- [/SEKCJA] -->
@@ -87,7 +96,7 @@ $appver = App_Globals::getRegistryKey('app_ver');
                         <!-- [/SEKCJA] -->
                     <?php endif; ?>
 
-                <tr class="app_ver">
+                <tr class="app_ver" id="ipl_tr_bottom" style="display: none;">
                     <?php if ($_SESSION['token'] == null): ?>
                         <?php $colspan = '2'; ?>
                     <?php else: ?>
@@ -95,25 +104,7 @@ $appver = App_Globals::getRegistryKey('app_ver');
                     <?php endif; ?>
                     <!-- [SEKCJA]: PANEL DOLNY -->
                     <td colspan="<?php echo $colspan; ?>">
-                        <div>
-                            <form action="<?php echo URL::site('default/look'); ?>" method="post" onchange="document.forms['lookf'].submit();" id="lookf" name="lookf">
-                                Wybierz wygląd:
-                                <select name="look">
-                                    <?php foreach (App_Globals::getThemes() as $theme): ?>
-                                        <?php if ($_SESSION['app_theme'] == $theme): ?>
-                                            <option selected><?php echo $theme; ?></option>
-                                        <?php else: ?>
-                                            <option><?php echo $theme; ?></option>    
-                                        <?php endif; ?>
-                                    <?php endforeach; ?>
-                                </select>
-                                <input type="hidden" name="site" value="<?php echo str_replace('index.php/', '', $_SERVER['REQUEST_URI']); ?>"/>
-                            </form>
-                            <div id="foot">
-                                <b>Plan lekcji </b><?php echo $appver; ?> - <?php echo App_Globals::getRegistryKey('nazwa_szkoly'); ?> |
-                                <a href="http://planlekcji.googlecode.com" target="_blank">strona projektu Plan Lekcji</a>
-                            </div>
-                        </div>
+                        <?php echo View::factory()->render('_panel_bottom'); ?>
                     </td>
                     <!-- [/SEKCJA]-->
                 </tr>

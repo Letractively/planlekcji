@@ -57,13 +57,13 @@ class Controller_Default extends Controller {
         $view->set('content', $content);
         echo $view->render();
     }
-    
-    public function action_look(){
-        if(!isset($_POST)){
+
+    public function action_look() {
+        if (!isset($_POST)) {
             Kohana_Request::factory()->redirect();
             exit;
         }
-        $_SESSION['app_theme']=$_POST['look'];
+        $_SESSION['app_theme'] = $_POST['look'];
         Kohana_Request::factory()->redirect($_POST['site']);
     }
 

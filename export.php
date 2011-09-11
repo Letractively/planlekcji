@@ -68,7 +68,7 @@ if (file_exists('tools/planlekcji.zip')) {
 
 $zip = new ZipArchive();
 
-if ($zip->open('tools/planlekcji.zip', ZIPARCHIVE::CREATE) !== TRUE) {
+if ($zip->open('export/planlekcji.zip', ZIPARCHIVE::CREATE) !== TRUE) {
     die('Nie udalo sie utworzyc pliku planlekcji.zip. <a href="index.php">Powrót</a>');
 }
 
@@ -172,8 +172,9 @@ function klasafile($klasa) {
     return $ret;
 }
 
+echo PHP_EOL . 'Kompilowanie klas';
 foreach ($isf->DbSelect('klasy', array('*')) as $rid => $rcl) {
-    echo 'Kompilowanie klas...';
+    echo '.';
     flush();
     ob_flush();
     $zip->addFromString('klasa/' . $rcl['klasa'] . '.html', klasafile($rcl['klasa']));
@@ -197,8 +198,9 @@ function salafile($sala) {
     return $ret;
 }
 
+echo PHP_EOL . 'Kompilowanie sal';
 foreach ($isf->DbSelect('sale', array('*')) as $rid => $rcl) {
-    echo 'Kompilowanie sal...';
+    echo '.';
     flush();
     ob_flush();
     $zip->addFromString('sala/' . $rcl['sala'] . '.html', salafile($rcl['sala']));
@@ -222,8 +224,9 @@ function nlfile($skrot) {
     return $ret;
 }
 
+echo PHP_EOL . 'Kompilowanie nauczycieli';
 foreach ($isf->DbSelect('nauczyciele', array('*')) as $rid => $rcl) {
-    echo 'Kompilowanie nauczycieli...';
+    echo '.';
     flush();
     ob_flush();
     $zip->addFromString('nauczyciel/' . $rcl['skrot'] . '.html', nlfile($rcl['skrot']));
@@ -247,10 +250,10 @@ function zfile() {
     return $ret;
 }
 
-echo 'Finalizowanie...' . PHP_EOL;
+echo PHP_EOL . 'Finalizowanie...' . PHP_EOL;
 
 $zip->addFromString('nauczyciel/zestawienie.html', zfile());
 $zip->close();
 
 echo 'Kompilacja zakonczona</pre>';
-echo '<h3><a href="tools/planlekcji.zip">Pobierz archiwum z planem zajęć</a></h3></body></html>';
+echo '<h3><a href="export/planlekcji.zip">Pobierz archiwum z planem zajęć</a></h3></body></html>';
