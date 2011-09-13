@@ -79,7 +79,7 @@ function pobierzzast($id) {
         <title>Drukowanie zastępstw</title>
         <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style_print.css"/>
     </head>
-    <body>
+    <body style="max-width: 20cm;">
         <?php if (isset($_POST['print'])): ?>
             <?php foreach ($_POST['print'] as $rid => $rcl): ?>
                 <?php pobierzzast($rid); ?>

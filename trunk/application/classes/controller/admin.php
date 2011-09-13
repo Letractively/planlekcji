@@ -154,11 +154,7 @@ class Controller_Admin extends Controller {
         if (!isset($_POST['inpToken'])) {
             $_POST['inpToken'] = '';
         }
-        if ($login != 'root') {
-            $msg = $this->wsdl->call('doUserLogin', array('login' => $login, 'haslo' => $haslo, 'token' => $_POST['inpToken']), 'webapi.planlekcji.isf');
-        } else {
-            $msg = $this->wsdl->call('doLogin', array('login' => $login, 'haslo' => $haslo, 'token' => $_POST['inpToken']), 'webapi.planlekcji.isf');
-        }
+        $msg = $this->wsdl->call('doLogin', array('login' => $login, 'haslo' => $haslo, 'token' => $_POST['inpToken']), 'webapi.planlekcji.isf');
         if ($msg != 'auth:failed' && $msg != 'auth:locked') {
             $_SESSION['token'] = $msg;
             $_SESSION['user'] = $login;

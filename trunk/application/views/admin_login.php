@@ -10,22 +10,30 @@ if (!isset($_POST['inpLogin'])) {
 <div class="a_odd" style="width: 100%;">
     Logowanie metodą RAND_TOKEN
 </div>
-
+<style type="text/css">
+    input{
+        height: 18pt;
+        font-size: 18pt;
+    }
+    button{
+        font-size: 14pt;
+    }
+</style>
 <form action="<?php echo url::site('admin/dologin'); ?>" method="post" name="lgn">
     <div class="a_light_menu" style="width: 100%;">
         <table border="0">
             <tbody>
                 <tr>
                     <td>Login</td>
-                    <td><input style="width: 150px;" type="text" name="inpLogin" value="<?php echo $_POST['inpLogin']; ?>"/></td>
+                    <td><input style="width: 100%;" type="text" name="inpLogin" value="<?php echo $_POST['inpLogin']; ?>"/></td>
                 </tr>
                 <tr>
                     <td>Hasło</td>
-                    <td><input style="width: 150px;" type="password" name="inpHaslo"/></td>
+                    <td><input style="width: 100%;" type="password" name="inpHaslo"/></td>
                 </tr>
                 <tr>
                     <td>Token sesji</td>
-                    <td><input style="width: 150px;" type="text" name="inpToken"/></td>
+                    <td><input style="width: 100%;" type="text" name="inpToken"/></td>
                 </tr>
                 <?php if ($pass == 'false'): ?>
                     <tr class="a_error">

@@ -35,13 +35,18 @@ function pobierzdzien($id) {
     $day = date('l', strtotime($nl[1]['dzien']));
     $dzien = $enpl_days[$day];
 
-    echo '<table class="przed" style="width: 400px"><thead style="background: #6699ff;">
-            <tr><td colspan=3><h1>Zastępstwo za ' . $nauczyciel . '</h1>
+    echo '<table class="przed" style="width: 400px"><thead class="a_odd">
+            <tr><td colspan=3><h1>' . $nauczyciel . '</h1>
                 <h3>' . $dzien . ' - ' . $nl[1]['dzien'] . '</h3></td></tr>
-        <tr><td width=25></td><td>Lekcja</td></tr></thead>';
+        <tr><td width="20"></td><td>Lekcja</td></tr></thead>';
     foreach ($isf->DbSelect('lek_godziny', array('*')) as $rowid => $rowcol) {
         $lek_nr = $rowid;
-        echo '<tr><td>' . $rowid . '</td><td>';
+        if ($lek_nr % 2 == 0) {
+            echo '<tr class="a_even"><td>';
+        } else {
+            echo '<tr><td>';
+        }
+        echo $rowid . '</td><td>';
         $res = $isf->DbSelect('planlek', array('*'), 'where nauczyciel=\'' . $nauczyciel . '\'
             and dzien=\'' . $dzien . '\' and lekcja=\'' . $rowid . '\'');
         if (count($res) == 1) {
@@ -74,6 +79,6 @@ function pobierzzast($id) {
 
 ?>
 <p>
-<h3><a href="<?php echo URL::site('zastepstwa/index'); ?>">Powrót do zastępstw</a></h3>
+    <b><</b>&emsp;<a href="<?php echo URL::site('zastepstwa/index'); ?>">Powrót do zastępstw</a>
 </p>
 <?php pobierzzast($zast_id); ?>

@@ -146,7 +146,6 @@ class Controller_Zastepstwa extends Controller {
      * @param integer $id numer zastepstwa
      */
     public function action_przeglad($id) {
-        session_start();
         $view = view::factory('main');
         $view2 = view::factory('zastepstwa_przeglad');
 
