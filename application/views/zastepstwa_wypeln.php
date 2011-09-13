@@ -47,36 +47,48 @@ function pobierznl($dzien, $lekcja) {
 function pobierzdzien($dzien, $nauczyciel) {
     $isf = new Kohana_Isf();
     $isf->DbConnect();
-    echo '<table class="przed"><thead style="background: #6699ff">
-        <tr><td></td><td>Godzina</td><td>Lekcja</td></tr></thead>';
+    echo '<table class="przed"><thead class="a_odd">
+        <tr><td></td><td>Godzina</td><td colspan=2>Lekcja</td></tr></thead>';
+    $i_l=0;
     foreach ($isf->DbSelect('lek_godziny', array('*')) as $rowid => $rowcol) {
         $lek_nr = $rowid;
-        echo '<tr><td>' . $rowid . '</td><td>' . $rowcol['godzina'] . '</td><td>';
+        if ($lek_nr % 2 == 0) {
+            echo '<tr class="a_even"><td>';
+        } else {
+            echo '<tr><td>';
+        }
+        echo $rowid . '</td><td>' . $rowcol['godzina'] . '</td>';
         $res = $isf->DbSelect('planlek', array('*'), 'where nauczyciel=\'' . $nauczyciel . '\'
             and dzien=\'' . $dzien . '\' and lekcja=\'' . $rowid . '\'');
         if (count($res) == 1) {
-            echo '<p class="grplek">
+            $i_l++;
+            echo '<td><p class="grplek">
                 <b>' . $res[1]['klasa'] . '</b> - ' . $res[1]['przedmiot'] . ' (' . $res[1]['sala'] . ')
                     </p>';
+            echo '</td><td>';
             pobierznl($dzien, $rowid);
             echo '</td></tr>';
         } else {
             $res = $isf->DbSelect('plan_grupy', array('*'), 'where nauczyciel=\'' . $nauczyciel . '\'
             and dzien=\'' . $dzien . '\' and lekcja=\'' . $lek_nr . '\'');
             if (count($res)>0) {
+                $i_l++;
                 foreach ($res as $rowid => $rowcol) {
-                    echo '<p class="grplek">
+                    echo '<td><p class="grplek">
                 <b>' . $rowcol['klasa'] . ' gr ' . $rowcol['grupa'] . '</b> - ' . $rowcol['przedmiot'] . ' (' . $rowcol['sala'] . ')
                     </p>';
                 }
                 pobierznl($dzien, $lek_nr);
                 echo '</td></tr>';
             } else {
-                echo '---</td></tr>';
+                echo '<td colspan=2>---</td></tr>';
             }
         }
     }
     echo '</table>';
+    if($i_l==0){
+        Kohana_Request::factory()->redirect('zastepstwa/edycja/brak');
+    }
 }
 ?>
 <h1>
@@ -84,7 +96,7 @@ function pobierzdzien($dzien, $nauczyciel) {
         <img src="<?php echo URL::base() ?>lib/images/save.png" alt="zapisz"/></a>
     Zastępstwo za <?php echo $nauczyciel; ?>
 </h1>
-<h3>W dniu <?php echo $data; ?> (<?php echo $dzien; ?>)</h3>
+<h3><a href="<?php echo URL::site('zastepstwa/edycja'); ?>">Powrót</a>&emsp;W dniu <?php echo $data; ?> (<?php echo $dzien; ?>)</h3>
 <p><b>Komentarz: </b><i><?php echo $komentarz; ?></i></p>
 <form name="formPlan" action="<?php echo URL::site('zastepstwa/zatwierdz'); ?>" method="post">
     <?php pobierzdzien($dzien, $nauczyciel); ?>
