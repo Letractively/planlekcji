@@ -39,7 +39,7 @@ namespace com\planlekcji {
             }
         }
 
-        public function DbInit($szkola) {
+        public function DbInit($szkola, $ver) {
             $this->Isf->DbDelete('rejestr', 'opcja like \'%\'');
             $this->Isf->DbDelete('uzytkownicy', 'login like \'%\'');
             $this->Isf->DbDelete('tokeny', 'token like \'%\'');
@@ -186,12 +186,12 @@ namespace com\planlekcji {
 
             $this->Isf->DbInsert('rejestr', array(
                 'opcja' => 'app_ver',
-                'wartosc' => '1.5 dev pgsql'
+                'wartosc' => $ver
             ));
 
             $this->Isf->DbInsert('rejestr', array(
                 'opcja' => 'randtoken_version',
-                'wartosc' => '1.5 dev pgsql'
+                'wartosc' => $ver
             ));
 
             $this->Isf->DbInsert('log', array(
