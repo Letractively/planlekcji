@@ -1,0 +1,146 @@
+body{
+    font: 80% sans-serif;
+    margin: 5px;
+    max-width: 100%;
+}
+.ui-button-text-only .ui-button-text {
+    padding: 0.3em 1em;
+}
+.app_info{
+    font-size: x-large;
+}
+.app_ver{
+    font-size: x-small;
+}
+.a_klasy{
+    line-height: 200%;
+}
+input{
+    border: 1px solid;
+}
+#mainw{
+    max-height: 100%;
+
+}
+.a_error{
+    background-color: red;
+    margin-top: 0px;
+    padding: 5px;
+    color: white;
+}
+.button-jq { 
+    outline: 0; 
+    margin:0 4px 0 0; 
+    padding: .4em 1em; 
+    text-decoration:none !important; 
+    cursor:pointer; 
+    position: relative; 
+    text-align: center;
+}
+img{
+    border: 0px;
+}
+h1{
+    font-size: 18pt;
+}
+.anac{
+    color: #330033;
+    font-weight: bold;
+}
+h3{
+    font-size: 11pt;
+}
+a{
+    color: blue;
+}
+a:visited{
+    color: blue;
+}
+a:hover{
+    color: red;
+}
+label{
+    font-weight: bold;
+}
+a:hover{
+    color: #ff3300
+}
+li{
+    margin-top: 5px;
+}
+#top{
+    height: auto;
+    margin-bottom: 15px;
+}
+#middle{
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+table{
+    font-size: 10pt;
+}
+td{
+    padding: 5px;
+}
+thead{
+    font-weight: bold;
+}
+.info{
+    font-style: italic;
+}
+.grplek{
+    font-size: 9pt;
+    margin: 0px;
+}
+.ui-timepicker-div .ui-widget-header{ margin-bottom: 8px; }
+.ui-timepicker-div dl{ text-align: left; }
+.ui-timepicker-div dl dt{ height: 25px; }
+.ui-timepicker-div dl dd{ margin: -25px 0 10px 65px; }
+.ui-timepicker-div td { font-size: 90%; }
+select{
+    margin: 5px;
+}
+hr {
+    height: 0;
+    border-top: 0px none;
+    border-bottom: 1px dotted #000;
+}
+.notice{
+    color: darkgreen;
+}
+.hlt{
+    color: #f6bc3e;
+}
+.error{
+    color: red;
+}
+table.przed {
+    border-width: 0px;
+    border-spacing: 0px;
+    border-style: solid;
+    border-color: green;
+    border-collapse: collapse;
+}
+table.przed th {
+    border-width: 1px;
+    padding: 3px;
+    border-style: solid;
+    border-color: black;
+}
+table.przed td {
+    border-width: 1px;
+    padding: 3px;
+    border-style: solid;
+    border-color: black;
+}
+table.main {
+    border-width: 0px;
+    width: 100%;
+    max-width: 100%;
+}
+
+tr.zestdzien{
+    background: #ffff99;
+    font-weight: bold;
+    text-align: center;
+}
