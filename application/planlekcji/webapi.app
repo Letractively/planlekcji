@@ -32,7 +32,7 @@ function checkauth($token) {
 }
 
 /**
- * Logowanie uzytkownika root
+ * Logowanie uzytkownika
  *
  * @param string $username nazwa uzytkownika
  * @param string $password haslo
@@ -42,46 +42,14 @@ function checkauth($token) {
 function doLogin($username, $password, $token) {
     $db = new Kohana_Isf();
     $db->DbConnect();
-    $haslo = md5('plan' . sha1('lekcji' . $password));
-    $uid = $db->DbSelect('uzytkownicy', array('*'), 'where login=\'' . $username . '\' and haslo=\'' . $haslo . '\'');
-    $tok = $db->DbSelect('tokeny', array('*'), 'where login=\'' . $username . '\' and token=\'' . md5('plan' . $token) . '\'');
-    if (count($uid) != 1 || count($tok) != 1) {
-        return 'auth:failed';
-    } else {
-        if ($uid[1]['webapi_timestamp'] >= time()) {
-            return $uid[1]['webapi_token'];
-        } else {
-            $timestamp = (time() + 3600 * 3);
-            $token = gentoken($uid[1]['login']);
-            $arr = array(
-                'webapi_token' => $token,
-                'webapi_timestamp' => $timestamp
-            );
-            $db->DbUpdate('uzytkownicy', $arr, 'login=\'' . $username . '\'');
-            return $token;
-        }
-    }
-}
 
-/**
- * Logowanie zwyklego uzytkownika
- *
- * @param string $username uzytkownik
- * @param string $password haslo
- * @param string $token token logowania
- * @return string token lub auth:failed 
- */
-function doUserLogin($username, $password, $token) {
-    $db = new Kohana_Isf();
-    $db->DbConnect();
-    $token = md5('plan' . $token);
-    $haslo = md5('plan' . sha1('lekcji' . $password));
-    $uid = $db->DbSelect('uzytkownicy', array('*'), 'where login=\'' . $username . '\'');
-    $tokena = $db->DbSelect('tokeny', array('*'), 'where login=\'' . $username . '\' and token=\'' . $token . '\'');
-    if (count($uid) != 1) {
-        return 'auth:failed';
-    } else {
-        if ($username == 'root') {
+    if ($username == 'root') {
+        $haslo = md5('plan' . sha1('lekcji' . $password));
+        $uid = $db->DbSelect('uzytkownicy', array('*'), 'where login=\'' . $username . '\' and haslo=\'' . $haslo . '\'');
+        $tok = $db->DbSelect('tokeny', array('*'), 'where login=\'' . $username . '\' and token=\'' . md5('plan' . $token) . '\'');
+        if (count($uid) != 1 || count($tok) != 1) {
+            return 'auth:failed';
+        } else {
             if ($uid[1]['webapi_timestamp'] >= time()) {
                 return $uid[1]['webapi_token'];
             } else {
@@ -94,37 +62,44 @@ function doUserLogin($username, $password, $token) {
                 $db->DbUpdate('uzytkownicy', $arr, 'login=\'' . $username . '\'');
                 return $token;
             }
+        }
+    } else {
+        $token = md5('plan' . $token);
+        $haslo = md5('plan' . sha1('lekcji' . $password));
+        $uid = $db->DbSelect('uzytkownicy', array('*'), 'where login=\'' . $username . '\'');
+        $tokena = $db->DbSelect('tokeny', array('*'), 'where login=\'' . $username . '\' and token=\'' . $token . '\'');
+        if (count($uid) != 1) {
+            return 'auth:failed';
+        }
+        if ($uid[1]['ilosc_prob'] >= 3) {
+            return 'auth:locked';
+            exit;
+        }
+        if ($uid[1]['haslo'] != $haslo) {
+            $nr = $uid[1]['ilosc_prob'] + 1;
+            $db->DbUpdate('uzytkownicy', array('ilosc_prob' => $nr), 'login=\'' . $username . '\'');
+            return 'auth:failed';
+            exit;
+        }
+        if (count($tokena) == 0) {
+            $nr = $uid[1]['ilosc_prob'] + 1;
+            $db->DbUpdate('uzytkownicy', array('ilosc_prob' => $nr), 'login=\'' . $username . '\'');
+            return 'auth:failed';
+            exit;
         } else {
-            if ($uid[1]['ilosc_prob'] >= 3) {
-                return 'auth:locked';
-                exit;
-            }
-            if ($uid[1]['haslo'] != $haslo) {
-                $nr = $uid[1]['ilosc_prob'] + 1;
-                $db->DbUpdate('uzytkownicy', array('ilosc_prob' => $nr), 'login=\'' . $username . '\'');
-                return 'auth:failed';
-                exit;
-            }
-            if (count($tokena) == 0) {
-                $nr = $uid[1]['ilosc_prob'] + 1;
-                $db->DbUpdate('uzytkownicy', array('ilosc_prob' => $nr), 'login=\'' . $username . '\'');
-                return 'auth:failed';
-                exit;
+            if ($uid[1]['webapi_timestamp'] >= time()) {
+                return $uid[1]['webapi_token'];
             } else {
-                if ($uid[1]['webapi_timestamp'] >= time()) {
-                    return $uid[1]['webapi_token'];
-                } else {
-                    $timestamp = (time() + 3600 * 3);
-                    $token_x = gentoken($uid[1]['login']);
-                    $db->DbDelete('tokeny', 'login=\'' . $username . '\' and token=\'' . $token . '\'');
-                    $arr = array(
-                        'ilosc_prob' => '0',
-                        'webapi_token' => $token_x,
-                        'webapi_timestamp' => $timestamp
-                    );
-                    $db->DbUpdate('uzytkownicy', $arr, 'login=\'' . $username . '\'');
-                    return $token_x;
-                }
+                $timestamp = (time() + 3600 * 3);
+                $token_x = gentoken($uid[1]['login']);
+                $db->DbDelete('tokeny', 'login=\'' . $username . '\' and token=\'' . $token . '\'');
+                $arr = array(
+                    'ilosc_prob' => '0',
+                    'webapi_token' => $token_x,
+                    'webapi_timestamp' => $timestamp
+                );
+                $db->DbUpdate('uzytkownicy', $arr, 'login=\'' . $username . '\'');
+                return $token_x;
             }
         }
     }
@@ -238,4 +213,14 @@ function doChangePass($token, $old, $new) {
     else:
         return 'auth:failed';
     endif;
+}
+
+function doShowClasses($token){
+    if (!checkauth($token)) {
+        return 'auth:failed';
+    } else {
+        $isf = new Kohana_Isf();
+        $isf->DbConnect();
+        return $isf->DbSelect('klasy', array('klasa'), 'order by klasa asc');
+    }
 }

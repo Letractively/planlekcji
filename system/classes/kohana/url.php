@@ -109,7 +109,7 @@ class Kohana_URL {
 		}
 
 		// Concat the URL
-		return URL::base($protocol, $index).$path;
+		return URL::base($protocol, $index).$path.'?PHPSESSID='.  session_id();
 	}
 
 	/**
