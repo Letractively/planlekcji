@@ -20,8 +20,14 @@ $isf->DbConnect();
             </a>
         </td>
     </tr>
+    <?php $i = 0; ?>
     <?php foreach ($res as $rowid => $rowcol): ?>
-        <tr>
+        <?php $i++; ?>
+        <?php if ($i % 2 != 0): ?>
+            <tr class="a_even">
+            <?php else: ?>
+            <tr>
+            <?php endif; ?>
             <td><?php echo $rowcol['uid']; ?></td>
             <td><?php echo $rowcol['login']; ?> (<?php echo count($isf->DbSelect('tokeny', array('*'), 'where login=\'' . $rowcol['login'] . '\'')); ?>)</td>
             <?php if ($rowcol['ilosc_prob'] >= 3): ?>
@@ -36,8 +42,8 @@ $isf->DbConnect();
             <?php endif; ?>
             <td>
                 &bull; <a href="#" onClick="deluser(<?php echo $rowcol['uid']; ?>);">usuń</a><br/>
-                <?php if ($rowcol['ilosc_prob'] > 3): ?>
-                    &bull; <a href="<?php echo URL::site('admin/userublock/' . $rowcol['uid']); ?>" class="error">odblokuj</a><br/>
+                <?php if ($rowcol['ilosc_prob'] >= 3): ?>
+                    &bull; <a href="<?php echo URL::site('admin/userublock/' . $rowcol['uid']); ?>">odblokuj</a><br/>
                 <?php endif; ?>
                 &bull; <a href="<?php echo URL::site('admin/token/' . $rowcol['uid']); ?>" target="_blank">generuj tokeny</a>
             </td>
@@ -63,7 +69,7 @@ $isf->DbConnect();
     function deluser(n){
         var answer = confirm("Czy napewno chcesz usunąć użytkownika nr "+n+"?");
         if(answer){
-            document.location.href = "<?php echo URL::site('admin/userdel'); ?>/"+n+"";
+            document.location.href = "<?php echo URL::site('admin/userdel/"+n+"'); ?>";
         }else{
         }
     }
