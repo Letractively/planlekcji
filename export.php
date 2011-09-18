@@ -20,8 +20,8 @@ if (!extension_loaded('curl')) {
 if (!class_exists('ZipArchive')) {
     die('Wymagana jest obsluga <b>ZipArchive</b>');
 }
-if (!is_writable('tools')) {
-    die('Katalog <b>tools</b> musi byc zapisywalny');
+if (!is_writable('export')) {
+    die('Katalog <b>export</b> musi byc zapisywalny');
 }
 /**
  * Dolacza niezbedne pliki
@@ -62,8 +62,8 @@ if ($reg[1]['wartosc'] != 3) {
     die('Dopoki plany nie zostana zatwierdzone, nie mozna wygenerowac planu. <a href="index.php">Powrót</a>');
 }
 
-if (file_exists('tools/planlekcji.zip')) {
-    unlink('tools/planlekcji.zip');
+if (file_exists('export/planlekcji.zip')) {
+    unlink('export/planlekcji.zip');
 }
 
 $zip = new ZipArchive();
