@@ -43,7 +43,7 @@ $appver = App_Globals::getRegistryKey('app_ver');
         <?php
         $isf = new Kohana_Isf();
         $isf->IE9_faviconset();
-        $isf->IE9_WebAPP('Internetowy Plan Lekcji', 'Uruchom IPL 1.5', APP_PATH);
+        $isf->IE9_WebAPP('Internetowy Plan Lekcji', 'Uruchom IPL', APP_PATH);
         $isf->IE9_apptask('Logowanie', 'index.php/admin/login');
         if (App_Globals::getSysLv() == 3) {
             $isf->IE9_apptask('Zestawienie planów', 'index.php/podglad/zestawienie');
@@ -66,20 +66,21 @@ $appver = App_Globals::getRegistryKey('app_ver');
             <table class="main">
                 <tr style="vertical-align: top">
                     <!-- [SEKCJA]: PANEL LEWY -->
-                    <td style="width: 20%; padding-right: 10px;" class="a_light_menu">
+                    <td style="width: 20%; padding-right: 10px; padding-top: 0px; padding-left: 0px;" class="a_light_menu">
                         <div class="app_info">
                             <a href="<?php echo URL::site('default/index'); ?>">
                                 <img src="<?php echo URL::base(); ?>lib/images/home.png" alt="" width="24" height="24"/></a>
                             Plan Lekcji
+                            <?php echo View::factory()->render('_snippet_theme'); ?>
                         </div>
-
                         <?php if (preg_match('#dev#', $appver)): ?>
                             <div class="a_error" style="width: 100%; font-size: x-small;">
                                 Używasz wersji rozwojowej systemu
                             </div>
                         <?php endif; ?>
-
-                        <?php echo View::factory()->render('_sidebar_menu'); ?>
+                        <div id="sidebar_menu" style="padding-left: 10px;">
+                            <?php echo View::factory()->render('_sidebar_menu'); ?>
+                        </div>
                         <p class="app_ver">
                             <a href="#" onClick="ipl_togglediv('ipl_tr_bottom');">Pokaż informacje o systemie</a>
                         </p>

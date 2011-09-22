@@ -598,7 +598,7 @@ START;
             Kohana_Request::factory()->redirect('admin/adduser/leng');
             exit;
         }
-        if (preg_match('/([!@#$;%^&*()+|])/i', $login)) {
+        if (preg_match('/([!@#$;%^&*()+| ])/i', $login)) {
             Kohana_Request::factory()->redirect('admin/adduser/data');
             exit;
         }

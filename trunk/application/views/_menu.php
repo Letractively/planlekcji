@@ -28,24 +28,7 @@ else:
                 Zestawienie planów
             </a>
         </p>
-        <h3>Plany lekcji według klas</h3>
-        <p class="a_klasy">
-            <?php foreach ($isf->DbSelect('klasy', array('*'), 'order by klasa asc') as $rw => $rc): ?>
-                <a target="_blank" href="<?php echo URL::site('podglad/klasa/' . $rc['klasa']); ?>"><?php echo $rc['klasa']; ?></a>&emsp;
-            <?php endforeach; ?>
-        </p>
-        <h3>Plany lekcji według sali</h3>
-        <p class="a_klasy">
-            <?php foreach ($isf->DbSelect('sale', array('*'), 'order by sala asc') as $rw => $rc): ?>
-                <a target="_blank" href="<?php echo URL::site('podglad/sala/' . $rc['sala']); ?>"><?php echo $rc['sala']; ?></a>&emsp;
-            <?php endforeach; ?>    
-        </p>
-        <h3>Plany lekcji według nauczycieli</h3>
-        <p class="a_klasy">
-            <?php foreach ($isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc') as $rw => $rc): ?>
-                <?php echo $rc['skrot']; ?>-<a href="<?php echo URL::site('podglad/nauczyciel/' . $rc['skrot']); ?>" target="_blank"><?php echo $rc['imie_naz']; ?></a>&emsp;
-            <?php endforeach; ?>    
-        </p>
+        <?php echo View::factory('_menu_plany')->render(); ?>
     <?php else: ?>
         <p class="info">Dopóki system edycji planów będzie otwarty, nie ma możliwości
             podglądu planu zajęć oraz zastępstw.</p>

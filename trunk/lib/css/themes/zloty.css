@@ -1,5 +1,5 @@
 .a_odd{
-    background-color: gold;
+    background-color: #f1db48;
     margin-top: 0px;
     padding: 5px;
 }
@@ -13,17 +13,18 @@ a.anodd:active{
 a.anodd:visited{
 }
 .a_light_menu{
+    background-color: #f1f1ae;
     margin-top: 0px;
     padding: 5px;
 }
 .a_even{
-    background-color: lightyellow;
+    background-color: #f7f7a9;
     margin-top: 0px;
     padding: 5px;
 }
 .app_info{
     width:100%;
-    background-color: gold;
+    background-color: #f1db48;
     margin-top: 0px;
     padding: 5px;
     text-shadow: gray 1px 1px 3px;
@@ -32,8 +33,11 @@ a.anodd:visited{
 }
 .app_ver{
     width:100%;
-    background-color: lightyellow;
+    background-color: #f1db48;
     margin-top: 0px;
     padding: 5px;
     text-align: right;
+}
+button{
+    background-color: gold;
 }

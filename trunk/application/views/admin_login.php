@@ -15,9 +15,6 @@ if (!isset($_POST['inpLogin'])) {
         height: 18pt;
         font-size: 18pt;
     }
-    button{
-        font-size: 14pt;
-    }
 </style>
 <form action="<?php echo url::site('admin/dologin'); ?>" method="post" name="lgn">
     <div class="a_light_menu" style="width: 100%;">
@@ -57,7 +54,8 @@ if (!isset($_POST['inpLogin'])) {
                     </tr>
                 <?php endif; ?>
                 <tr style="text-align: center">
-                    <td colspan="2">
+                    <td></td>
+                    <td>
                         <button type="submit" name="btnSubmit" id="btnSubmit">Zaloguj</button>&emsp;
                         <button type="reset" name="btnReset" id="btnReset">Wyczyść dane</button>
                     </td>
