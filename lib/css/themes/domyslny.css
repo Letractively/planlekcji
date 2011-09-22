@@ -44,3 +44,7 @@ a.anodd:visited{
     padding: 5px;
     text-align: right;
 }
+button{
+    background-color: #2B6FB6;
+    color: white;
+}

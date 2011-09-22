@@ -28,6 +28,9 @@ function pobierz_klasy($dzien, $lekcja) {
     $isf = new Kohana_Isf();
     $isf->DbConnect();
 
+    $apg = new App_Globals();
+    $ilgr = $apg->getRegistryKey('ilosc_grup');
+
     $godziny = $isf->DbSelect('lek_godziny', array('*'), 'where lekcja=\'' . $lekcja . '\'');
     echo '<tr><td><b>' . $lekcja . '</b></td><td><i>' . $godziny[1]['godzina'] . '</i></td>';
     $klasy = $isf->DbSelect('klasy', array('*'));
@@ -37,7 +40,10 @@ function pobierz_klasy($dzien, $lekcja) {
                     and lekcja=\'' . $lekcja . '\'');
         if (count($lek) != 0) {
             if (isset($lek[1]['sala']) && isset($lek[1]['skrot'])) {
-                echo '<b>' . $lek[1]['przedmiot'] . '</b> <a href=\'' . URL::site('podglad/sala/' . $lek[1]['sala']) . '\'>' . $lek[1]['sala'] . '</a> <a href=\'' . URL::site('podglad/nauczyciel/' . $lek[1]['skrot']) . '\'>' . $lek[1]['skrot'] . '</a>';
+                echo '<b>' . $lek[1]['przedmiot'] . '</b>
+                    <span class="grptxt">
+                    <a href=\'' . URL::site('podglad/sala/' . $lek[1]['sala']) . '\'>' . $lek[1]['sala'] . '</a> <a href=\'' . URL::site('podglad/nauczyciel/' . $lek[1]['skrot']) . '\'>' . $lek[1]['skrot'] . '</a>
+                        </span>';
             } else {
                 echo '<b>' . $lek[1]['przedmiot'] . '</b>';
             }
@@ -46,10 +52,14 @@ function pobierz_klasy($dzien, $lekcja) {
                     and lekcja=\'' . $lekcja . '\' order by grupa asc');
             foreach ($lek as $rowid => $rowcol) {
                 if (isset($rowcol['sala']) && isset($rowcol['skrot'])) {
-                    echo '<p class=\'grplek\'>gr ' . $rowcol['grupa'] . ' - <b>' . $lek[1]['przedmiot'] . '</b> <a href=\'' . URL::site('podglad/sala/' . $lek[1]['sala']) . '\'>' . $lek[1]['sala'] . '</a>
-                        <a href=\'' . URL::site('podglad/nauczyciel/' . $lek[1]['skrot']) . '\'>' . $lek[1]['skrot'] . '</a></p>';
+                    echo '<p class=\'grplek\'><b>' . $rowcol['przedmiot'] . '</b>
+                        <span class="grptxt">
+                        ' . $rowcol['grupa'] . '/' . $ilgr . '
+                        <a href=\'' . URL::site('podglad/sala/' . $lek[1]['sala']) . '\'>' . $rowcol['sala'] . '</a>
+                        <a href=\'' . URL::site('podglad/nauczyciel/' . $lek[1]['skrot']) . '\'>' . $rowcol['skrot'] . '</a>
+                        </span></p>';
                 } else {
-                    echo '<p class=\'grplek\'>gr ' . $rowcol['grupa'] . ' - <b>' . $rowcol['przedmiot'] . '</b></p>';
+                    echo '<p class=\'grplek\'><b>' . $rowcol['przedmiot'] . '</b> <span class="grptxt">' . $rowcol['grupa'] . '/'.$ilgr.'</span></p>';
                 }
             }
         }
@@ -61,7 +71,10 @@ function pobierz_klasy($dzien, $lekcja) {
         $lek = $isf->DbSelect('planlek', array('*'), 'where dzien=\'' . $dzien . '\' and nauczyciel=\'' . $rowcol['imie_naz'] . '\'
                     and lekcja=\'' . $lekcja . '\'');
         if (count($lek) == 1) {
-            echo '<p class=\'grplek\'><b>' . $lek[1]['klasa'] . '</b> <a href=\'' . URL::site('podglad/sala/' . $lek[1]['sala']) . '\'>' . $lek[1]['sala'] . '</a></p>';
+            echo '<p class=\'grplek\'><b>' . $lek[1]['klasa'] . '</b>
+                <span class="grptxt">
+                <a href=\'' . URL::site('podglad/sala/' . $lek[1]['sala']) . '\'>' . $lek[1]['sala'] . '</a>
+                </span></p>';
         } else {
             $lek = $isf->DbSelect('plan_grupy', array('*'), 'where dzien=\'' . $dzien . '\' and nauczyciel=\'' . $rowcol['imie_naz'] . '\'
                     and lekcja=\'' . $lekcja . '\'');
@@ -69,10 +82,12 @@ function pobierz_klasy($dzien, $lekcja) {
                 echo '<p class=\'grplek\'><b>';
                 $stg = '';
                 foreach ($lek as $rowid => $rowcol) {
-                    $stg .= '' . $rowcol['klasa'] . '/'.$rowcol['grupa'].', ';
+                    $stg .= '' . $rowcol['klasa'] . '</b> <span class="grptxt">' . $rowcol['grupa'] . '/' . $ilgr . ', ';
                 }
                 echo substr($stg, 0, -2);
-                echo '</b></p><p class=\'grplek\'><a href=\'' . URL::site('podglad/sala/' . $rowcol['sala']) . '\'>' . $rowcol['sala'] . '</a></p>';
+                echo '</span></p><span class=\'grplek\'>
+                    <a href=\'' . URL::site('podglad/sala/' . $rowcol['sala']) . '\'>' . $rowcol['sala'] . '</a>
+                    </span>';
             } else {
                 echo '---';
             }
@@ -88,8 +103,9 @@ function pobierz_dzien($dzien) {
 
     $lekcje = $isf->DbSelect('lek_godziny', array('*'));
 
-    $colspan = $GLOBALS['ilosc_klas']+$GLOBALS['ilosc_nl'];
-    echo '<tr class=\'zestdzien\'><td colspan=2></td><td colspan=\'' . $colspan . '\'>' . $dzien . '</td>';
+    $colspan = $GLOBALS['ilosc_klas'] + $GLOBALS['ilosc_nl'];
+    echo '<tr class="a_even" style="font-weight: bold; text-align: center;">
+         <td colspan=2></td><td colspan=\'' . $colspan . '\'>' . $dzien . '</td>';
     //echo '<td colspan='.$GLOBALS['ilosc_nl'].'></td>';
     echo '</tr>';
 
@@ -104,6 +120,7 @@ function pobierz_dzien($dzien) {
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Plan lekcji</title>
         <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style.css"/>
+        <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/themes/{{theme}}.css"/>
         <style>
             body{
                 max-width: none;
@@ -111,10 +128,8 @@ function pobierz_dzien($dzien) {
         </style>
     </head>
     <body>
-        <h1><a href="#" onClick="window.print();"><img border="0" src="<?php echo URL::base() ?>lib/images/printer.png" alt="[drukuj plan]"/></a>
-            Zestawienie planów lekcji</h1>
         <table class="przed">
-            <thead style="background: #ccffcc; text-align: center">
+            <thead class="a_odd" style="text-align: center;">
                 <?php pobierz_naglowki(); ?>
             </thead>
             <?php pobierz_dzien('Poniedziałek'); ?>
