@@ -82,7 +82,7 @@ function pobierz_klasy($dzien, $lekcja) {
                 echo '<p class=\'grplek\'><b>';
                 $stg = '';
                 foreach ($lek as $rowid => $rowcol) {
-                    $stg .= '' . $rowcol['klasa'] . '</b> <span class="grptxt">' . $rowcol['grupa'] . '/' . $ilgr . ', ';
+                    $stg .= '' . $rowcol['klasa'] . '</b>-<span class="grptxt">' . $rowcol['grupa'] . '/' . $ilgr . ', ';
                 }
                 echo substr($stg, 0, -2);
                 echo '</span></p><span class=\'grplek\'>

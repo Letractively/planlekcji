@@ -16,20 +16,20 @@ if ($zadmin > $toktime) {
         </legend>
         <ul style="font-size: 8pt; list-style: none; padding: 0px;">
             <li>
+                <img src="<?php echo URL::base() ?>lib/images/keylabel.gif" alt=""/>
                 <a href="<?php echo URL::site('admin/renew'); ?>">
-                    <img src="<?php echo URL::base() ?>lib/images/keylabel.gif" alt=""/>
                     Odnów mój token
                 </a>
             </li>
             <li>
+                <img src="<?php echo URL::base() ?>lib/images/keys.gif" alt=""/>
                 <a href="<?php echo URL::site('admin/haslo'); ?>">
-                    <img src="<?php echo URL::base() ?>lib/images/keys.gif" alt=""/>
                     Zmień moje hasło
                 </a>
             </li>
             <li>
+                <img src="<?php echo URL::base() ?>lib/images/keygenoff.gif" alt=""/>
                 <a href="<?php echo URL::site('admin/logout'); ?>">
-                    <img src="<?php echo URL::base() ?>lib/images/keygenoff.gif" alt=""/>
                     Wyloguj mnie
                 </a>
             </li>
@@ -40,31 +40,28 @@ if ($zadmin > $toktime) {
     </fieldset>
     <?php if ($_SESSION['user'] == 'root'): ?>
         <p>
+            <img src="<?php echo URL::base() ?>lib/images/settings.gif" alt=""/>
             <a href="<?php echo URL::site('admin/zmiendane'); ?>">
-                <img src="<?php echo URL::base() ?>lib/images/settings.gif" alt=""/>
                 Ustawienia szkoły i strony głównej
             </a>
         </p>
         <p>
+            <img src="<?php echo URL::base() ?>lib/images/warn.gif" alt=""/>
             <a  href="<?php echo url::site('admin/reset'); ?>">
-                <img src="<?php echo URL::base() ?>lib/images/warn.gif" alt=""/>
                 Wyczyść system
             </a>
         </p>
-        <?php if (App_Globals::getSysLv() == 3 && isset($_SESSION['token'])): ?>
+        <p>
+            <img src="<?php echo URL::base(); ?>lib/images/warn2.gif" alt="" width="16" height="16"/>
+            <a href="<?php echo URL::site('admin/backup'); ?>">Kopia zapasowa systemu</a>
+        </p>
+        <?php if (App_Globals::getSysLv() == 3): ?>
             <p>
                 <img src="<?php echo URL::base(); ?>lib/images/save.png" alt="" width="16" height="16"/>
                 <a href="#" onClick="window.open('<?php echo URL::base(); ?>export.php', 'moje', 'width=500,height=500,scrollbars=1')" >Eksport planu zajęć</a>
             </p>
         <?php endif; ?>
-        <p>
-            <img src="<?php echo URL::base(); ?>lib/images/save.png" alt="" width="16" height="16"/>
-            <a href="<?php echo URL::site('admin/backup'); ?>">Kopia zapasowa systemu</a>
-        </p>
-        <p>
-            <img src="<?php echo URL::base(); ?>lib/images/betasign.png" alt="" height="12"/>
-        </p>
-        <?php if (App_Globals::getSysLv() == 0 && $_SESSION['user'] == 'root'): ?>
+        <?php if (App_Globals::getSysLv() == 0): ?>
             <p>
                 <img src="<?php echo URL::base(); ?>lib/images/registry.png" alt="" width="16" height="16"/>
                 <a href="#" onClick="window.open('<?php echo URL::base(); ?>generator.php', 'moje', 'width=500,height=500,scrollbars=1')" >Generator planu zajęć</a>

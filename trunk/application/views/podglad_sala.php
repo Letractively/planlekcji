@@ -42,7 +42,7 @@ function pobierzdzien($dzien, $lekcja) {
     }
 }
 ?>
-<table class="przed">
+<table class="przed" align="center">
     <thead style="background: #ccccff;">
         <tr class="a_odd">
             <td colspan="7" style="text-align: center">
