@@ -10,6 +10,6 @@
     <img src="<?php echo URL::base(); ?>lib/images/notes.png" alt="" width="24" height="24"/>
     <a href="<?php echo URL::site('admin/logs'); ?>" >Podgląd dzienników</a>
 </p>
-<p class="info">Jako <b>root</b> nie masz dostępu do edycji planów i zastępstw.
+<p class="grptxt">Jako <b>root</b> nie masz dostępu do edycji planów i zastępstw.
     Aby powrócić do ustawień sal, przedmiotów i nauczycieli wykonaj reset systemu,
     który usunie wszystkie plany.</p>

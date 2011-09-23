@@ -2,8 +2,9 @@
 <?php $isf->DbConnect(); ?>
 <?php if (App_Globals::getSysLv() == 1): ?>
     <p>
-        <a href="<?php echo URL::site('admin/login'); ?>" style="font-size: 10pt; font-weight: bold;">
-            <img src="<?php echo URL::base(); ?>lib/images/t1.png" alt="" width="24" height="24"/> Administracja
+        <img src="<?php echo URL::base(); ?>lib/images/t1.png" alt="" width="24" height="24"/>
+        <a href="<?php echo URL::site('admin/login'); ?>">
+            Administracja
         </a>
     </p>
     <p class="info">System będzie niedostępny, dopóki opcja edycji sal, przedmiotów, itp.
@@ -12,19 +13,21 @@
 else:
     ?>
     <p>
-        <a href="<?php echo URL::site('admin/login'); ?>" style="font-size: 10pt; font-weight: bold;">
-            <img src="<?php echo URL::base(); ?>lib/images/t1.png" alt="" width="24" height="24"/> Administracja
+        <img src="<?php echo URL::base(); ?>lib/images/t1.png" alt="" width="24" height="24"/>
+        <a href="<?php echo URL::site('admin/login'); ?>">
+            Administracja
         </a>
     </p>
     <?php if (App_Globals::getSysLv() == 3): //gdy system jest calkowicie otwarty bez edycji sal, czy planow ?>
         <p>
-            <a href="<?php echo URL::site('zastepstwa/index'); ?>" style="font-size: 10pt; font-weight: bold;">
-                <img src="<?php echo URL::base(); ?>lib/images/notes.png" alt="" width="24" height="24"/> Zastępstwa
+            <img src="<?php echo URL::base(); ?>lib/images/notes.png" alt="" width="24" height="24"/>
+            <a href="<?php echo URL::site('zastepstwa/index'); ?>">
+                Zastępstwa
             </a>
         </p>
         <p>
             <img src="<?php echo URL::base(); ?>lib/images/t2.png" alt="" width="24" height="24"/>
-            <a href="<?php echo URL::site('podglad/zestawienie'); ?>" style="font-size: 10pt; font-weight: bold;" target="_blank">
+            <a href="<?php echo URL::site('podglad/zestawienie'); ?>" target="_blank">
                 Zestawienie planów
             </a>
         </p>

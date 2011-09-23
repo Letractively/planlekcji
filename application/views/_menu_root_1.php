@@ -48,6 +48,6 @@
         </tr>
     </tbody>
 </table>
-<p class="info">System aktualnie umożliwia edycję takich danych, jak sale, przedmioty,
-    nauczyciele i inne. Dopóki nie zamkniesz systemu, edycja planów zajęć nie będzie dostępna.
+<p class="grptxt">System aktualnie umożliwia edycję takich danych, jak sale, przedmioty,
+    nauczyciele i inne. Dopóki nie zamkniesz trybu edycji systemu, edycja planów zajęć nie będzie dostępna.
     Późniejszy powrót do tej strony jest możliwy poprzez opcję <b>Wyczyść system</b>.</p>
