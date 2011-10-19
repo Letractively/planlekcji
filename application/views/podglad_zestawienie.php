@@ -124,6 +124,7 @@ function pobierz_dzien($dzien) {
         <style>
             body{
                 max-width: none;
+                background: none;
             }
         </style>
     </head>

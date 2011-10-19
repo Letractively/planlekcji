@@ -58,18 +58,23 @@ $appver = App_Globals::getRegistryKey('app_ver');
             }
         }
         ?>
+        <style>
+            body{
+                background-image: url('<?php echo URL::base(); ?>lib/images/background.png');
+            }
+        </style>
         <!-- [/SEKCJA] -->
     </head>
     <body <?php echo $bodystr; ?>>
         <!-- [SEKCJA]: STRONA GŁÓWNA -->
-        <div id="mainw">
+        <div id="mainw" style="width: 1000px; margin: 0 auto; background-color: white;">
             <table class="main">
                 <tr style="vertical-align: top">
                     <!-- [SEKCJA]: PANEL LEWY -->
-                    <td style="width: 20%; padding-right: 10px; padding-top: 0px; padding-left: 0px;" class="a_light_menu">
+                    <td style="width: 250px; padding-right: 10px; padding-top: 0px; padding-left: 0px;" class="a_light_menu">
                         <div class="app_info">
                             <a href="<?php echo URL::site('default/index'); ?>">
-                                <img src="<?php echo URL::base(); ?>lib/images/home.png" alt="" width="24" height="24"/></a>
+                                <img src="<?php echo URL::base(); ?>lib/icons/home.png" alt=""/></a>
                             Plan Lekcji
                             <?php echo View::factory()->render('_snippet_theme'); ?>
                         </div>
@@ -87,7 +92,7 @@ $appver = App_Globals::getRegistryKey('app_ver');
                     </td>
                     <!-- [/SEKCJA] -->
                     <!-- [SEKCJA]: PANEL TRESCI -->
-                    <td valign="top" style="width: 60%; margin-top: 0px; padding-top: 0px;">
+                    <td valign="top" style="width: 750px; margin-top: 0px; padding-top: 0px;">
                         <?php echo $content; ?>
                     </td>
                     <!-- [/SEKCJA] -->

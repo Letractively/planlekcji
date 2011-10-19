@@ -54,8 +54,13 @@ function pobierzdzien($dzien, $lekcja) {
     }
 }
 ?>
-<table class="przed" align="center">
-    <thead>
+<style>
+    .grptxt{
+        font-size: 8pt;
+    }
+</style>
+<table class="przed" align="center" style="font-size: 9pt; width: auto;">
+    <thead style="background: #ccccff;">
         <tr class="a_odd">
             <td colspan="7" style="text-align: center">
                 <p>
@@ -66,11 +71,11 @@ function pobierzdzien($dzien, $lekcja) {
         <tr class="a_even">
             <td></td>
             <td>Godziny</td>
-            <td style="min-width: 150px; max-width: 200px;">Poniedziałek</td>
-            <td style="min-width: 150px; max-width: 200px;">Wtorek</td>
-            <td style="min-width: 150px; max-width: 200px;">Środa</td>
-            <td style="min-width: 150px; max-width: 200px;">Czwartek</td>
-            <td style="min-width: 150px; max-width: 200px;">Piątek</td>
+            <td style="width: 110px;">Poniedziałek</td>
+            <td style="width: 110px;">Wtorek</td>
+            <td style="width: 110px;">Środa</td>
+            <td style="width: 110px;">Czwartek</td>
+            <td style="width: 110px;">Piątek</td>
         </tr>
     </thead>
     <tbody>

@@ -16,55 +16,56 @@ if ($zadmin > $toktime) {
         </legend>
         <ul style="font-size: 8pt; list-style: none; padding: 0px;">
             <li>
-                <img src="<?php echo URL::base() ?>lib/images/keylabel.gif" alt=""/>
+                <img src="<?php echo URL::base() ?>lib/icons/token.png" alt=""/>
                 <a href="<?php echo URL::site('admin/renew'); ?>">
                     Odnów mój token
                 </a>
             </li>
             <li>
-                <img src="<?php echo URL::base() ?>lib/images/keys.gif" alt=""/>
+                <img src="<?php echo URL::base() ?>lib/icons/password.png" alt=""/>
                 <a href="<?php echo URL::site('admin/haslo'); ?>">
                     Zmień moje hasło
                 </a>
             </li>
             <li>
-                <img src="<?php echo URL::base() ?>lib/images/keygenoff.gif" alt=""/>
+                <img src="<?php echo URL::base() ?>lib/icons/logout.png" alt=""/>
                 <a href="<?php echo URL::site('admin/logout'); ?>">
                     Wyloguj mnie
                 </a>
             </li>
             <li>
+                <br/>
                 <b>Token wygasa o: </b> <?php echo $tokenizer; ?>
             </li>
         </ul>
     </fieldset>
     <?php if ($_SESSION['user'] == 'root'): ?>
         <p>
-            <img src="<?php echo URL::base() ?>lib/images/settings.gif" alt=""/>
+            <img src="<?php echo URL::base() ?>lib/icons/edit.png" alt=""/>
             <a href="<?php echo URL::site('admin/zmiendane'); ?>">
-                Ustawienia szkoły i strony głównej
+                Szkoła i strona główna
             </a>
         </p>
         <p>
-            <img src="<?php echo URL::base() ?>lib/images/warn.gif" alt=""/>
+            <img src="<?php echo URL::base() ?>lib/icons/alert.png" alt=""/>
             <a  href="<?php echo url::site('admin/reset'); ?>">
                 Wyczyść system
             </a>
         </p>
         <p>
-            <img src="<?php echo URL::base(); ?>lib/images/warn2.gif" alt="" width="16" height="16"/>
-            <a href="<?php echo URL::site('admin/backup'); ?>">Kopia zapasowa systemu</a>
+            <img src="<?php echo URL::base(); ?>lib/icons/backup.png" alt=""/>
+            <a href="<?php echo URL::site('admin/backup'); ?>">Kopia zapasowa</a>
         </p>
         <?php if (App_Globals::getSysLv() == 3): ?>
             <p>
-                <img src="<?php echo URL::base(); ?>lib/images/save.png" alt="" width="16" height="16"/>
-                <a href="#" onClick="window.open('<?php echo URL::base(); ?>export.php', 'moje', 'width=500,height=500,scrollbars=1')" >Eksport planu zajęć</a>
+                <img src="<?php echo URL::base(); ?>lib/icons/save.png" alt=""/>
+                <a href="#" onClick="window.open('<?php echo URL::base(); ?>export.php', 'moje', 'width=500,height=500,scrollbars=1')" >Eksport planów</a>
             </p>
         <?php endif; ?>
         <?php if (App_Globals::getSysLv() == 0): ?>
             <p>
                 <img src="<?php echo URL::base(); ?>lib/images/registry.png" alt="" width="16" height="16"/>
-                <a href="#" onClick="window.open('<?php echo URL::base(); ?>generator.php', 'moje', 'width=500,height=500,scrollbars=1')" >Generator planu zajęć</a>
+                <a href="#" onClick="window.open('<?php echo URL::base(); ?>generator.php', 'moje', 'width=500,height=500,scrollbars=1')" >Generator planów zajęć</a>
             </p>
         <?php endif; ?>
     <?php endif; ?>
@@ -73,7 +74,7 @@ if ($zadmin > $toktime) {
             <img src="<?php echo URL::base(); ?>lib/images/betasign.png" alt="" height="12"/>
         </p>
         <p>
-            <img src="<?php echo URL::base() ?>lib/images/warn.gif" alt=""/>
+            <img src="<?php echo URL::base() ?>lib/images/registry.png" alt=""/>
             <a href="#" onClick="window.open('<?php echo URL::base(); ?>generator.php', 'moje', 'width=500,height=500,scrollbars=1')" >
                 Generator planów zajęć
             </a>
