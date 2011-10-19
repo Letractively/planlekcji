@@ -16,8 +16,5 @@ if(!preg_match('/index.php/', $_SERVER['REQUEST_URI'])){
             <?php endif; ?>
         <?php endforeach; ?>
     </select>
-    <?php if (Kohana_Isf::factory()->detect_ie()): ?>
-        <button type="submit" name="btnLookSubmit">Zmień styl</button>
-    <?php endif; ?>
     <input type="hidden" name="site" value="<?php echo $site; ?>"/>
 </form>

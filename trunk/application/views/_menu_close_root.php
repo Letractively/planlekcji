@@ -1,13 +1,13 @@
 <p>
-    <img src="<?php echo URL::base(); ?>lib/images/keys.gif" alt="" width="24" height="24"/>
-    <a href="<?php echo URL::site('admin/users'); ?>" >Użytkownicy i autoryzacja</a>
+    <img src="<?php echo URL::base(); ?>lib/icons/user.png" alt=""/>
+    <a href="<?php echo URL::site('admin/users'); ?>" >Użytkownicy</a>
 </p>
 <p>
-    <img src="<?php echo URL::base(); ?>lib/images/registry.png" alt="" width="24" height="24"/>
+    <img src="<?php echo URL::base(); ?>lib/icons/registry.png" alt=""/>
     <a href="<?php echo URL::site('regedit'); ?>" >Podgląd rejestru</a>
 </p>
 <p>
-    <img src="<?php echo URL::base(); ?>lib/images/notes.png" alt="" width="24" height="24"/>
+    <img src="<?php echo URL::base(); ?>lib/icons/file.png" alt=""/>
     <a href="<?php echo URL::site('admin/logs'); ?>" >Podgląd dzienników</a>
 </p>
 <p class="grptxt">Jako <b>root</b> nie masz dostępu do edycji planów i zastępstw.

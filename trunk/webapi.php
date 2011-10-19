@@ -38,15 +38,15 @@ array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Klasy[]')
 'tns:Klasy'
 );
 
-$soapsrv->register('doLogin', array('username' => 'xsd:string', 'password' => 'xsd:string', 'token' => 'xsd:string'), array('return' => 'xsd:string'), $namespace);
-$soapsrv->register('doShowAuthTime', array('token' => 'xsd:string'), array('return' => 'xsd:string'), $namespace);
-$soapsrv->register('doRenewToken', array('token' => 'xsd:string'), array('return' => 'xsd:string'), $namespace);
-$soapsrv->register('doAddClassroom', array('token' => 'xsd:string', 'class' => 'xsd:string'), array('return' => 'xsd:string'), $namespace);
-$soapsrv->register('doGetRegistryKey', array('token' => 'xsd:string', 'key' => 'xsd:string'), array('return' => 'xsd:string'), $namespace);
-$soapsrv->register('doChangePass', array('token' => 'xsd:string', 'old' => 'xsd:string', 'new' => 'xsd:string'), array('return' => 'xsd:string'), $namespace);
-$soapsrv->register('doLogout', array('token' => 'xsd:string'), array('return' => 'xsd:string'), $namespace);
+$soapsrv->register('doLogin', array('username' => 'xsd:string', 'password' => 'xsd:string', 'token' => 'xsd:string'), array('return' => 'xsd:string'), $namespace, false, false, 'literal');
+$soapsrv->register('doShowAuthTime', array('token' => 'xsd:string'), array('return' => 'xsd:string'), $namespace, false, false, 'literal');
+$soapsrv->register('doRenewToken', array('token' => 'xsd:string'), array('return' => 'xsd:string'), $namespace, false, false, 'literal');
+$soapsrv->register('doAddClassroom', array('token' => 'xsd:string', 'class' => 'xsd:string'), array('return' => 'xsd:string'), $namespace, false, false, 'literal');
+$soapsrv->register('doGetRegistryKey', array('token' => 'xsd:string', 'key' => 'xsd:string'), array('return' => 'xsd:string'), $namespace, false, false, 'literal');
+$soapsrv->register('doChangePass', array('token' => 'xsd:string', 'old' => 'xsd:string', 'new' => 'xsd:string'), array('return' => 'xsd:string'), $namespace, false, false, 'literal');
+$soapsrv->register('doLogout', array('token' => 'xsd:string'), array('return' => 'xsd:string'), $namespace, false, false, 'literal');
 
-$soapsrv->register('doShowClasses', array('token' => 'xsd:string'), array('return' => 'tns:KlasyArray'), $namespace);
+$soapsrv->register('doShowClasses', array('token' => 'xsd:string'), array('return' => 'tns:KlasyArray'), $namespace, false, false, 'literal');
 
 $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '  ';
 $soapsrv->service($HTTP_RAW_POST_DATA);
