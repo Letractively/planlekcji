@@ -41,11 +41,11 @@ if ($r == 1):
     <html>
         <head>
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-            <title>Instalacja Internetowy Plan Lekcji</title>
+            <title>Internetowy Plan Lekcji <?php echo _I_SYSVER; ?></title>
             <link rel="stylesheet" type="text/css" href="lib/css/style.css"/>
             <style>
                 body{
-                    background-image: url('lib/images/tlo.jpg');
+                    background-image: url('lib/images/background.png');
                 }
             </style>
         </head>
@@ -101,12 +101,12 @@ else:
         <html>
             <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-                <title>Instalacja Internetowy Plan Lekcji</title>
+                <title>Internetowy Plan Lekcji <?php echo _I_SYSVER; ?></title>
                 <link rel="stylesheet" type="text/css" href="lib/css/style.css"/>
                 <style>
                     body{
-                        background-image: url('lib/images/tlo.jpg');
-                    }
+						background-image: url('lib/images/background.png');
+					}
                     input, button{
                         font-size: 14pt;
                     }
@@ -197,11 +197,11 @@ else:
             <head>
                 <meta charset="UTF-8"/>
                 <link rel="stylesheet" type="text/css" href="lib/css/style.css"/>
-                <title>Instalator pakietu Internetowy Plan Lekcji 1.5</title>
+                <title>Internetowy Plan Lekcji <?php echo _I_SYSVER; ?></title>
                 <style type="text/css">
                     body{
-                        background-image: url('lib/images/tlo.jpg');
-                    }
+						background-image: url('lib/images/background.png');
+					}
                     span{
                         font-size: 10pt;
                     }
@@ -210,7 +210,7 @@ else:
             <body>
                 <div style="text-align: center;">
                     <img src="lib/images/logo.png" style="height: 80px;"/>
-                    <h1>Instalator pakietu Internetowy Plan Lekcji 1.5</h1>
+                    <h1>Instalator pakietu Internetowy Plan Lekcji <?php echo _I_SYSVER; ?></h1>
                     <h3 class="notice">Dziękujemy za instalację</h3>
                     <h3>Twoje dane administratora</h3>
                     <p><b>Login: </b>root</p>
