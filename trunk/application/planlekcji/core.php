@@ -25,7 +25,7 @@ namespace com\planlekcji {
 
         public function Connect($type) {
             switch ($type) {
-                case null:
+                case 'sqlite':
                     $this->Isf->DbConnect();
                     return 'db:cpass';
                     break;
