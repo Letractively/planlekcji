@@ -2,7 +2,14 @@
 /*
  * Plik instalacyjny Planu Lekcji
  */
-require_once 'modules/isf/classes/kohana/isf.php';
+ /**
+ * Wersja instalatora
+ */
+define('_I_SYSVER', '1.10 dev');
+
+require_once 'modules/isf/classes/kohana/isf.php'; # pobiera framework ISF
+require_once 'application/planlekcji/core.php';
+
 if (!file_exists('config.php')) {
     $r = 0;
 } else {
@@ -27,7 +34,7 @@ if (isset($_GET['reinstall'])) {
     <html>
         <head>
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-            <title>Instalacja Intersys Plan Lekcji</title>
+            <title>Instalator pakietu Internetowy Plan Lekcji <?php echo _I_SYSVER; ?></title>
             <link rel="stylesheet" type="text/css" href="lib/css/style.css"/>
         </head>
         <body>
@@ -80,7 +87,7 @@ START;
         <html>
             <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-                <title>Instalacja Intersys Plan Lekcji</title>
+                <title>Instalator pakietu Internetowy Plan Lekcji <?php echo _I_SYSVER; ?></title>
                 <link rel="stylesheet" type="text/css" href="lib/css/style.css"/>
                 <style type="text/css">
                     pre{
@@ -90,7 +97,7 @@ START;
             </head>
             <body>
                 <img src="lib/images/logo.png"/>
-                <h1>Instalator Intersys Plan Lekcji - PostgreSQL</h1>
+                <h1>Instalator pakietu Internetowy Plan Lekcji <?php echo _I_SYSVER; ?></h1>
                 <?php if ($_SERVER['SERVER_NAME'] != 'localhost' && $_SERVER['SERVER_NAME'] != '127.0.0.1'): ?>
                     <p class="error">
                         Aplikacja może zostać zainstalowana tylko wtedy, gdy ta
@@ -153,7 +160,7 @@ START;
             'password' => $_POST['dbHaslo'],
             'database' => $_POST['dbBaza'],
         );
-        $isf->DbConnect($customvars);
+		
         $a = fopen('config.php', 'w');
         if (!$a) {
             $ferr = true;
@@ -165,194 +172,19 @@ START;
             fputs($a, $file);
             fclose($a);
         }
-        /**
-         * Gdy instalacja awaryjna (na istniejaca instalacje),
-         * wowczas usuwa starych uzytkownikow
+		
+		/**
+         * Przystapienie do instalacji systemu
          */
-        $isf->DbDelete('rejestr', 'opcja like \'%\'');
-        $isf->DbDelete('uzytkownicy', 'login like \'%\'');
-        $isf->DbDelete('tokeny', 'token like \'%\'');
-        $isf->DbTblCreate('przedmioty', array(
-            'przedmiot' => 'text not null'
-        ));
-
-        $isf->DbTblCreate('sale', array(
-            'sala' => 'text not null'
-        ));
-
-        $isf->DbTblCreate('przedmiot_sale', array(
-            'przedmiot' => 'text not null',
-            'sala' => 'text not null'
-        ));
-
-        $isf->DbTblCreate('klasy', array(
-            'klasa' => 'text not null'
-        ));
-
-        $isf->DbTblCreate('nauczyciele', array(
-            'imie_naz' => 'text not null',
-            'skrot' => 'text not null'
-        ));
-
-        $isf->DbTblCreate('nl_przedm', array(
-            'nauczyciel' => 'text not null',
-            'przedmiot' => 'text not null'
-        ));
-
-        $isf->DbTblCreate('nl_klasy', array(
-            'nauczyciel' => 'text not null',
-            'klasa' => 'text not null'
-        ));
-
-        $isf->DbTblCreate('rejestr', array(
-            'opcja' => 'text not null',
-            'wartosc' => 'text'
-        ));
-
-        $isf->DbTblCreate('planlek', array(
-            'dzien' => 'text',
-            'klasa' => 'text',
-            'lekcja' => 'text',
-            'przedmiot' => 'text',
-            'sala' => 'text',
-            'nauczyciel' => 'text',
-            'skrot' => 'text'
-        ));
-
-        $isf->DbTblCreate('uzytkownicy', array(
-            'uid' => 'numeric not null',
-            'login' => 'text not null',
-            'haslo' => 'text not null',
-            'webapi_token' => 'text',
-            'webapi_timestamp' => 'text',
-            'ilosc_prob' => 'numeric'
-        ));
-
-        $isf->DbTblCreate('log', array(
-            'id' => 'serial',
-            'data' => 'text not null',
-            'modul' => 'text not null',
-            'wiadomosc' => 'text',
-        ));
-
-        $isf->DbTblCreate('tokeny', array(
-            'login' => 'text',
-            'token' => 'text',
-        ));
-
-        $isf->DbTblCreate('plan_grupy', array(
-            'dzien' => 'text',
-            'lekcja' => 'text',
-            'klasa' => 'text',
-            'grupa' => 'text',
-            'przedmiot' => 'text',
-            'nauczyciel' => 'text',
-            'skrot' => 'text',
-            'sala' => 'text'
-        ));
-
-        $isf->DbTblCreate('zast_id', array(
-            'zast_id' => 'serial',
-            'dzien' => 'text',
-            'za_nl' => 'text',
-            'info' => 'text',
-        ));
-
-        $isf->DbTblCreate('zastepstwa', array(
-            'zast_id' => 'text',
-            'lekcja' => 'text',
-            'przedmiot' => 'text',
-            'nauczyciel' => 'text',
-            'sala' => 'text',
-        ));
-
-        $isf->DbTblCreate('lek_godziny', array(
-            'lekcja' => 'text',
-            'godzina' => 'text',
-            'dl_prz' => 'text'
-        ));
-
-        $isf->DbInsert('rejestr', array(
-            'opcja' => 'edycja_danych',
-            'wartosc' => '1'
-        ));
-
-        $isf->DbInsert('rejestr', array(
-            'opcja' => 'ilosc_godzin_lek',
-            'wartosc' => '1'
-        ));
-
-        $isf->DbInsert('rejestr', array(
-            'opcja' => 'dlugosc_lekcji',
-            'wartosc' => '45'
-        ));
-
-        $isf->DbInsert('rejestr', array(
-            'opcja' => 'nazwa_szkoly',
-            'wartosc' => $szkola
-        ));
-
-        $isf->DbInsert('rejestr', array(
-            'opcja' => 'index_text',
-            'wartosc' => '<h1>Witaj w Planie Lekcji 1.5</h1><p>Na początek proszę zmienić hasła do panelu administracyjnego
-                oraz zmienić treść tej strony w górnym panelu użytkownika.</p><p>Dziękujemy za skorzystanie z systemu Plan Lekcji</p>'
-                ), false);
-
-        $isf->DbInsert('rejestr', array(
-            'opcja' => 'ilosc_grup',
-            'wartosc' => '0'
-        ));
-
-        $isf->DbInsert('rejestr', array(
-            'opcja' => 'godz_rozp_zaj',
-            'wartosc' => '08:00'
-        ));
-
-        $isf->DbInsert('rejestr', array(
-            'opcja' => 'installed',
-            'wartosc' => '1'
-        ));
-
-        $isf->DbInsert('rejestr', array(
-            'opcja' => 'app_ver',
-            'wartosc' => '1.5 dev pgsql'
-        ));
-
-        $isf->DbInsert('rejestr', array(
-            'opcja' => 'randtoken_version',
-            'wartosc' => '1.5 dev pgsql'
-        ));
-
-        $isf->DbInsert('log', array(
-            'data' => date('d.m.Y H:i:s'),
-            'modul' => 'plan.install',
-            'wiadomosc' => 'Instalacja systemu'
-        ));
-
-        $isf->DbInsert('log', array(
-            'data' => date('d.m.Y H:i:s'),
-            'modul' => 'plan.install',
-            'wiadomosc' => 'Tworzenie administratora'
-        ));
-
-        $pass = substr(md5(@date('Y:m:d')), 0, 8);
-        $pass = rand(1, 100) . $pass;
-
-        $isf->DbInsert('uzytkownicy', array(
-            'uid' => 1,
-            'login' => 'root',
-            'haslo' => md5('plan' . sha1('lekcji' . $pass)),
-        ));
-
-        $token = substr(md5(time() . 'plan'), 0, 6);
-
-        $isf->DbInsert('tokeny', array('login' => 'root', 'token' => md5('plan' . $token)));
+        $App_Install = new Core_Install('sqlite');
+        $App_Install->Connect('sqlite');
+        $res = $App_Install->DbInit($_POST['inpSzkola'], _I_SYSVER);
         ?>
         <html>
             <head>
                 <meta charset="UTF-8"/>
                 <link rel="stylesheet" type="text/css" href="lib/css/style.css"/>
-                <title>Instalator pakietu Internetowy Plan Lekcji 1.5</title>
+                <title>Instalator pakietu Internetowy Plan Lekcji <?php echo _I_SYSVER; ?></title>
                 <style type="text/css">
                     span{
                         font-size: 10pt;
@@ -361,15 +193,14 @@ START;
             </head>
             <body>
                 <img src="lib/images/logo.png" style="height: 80px;"/>
-                <h1>Instalator pakietu Internetowy Plan Lekcji 1.5</h1><h3>Krok 2: instalacja</h3>
-                <fieldset style="max-width: 50%;">
-                    <legend>Dane administratora</legend>
+                <h1>Instalator pakietu Internetowy Plan Lekcji <?php echo _I_SYSVER; ?></h1>
+                    <h3 class="notice">Dziękujemy za instalację</h3>
+                    <h3>Twoje dane administratora</h3>
                     <p><b>Login: </b>root</p>
-                    <p><b>Hasło: </b><?php echo $pass; ?></p>
-                    <p><b>Token: </b><?php echo $token; ?></p>
+                    <p><b>Hasło: </b><?php echo $res['pass']; ?></p>
+                    <p><b>Token: </b><?php echo $res['token']; ?></p>
                     <p class="info">Zapamiętaj dane do logowania oraz usuń pliki <b>install.php</b> oraz <b>unixinstall.php</b>,
                         a następnie przejdź do <a href="index.php">strony głównej</a>.</p>
-                </fieldset>
                 <?php if (!file_exists('config.php')): ?>
                     <?php
                     $r = $_SERVER['REQUEST_URI'];
