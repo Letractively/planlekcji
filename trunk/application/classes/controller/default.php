@@ -58,6 +58,9 @@ class Controller_Default extends Controller {
         echo $view->render();
     }
 
+    /**
+     * Zmienia temat strony
+     */
     public function action_look() {
         if (!isset($_POST)) {
             Kohana_Request::factory()->redirect();

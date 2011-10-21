@@ -24,7 +24,8 @@ $appver = App_Globals::getRegistryKey('app_ver');
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Plan lekcji - <?php echo App_Globals::getRegistryKey('nazwa_szkoly'); ?></title>
-        <!-- [SEKCJA]: JavaScript -->
+
+        <!-- [SEKCJA]: JS,CSS,META -->
         <?php echo $script; ?>
         <script type="text/javascript">
             function ipl_togglediv(id) {
@@ -35,11 +36,9 @@ $appver = App_Globals::getRegistryKey('app_ver');
                     e.style.display = '';
             }
 
-        </script>
-        <!-- [/SEKCJA] -->
+        </script>    
         <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style.css"/>
         <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/themes/<?php echo $_SESSION['app_theme']; ?>.css"/>
-        <!-- [SEKCJA]: Dla przeglądarki -->
         <?php
         $isf = new Kohana_Isf();
         $isf->IE9_faviconset();
@@ -64,12 +63,15 @@ $appver = App_Globals::getRegistryKey('app_ver');
             }
         </style>
         <!-- [/SEKCJA] -->
+
     </head>
     <body <?php echo $bodystr; ?>>
-        <!-- [SEKCJA]: STRONA GŁÓWNA -->
+
+        <!-- [SEKCJA]: MAIN -->
         <div id="mainw" style="width: 1000px; margin: 0 auto; background-color: white;">
             <table class="main">
                 <tr style="vertical-align: top">
+
                     <!-- [SEKCJA]: PANEL LEWY -->
                     <td style="width: 250px; padding-right: 10px; padding-top: 0px; padding-left: 0px;" class="a_light_menu">
                         <div class="app_info">
@@ -86,35 +88,23 @@ $appver = App_Globals::getRegistryKey('app_ver');
                         <div id="sidebar_menu" style="padding-left: 10px;">
                             <?php echo View::factory()->render('_sidebar_menu'); ?>
                         </div>
-                        <p class="app_ver">
-                            <a href="#" onClick="ipl_togglediv('ipl_tr_bottom');">Pokaż informacje o systemie</a>
-                        </p>
+                        <?php echo View::factory()->render('_panel_bottom'); ?>
                     </td>
                     <!-- [/SEKCJA] -->
+
                     <!-- [SEKCJA]: PANEL TRESCI -->
                     <td valign="top" style="width: 750px; margin-top: 0px; padding-top: 0px;">
                         <?php echo $content; ?>
                     </td>
                     <!-- [/SEKCJA] -->
+
                     <?php if ($_SESSION['token'] != null): ?>
                         <!-- [SEKCJA]: PANEL PRAWY -->
                         <?php echo View::factory()->render('_sidebar_right'); ?>
                         <!-- [/SEKCJA] -->
                     <?php endif; ?>
-
-                <tr class="app_ver" id="ipl_tr_bottom" style="display: none;">
-                    <?php if ($_SESSION['token'] == null): ?>
-                        <?php $colspan = '2'; ?>
-                    <?php else: ?>
-                        <?php $colspan = '3'; ?>
-                    <?php endif; ?>
-                    <!-- [SEKCJA]: PANEL DOLNY -->
-                    <td colspan="<?php echo $colspan; ?>">
-                        <?php echo View::factory()->render('_panel_bottom'); ?>
-                    </td>
-                    <!-- [/SEKCJA]-->
-                </tr>
             </table>
         </div>
+        <!-- [/SEKCJA] -->
     </body>
 </html>
