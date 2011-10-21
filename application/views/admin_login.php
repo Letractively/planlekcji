@@ -12,8 +12,9 @@ if (!isset($_POST['inpLogin'])) {
 </div>
 <style type="text/css">
     input{
-        height: 18pt;
-        font-size: 18pt;
+        height: 14pt;
+        font-size: 14pt;
+        text-align: center;
     }
 </style>
 <form action="<?php echo url::site('admin/dologin'); ?>" method="post" name="lgn">
@@ -21,8 +22,10 @@ if (!isset($_POST['inpLogin'])) {
         <table border="0">
             <tbody>
                 <tr>
-                    <td>Login</td>
-                    <td><input style="width: 100%;" type="text" name="inpLogin" value="<?php echo $_POST['inpLogin']; ?>"/></td>
+                    <td style="width: 100px;">Login</td>
+                    <td style="width: 650px;">
+                        <input style="width: 100%;" type="text" name="inpLogin" value="<?php echo $_POST['inpLogin']; ?>"/>
+                    </td>
                 </tr>
                 <tr>
                     <td>Hasło</td>

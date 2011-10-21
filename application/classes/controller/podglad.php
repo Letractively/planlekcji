@@ -99,12 +99,22 @@ class Controller_Podglad extends Controller {
         $out = str_replace('{{theme}}', $_SESSION['app_theme'], $view->render());
         echo $out;
     }
-
+    
+    /**
+     * Wyswietla plan w trybie generatora
+     * 
+     * Czysty plan z HTML bez reszty systemu,menu
+     */
     public function action_zzestawienie() {
         $view = View::factory('podglad_zestawienie');
         echo $view->render();
     }
 
+    /**
+     * Wyswietla plan w trybie generatora
+     * 
+     * Czysty plan z HTML bez reszty systemu,menu
+     */
     public function action_sklasa($klasa) {
         echo $this->head;
         $view = view::factory('podglad_klasa');
@@ -113,6 +123,11 @@ class Controller_Podglad extends Controller {
         echo '</body></html>';
     }
 
+    /**
+     * Wyswietla plan w trybie generatora
+     * 
+     * Czysty plan z HTML bez reszty systemu,menu
+     */
     public function action_ssala($klasa) {
         echo $this->head;
         $view = view::factory('podglad_sala');
@@ -121,6 +136,11 @@ class Controller_Podglad extends Controller {
         echo '</body></html>';
     }
 
+    /**
+     * Wyswietla plan w trybie generatora
+     * 
+     * Czysty plan z HTML bez reszty systemu,menu
+     */
     public function action_snauczyciel($nauczyciel) {
         echo $this->head;
         $view = view::factory('podglad_nauczyciel');

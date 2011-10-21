@@ -50,10 +50,10 @@ function pobierzdzien($id) {
         $res = $isf->DbSelect('planlek', array('*'), 'where nauczyciel=\'' . $nauczyciel . '\'
             and dzien=\'' . $dzien . '\' and lekcja=\'' . $rowid . '\'');
         if (count($res) == 1) {
-            echo '<p class="grplek">
+            echo '<span class="grptxt">
                 <b>' . $res[1]['klasa'] . '</b> - ';
             pobierznl($lek_nr, $id);
-            echo '</p></td></tr>';
+            echo '</span></td></tr>';
         }
         if (count($res) == 0) {
             $res = $isf->DbSelect('plan_grupy', array('*'), 'where nauczyciel=\'' . $nauczyciel . '\'
@@ -61,10 +61,11 @@ function pobierzdzien($id) {
             if (count($res) > 0) {
                 foreach ($res as $rowid => $rowcol) {
                     echo '<p class="grplek">
+                        <span class="grptxt">
                 <b>' . $rowcol['klasa'] . ' gr ' . $rowcol['grupa'] . '</b> - ';
                     pobierznl($lek_nr, $id);
                 }
-                echo '</p></td></tr>';
+                echo '</span></p></td></tr>';
             } else {
                 echo '---</td></tr>';
             }
@@ -76,9 +77,11 @@ function pobierzdzien($id) {
 function pobierzzast($id) {
     pobierzdzien($id);
 }
-
 ?>
-<p>
-    <b><</b>&emsp;<a href="<?php echo URL::site('zastepstwa/index'); ?>">Powrót do zastępstw</a>
-</p>
 <?php pobierzzast($zast_id); ?>
+<p>
+    <span style="font-size: 10pt;">
+        <b>&leftarrow;</b>
+    </span>
+    &emsp;<a href="<?php echo URL::site('zastepstwa/index'); ?>">Powrót do zastępstw</a>
+</p>

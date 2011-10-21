@@ -81,6 +81,11 @@ echo <<< START
 <meta charset="UTF-8"/>
 <title>Generowanie planu lekcji</title>
 <link rel="stylesheet" type="text/css" href="lib/css/style.css"/>
+<style>
+body{
+text-align: center;
+}
+</style>
 </head>
 <body>
 <img src="lib/images/logo.png" alt=""/>

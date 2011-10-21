@@ -17,12 +17,12 @@ $msg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'index_text\'');
     </p>
     <input
         type="text"
-        style="width: 100%; font-size: 14pt;"
+        style="height: 14pt; font-size: 14pt; text-align: center; width: 100%;"
         name="inpNazwa"
         value="<?php echo $nazwa[1]['wartosc']; ?>"
         />
     <p>
-        <textarea name="txtMsg" style="width: 100%" rows="30">
+        <textarea name="txtMsg" style="width: 100%;" rows="30">
             <?php echo $msg[1]['wartosc']; ?>
         </textarea>
     </p>
