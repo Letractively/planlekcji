@@ -7,6 +7,7 @@
  * @license GNU GPL v3
  * @package main\webapi
  */
+require_once 'config.php';
 require_once 'lib/nusoap/nusoap.php';
 require_once 'modules/isf/classes/kohana/isf.php';
 require_once 'application/planlekcji/webapi.app';
