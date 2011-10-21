@@ -1,8 +1,13 @@
 <?php
-/*
- * Plik instalacyjny Planu Lekcji
+/**
+ * Instalator Planu Lekcji
+ * 
+ * @author Michał Bocian <mhl.bocian@gmail.com>
+ * @version 1.5
+ * @license GNU GPL v3
+ * @package main\install
  */
- /**
+/**
  * Wersja instalatora
  */
 define('_I_SYSVER', '1.10 dev');
@@ -36,26 +41,29 @@ if (isset($_GET['reinstall'])) {
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
             <title>Instalator pakietu Internetowy Plan Lekcji <?php echo _I_SYSVER; ?></title>
             <link rel="stylesheet" type="text/css" href="lib/css/style.css"/>
+            <style>
+                body{
+                    background-image: url('lib/images/background.png');
+                }
+            </style>
         </head>
         <body>
-            <img src="lib/images/logo.png" style="height: 80px;"/>
-            <h1 class="notice">Instalacja zakończona powodzeniem!</h1>
-            <p class="info">Usuń plik <b>install.php</b> oraz <b>unixinstall.php</b>
-                i zaloguj się, używając
-                danych podanych przez instalator</p>
-            <?php if (!file_exists('config.php')): ?>
-                <?php
-                $r = $_SERVER['REQUEST_URI'];
-                $r = str_replace('index.php', '', $r);
-                $r = str_replace('install.php', '', $r);
-                $r = str_replace('?reinstall', '', $r);
-                ?>
-                <fieldset style="max-width: 50%;">
-                    <legend>
-                        <p class="error">
-                            Błąd zapisu pliku <b>config.php</b>
-                        </p>
-                    </legend>
+            <div style="text-align: center;">
+                <img src="lib/images/logo.png" style="height: 80px;"/>
+                <h1 class="notice">Instalacja zakończona powodzeniem!</h1>
+                <p>Proszę usunąć plik <b>install.php</b> oraz <b>unixinstall.php</b>
+                    i zaloguj się, używając
+                    danych podanych przez instalator</p>
+                <?php if (!file_exists('config.php')): ?>
+                    <?php
+                    $r = $_SERVER['REQUEST_URI'];
+                    $r = str_replace('index.php', '', $r);
+                    $r = str_replace('install.php', '', $r);
+                    $r = str_replace('?reinstall', '', $r);
+                    ?>
+                    <h3 class="error">Błąd zapisu pliku config.php</h3>
+                    <p>Proszę utworzyć plik config.php w katalogu głównym
+                        aplikacji o poniższej treści.</p>
                     <?php
                     $str = <<< START
    <?php
@@ -69,15 +77,8 @@ if (isset($_GET['reinstall'])) {
 START;
                     highlight_string($str);
                     ?>
-                    <p>Proszę utworzyć plik config.php w katalogu głównym
-                        aplikacji o powyższej treści.</p>
-                </fieldset>
-            <?php endif; ?>
-            <div id="foot">
-                <p>
-                    <img src="lib/images/gplv3.png" alt="GNU GPL v3 logo"/>
-                    <b>Plan lekcji</b> |
-                    <a href="http://planlekcji.googlecode.com" target="_blank">strona projektu Plan Lekcji</a></p>
+
+                <?php endif; ?>
             </div>
         </body>
     </html>
@@ -93,54 +94,59 @@ START;
                     pre{
                         font-size: 10pt;
                     }
+                    body{
+                        background-image: url('lib/images/background.png');
+                    }
+                    input, button{
+                        font-size: 14pt;
+                    }
                 </style>
             </head>
             <body>
-                <img src="lib/images/logo.png"/>
-                <h1>Instalator pakietu Internetowy Plan Lekcji <?php echo _I_SYSVER; ?></h1>
-                <?php if ($_SERVER['SERVER_NAME'] != 'localhost' && $_SERVER['SERVER_NAME'] != '127.0.0.1'): ?>
-                    <p class="error">
-                        Aplikacja może zostać zainstalowana tylko wtedy, gdy ta
-                        strona jest wywołana z komputera lokalnego.
-                    </p>
-                <?php else: ?>
-                    <?php if (isset($_GET['reinstall'])): ?>
-                        <p class="info">Reinstalacja usunie wszystkich użytkowników, wszystkie dane
-                            systemu zostaną zachowane.</p>
-                    <?php endif; ?>
-                    <?php
-                    $r = $_SERVER['REQUEST_URI'];
-                    $r = str_replace('index.php', '', $r);
-                    $r = str_replace('install.php', '', $r);
-                    $r = str_replace('?err', '', $r);
-                    $r = str_replace('?reinstall', '', $r);
-                    ?>
-                    <h3>Krok 1</h3>
-                    <form action="" method="post">
-                        <b>Nazwa szkoły: </b>
-                        <input type="text" name="inpSzkola" size="80"/><p/>
-                        <b>Ścieżka aplikacji*: </b>
-                        <input type="text" name="inpPath" size="50" value="<?php echo $r; ?>"/>
-                        <input type="hidden" name="step2" value="true"/><p/>
-                        <p class="info">
-                            Ścieżka aplikacji to ciąg znaków po nazwie hosta w pasku adresu
-                            przeglądarki. System automatycznie dopasuje odpowiednią wartość.
-                            Proszę nie zmieniać wartości tego pola chyba, że jest ona nieprawidłowa.
+                <div style="text-align: center;">
+                    <img src="lib/images/logo.png"/>
+                    <h1>Internetowy Plan Lekcji <?php echo _I_SYSVER; ?></h1>
+                    <?php if ($_SERVER['SERVER_NAME'] != 'localhost' && $_SERVER['SERVER_NAME'] != '127.0.0.1'): ?>
+                        <p class="error">
+                            Aplikacja może zostać zainstalowana tylko wtedy, gdy ta
+                            strona jest wywołana z komputera lokalnego.
                         </p>
-                        <fieldset style="margin: 10px; max-width: 50%">
-                            <legend><b>Dane serwera PostgreSQL</b></legend>
+                    <?php else: ?>
+                        <?php if (isset($_GET['reinstall'])): ?>
+                            <p class="info">Reinstalacja usunie wszystkich użytkowników, wszystkie dane
+                                systemu zostaną zachowane.</p>
+                        <?php endif; ?>
+                        <?php
+                        $r = $_SERVER['REQUEST_URI'];
+                        $r = str_replace('index.php', '', $r);
+                        $r = str_replace('install.php', '', $r);
+                        $r = str_replace('?err', '', $r);
+                        $r = str_replace('?reinstall', '', $r);
+                        ?>
+                        <h3>Instalator systetmu</h3>
+                        <form action="" method="post">
+                            <b>Nazwa szkoły: </b>
+                            <input type="text" name="inpSzkola" size="80"/><p/>
+                            <b>Ścieżka aplikacji*: </b>
+                            <input type="text" name="inpPath" size="50" value="<?php echo $r; ?>"/>
+                            <input type="hidden" name="step2" value="true"/><p/>
+                            <p class="info">
+                                Ścieżka aplikacji to ciąg znaków po nazwie hosta w pasku adresu
+                                przeglądarki. System automatycznie dopasuje odpowiednią wartość.
+                                Proszę nie zmieniać wartości tego pola chyba, że jest ona nieprawidłowa.
+                            </p>
+                            <h3>Dane serwera PostgreSQL</h3>
                             <p><b>Host: <input type="text" name="dbHost" size="50"/></b></p>
                             <p><b>Login: <input type="text" name="dbLogin" size="50"/></b></p>
                             <p><b>Hasło: <input type="password" name="dbHaslo" size="50"/></b></p>
-                            <p><b>Baza danych: <input type="text" name="dbBaza" size="50"/></b>
-                                baza musi istnieć</p>
-                        </fieldset>
-                        <button type="submit" name="btnSubmit">Zainstaluj aplikację</button>
-                    </form>
-                    <?php if (isset($_GET['err'])): ?>
-                        <p class="error">Żadne pole nie może być puste!</p>
+                            <p><b>Baza danych: <input type="text" name="dbBaza" size="50"/></b></p>
+                            <button type="submit" name="btnSubmit">Zainstaluj aplikację</button>
+                        </form>
+                        <?php if (isset($_GET['err'])): ?>
+                            <p class="error">Żadne pole nie może być puste!</p>
+                        <?php endif; ?>
                     <?php endif; ?>
-                <?php endif; ?>
+                </div>
             </body>
         </html>
     <?php else: ?>
@@ -160,7 +166,7 @@ START;
             'password' => $_POST['dbHaslo'],
             'database' => $_POST['dbBaza'],
         );
-		
+
         $a = fopen('config.php', 'w');
         if (!$a) {
             $ferr = true;
@@ -172,8 +178,8 @@ START;
             fputs($a, $file);
             fclose($a);
         }
-		
-		/**
+
+        /**
          * Przystapienie do instalacji systemu
          */
         $App_Install = new Core_Install('sqlite');
@@ -194,13 +200,13 @@ START;
             <body>
                 <img src="lib/images/logo.png" style="height: 80px;"/>
                 <h1>Instalator pakietu Internetowy Plan Lekcji <?php echo _I_SYSVER; ?></h1>
-                    <h3 class="notice">Dziękujemy za instalację</h3>
-                    <h3>Twoje dane administratora</h3>
-                    <p><b>Login: </b>root</p>
-                    <p><b>Hasło: </b><?php echo $res['pass']; ?></p>
-                    <p><b>Token: </b><?php echo $res['token']; ?></p>
-                    <p class="info">Zapamiętaj dane do logowania oraz usuń pliki <b>install.php</b> oraz <b>unixinstall.php</b>,
-                        a następnie przejdź do <a href="index.php">strony głównej</a>.</p>
+                <h3 class="notice">Dziękujemy za instalację</h3>
+                <h3>Twoje dane administratora</h3>
+                <p><b>Login: </b>root</p>
+                <p><b>Hasło: </b><?php echo $res['pass']; ?></p>
+                <p><b>Token: </b><?php echo $res['token']; ?></p>
+                <p class="info">Zapamiętaj dane do logowania oraz usuń pliki <b>install.php</b> oraz <b>unixinstall.php</b>,
+                    a następnie przejdź do <a href="index.php">strony głównej</a>.</p>
                 <?php if (!file_exists('config.php')): ?>
                     <?php
                     $r = $_SERVER['REQUEST_URI'];
