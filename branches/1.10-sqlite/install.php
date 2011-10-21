@@ -189,7 +189,7 @@ else:
         /**
          * Przystapienie do instalacji systemu
          */
-        $App_Install = new \com\planlekcji\Install('sqlite');
+        $App_Install = new Core_Install('sqlite');
         $App_Install->Connect('sqlite');
         $res = $App_Install->DbInit($_POST['inpSzkola'], _I_SYSVER);
         ?>
