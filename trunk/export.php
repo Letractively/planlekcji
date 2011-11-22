@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Eksporter Planow Lekcji (EPL)
  * 

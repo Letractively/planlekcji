@@ -80,8 +80,8 @@ function pobierzzast($id) {
 ?>
 <?php pobierzzast($zast_id); ?>
 <p>
-    <span style="font-size: 10pt;">
-        <b>&leftarrow;</b>
+    <span style="font-size: 16pt;">
+        ◂
     </span>
-    &emsp;<a href="<?php echo URL::site('zastepstwa/index'); ?>">Powrót do zastępstw</a>
+    <a href="<?php echo URL::site('zastepstwa/index'); ?>">Powrót do zastępstw</a>
 </p>

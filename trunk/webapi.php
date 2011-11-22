@@ -43,6 +43,7 @@ $soapsrv->register('doLogin', array('username' => 'xsd:string', 'password' => 'x
 $soapsrv->register('doShowAuthTime', array('token' => 'xsd:string'), array('return' => 'xsd:string'), $namespace, false, false, 'literal');
 $soapsrv->register('doRenewToken', array('token' => 'xsd:string'), array('return' => 'xsd:string'), $namespace, false, false, 'literal');
 $soapsrv->register('doAddClassroom', array('token' => 'xsd:string', 'class' => 'xsd:string'), array('return' => 'xsd:string'), $namespace, false, false, 'literal');
+$soapsrv->register('doAddClass', array('token' => 'xsd:string', 'class' => 'xsd:string'), array('return' => 'xsd:string'), $namespace, false, false, 'literal');
 $soapsrv->register('doGetRegistryKey', array('token' => 'xsd:string', 'key' => 'xsd:string'), array('return' => 'xsd:string'), $namespace, false, false, 'literal');
 $soapsrv->register('doChangePass', array('token' => 'xsd:string', 'old' => 'xsd:string', 'new' => 'xsd:string'), array('return' => 'xsd:string'), $namespace, false, false, 'literal');
 $soapsrv->register('doLogout', array('token' => 'xsd:string'), array('return' => 'xsd:string'), $namespace, false, false, 'literal');
