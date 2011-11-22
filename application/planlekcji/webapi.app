@@ -196,6 +196,32 @@ function doAddClassroom($token, $class) {
 }
 
 /**
+ * Dodaje klase
+ *
+ * @param string $token Token sesji
+ * @param string  $class Klasa
+ * @return string
+ */
+function doAddClass($token, $class) {
+    if (!checkauth($token)) {
+        return 'auth:failed';
+    } else {
+        $db = new Kohana_Isf();
+        $db->DbConnect();
+        if (count($db->DbSelect('klasy', array('*'), 'where klasa=\'' . $class . '\'')) != 0) {
+            return 'class:exists';
+        } else {
+            if (preg_match('/([.!@#$;%^&*()_+|])/i', $class)) {
+                return 'class:nameerror';
+            } else {
+                $db->DbInsert('klasy', array('klasa' => $class));
+                return 'class:added';
+            }
+        }
+    }
+}
+
+/**
  * Zmienia haslo uzytkownika
  *
  * @param string $token token
