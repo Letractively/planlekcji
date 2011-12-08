@@ -50,7 +50,7 @@ class Controller_Klasy extends Controller {
             }
         }
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
         /**
          * Czy mozna edytowac dane
@@ -81,7 +81,7 @@ class Controller_Klasy extends Controller {
      */
     public function action_usun($klasa) {
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $isf->DbDelete('klasy', 'klasa=\'' . $klasa . '\'');
         $isf->DbDelete('nl_klasy', 'klasa=\'' . $klasa . '\'');
         Kohana_Request::factory()->redirect('klasy/index/usun');
@@ -99,7 +99,7 @@ class Controller_Klasy extends Controller {
         } else {
 
             $isf = new Kohana_Isf();
-            $isf->DbConnect();
+            $isf->Connect(APP_DBSYS);
 
             if (count($isf->DbSelect('klasy', array('*'), 'where klasa=\'' . $_POST['inpKlasa'] . '\'')) != 0) {
                 Kohana_Request::factory()->redirect('klasy/index/e1');
@@ -130,7 +130,7 @@ class Controller_Klasy extends Controller {
         if (isset($_POST)) {
             $i = $_POST['grp'];
             $isf = new Kohana_Isf();
-            $isf->DbConnect();
+            $isf->Connect(APP_DBSYS);
             $isf->DbUpdate('rejestr', array('wartosc' => $i), 'opcja=\'ilosc_grup\'');
         }
         Kohana_Request::factory()->redirect('klasy/index');

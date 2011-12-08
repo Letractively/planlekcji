@@ -49,7 +49,7 @@ class Controller_Przedmioty extends Controller {
             }
         }
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
         /**
          * Czy mozna edytowac dane
@@ -67,7 +67,7 @@ class Controller_Przedmioty extends Controller {
     public function action_index($err=null) {
 
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
 
         $view = view::factory('main');
         $view2 = view::factory('przedmioty_index');
@@ -88,7 +88,7 @@ class Controller_Przedmioty extends Controller {
     public function action_usun($przedmiot, $usun=null) {
 
         $isf = new Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
 
         if ($usun == null) {
             $isf->JQUi();
@@ -120,7 +120,7 @@ class Controller_Przedmioty extends Controller {
         if (isset($_POST)) {
 
             $isf = new Kohana_Isf();
-            $isf->DbConnect();
+            $isf->Connect(APP_DBSYS);
 
             if (count($isf->DbSelect('przedmioty', array('*'), 'where przedmiot=\'' . $_POST['inpPrzedmiot'] . '\'')) != 0) {
                 Kohana_Request::factory()->redirect('przedmioty/index/e1');
@@ -155,7 +155,7 @@ class Controller_Przedmioty extends Controller {
      */
     public function action_sale($przedmiot) {
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $isf->JQUi();
         $view = view::factory('main');
         $view2 = view::factory('przedmioty_sale');
@@ -178,7 +178,7 @@ class Controller_Przedmioty extends Controller {
         $przedmiot = $_POST['formPrzedmiot'];
         $sala = $_POST['selSale'];
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $isf->DbInsert('przedmiot_sale', array(
             'przedmiot' => $przedmiot,
             'sala' => $sala,
@@ -193,7 +193,7 @@ class Controller_Przedmioty extends Controller {
      */
     public function action_przypisusun($przedmiot, $sala) {
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $isf->DbDelete('przedmiot_sale', 'przedmiot=\'' . $przedmiot . '\' and sala=\'' . $sala . '\'');
         Kohana_Request::factory()->redirect('przedmioty/sale/' . $przedmiot);
     }
@@ -219,7 +219,7 @@ class Controller_Przedmioty extends Controller {
      */
     public function action_wypisz($przedmiot, $nauczyciel) {
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $isf->DbDelete('nl_przedm', 'nauczyciel=\'' . $nauczyciel . '\' and przedmiot=\'' . $przedmiot . '\'');
         Kohana_Request::factory()->redirect('przedmioty/zarzadzanie/' . $przedmiot);
     }
@@ -230,7 +230,7 @@ class Controller_Przedmioty extends Controller {
         $nauczyciel = $_POST['selNaucz'];
         $przedm = $_POST['przedmiot'];
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $isf->DbInsert('nl_przedm', array(
             'nauczyciel' => $nauczyciel,
             'przedmiot' => $przedm,

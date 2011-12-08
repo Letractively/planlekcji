@@ -16,14 +16,14 @@ class App_Globals {
 
     public static function getSysLv() {
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $a = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
         return $a[1]['wartosc'];
     }
 
     public static function getRegistryKey($key) {
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $a = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'' . $key . '\'');
         if (count($a) == 0) {
             return 'registry:key not exists';

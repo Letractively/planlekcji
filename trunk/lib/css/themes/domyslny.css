@@ -28,20 +28,14 @@ a.anodd:visited{
     padding: 5px;
 }
 .app_info{
-    width:100%;
     background-color: #2B6FB6;
-    margin-top: 0px;
-    padding: 5px;
     text-shadow: lightgray 1px 1px 3px;
     font-style: italic;
     font-weight: bolder;
     color: white;
 }
 .app_ver{
-    width:100%;
     background-color: lightgrey;
-    margin-top: 0px;
-    padding: 5px;
     text-align: right;
 }
 button{

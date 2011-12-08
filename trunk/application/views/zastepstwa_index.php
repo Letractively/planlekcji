@@ -1,6 +1,6 @@
 <?php
 $isf = new Kohana_Isf();
-$isf->DbConnect();
+$isf->Connect(APP_DBSYS);
 $zast = $isf->DbSelect('zast_id', array('*'), 'order by dzien desc');
 $ile = count($zast);
 $enpl_days = array(

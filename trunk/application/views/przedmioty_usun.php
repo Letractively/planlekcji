@@ -5,7 +5,7 @@
  * 
  */
 $isf = new Kohana_Isf();
-$isf->DbConnect();
+$isf->Connect(APP_DBSYS);
 $nres = $isf->DbSelect('nl_przedm', array('nauczyciel'), 'where przedmiot="' . $przedmiot . '"');
 ?>
 <h1>Usunięcie przedmiotu <b><?php echo $przedmiot; ?></b></h1>

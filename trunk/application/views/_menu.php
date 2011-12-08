@@ -1,5 +1,5 @@
 <?php $isf = new Kohana_Isf(); ?>
-<?php $isf->DbConnect(); ?>
+<?php $isf->Connect(APP_DBSYS); ?>
 <p>
     <img src="<?php echo URL::base(); ?>lib/icons/adminlogin.png" alt=""/>
     <a href="<?php echo URL::site('admin/login'); ?>">

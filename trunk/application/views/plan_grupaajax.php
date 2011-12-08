@@ -5,7 +5,7 @@
  * 
  */
 $isf = new Kohana_Isf();
-$isf->DbConnect();
+$isf->Connect(APP_DBSYS);
 /**
  * Pobiera ilość godzin lekcyjnych
  */
@@ -40,7 +40,7 @@ $ilosc_grp = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'ilosc_grup\'')
 function pobierzdzien($dzien, $lekcja) {
     global $k; // odwolanie do globalnej k
     $isf = new Kohana_Isf();
-    $isf->DbConnect();
+    $isf->Connect(APP_DBSYS);
     /**
      * Pobiera wszystkich nauczycieli uczących klasę
      */

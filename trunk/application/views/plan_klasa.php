@@ -5,7 +5,7 @@
  */
 $k = $klasa;
 $isf = new Kohana_Isf();
-$isf->DbConnect();
+$isf->Connect(APP_DBSYS);
 $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
 $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
 

@@ -23,19 +23,13 @@ a.anodd:visited{
     padding: 5px;
 }
 .app_info{
-    width:100%;
     background-color: #f1db48;
-    margin-top: 0px;
-    padding: 5px;
     text-shadow: gray 1px 1px 3px;
     font-style: italic;
     font-weight: bolder;
 }
 .app_ver{
-    width:100%;
     background-color: #f1db48;
-    margin-top: 0px;
-    padding: 5px;
     text-align: right;
 }
 button{

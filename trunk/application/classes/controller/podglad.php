@@ -79,7 +79,7 @@ class Controller_Podglad extends Controller {
         $view = view::factory('podglad_nauczyciel');
 
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
 
         $imienaz = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\'' . $nauczyciel . '\'');
         $imienaz = $imienaz[1]['imie_naz'];
@@ -146,7 +146,7 @@ class Controller_Podglad extends Controller {
         $view = view::factory('podglad_nauczyciel');
         
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
 
         $imienaz = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\'' . $nauczyciel . '\'');
         $imienaz = $imienaz[1]['imie_naz'];

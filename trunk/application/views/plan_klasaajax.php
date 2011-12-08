@@ -8,7 +8,7 @@
  * Nowy obiekt frameworka
  */
 $isf = new Kohana_Isf();
-$isf->DbConnect();
+$isf->Connect(APP_DBSYS);
 /**
  * Pobiera z rejestru ilość godzin lekcyjnych
  */
@@ -38,7 +38,7 @@ function pobierzdzien($dzien, $lekcja) {
      * Nowy obiekt frameworka
      */
     $isf = new Kohana_Isf();
-    $isf->DbConnect();
+    $isf->Connect(APP_DBSYS);
     /**
      * Pobiera wszystkich nauczycieli uczących klasę
      */

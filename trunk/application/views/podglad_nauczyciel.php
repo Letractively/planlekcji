@@ -5,7 +5,7 @@
  * 
  */
 $isf = new Kohana_Isf();
-$isf->DbConnect();
+$isf->Connect(APP_DBSYS);
 $ilosc_lek = $isf->DbSelect('rejestr', array('wartosc'), 'where opcja=\'ilosc_godzin_lek\'');
 $ilosc_lek = $ilosc_lek[1]['wartosc'];
 $lek_godziny = $isf->DbSelect('lek_godziny', array('*'));
@@ -15,7 +15,7 @@ $GLOBALS['k'] = $klasa;
 function pobierzdzien($dzien, $lekcja) {
     global $k;
     $isf = new Kohana_Isf();
-    $isf->DbConnect();
+    $isf->Connect(APP_DBSYS);
     $apg = new App_Globals();
     $ilosc_grp = $apg->getRegistryKey('ilosc_grup');
     $ret = '';

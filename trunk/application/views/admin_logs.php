@@ -1,6 +1,6 @@
 <?php
 $isf = new Kohana_Isf();
-$isf->DbConnect();
+$isf->Connect(APP_DBSYS);
 $ile = count($isf->DbSelect('log', array('*')));
 $ile = ceil($ile / 15);
 $offset = 15 * ($page - 1);

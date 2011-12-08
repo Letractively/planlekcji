@@ -50,7 +50,7 @@ class Controller_Nauczyciele extends Controller {
             }
         }
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
         /**
          * Czy mozna edytowac dane
@@ -84,7 +84,7 @@ class Controller_Nauczyciele extends Controller {
         if (isset($_POST)) {
 
             $isf = new Kohana_Isf();
-            $isf->DbConnect();
+            $isf->Connect(APP_DBSYS);
 
             if (count($isf->DbSelect('nauczyciele', array('*'), 'where imie_naz=\'' . $_POST['inpName'] . '\'')) != 0) {
                 Kohana_Request::factory()->redirect('nauczyciele/index/e1');
@@ -126,7 +126,7 @@ class Controller_Nauczyciele extends Controller {
      */
     public function action_zarzadzanie($skrot) {
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $nauczyciel = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\'' . $skrot . '\'');
         $nauczyciel = $nauczyciel[1]['imie_naz'];
 
@@ -146,7 +146,7 @@ class Controller_Nauczyciele extends Controller {
         $naucz = $_POST['nauczyciel'];
         $klasa = $_POST['selKlasy'];
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $nl = $isf->DbSelect('nauczyciele', array('*'), 'where imie_naz=\''.$naucz.'\'');
         $nl = $nl[1]['skrot'];
         $isf->DbInsert('nl_klasy', array(
@@ -172,7 +172,7 @@ class Controller_Nauczyciele extends Controller {
             echo $view->render();
         } else {
             $isf = new Kohana_Isf();
-            $isf->DbConnect();
+            $isf->Connect(APP_DBSYS);
             $nl = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\'' . $nauczyciel . '\'');
             $isf->DbDelete('nauczyciele', 'skrot=\'' . $nauczyciel . '\'');
             $nauczyciel = $nl[1]['imie_naz'];
@@ -190,7 +190,7 @@ class Controller_Nauczyciele extends Controller {
         $naucz = $_POST['nauczyciel'];
         $przedmiot = $_POST['selPrzedm'];
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $isf->DbInsert('nl_przedm', array(
             'nauczyciel' => $naucz,
             'przedmiot' => $przedmiot
@@ -206,7 +206,7 @@ class Controller_Nauczyciele extends Controller {
      */
     public function action_klwyp($nauczyciel, $klasa) {
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $nl = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\''.$nauczyciel.'\'');
         $nl = $nl[1]['imie_naz'];
         $isf->DbDelete('nl_klasy', 'nauczyciel=\'' . $nl . '\' and klasa=\'' . $klasa . '\'');
@@ -221,7 +221,7 @@ class Controller_Nauczyciele extends Controller {
      */
     public function action_przwyp($nauczyciel, $przedmiot) {
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $nl = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\'' . $nauczyciel . '\'');
         $nl = $nl[1]['imie_naz'];
         $isf->DbDelete('nl_przedm', 'nauczyciel=\'' . $nl . '\' and przedmiot=\'' . $przedmiot . '\'');

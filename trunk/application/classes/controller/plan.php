@@ -50,7 +50,7 @@ class Controller_Plan extends Controller {
             }
         }
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
         if ($reg[1]['wartosc'] != 0) {
             echo '<h1>Edycja danych nie zostala zamknieta</h1>';
@@ -116,7 +116,7 @@ class Controller_Plan extends Controller {
      */
     public function action_zatwierdz() {
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $klasa = $_POST['klasa'];
         $isf->DbDelete('plan_grupy', 'klasa=\'' . $klasa . '\'');
         foreach ($_POST['Poniedziałek'] as $lek => $przedm) {
@@ -276,7 +276,7 @@ class Controller_Plan extends Controller {
      */
     public function action_grupazatw() {
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $klasa = $_POST['klasa'];
         $isf->DbDelete('plan_grupy', 'klasa=\'' . $klasa . '\'');
         foreach ($_POST['Poniedziałek'] as $lek => $przedlek) {

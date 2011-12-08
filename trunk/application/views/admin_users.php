@@ -1,6 +1,6 @@
 <?php
 $isf = new Kohana_Isf();
-$isf->DbConnect();
+$isf->Connect(APP_DBSYS);
 ?>
 <?php $res = $isf->DbSelect('uzytkownicy', array('*'), 'where login != \'root\''); ?>
 <table style="width: 100%;">

@@ -16,7 +16,7 @@ function ustalplan($klasa) {
     $ilosc_godz_tyg = $maxl * 8;
 
     $isf = new Kohana_Isf();
-    $isf->DbConnect();
+    $isf->Connect(APP_DBSYS);
 
     $isf->DbDelete('planlek', 'where klasa like \'%\'');
 
@@ -113,7 +113,7 @@ function ustalplan($klasa) {
 }
 
 $isf = new Kohana_Isf();
-$isf->DbConnect();
+$isf->Connect(APP_DBSYS);
 foreach ($isf->DbSelect('klasy', array('*')) as $rowid => $rowcol) {
     ustalplan($rowcol['klasa']);
 }

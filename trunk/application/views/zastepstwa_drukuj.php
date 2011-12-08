@@ -2,7 +2,7 @@
 
 function pobierznl($lekcja, $id) {
     $isf = new Kohana_Isf();
-    $isf->DbConnect();
+    $isf->Connect(APP_DBSYS);
 
 
     $res = $isf->DbSelect('zastepstwa', array('*'), 'where zast_id=\'' . $id . '\' and lekcja=\'' . $lekcja . '\'');
@@ -19,7 +19,7 @@ function pobierznl($lekcja, $id) {
 
 function pobierzdzien($id) {
     $isf = new Kohana_Isf();
-    $isf->DbConnect();
+    $isf->Connect(APP_DBSYS);
     $nl = $isf->DbSelect('zast_id', array('*'), 'where zast_id=\'' . $id . '\'');
     $nauczyciel = $nl[1]['za_nl'];
 
