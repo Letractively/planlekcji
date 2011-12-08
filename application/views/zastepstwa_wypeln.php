@@ -3,7 +3,7 @@ $isf = new Kohana_Isf();
 
 function pobierznl($dzien, $lekcja) {
     $isf = new Kohana_Isf();
-    $isf->DbConnect();
+    $isf->Connect(APP_DBSYS);
 
     $r = 1;
     $res = array();
@@ -42,7 +42,7 @@ function pobierznl($dzien, $lekcja) {
 
 function pobierzdzien($dzien, $nauczyciel) {
     $isf = new Kohana_Isf();
-    $isf->DbConnect();
+    $isf->Connect(APP_DBSYS);
     echo '<table class="przed"><thead class="a_odd">
         <tr><td></td><td>Godzina</td><td colspan=2>Lekcja</td></tr></thead>';
     $i_l = 0;

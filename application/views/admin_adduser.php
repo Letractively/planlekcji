@@ -1,6 +1,6 @@
 <?php
 $isf = new Kohana_Isf();
-$isf->DbConnect();
+$isf->Connect(APP_DBSYS);
 $uid = $isf->DbSelect('uzytkownicy', array('*'), 'order by uid desc');
 $uid = $uid[1]['uid'] + 1;
 ?>

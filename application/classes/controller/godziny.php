@@ -50,7 +50,7 @@ class Controller_Godziny extends Controller {
             }
         }
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
         /**
          * Czy mozna edytowac dane
@@ -69,7 +69,7 @@ class Controller_Godziny extends Controller {
         $view2 = view::factory('godziny_index');
 
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $res = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'ilosc_godzin_lek\'');
         $isf->JQUi();
         $isf->JQUi_CustomFunction('$(\'#czasRZ\').timepicker({showHour:true});');
@@ -87,7 +87,7 @@ class Controller_Godziny extends Controller {
      */
     public function action_ustaw() {
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $ilosc = $_POST['iloscgodzin'];
         $isf->DbUpdate('rejestr', array('wartosc' => $ilosc), 'opcja=\'ilosc_godzin_lek\'');
         $isf->DbUpdate('rejestr', array('wartosc' => $_POST['dlugosclekcji']), 'opcja=\'dlugosc_lekcji\'');
@@ -100,7 +100,7 @@ class Controller_Godziny extends Controller {
      */
     public function action_lekcje() {
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $czaslek = $isf->DbSelect('rejestr', array('wartosc'), 'where opcja=\'dlugosc_lekcji\'');
         $czaslek = $czaslek[1]['wartosc'];
 

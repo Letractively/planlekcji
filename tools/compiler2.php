@@ -6,7 +6,7 @@ require_once '../lib/nusoap/nusoap.php';
 define('HNAME', 'http://localhost/');
 
 $isf = new Kohana_Isf();
-$isf->DbConnect();
+$isf->Connect(APP_DBSYS);
 
 try {
     $wsdl = new nusoap_client(HNAME . 'webapi.php?wsdl');

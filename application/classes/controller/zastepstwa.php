@@ -61,7 +61,7 @@ class Controller_Zastepstwa extends Controller {
             }
         }
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
         if ($reg[1]['wartosc'] != 3) {
             echo '<h1>Edycja planow nie zostala zamknieta</h1>';
@@ -150,7 +150,7 @@ class Controller_Zastepstwa extends Controller {
         $view2 = view::factory('zastepstwa_przeglad');
 
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $res = $isf->DbSelect('zast_id', array('*'), 'where zast_id=\'' . $id . '\'');
 
         $enpl_days = array(
@@ -184,7 +184,7 @@ class Controller_Zastepstwa extends Controller {
         }
 
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
 
         $isf->DbInsert('zast_id', array(
             'dzien' => $_POST['dzien'],
@@ -224,7 +224,7 @@ class Controller_Zastepstwa extends Controller {
     public function action_usun($id) {
         $this->checklogin();
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $isf->DbDelete('zast_id', 'zast_id=\'' . $id . '\'');
         $isf->DbDelete('zastepstwa', 'zast_id=\'' . $id . '\'');
 

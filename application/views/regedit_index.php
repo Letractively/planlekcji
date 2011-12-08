@@ -1,8 +1,8 @@
 <?php
 $isf = new Kohana_Isf();
-$isf->DbConnect();
+$isf->Connect(APP_DBSYS);
 ?>
-<table>
+<table style="width:100%;">
     <thead style="text-align: center;">
         <tr class="a_odd">
             <td colspan="2">

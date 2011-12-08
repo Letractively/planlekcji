@@ -1,5 +1,5 @@
 <?php $isf = new Kohana_Isf(); ?>
-<?php $isf->DbConnect(); ?>
+<?php $isf->Connect(APP_DBSYS); ?>
 <?php if (App_Globals::getSysLv() == 3): // gdy edycja planow zamknieta     ?>
     <h3>Oddziały</h3>
     <p class="a_klasy">

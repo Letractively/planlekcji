@@ -3,7 +3,7 @@
  * Resetowanie systemu Plan Lekcji
  */
 $isf = new Kohana_Isf();
-$isf->DbConnect();
+$isf->Connect(APP_DBSYS);
 $res = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
 $res = $res[1]['wartosc'];
 ?>

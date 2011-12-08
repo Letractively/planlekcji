@@ -34,7 +34,7 @@ require_once 'application/planlekcji/globals.app';
 
 $GLOBALS['hostname'] = 'http://' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $path;
 $isf = new Kohana_Isf();
-$isf->DbConnect();
+$isf->Connect(APP_DBSYS);
 
 try {
     $wsdl = new nusoap_client($GLOBALS['hostname'] . 'webapi.php?wsdl');

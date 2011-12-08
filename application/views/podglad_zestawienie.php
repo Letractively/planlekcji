@@ -4,7 +4,7 @@ $GLOBALS['ilosc_klas'] = '';
 function pobierz_naglowki() {
 
     $isf = new Kohana_Isf();
-    $isf->DbConnect();
+    $isf->Connect(APP_DBSYS);
     $klasy = $isf->DbSelect('klasy', array('*'));
     $nl = $isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc');
     $GLOBALS['ilosc_nl'] = count($nl);
@@ -26,7 +26,7 @@ function pobierz_naglowki() {
 
 function pobierz_klasy($dzien, $lekcja) {
     $isf = new Kohana_Isf();
-    $isf->DbConnect();
+    $isf->Connect(APP_DBSYS);
 
     $apg = new App_Globals();
     $ilgr = $apg->getRegistryKey('ilosc_grup');
@@ -99,7 +99,7 @@ function pobierz_klasy($dzien, $lekcja) {
 
 function pobierz_dzien($dzien) {
     $isf = new Kohana_Isf();
-    $isf->DbConnect();
+    $isf->Connect(APP_DBSYS);
 
     $lekcje = $isf->DbSelect('lek_godziny', array('*'));
 

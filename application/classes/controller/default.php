@@ -48,7 +48,7 @@ class Controller_Default extends Controller {
      */
     public function action_index() {
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $view = View::factory('main');
 
         $content = $isf->DbSelect('rejestr', array('*'), 'where opcja = \'index_text\'');

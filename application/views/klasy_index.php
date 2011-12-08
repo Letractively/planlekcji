@@ -26,7 +26,7 @@
 
 <?php
 $isf = new Kohana_Isf();
-$isf->DbConnect();
+$isf->Connect(APP_DBSYS);
 /** pobiera klasy w systemie */
 $res = $isf->DbSelect('klasy', array('klasa'), 'order by klasa asc');
 /** pobiera ilosc grup */

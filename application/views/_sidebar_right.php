@@ -8,7 +8,7 @@ if ($zadmin > $toktime) {
     $tokenizer = '<i class="notice">' . $_SESSION['token_time'] . '</i>';
 }
 ?>
-<td valign="top" style="width: 20%;">
+<td valign="top">
     <fieldset>
         <legend>
             <img src="<?php echo URL::base() ?>lib/images/user.gif" alt=""/>

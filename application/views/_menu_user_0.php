@@ -1,5 +1,5 @@
 <?php $isf = new Kohana_Isf(); ?>
-<?php $isf->DbConnect(); ?>
+<?php $isf->Connect(APP_DBSYS); ?>
 <table border="0" width="100%">
     <thead class="a_even" style="text-align: center;">
         <tr>

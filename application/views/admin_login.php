@@ -17,6 +17,7 @@ if (!isset($_POST['inpLogin'])) {
         text-align: center;
     }
 </style>
+
 <form action="<?php echo url::site('admin/dologin'); ?>" method="post" name="lgn">
     <div class="a_light_menu" style="width: 100%;">
         <table border="0">
@@ -35,27 +36,35 @@ if (!isset($_POST['inpLogin'])) {
                     <td>Token sesji</td>
                     <td><input style="width: 100%;" type="text" name="inpToken"/></td>
                 </tr>
-                <?php if ($pass == 'false'): ?>
-                    <tr class="a_error">
-                        <td colspan="2">
-                            Nie udało się zalogować do systemu
-                        </td>
-                    </tr>
-                <?php endif; ?>
-                <?php if ($pass == 'locked'): ?>
-                    <tr class="a_error">
-                        <td colspan="2">
-                            Twoje konto jest zablokowane
-                        </td>
-                    </tr>
-                <?php endif; ?>
-                <?php if ($pass == 'delay'): ?>
-                    <tr class="a_error">
-                        <td colspan="2">
-                            Twój token wygasł
-                        </td>
-                    </tr>
-                <?php endif; ?>
+		<?php if ($pass == 'false'): ?>
+    		<tr class="a_error">
+    		    <td colspan="2">
+    			Nie udało się zalogować do systemu
+    		    </td>
+    		</tr>
+		<?php endif; ?>
+		<?php if ($pass == 'locked'): ?>
+    		<tr class="a_error">
+    		    <td colspan="2">
+    			Twoje konto jest zablokowane
+    		    </td>
+    		</tr>
+		<?php endif; ?>
+		<?php if ($pass == 'delay'): ?>
+    		<tr class="a_error">
+    		    <td colspan="2">
+    			Twój token wygasł
+    		    </td>
+    		</tr>
+		<?php endif; ?>
+		<?php if ($pass == 'exist'): ?>
+    		<tr class="a_error">
+    		    <td colspan="2">
+    			Token został nadpisany. Prawdopodobnie inna osoba zalogowała się
+			na to konto. Sprawdź <b>Dziennik Aplikacji</b>.
+    		    </td>
+    		</tr>
+		<?php endif; ?>
                 <tr style="text-align: center">
                     <td></td>
                     <td>

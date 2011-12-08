@@ -5,7 +5,7 @@
  * 
  */
 $isf = new Kohana_Isf();
-$isf->DbConnect();
+$isf->Connect(APP_DBSYS);
 $nl = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\''.$nauczyciel.'\'');
 $nauczyciel = $nl[1]['imie_naz'];
 $nres = $isf->DbSelect('nl_przedm', array('przedmiot'), 'where nauczyciel="' . $nauczyciel . '"');

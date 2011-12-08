@@ -5,7 +5,7 @@
  * 
  */
 $isf = new Kohana_Isf();
-$isf->DbConnect();
+$isf->Connect(APP_DBSYS);
 ?>
 <h1><?php echo $przedmiot . ' - zarządzanie'; ?></h1>
 

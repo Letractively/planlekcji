@@ -2,22 +2,66 @@ body{
     font-family: sans-serif;
     font-size: 9pt;
     margin: 5px;
+    margin-top: 0px;
+    margin-bottom: 0px;
     max-width: 100%;
 }
+div#divbrk{
+    clear: both;
+}
+div#container{
+    width: 1000px;
+    margin: 0 auto;
+    background-color: white;
+    box-shadow: white 0px 0px 6px;
+}
+div#container1{
+}
+div#pnlLeft{
+    width: 200px;
+    float: left;
+}
+div#pnlCenter{
+    width: 780px;
+    padding-left: 10px;
+    padding-right: 10px;
+    float: left;
+}
+div#pnlRight{
+    width: 200px;
+    float: right;
+    padding-right: 10px;
+}
+div#footer{
+    position: fixed;
+    bottom: 0px;
+    width: 1000px;
+}
+
+.app_info{
+    padding: 5px;
+    font-size: 14pt;
+}
+.app_ver{
+    font-size: 8pt;
+    padding-right: 10px;
+}
+.a_error{
+    padding-top: 2px;
+    padding-bottom: 2px;
+    background-color: red;
+    color: white;
+}
+
+.a_klasy{
+    line-height: 200%;
+}
+
 p{
     font-size: 8pt;
 }
 .ui-button-text-only .ui-button-text {
     padding: 0.3em 1em;
-}
-.app_info{
-    font-size: 14pt;
-}
-.app_ver{
-    font-size: 8pt;
-}
-.a_klasy{
-    line-height: 200%;
 }
 
 input{
@@ -31,12 +75,6 @@ button{
 #mainw{
     max-height: 100%;
 
-}
-.a_error{
-    background-color: red;
-    margin-top: 0px;
-    padding: 5px;
-    color: white;
 }
 .grptxt{
     font-size: 8pt;
@@ -155,9 +193,4 @@ table.przed td {
     padding: 3px;
     border-style: solid;
     border-color: black;
-}
-table.main {
-    border-width: 0px;
-    width: 100%;
-    max-width: 100%;
 }

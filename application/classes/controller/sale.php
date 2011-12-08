@@ -47,7 +47,7 @@ class Controller_Sale extends Controller {
             }
         }
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+	$isf->Connect(APP_DBSYS);
         $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
         /**
          * Czy mozna edytowac dane
@@ -64,7 +64,7 @@ class Controller_Sale extends Controller {
      */
     public function action_index($err=null) {
         $isf = new Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
 
         $view = View::factory('main');
 
@@ -88,7 +88,7 @@ class Controller_Sale extends Controller {
     public function action_usun($sala, $usun=null) {
 
         $isf = new Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
 
         if ($usun == null) {
 
@@ -122,7 +122,7 @@ class Controller_Sale extends Controller {
         if (isset($_POST)) {
 
             $isf = new Kohana_Isf();
-            $isf->DbConnect();
+            $isf->Connect(APP_DBSYS);
 
             if (count($isf->DbSelect('sale', array('*'), 'where sala=\'' . $_POST['inpSala'] . '\'')) != 0) {
                 Kohana_Request::factory()->redirect('sale/index/e1');
@@ -154,7 +154,7 @@ class Controller_Sale extends Controller {
      */
     public function action_przedmiot($sala) {
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
 
         $view = view::factory('main');
         $view2 = view::factory('sale_przedmiot');
@@ -177,7 +177,7 @@ class Controller_Sale extends Controller {
         $sala = $_POST['formSala'];
         $przedmiot = $_POST['selPrzed'];
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $isf->DbInsert('przedmiot_sale', array(
             'przedmiot' => $przedmiot,
             'sala' => $sala,
@@ -192,7 +192,7 @@ class Controller_Sale extends Controller {
      */
     public function action_przedusun($sala, $przedmiot) {
         $isf = new Kohana_Isf();
-        $isf->DbConnect();
+        $isf->Connect(APP_DBSYS);
         $isf->DbDelete('przedmiot_sale', 'przedmiot=\'' . $przedmiot . '\' and sala=\'' . $sala . '\'');
         Kohana_Request::factory()->redirect('sale/przedmiot/' . $sala);
     }

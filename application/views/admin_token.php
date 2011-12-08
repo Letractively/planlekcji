@@ -4,7 +4,7 @@
         <meta charset="UTF-8"/>
         <?php
         $db = new Kohana_Isf();
-        $db->DbConnect();
+        $db->Connect(APP_DBSYS);
         $r = App_Globals::getRegistryKey('nazwa_szkoly');
         insert_log('admin.token', 'Uzytkownik ' . $_SESSION['user'] . ' generuje tokeny dla uzytkownika ' . $id);
         ?>

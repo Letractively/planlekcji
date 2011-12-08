@@ -1,6 +1,6 @@
 <?php
 $isf = new Kohana_Isf();
-$isf->DbConnect();
+$isf->Connect(APP_DBSYS);
 $naucz = $isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc');
 $c_naucz = count($naucz);
 ?>
