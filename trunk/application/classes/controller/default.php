@@ -52,7 +52,7 @@ class Controller_Default extends Controller {
         $view = View::factory('main');
 
         $content = $isf->DbSelect('rejestr', array('*'), 'where opcja = \'index_text\'');
-        $content = $content[1]['wartosc'];
+        $content = $content[0]['wartosc'];
 
         $view->set('content', $content);
         echo $view->render();

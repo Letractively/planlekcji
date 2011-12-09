@@ -60,7 +60,7 @@ try {
 }
 
 $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
-if ($reg[1]['wartosc'] != 3) {
+if ($reg[0]['wartosc'] != 3) {
     die('Dopoki plany nie zostana zatwierdzone, nie mozna wygenerowac planu. <a href="index.php">Powrót</a>');
 }
 
@@ -134,7 +134,7 @@ $zip->addFile('lib/css/themes/' . $_POST['motyw'] . '.css', 'planlekcji/' . $_PO
  * Utworzenie index
  */
 $ns = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
-$title = $ns[1]['wartosc'];
+$title = $ns[0]['wartosc'];
 $thm = $_POST['motyw'] . '.css';
 $file = <<<START
 <!doctype html>
@@ -152,7 +152,7 @@ $file = <<<START
 </head>
 <body class="a_light_menu">
 START;
-$file .= '<h1>Plan Lekcji - ' . $ns[1]['wartosc'] . '</h1><hr/>';
+$file .= '<h1>Plan Lekcji - ' . $ns[0]['wartosc'] . '</h1><hr/>';
 
 $file .= '<h3>Klasy</h3><p class="grplek">';
 foreach ($isf->DbSelect('klasy', array('*'), 'order by klasa asc') as $rowid => $rowcol) {

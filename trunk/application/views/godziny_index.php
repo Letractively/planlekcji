@@ -22,7 +22,7 @@ if (count($res) == 0) {
 <table border="0" style="width: 100%;">
     <tr valign="top">
         <td style="width: 50%;">
-            <?php if ($res[1]['wartosc'] == 0): ?>
+            <?php if ($res[0]['wartosc'] == 0): ?>
                 <p class="info">Obecna ilość godzin lekcyjnych jest ustawiona na <b>0</b>!</p>
             <?php else: ?>
                 <form action="<?php echo URL::site('godziny/lekcje'); ?>" method="post">
@@ -32,7 +32,7 @@ if (count($res) == 0) {
                                 <td colspan="3" style="text-align: center;">
                                     <p>
                                         Godzina rozpoczęcia zajęć:
-                                        <input type="text" name="czasRZ" id="czasRZ" value="<?php echo $grz[1]['wartosc']; ?>" size="6"/>
+                                        <input type="text" name="czasRZ" id="czasRZ" value="<?php echo $grz[0]['wartosc']; ?>" size="6"/>
                                     </p>
                                 </td>
                             </tr>
@@ -49,7 +49,7 @@ if (count($res) == 0) {
                             </tr>
                         </thead>
                         <tbody>
-                            <?php for ($i = 1; $i <= $res[1]['wartosc']; $i++): ?>
+                            <?php for ($i = 1; $i <= $res[0]['wartosc']; $i++): ?>
                                 <?php if ($i % 2 == 0): ?>
                                     <?php $class = " class='a_even'"; ?>
                                 <?php else: ?>
@@ -66,7 +66,7 @@ if (count($res) == 0) {
                                 if (count($godz) == 0):
                                     echo '00:00';
                                 else:
-                                    echo $godz[1]['dl_prz'];
+                                    echo $godz[0]['dl_prz'];
                                 endif;
                                         ?>"/>
                                     </td>
@@ -75,7 +75,7 @@ if (count($res) == 0) {
                                         if (count($godz) == 0):
                                             echo '';
                                         else:
-                                            echo $godz[1]['godzina'];
+                                            echo $godz[0]['godzina'];
                                         endif;
                                         ?>
                                     </td>
@@ -103,7 +103,7 @@ if (count($res) == 0) {
                 <p>
                     Ilość godzin: <select name="iloscgodzin">
                         <?php for ($i = 1; $i <= 15; $i++): ?>
-                            <?php if ($res[1]['wartosc'] == $i): ?>
+                            <?php if ($res[0]['wartosc'] == $i): ?>
                                 <option selected><?php echo $i; ?></option>
                             <?php else: ?>
                                 <option><?php echo $i; ?></option>
@@ -113,7 +113,7 @@ if (count($res) == 0) {
                     Długość godziny lekcyjnej:
                     <select name="dlugosclekcji">
                         <?php for ($i = 5; $i <= 60; $i = $i + 5): ?>
-                            <?php if ($dlugosc[1]['wartosc'] == $i): ?>
+                            <?php if ($dlugosc[0]['wartosc'] == $i): ?>
                                 <option selected><?php echo $i; ?></option>
                             <?php else: ?>
                                 <option><?php echo $i; ?></option>

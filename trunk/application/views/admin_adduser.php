@@ -2,7 +2,7 @@
 $isf = new Kohana_Isf();
 $isf->Connect(APP_DBSYS);
 $uid = $isf->DbSelect('uzytkownicy', array('*'), 'order by uid desc');
-$uid = $uid[1]['uid'] + 1;
+$uid = $uid[0]['uid'] + 1;
 ?>
 <form action="<?php echo URL::site('admin/douseradd'); ?>" method="post">
     <input type="hidden" name="inpUid" value="<?php echo $uid; ?>"/>

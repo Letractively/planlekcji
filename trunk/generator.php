@@ -37,7 +37,7 @@
 	    </p>
 	    <?php
 	    $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
-	    $reg = $reg[1]['wartosc'];
+	    $reg = $reg[0]['wartosc'];
 	    ?>
 	    <?php if ($reg != 0): ?>
 		<?php //die('<p>Musisz być w trybie edycji planów zajęć!</p></body></html>'); ?>
@@ -77,7 +77,7 @@
 		<?php
 		$przedm = $isf->DbSelect('przedmioty', array('*'), 'order by przedmiot asc');
 		$grp = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'ilosc_grup\'');
-		$grp = $grp[1]['wartosc'];
+		$grp = $grp[0]['wartosc'];
 		?>
 		<?php if (count($przedm) == 0): ?>
 		    <p class="error">Brak przedmiotów w systemie</p>
@@ -136,9 +136,9 @@
     	    <h3>Krok 3 - wybierz nauczycieli</h3>
 		<?php
 		$ilgr = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'ilosc_grup\'');
-		$ilgr = $ilgr[1]['wartosc'];
+		$ilgr = $ilgr[0]['wartosc'];
 		$igl = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'ilosc_godzin_lek\'');
-		$igl = $igl[1]['wartosc'] * 5;
+		$igl = $igl[0]['wartosc'] * 5;
 		$gd = 0;
 		foreach ($_POST['gd'] as $prz => $ilosc) {
 		    if (isset($_POST['cb'][$prz])) {

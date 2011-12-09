@@ -18,7 +18,7 @@ class App_Globals {
         $isf = new Kohana_Isf();
         $isf->Connect(APP_DBSYS);
         $a = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
-        return $a[1]['wartosc'];
+        return $a[0]['wartosc'];
     }
 
     public static function getRegistryKey($key) {
@@ -28,7 +28,7 @@ class App_Globals {
         if (count($a) == 0) {
             return 'registry:key not exists';
         } else {
-            return $a[1]['wartosc'];
+            return $a[0]['wartosc'];
         }
     }
 

@@ -19,11 +19,11 @@ $msg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'index_text\'');
         type="text"
         style="height: 14pt; font-size: 14pt; text-align: center; width: 100%;"
         name="inpNazwa"
-        value="<?php echo $nazwa[1]['wartosc']; ?>"
+        value="<?php echo $nazwa[0]['wartosc']; ?>"
         />
     <p>
         <textarea name="txtMsg" style="width: 100%;" rows="30">
-            <?php echo $msg[1]['wartosc']; ?>
+            <?php echo $msg[0]['wartosc']; ?>
         </textarea>
     </p>
 </form>

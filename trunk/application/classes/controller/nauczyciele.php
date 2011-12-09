@@ -55,7 +55,7 @@ class Controller_Nauczyciele extends Controller {
         /**
          * Czy mozna edytowac dane
          */
-        if ($reg[1]['wartosc'] != 1) {
+        if ($reg[0]['wartosc'] != 1) {
             echo '<h1>Edycja danych zostala zamknieta</h1>';
             exit;
         }
@@ -128,7 +128,7 @@ class Controller_Nauczyciele extends Controller {
         $isf = new Kohana_Isf();
         $isf->Connect(APP_DBSYS);
         $nauczyciel = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\'' . $skrot . '\'');
-        $nauczyciel = $nauczyciel[1]['imie_naz'];
+        $nauczyciel = $nauczyciel[0]['imie_naz'];
 
         $view = View::factory('main');
         $view2 = View::factory('nauczyciele_zarzadzanie');
@@ -148,7 +148,7 @@ class Controller_Nauczyciele extends Controller {
         $isf = new Kohana_Isf();
         $isf->Connect(APP_DBSYS);
         $nl = $isf->DbSelect('nauczyciele', array('*'), 'where imie_naz=\''.$naucz.'\'');
-        $nl = $nl[1]['skrot'];
+        $nl = $nl[0]['skrot'];
         $isf->DbInsert('nl_klasy', array(
             'nauczyciel' => $naucz,
             'klasa' => $klasa
@@ -175,7 +175,7 @@ class Controller_Nauczyciele extends Controller {
             $isf->Connect(APP_DBSYS);
             $nl = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\'' . $nauczyciel . '\'');
             $isf->DbDelete('nauczyciele', 'skrot=\'' . $nauczyciel . '\'');
-            $nauczyciel = $nl[1]['imie_naz'];
+            $nauczyciel = $nl[0]['imie_naz'];
             $isf->DbDelete('nl_klasy', 'nauczyciel=\'' . $nauczyciel . '\'');
             $isf->DbDelete('nl_przedm', 'nauczyciel=\'' . $nauczyciel . '\'');
             Kohana_Request::factory()->redirect('nauczyciele/index');
@@ -208,7 +208,7 @@ class Controller_Nauczyciele extends Controller {
         $isf = new Kohana_Isf();
         $isf->Connect(APP_DBSYS);
         $nl = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\''.$nauczyciel.'\'');
-        $nl = $nl[1]['imie_naz'];
+        $nl = $nl[0]['imie_naz'];
         $isf->DbDelete('nl_klasy', 'nauczyciel=\'' . $nl . '\' and klasa=\'' . $klasa . '\'');
         Kohana_Request::factory()->redirect('nauczyciele/zarzadzanie/' . $nauczyciel);
     }
@@ -223,7 +223,7 @@ class Controller_Nauczyciele extends Controller {
         $isf = new Kohana_Isf();
         $isf->Connect(APP_DBSYS);
         $nl = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\'' . $nauczyciel . '\'');
-        $nl = $nl[1]['imie_naz'];
+        $nl = $nl[0]['imie_naz'];
         $isf->DbDelete('nl_przedm', 'nauczyciel=\'' . $nl . '\' and przedmiot=\'' . $przedmiot . '\'');
         Kohana_Request::factory()->redirect('nauczyciele/zarzadzanie/' . $nauczyciel);
     }

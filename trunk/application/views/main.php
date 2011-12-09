@@ -101,11 +101,16 @@ $appver = App_Globals::getRegistryKey('app_ver');
 	<script type="text/javascript">
 	    function resizeContent() { 
 		var contentDiv = document.getElementById('container');
+		var cDiv = document.getElementById('pnlCenter');
+		var rDiv = document.getElementById('pnlLeft');
+		var fDiv = document.getElementById('footer');
 		
 		// This may need to be done differently on IE than FF, but you get the idea. 
 		var viewPortHeight = window.innerHeight; 
 		contentDiv.style.height =  
 		    Math.max(viewPortHeight, contentDiv.clientHeight) + 'px';
+		cDiv.style.height = Math.min(viewPortHeight-fDiv.clientHeight, contentDiv.clientHeight) + 'px';
+		rDiv.style.height = Math.min(viewPortHeight-fDiv.clientHeight, contentDiv.clientHeight) + 'px';
 	    }
 	</script>
 	<!-- [/SEKCJA] -->

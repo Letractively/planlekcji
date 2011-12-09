@@ -77,13 +77,13 @@ $grp = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'ilosc_grup\'');
                 <button type="submit" name="btnSubmit">Dodaj klasę</button>
             </form>
             <h3>Grupy klasowe</h3>
-            <p><b>Bieżąca ilość grup: </b><?php echo $grp[1]['wartosc']; ?></p>
+            <p><b>Bieżąca ilość grup: </b><?php echo $grp[0]['wartosc']; ?></p>
             <form action="<?php echo url::site('klasy/grupyklasowe'); ?>" method="post" name="form">
                 <select name="grp">
                     <?php for ($i = 0; $i <= 10; $i++): ?>
                         <?php if ($i == 1): ?>
                         <?php else: ?>
-                            <?php if ($i == $grp[1]['wartosc']): ?>
+                            <?php if ($i == $grp[0]['wartosc']): ?>
                                 <option selected><?php echo $i; ?></option>
                             <?php else: ?>
                                 <option><?php echo $i; ?></option>

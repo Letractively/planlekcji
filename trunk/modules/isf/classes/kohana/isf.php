@@ -9,23 +9,62 @@
 class Kohana_Isf {
 
     /**
-     * Zwraca wersje ISF
+     * Zwraca wersje frameworka
+     *
+     * @return string
      */
     public function isf_version() {
-	return '1.5';
+	return '1.10';
     }
 
+    /** @var string */
     protected $isf_path;
+    /** @var object PDO */
     protected $dbhandle;
+    /** @var string */
     protected $script;
+    /** @var string */
     protected $jqpath;
+    /** @var string */
+    protected $system;
+    /** @var string */
     protected $ie9script;
-
+    
+    /**
+     * Zwraca obiekt ISF
+     *
+     * @return Kohana_Isf 
+     */
     public static function factory() {
 	return new Kohana_Isf();
     }
-
+    /**
+     * Laczy sie z wybrana baza danych
+     * 
+     * Dla SQLite
+     * 
+     * <code>
+     * <?php
+     * Kohana_Isf::factory()->Connect('sqlite', NULL);
+     * // NULL oznacza domyslna nazwe pliku default.sqlite
+     * </code>
+     *
+     * Dla PostgreSQL
+     * <code>
+     * <?php
+     * // gdy $params nie jest zdefiniowany, pobiera wartosci z pliku config.php
+     * $params['host']='localhost';
+     * $params['dbname']='test';
+     * $params['user']='user';
+     * $params['password]='password';
+     * Kohana_Isf::factory()->Connect('sqlite', $params);
+     * </code>
+     * 
+     * @param string $system System DB
+     * @param mixed $param Parametry dla PgSQL
+     */
     public function Connect($system, $param=null) {
+	$this->system = $system;
 	switch ($system) {
 	    case 'sqlite':
 		$this->SQLite_Connect($param);
@@ -38,9 +77,17 @@ class Kohana_Isf {
 		break;
 	}
     }
-
-    public function PgSQL_Connect($customvars=null) {
-
+    /**
+     * Laczy sie z baza PostgreSQL
+     * 
+     * Dostep tylko dla klas potomnych
+     *
+     * @see Kohana_Isf::Connect
+     * @access protected
+     * @param array $customvars Parametry polaczenia
+     */
+    protected function PgSQL_Connect($customvars=null) {
+	
 	$my_cfg = $GLOBALS['my_cfg'];
 
 	if (!class_exists('PDO') || !extension_loaded('pdo_pgsql')) {
@@ -67,8 +114,16 @@ class Kohana_Isf {
 	    }
 	}
     }
-
-    public function SQLite_Connect($name) {
+    /**
+     * Laczy sie z baza danych SQLite
+     * 
+     * Tylko dla klas potomnych
+     *
+     * @see Kohana_Isf::Connect
+     * @access protected
+     * @param string $name Nazwa pliku
+     */
+    protected function SQLite_Connect($name) {
 
 	if ($name == null) {
 	    $name = 'default';
@@ -103,9 +158,9 @@ class Kohana_Isf {
      * $db->DbSelect('tabela', array('*');
      * </code>
      *
-     * @param text $table Nazwa tabeli
+     * @param string $table Nazwa tabeli
      * @param array $columns Tablica z kolumnami
-     * @param text $condition Warunek kwerendy SQL
+     * @param string $condition Warunek kwerendy SQL
      * @return array Tablica z rekordami
      */
     public function DbSelect($table, $columns, $condition=null) {
@@ -123,11 +178,9 @@ class Kohana_Isf {
 	$r = 1;
 	$ret = array();
 	try {
-	    foreach ($this->dbhandle->query($query) as $row) {
-		$ret[$r] = $row;
-		$r++;
-	    }
-	    return $ret;
+	    $return = $this->dbhandle->prepare($query);
+	    $return->execute();
+	    return $return->fetchAll();
 	} catch (SQLiteException $e) {
 	    echo $e->getMessage();
 	}
@@ -155,7 +208,7 @@ class Kohana_Isf {
      * Aby wylaczyc obsluge <b>htmlspecialchars</b> jako trzeci argument nalezy
      * podac <b>false</b> bez cydzyslowia.
      *
-     * @param text $table Nazwa tabeli
+     * @param string $table Nazwa tabeli
      * @param array $col_val Tablica w postaci kolumna=>wartosc
      * @param boolean $specialchars Czy uzyc funckji <b>htmlspecialchars</b>
      * @return boolean
@@ -164,16 +217,18 @@ class Kohana_Isf {
 	if (!is_array($col_val) || empty($table))
 	    die('Nieprawidlowy argument dla funkcji insert');
 	$query = 'insert into ' . $table . ' (';
+	$valuesArray = array();
 	foreach ($col_val as $col => $val) {
-	    $query .= '\'' . $col . '\', ';
+	    $query .= '' . $col . ', ';
 	}
 	$query = substr($query, 0, -2);
 	$query .= ') values (';
 	foreach ($col_val as $col => $val) {
+	    $valuesArray[] = $val;
 	    if ($specialchars == true)
 		$val = htmlspecialchars($val);
-	    if ($val != 'null') {
-		$query .= '\'' . $val . '\', ';
+	    if ($val != null) {
+		$query .= '?, ';
 	    } else {
 		$query .= '' . $val . ', ';
 	    }
@@ -181,7 +236,8 @@ class Kohana_Isf {
 	$query = substr($query, 0, -2);
 	$query .= ')';
 	try {
-	    $res = $this->dbhandle->exec($query);
+	    $res = $this->dbhandle->prepare($query);
+	    $res->execute($valuesArray);
 	} catch (SQLiteException $e) {
 	    echo $e->getMessage();
 	}
@@ -200,29 +256,33 @@ class Kohana_Isf {
      *  ), 'id=33');
      * </code>
      *
-     * @param text $table Nazwa tabeli
+     * @param string $table Nazwa tabeli
      * @param array $colvals Tablica kolumna=>wartosc do zmiany
-     * @param text $cond Warunek <b>where</b>
-     * @param text $usehtmlsc Czy zapisywac tagi HTML jako tekst (true)
+     * @param string $cond Warunek <b>where</b>
+     * @param string $usehtmlsc Czy zapisywac tagi HTML jako tekst (true)
      * @return bool Sprawdza poprawnosc zapytania
      */
     public function DbUpdate($table, $colvals, $cond, $usehtmlsc=true) {
 	if (empty($table) || !is_array($colvals) || empty($cond))
 	    die('Sprawdz parametry funkcji <b>update</b>!');
 	$query = 'update ' . $table . ' set ';
+	$valuesArray=array();
 	foreach ($colvals as $col => $val) {
 	    if ($usehtmlsc == true)
 		$val = htmlspecialchars($val);
-	    $query .= $col . '=\'' . $val . '\', ';
+	    $valuesArray[]=$val;
+	    $query .= $col . '=?, ';
 	}
 	$query = substr($query, 0, -2);
 	$query .= ' where ' . $cond;
 
 	try {
-	    $this->dbhandle->exec($query);
+	    $res = $this->dbhandle->prepare($query);
+	    $res->execute($valuesArray);
 	} catch (SQLiteException $e) {
 	    echo $e->getMessage();
 	}
+	
     }
 
     /**
@@ -234,8 +294,8 @@ class Kohana_Isf {
      * $Db->DbDelete('tabela', 'kolumna=wartosc');
      * </code>
      *
-     * @param text $table Nazwa tabeli
-     * @param text $cond Warunek <b>where</b>
+     * @param string $table Nazwa tabeli
+     * @param string $cond Warunek <b>where</b>
      * @return bool Sprawdza poprawnosc kwerendy
      */
     public function DbDelete($table, $cond) {
@@ -265,7 +325,7 @@ class Kohana_Isf {
      * $Db->DbTblCreate('nazwa', $cols);
      * </code>
      *
-     * @param text $name Nazwa tabeli
+     * @param string $name Nazwa tabeli
      * @param array $columns Tablica kolumn i typow danych
      * @return bool Poprawnosc kwerendy SQL
      */
@@ -274,7 +334,7 @@ class Kohana_Isf {
 	    die('Sprawdz parametr funkcji tbl_create');
 	$query = 'create table ' . $name . '(';
 	foreach ($columns as $col => $type) {
-	    $query .= '\'' . $col . '\' ' . $type . ', ';
+	    $query .= '"' . $col . '" ' . $type . ', ';
 	}
 	$query = substr($query, 0, -2);
 	$query .= ')';
@@ -305,7 +365,7 @@ class Kohana_Isf {
      * $jqui = new Ui(); // mozna dodac parametr $style
      * </code>
      *
-     * @param text $style Nazwa stylu w katalogu <b>/templates/css</b>
+     * @param string $style Nazwa stylu w katalogu <b>/templates/css</b>
      */
     public function JQUi($style='smoothness') {
 	$respath = URL::base(true) . 'lib/jquery';
@@ -329,7 +389,7 @@ class Kohana_Isf {
     /**
      * Tworzy unikalny identyfikator obiektu na podstawie nazwy
      *
-     * @param text $name Nazwa obiektu
+     * @param string $name Nazwa obiektu
      * @return text Unikalny identyfikator obiektu
      */
     private function hashname($name) {
@@ -354,7 +414,7 @@ class Kohana_Isf {
      * $Ui->customfunc(' alert("test"); '); //nalezy dodawac srednik na koncu operacji
      * </code>
      *
-     * @param text $function Funkcja w JavaScript
+     * @param string $function Funkcja w JavaScript
      * @param bool $ui_script Czy umiescic kod w skrypcie JQuery UI
      * @return text Zwraca kod, gdy $ui_script jest false
      */
@@ -383,7 +443,7 @@ class Kohana_Isf {
      * $Ui->dialog_close('okienko'); // zamyka okienko o nazwie 'okienko' (przyklad)
      * </code>
      *
-     * @param text $name Domyslnie 'this'
+     * @param string $name Domyslnie 'this'
      * @return text Zwraca skrypt
      */
     public function JQUi_DialogClose($name='this') {
@@ -410,7 +470,7 @@ class Kohana_Isf {
      * $Ui->dialog_open('test'); // otwiera okienko o nazwie <b>test</b> (przyklad)
      * </code>
      *
-     * @param text $name
+     * @param string $name
      * @return text Zwraca skrypt
      */
     public function JQUi_DialogOpen($name='this') {
@@ -448,8 +508,8 @@ class Kohana_Isf {
      * @param string $name Nazwa okienka dialogowego
      * @param array $content Tablica zawartosci (title, content)
      * @param array $buttons Tablica przyciskow (nazwa, akcja)
-     * @param text $autoopen Autootwieranie
-     * @param text $modal Przyciemnianie strony
+     * @param string $autoopen Autootwieranie
+     * @param string $modal Przyciemnianie strony
      * @param integer $height Wysokosc okienka
      * @return string Zwraca kod HTML
      */
@@ -517,7 +577,7 @@ class Kohana_Isf {
     /**
      * Tworzy przycisk z elementu o danym id
      *
-     * @param text $name Nazwa elementu HTML
+     * @param string $name Nazwa elementu HTML
      */
     public function JQUi_ButtonCreate($name) {
 	$this->script .= '
@@ -548,7 +608,7 @@ class Kohana_Isf {
      * $tpl->assign('nazwa_zmiennej', $tabs);
      * </code>
      *
-     * @param text $name Nazwa elementu
+     * @param string $name Nazwa elementu
      * @param array $content Tablica zawartosci
      * @return text Zwraca kod HTML 
      */
@@ -576,8 +636,8 @@ class Kohana_Isf {
      * 
      * <b>Funkcja nie jest w pelni sprawna</b>
      *
-     * @param text $name Nazwa paska postepu
-     * @param text $options Opcje funkcji JQuery UI
+     * @param string $name Nazwa paska postepu
+     * @param string $options Opcje funkcji JQuery UI
      */
     public function JQUi_Progressbar($name, $options=null) {
 	$name = 'isf_pgbar_' . $this->hashname($name);
@@ -613,7 +673,7 @@ class Kohana_Isf {
      * $tpl->assing('zmienna', $Ui->accordion_create('nazwa', $content));
      * </code>
      *
-     * @param text $name
+     * @param string $name
      * @param array $content
      * @return text Zwraca kod HTML 
      */
@@ -647,7 +707,7 @@ class Kohana_Isf {
      * // opcjonalnym przyciskiem ukrycia elementu
      * </code>
      * 
-     * @param text $name Nazwa elementu
+     * @param string $name Nazwa elementu
      * @param bool $progressgif Wyswietlanie animowanego gif-a
      * @param bool $hiddenbtn Pokazanie przycisku ukrycia elementu
      * @return text Zwraca kod HTML
@@ -683,8 +743,8 @@ class Kohana_Isf {
      * Funkcja generuje czysty kod JQuery UI, dlatego nalezy uzyc jej w
      * konteksie innej funkcji, np. obslugi zdarzenia dla hiprelacza.
      *
-     * @param text $divname Nazwa elementu <b>ajaxdiv</b>
-     * @param text $url Adres URL strony z zapytaniem
+     * @param string $divname Nazwa elementu <b>ajaxdiv</b>
+     * @param string $url Adres URL strony z zapytaniem
      * @return text Zwraca kod JQuery
      */
     public function JQUi_AjaxdivDoAjax($divname, $url, $to_mscript=false) {
@@ -711,8 +771,8 @@ class Kohana_Isf {
      * Funkcje nalezy uzyc w kontekscie innej funkcji, np. do obslugi
      * zdarzen hiperlacza (<b>zobacz</b>: anchor_action)
      *
-     * @param text $url Adres URL strony z zapytaniem
-     * @param text $success Funkcja JS, gdy zapytanie zostanie wykonane
+     * @param string $url Adres URL strony z zapytaniem
+     * @param string $success Funkcja JS, gdy zapytanie zostanie wykonane
      * @return text Zwraca kod JQuery zapytania AJAX
      */
     public function JQUi_DoAjax($url, $success) {
@@ -759,9 +819,9 @@ class Kohana_Isf {
      * $tools->IE9_WebAPP('Moja strona', 'Otwórz moją stronę');
      * </code>
      *
-     * @param text $app_name Nazwa aplikacji
-     * @param text $tooltip Opis strony
-     * @param text $s_url Adres aplikacji, domyslnie /
+     * @param string $app_name Nazwa aplikacji
+     * @param string $tooltip Opis strony
+     * @param string $s_url Adres aplikacji, domyslnie /
      * @param array $win Wymiary okna (szer, wys)
      */
     public function IE9_WebAPP($app_name, $tooltip, $s_url='/', $win=array(800, 600)) {
@@ -807,9 +867,9 @@ class Kohana_Isf {
      * $tools->IE9_apptask('Moje zadanie', '/strona.php');
      * </code>
      *
-     * @param text $name Nazwa zadania
-     * @param text $uri Adres pliku. Np. /index.php
-     * @param text $icon Adres ikony, domyslnie favicon.ico
+     * @param string $name Nazwa zadania
+     * @param string $uri Adres pliku. Np. /index.php
+     * @param string $icon Adres ikony, domyslnie favicon.ico
      */
     public function IE9_apptask($name, $uri, $icon=null) {
 	if ($icon == null)

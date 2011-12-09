@@ -5,7 +5,7 @@
 $isf = new Kohana_Isf();
 $isf->Connect(APP_DBSYS);
 $res = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
-$res = $res[1]['wartosc'];
+$res = $res[0]['wartosc'];
 ?>
 <table border="0">
     <thead>

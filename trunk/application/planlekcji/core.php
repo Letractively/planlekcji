@@ -10,12 +10,14 @@ class Core_Administrator {
 class Core_Install {
 
     public $Isf;
+    public $type;
 
     public function __construct() {
 	$this->Isf = new Kohana_Isf();
     }
 
     public function Connect($type) {
+	$this->type = $type;
 	switch ($type) {
 	    case 'sqlite':
 		$this->Isf->Connect('sqlite');
@@ -42,7 +44,7 @@ class Core_Install {
 	$this->Isf->DbTblCreate('sale', array(
 	    'sala' => 'text not null'
 	));
-	
+
 	$this->Isf->DbTblCreate('przedmiot_sale', array(
 	    'przedmiot' => 'text not null',
 	    'sala' => 'text not null'
@@ -92,7 +94,7 @@ class Core_Install {
 	));
 
 	$this->Isf->DbTblCreate('log', array(
-	    'id' => 'serial',
+	    'id' => 'numeric not null',
 	    'data' => 'text not null',
 	    'modul' => 'text not null',
 	    'wiadomosc' => 'text',
@@ -114,12 +116,21 @@ class Core_Install {
 	    'sala' => 'text'
 	));
 
-	$this->Isf->DbTblCreate('zast_id', array(
-	    'zast_id' => 'serial',
-	    'dzien' => 'text',
-	    'za_nl' => 'text',
-	    'info' => 'text',
-	));
+	if ($this->type == 'sqlite') {
+	    $this->Isf->DbTblCreate('zast_id', array(
+		'zast_id' => 'integer primary key autoincrement',
+		'dzien' => 'text',
+		'za_nl' => 'text',
+		'info' => 'text',
+	    ));
+	} else {
+	    $this->Isf->DbTblCreate('zast_id', array(
+		'zast_id' => 'serial',
+		'dzien' => 'text',
+		'za_nl' => 'text',
+		'info' => 'text',
+	    ));
+	}
 
 	$this->Isf->DbTblCreate('zastepstwa', array(
 	    'zast_id' => 'text',
@@ -185,19 +196,7 @@ class Core_Install {
 	    'opcja' => 'randtoken_version',
 	    'wartosc' => $ver
 	));
-
-	$this->Isf->DbInsert('log', array(
-	    'data' => date('d.m.Y H:i:s'),
-	    'modul' => 'plan.install',
-	    'wiadomosc' => 'Instalacja systemu'
-	));
-
-	$this->Isf->DbInsert('log', array(
-	    'data' => date('d.m.Y H:i:s'),
-	    'modul' => 'plan.install',
-	    'wiadomosc' => 'Tworzenie administratora'
-	));
-
+	
 	$pass = substr(md5(@date('Y:m:d')), 0, 8);
 	$pass = rand(1, 100) . $pass;
 

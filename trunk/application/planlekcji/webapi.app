@@ -59,13 +59,13 @@ function doLogin($username, $password, $token) {
     if (count($uid) != 1) {
 	return 'auth:failed';
     }
-    if ($uid[1]['ilosc_prob'] >= 3) {
+    if ($uid[0]['ilosc_prob'] >= 3) {
 	return 'auth:locked';
 	exit;
     }
-    if ($uid[1]['haslo'] != $haslo) {
+    if ($uid[0]['haslo'] != $haslo) {
 	if ($username != 'root') {
-	    $nr = $uid[1]['ilosc_prob'] + 1;
+	    $nr = $uid[0]['ilosc_prob'] + 1;
 	    $db->DbUpdate('uzytkownicy', array('ilosc_prob' => $nr), 'login=\'' . $username . '\'');
 	}
 	return 'auth:failed';
@@ -73,14 +73,14 @@ function doLogin($username, $password, $token) {
     }
     if (count($tokena) == 0) {
 	if ($username != 'root') {
-	    $nr = $uid[1]['ilosc_prob'] + 1;
+	    $nr = $uid[0]['ilosc_prob'] + 1;
 	    $db->DbUpdate('uzytkownicy', array('ilosc_prob' => $nr), 'login=\'' . $username . '\'');
 	}
 	return 'auth:failed';
 	exit;
     } else {
 	$timestamp = (time() + 3600 * 3);
-	$token_x = gentoken($uid[1]['login']);
+	$token_x = gentoken($uid[0]['login']);
 	if ($username != 'root') {
 	    $db->DbDelete('tokeny', 'login=\'' . $username . '\' and token=\'' . $token . '\'');
 	}
@@ -106,7 +106,7 @@ function doShowAuthTime($token) {
     if ($r == false) {
 	return 'auth:failed';
     } else {
-	return date('Y-m-d H:i:s', $r[1]['webapi_timestamp']);
+	return date('Y-m-d H:i:s', $r[0]['webapi_timestamp']);
     }
 }
 
@@ -127,7 +127,7 @@ function doGetRegistryKey($token, $key) {
 	if (count($res) == 0) {
 	    return 'fetch:failed';
 	} else {
-	    return $res[1]['wartosc'];
+	    return $res[0]['wartosc'];
 	}
     }
 }
@@ -247,11 +247,13 @@ function doChangePass($token, $old, $new) {
     $db->Connect(APP_DBSYS);
     $oldm = md5('plan' . sha1('lekcji' . $old));
     $newm = md5('plan' . sha1('lekcji' . $new));
-    if ($db->DbUpdate('uzytkownicy', array('haslo' => $newm), 'webapi_token=\'' . $token . '\' and haslo=\'' . $oldm . '\'')):
-	return 'auth:chpasswd';
-    else:
+    
+    if(count($db->DbSelect('uzytkownicy', array('haslo'), 'where haslo=\''.$oldm.'\''))!=1){
 	return 'auth:failed';
-    endif;
+    }else{
+	$db->DbUpdate('uzytkownicy', array('haslo' => $newm), 'webapi_token=\'' . $token . '\' and haslo=\'' . $oldm . '\'');
+	return 'auth:chpasswd';
+    }
 }
 
 function doShowClasses($token) {

@@ -32,20 +32,20 @@ function pobierz_klasy($dzien, $lekcja) {
     $ilgr = $apg->getRegistryKey('ilosc_grup');
 
     $godziny = $isf->DbSelect('lek_godziny', array('*'), 'where lekcja=\'' . $lekcja . '\'');
-    echo '<tr><td><b>' . $lekcja . '</b></td><td><i>' . $godziny[1]['godzina'] . '</i></td>';
+    echo '<tr><td><b>' . $lekcja . '</b></td><td><i>' . $godziny[0]['godzina'] . '</i></td>';
     $klasy = $isf->DbSelect('klasy', array('*'));
     foreach ($klasy as $rowid => $rowcol) {
         echo '<td>';
         $lek = $isf->DbSelect('planlek', array('*'), 'where dzien=\'' . $dzien . '\' and klasa=\'' . $rowcol['klasa'] . '\'
                     and lekcja=\'' . $lekcja . '\'');
         if (count($lek) != 0) {
-            if (isset($lek[1]['sala']) && isset($lek[1]['skrot'])) {
-                echo '<b>' . $lek[1]['przedmiot'] . '</b>
+            if (isset($lek[0]['sala']) && isset($lek[0]['skrot'])) {
+                echo '<b>' . $lek[0]['przedmiot'] . '</b>
                     <span class="grptxt">
-                    <a href=\'' . URL::site('podglad/sala/' . $lek[1]['sala']) . '\'>' . $lek[1]['sala'] . '</a> <a href=\'' . URL::site('podglad/nauczyciel/' . $lek[1]['skrot']) . '\'>' . $lek[1]['skrot'] . '</a>
+                    <a href=\'' . URL::site('podglad/sala/' . $lek[0]['sala']) . '\'>' . $lek[0]['sala'] . '</a> <a href=\'' . URL::site('podglad/nauczyciel/' . $lek[0]['skrot']) . '\'>' . $lek[0]['skrot'] . '</a>
                         </span>';
             } else {
-                echo '<b>' . $lek[1]['przedmiot'] . '</b>';
+                echo '<b>' . $lek[0]['przedmiot'] . '</b>';
             }
         } else {
             $lek = $isf->DbSelect('plan_grupy', array('*'), 'where dzien=\'' . $dzien . '\' and klasa=\'' . $rowcol['klasa'] . '\'
@@ -55,8 +55,8 @@ function pobierz_klasy($dzien, $lekcja) {
                     echo '<p class=\'grplek\'><b>' . $rowcol['przedmiot'] . '</b>
                         <span class="grptxt">
                         ' . $rowcol['grupa'] . '/' . $ilgr . '
-                        <a href=\'' . URL::site('podglad/sala/' . $lek[1]['sala']) . '\'>' . $rowcol['sala'] . '</a>
-                        <a href=\'' . URL::site('podglad/nauczyciel/' . $lek[1]['skrot']) . '\'>' . $rowcol['skrot'] . '</a>
+                        <a href=\'' . URL::site('podglad/sala/' . $lek[0]['sala']) . '\'>' . $rowcol['sala'] . '</a>
+                        <a href=\'' . URL::site('podglad/nauczyciel/' . $lek[0]['skrot']) . '\'>' . $rowcol['skrot'] . '</a>
                         </span></p>';
                 } else {
                     echo '<p class=\'grplek\'><b>' . $rowcol['przedmiot'] . '</b> <span class="grptxt">' . $rowcol['grupa'] . '/'.$ilgr.'</span></p>';
@@ -71,9 +71,9 @@ function pobierz_klasy($dzien, $lekcja) {
         $lek = $isf->DbSelect('planlek', array('*'), 'where dzien=\'' . $dzien . '\' and nauczyciel=\'' . $rowcol['imie_naz'] . '\'
                     and lekcja=\'' . $lekcja . '\'');
         if (count($lek) == 1) {
-            echo '<p class=\'grplek\'><b>' . $lek[1]['klasa'] . '</b>
+            echo '<p class=\'grplek\'><b>' . $lek[0]['klasa'] . '</b>
                 <span class="grptxt">
-                <a href=\'' . URL::site('podglad/sala/' . $lek[1]['sala']) . '\'>' . $lek[1]['sala'] . '</a>
+                <a href=\'' . URL::site('podglad/sala/' . $lek[0]['sala']) . '\'>' . $lek[0]['sala'] . '</a>
                 </span></p>';
         } else {
             $lek = $isf->DbSelect('plan_grupy', array('*'), 'where dzien=\'' . $dzien . '\' and nauczyciel=\'' . $rowcol['imie_naz'] . '\'
@@ -110,7 +110,7 @@ function pobierz_dzien($dzien) {
     echo '</tr>';
 
     foreach ($lekcje as $rowid => $rowcol) {
-        pobierz_klasy($dzien, $rowid);
+        pobierz_klasy($dzien, $rowid+1);
     }
 }
 ?>

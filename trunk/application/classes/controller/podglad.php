@@ -82,7 +82,7 @@ class Controller_Podglad extends Controller {
         $isf->Connect(APP_DBSYS);
 
         $imienaz = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\'' . $nauczyciel . '\'');
-        $imienaz = $imienaz[1]['imie_naz'];
+        $imienaz = $imienaz[0]['imie_naz'];
 
         $view->set('skrot', $nauczyciel);
         $view->set('klasa', $imienaz);
@@ -149,7 +149,7 @@ class Controller_Podglad extends Controller {
         $isf->Connect(APP_DBSYS);
 
         $imienaz = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\'' . $nauczyciel . '\'');
-        $imienaz = $imienaz[1]['imie_naz'];
+        $imienaz = $imienaz[0]['imie_naz'];
 
         $view->set('skrot', $nauczyciel);
         $view->set('klasa', $imienaz);

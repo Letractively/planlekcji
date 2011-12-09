@@ -55,7 +55,7 @@ class Controller_Godziny extends Controller {
         /**
          * Czy mozna edytowac dane
          */
-        if ($reg[1]['wartosc'] != 1) {
+        if ($reg[0]['wartosc'] != 1) {
             echo '<h1>Edycja danych zostala zamknieta</h1>';
             exit;
         }
@@ -73,7 +73,7 @@ class Controller_Godziny extends Controller {
         $res = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'ilosc_godzin_lek\'');
         $isf->JQUi();
         $isf->JQUi_CustomFunction('$(\'#czasRZ\').timepicker({showHour:true});');
-        for ($i = 1; $i <= $res[1]['wartosc']; $i++):
+        for ($i = 1; $i <= $res[0]['wartosc']; $i++):
             $isf->JQUi_CustomFunction('$(\'#lekcja' . $i . '\').timepicker({showHour:false});');
         endfor;
 
@@ -102,7 +102,7 @@ class Controller_Godziny extends Controller {
         $isf = new Kohana_Isf();
         $isf->Connect(APP_DBSYS);
         $czaslek = $isf->DbSelect('rejestr', array('wartosc'), 'where opcja=\'dlugosc_lekcji\'');
-        $czaslek = $czaslek[1]['wartosc'];
+        $czaslek = $czaslek[0]['wartosc'];
 
         $isf->DbDelete('lek_godziny', 'lekcja like \'%\'');
         $g1;

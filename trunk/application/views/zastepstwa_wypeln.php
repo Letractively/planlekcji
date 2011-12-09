@@ -59,7 +59,7 @@ function pobierzdzien($dzien, $nauczyciel) {
         if (count($res) == 1) {
             $i_l++;
             echo '<td><p class="grplek">
-                <b>' . $res[1]['klasa'] . '</b> - ' . $res[1]['przedmiot'] . ' (' . $res[1]['sala'] . ')
+                <b>' . $res[0]['klasa'] . '</b> - ' . $res[0]['przedmiot'] . ' (' . $res[0]['sala'] . ')
                     </p>';
             echo '</td><td>';
             pobierznl($dzien, $rowid);
