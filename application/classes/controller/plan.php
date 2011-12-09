@@ -52,7 +52,7 @@ class Controller_Plan extends Controller {
         $isf = new Kohana_Isf();
         $isf->Connect(APP_DBSYS);
         $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
-        if ($reg[1]['wartosc'] != 0) {
+        if ($reg[0]['wartosc'] != 0) {
             echo '<h1>Edycja danych nie zostala zamknieta</h1>';
             exit;
         }
@@ -134,7 +134,7 @@ class Controller_Plan extends Controller {
                     );
                 } else {
                     $nl_s = $isf->DbSelect('nauczyciele', array('skrot'), 'where imie_naz=\'' . $przedm[2] . '\'');
-                    $nl_s = $nl_s[1]['skrot'];
+                    $nl_s = $nl_s[0]['skrot'];
                     $colval = array(
                         'dzien' => 'Poniedziałek',
                         'klasa' => $klasa,
@@ -164,7 +164,7 @@ class Controller_Plan extends Controller {
                     );
                 } else {
                     $nl_s = $isf->DbSelect('nauczyciele', array('skrot'), 'where imie_naz=\'' . $przedm[2] . '\'');
-                    $nl_s = $nl_s[1]['skrot'];
+                    $nl_s = $nl_s[0]['skrot'];
                     $colval = array(
                         'dzien' => 'Wtorek',
                         'klasa' => $klasa,
@@ -194,7 +194,7 @@ class Controller_Plan extends Controller {
                     );
                 } else {
                     $nl_s = $isf->DbSelect('nauczyciele', array('skrot'), 'where imie_naz=\'' . $przedm[2] . '\'');
-                    $nl_s = $nl_s[1]['skrot'];
+                    $nl_s = $nl_s[0]['skrot'];
                     $colval = array(
                         'dzien' => 'Środa',
                         'klasa' => $klasa,
@@ -224,7 +224,7 @@ class Controller_Plan extends Controller {
                     );
                 } else {
                     $nl_s = $isf->DbSelect('nauczyciele', array('skrot'), 'where imie_naz=\'' . $przedm[2] . '\'');
-                    $nl_s = $nl_s[1]['skrot'];
+                    $nl_s = $nl_s[0]['skrot'];
                     $colval = array(
                         'dzien' => 'Czwartek',
                         'klasa' => $klasa,
@@ -254,7 +254,7 @@ class Controller_Plan extends Controller {
                     );
                 } else {
                     $nl_s = $isf->DbSelect('nauczyciele', array('skrot'), 'where imie_naz=\'' . $przedm[2] . '\'');
-                    $nl_s = $nl_s[1]['skrot'];
+                    $nl_s = $nl_s[0]['skrot'];
                     $colval = array(
                         'dzien' => 'Piątek',
                         'klasa' => $klasa,
@@ -294,7 +294,7 @@ class Controller_Plan extends Controller {
                         );
                     } else {
                         $nl_s = $isf->DbSelect('nauczyciele', array('skrot'), 'where imie_naz=\'' . $przedm[2] . '\'');
-                        $nl_s = $nl_s[1]['skrot'];
+                        $nl_s = $nl_s[0]['skrot'];
 
                         $valid = $isf->DbSelect('plan_grupy', array('*'), 'where dzien=\'Poniedziałek\' and lekcja=\'' . $lek . '\' and nauczyciel=\'' . $przedm[2] . '\' and sala!=\'' . $przedm[1] . '\'');
                         if (count($valid) > 0) {
@@ -333,7 +333,7 @@ class Controller_Plan extends Controller {
                         );
                     } else {
                         $nl_s = $isf->DbSelect('nauczyciele', array('skrot'), 'where imie_naz=\'' . $przedm[2] . '\'');
-                        $nl_s = $nl_s[1]['skrot'];
+                        $nl_s = $nl_s[0]['skrot'];
 
                         $valid = $isf->DbSelect('plan_grupy', array('*'), 'where dzien=\'Wtorek\' and lekcja=\'' . $lek . '\' and nauczyciel=\'' . $przedm[2] . '\' and sala!=\'' . $przedm[1] . '\'');
                         if (count($valid) > 0) {
@@ -372,7 +372,7 @@ class Controller_Plan extends Controller {
                         );
                     } else {
                         $nl_s = $isf->DbSelect('nauczyciele', array('skrot'), 'where imie_naz=\'' . $przedm[2] . '\'');
-                        $nl_s = $nl_s[1]['skrot'];
+                        $nl_s = $nl_s[0]['skrot'];
 
                         $valid = $isf->DbSelect('plan_grupy', array('*'), 'where dzien=\'Środa\' and lekcja=\'' . $lek . '\' and nauczyciel=\'' . $przedm[2] . '\' and sala!=\'' . $przedm[1] . '\'');
                         if (count($valid) > 0) {
@@ -411,7 +411,7 @@ class Controller_Plan extends Controller {
                         );
                     } else {
                         $nl_s = $isf->DbSelect('nauczyciele', array('skrot'), 'where imie_naz=\'' . $przedm[2] . '\'');
-                        $nl_s = $nl_s[1]['skrot'];
+                        $nl_s = $nl_s[0]['skrot'];
 
                         $valid = $isf->DbSelect('plan_grupy', array('*'), 'where dzien=\'Czwartek\' and lekcja=\'' . $lek . '\' and nauczyciel=\'' . $przedm[2] . '\' and sala!=\'' . $przedm[1] . '\'');
                         if (count($valid) > 0) {
@@ -450,7 +450,7 @@ class Controller_Plan extends Controller {
                         );
                     } else {
                         $nl_s = $isf->DbSelect('nauczyciele', array('skrot'), 'where imie_naz=\'' . $przedm[2] . '\'');
-                        $nl_s = $nl_s[1]['skrot'];
+                        $nl_s = $nl_s[0]['skrot'];
 
                         $valid = $isf->DbSelect('plan_grupy', array('*'), 'where dzien=\'Piątek\' and lekcja=\'' . $lek . '\' and nauczyciel=\'' . $przedm[2] . '\' and sala!=\'' . $przedm[1] . '\'');
                         if (count($valid) > 0) {

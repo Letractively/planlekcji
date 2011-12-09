@@ -54,7 +54,7 @@ class Controller_Przedmioty extends Controller {
         /**
          * Czy mozna edytowac dane
          */
-        if ($reg[1]['wartosc'] != 1) {
+        if ($reg[0]['wartosc'] != 1) {
             echo '<h1>Edycja danych zostala zamknieta</h1>';
             exit;
         }

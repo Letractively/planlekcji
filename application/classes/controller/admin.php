@@ -543,7 +543,7 @@ START;
 	$isf->Connect(APP_DBSYS);
 	$u = $isf->DbSelect('uzytkownicy', array('*'), 'where uid=\'' . $uid . '\'');
 	$isf->DbDelete('uzytkownicy', 'uid=\'' . $uid . '\'');
-	$isf->DbDelete('tokeny', 'login=\'' . $u[1]['login'] . '\'');
+	$isf->DbDelete('tokeny', 'login=\'' . $u[0]['login'] . '\'');
 	Kohana_Request::factory()->redirect('admin/users');
     }
 

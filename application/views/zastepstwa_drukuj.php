@@ -3,16 +3,15 @@
 function pobierznl($lekcja, $id) {
     $isf = new Kohana_Isf();
     $isf->Connect(APP_DBSYS);
-
-
+    
     $res = $isf->DbSelect('zastepstwa', array('*'), 'where zast_id=\'' . $id . '\' and lekcja=\'' . $lekcja . '\'');
 
     if (count($res) != 0) {
 
-        if (empty($res[1]['sala']) || empty($res[1]['nauczyciel'])) {
-            echo $res[1]['przedmiot'];
+        if (empty($res[0]['sala']) || empty($res[0]['nauczyciel'])) {
+            echo $res[0]['przedmiot'];
         } else {
-            echo $res[1]['przedmiot'] . ' (' . $res[1]['sala'] . ') - ' . $res[1]['nauczyciel'];
+            echo $res[0]['przedmiot'] . ' (' . $res[0]['sala'] . ') - ' . $res[0]['nauczyciel'];
         }
     }
 }
@@ -21,7 +20,7 @@ function pobierzdzien($id) {
     $isf = new Kohana_Isf();
     $isf->Connect(APP_DBSYS);
     $nl = $isf->DbSelect('zast_id', array('*'), 'where zast_id=\'' . $id . '\'');
-    $nauczyciel = $nl[1]['za_nl'];
+    $nauczyciel = $nl[0]['za_nl'];
 
     $enpl_days = array(
         'Monday' => 'Poniedziałek',
@@ -32,12 +31,12 @@ function pobierzdzien($id) {
         'Saturday' => 'Sobota',
         'Sunday' => 'Niedziela',
     );
-    $day = date('l', strtotime($nl[1]['dzien']));
+    $day = date('l', strtotime($nl[0]['dzien']));
     $dzien = $enpl_days[$day];
 
     echo '<table class="przed" style="width: 400px"><thead style="background: #DDD;">
             <tr><td colspan=3><h1>Zastępstwo za ' . $nauczyciel . '</h1>
-                <h3>' . $dzien . ' - ' . $nl[1]['dzien'] . '</h3></td></tr>
+                <h3>' . $dzien . ' - ' . $nl[0]['dzien'] . '</h3></td></tr>
         <tr><td width=25></td><td>Lekcja</td></tr></thead>';
     foreach ($isf->DbSelect('lek_godziny', array('*')) as $rowid => $rowcol) {
         $lek_nr = $rowid;
@@ -46,7 +45,7 @@ function pobierzdzien($id) {
             and dzien=\'' . $dzien . '\' and lekcja=\'' . $rowid . '\'');
         if (count($res) == 1) {
             echo '<p class="grplek">
-                <b>' . $res[1]['klasa'] . '</b> - ';
+                <b>' . $res[0]['klasa'] . '</b> - ';
             pobierznl($lek_nr, $id);
             echo '</p></td></tr>';
         }

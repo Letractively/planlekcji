@@ -20,7 +20,7 @@ endif;
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Plan lekcji - <?php echo $ns[1]['wartosc']; ?></title>
+        <title>Plan lekcji - <?php echo $ns[0]['wartosc']; ?></title>
         <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/themes/<?php echo $_SESSION['app_theme']; ?>.css"/>
         <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style.css"/>
         <?php if ($isf->detect_ie()): ?>

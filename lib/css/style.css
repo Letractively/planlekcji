@@ -20,17 +20,19 @@ div#container1{
 div#pnlLeft{
     width: 200px;
     float: left;
+    overflow: auto;
 }
 div#pnlCenter{
-    width: 780px;
+    width: 785px;
     padding-left: 10px;
-    padding-right: 10px;
+    padding-right: 5px;
+    overflow: auto;
     float: left;
 }
 div#pnlRight{
     width: 200px;
     float: right;
-    padding-right: 10px;
+    padding-right: 5px;
 }
 div#footer{
     position: fixed;

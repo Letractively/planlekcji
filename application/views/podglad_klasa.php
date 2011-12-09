@@ -24,12 +24,12 @@ function pobierzdzien($dzien, $lekcja) {
     $ret = '';
     $r = $isf->DbSelect('planlek', array('*'), 'where klasa=\'' . $k . '\' and dzien=\'' . $dzien . '\' and lekcja=\'' . $lekcja . '\'');
     if (count($r) != 0) {
-        if (empty($r[1]['sala'])) {
-            echo '<b>' . $r[1]['przedmiot'] . '</b>';
+        if (empty($r[0]['sala'])) {
+            echo '<b>' . $r[0]['przedmiot'] . '</b>';
         } else {
-            echo '<b>' . $r[1]['przedmiot'] . '</b> ';
+            echo '<b>' . $r[0]['przedmiot'] . '</b> ';
             echo '<span class="grptxt">';
-            echo '<a href=\'' . URL::site('podglad/sala/' . $r[1]['sala']) . '\'>' . $r[1]['sala'] . '</a> <a href=\'' . URL::site('podglad/nauczyciel/' . $r[1]['skrot']) . '\'>' . $r[1]['skrot'] . '</a>';
+            echo '<a href=\'' . URL::site('podglad/sala/' . $r[0]['sala']) . '\'>' . $r[0]['sala'] . '</a> <a href=\'' . URL::site('podglad/nauczyciel/' . $r[0]['skrot']) . '\'>' . $r[0]['skrot'] . '</a>';
             echo '</span>';
         }
     } else {
@@ -87,7 +87,7 @@ function pobierzdzien($dzien, $lekcja) {
             <?php endif; ?>
             <tr <?php echo $cl; ?>>
                 <td><b><?php echo $i; ?></b></td>
-                <td class="info"><?php echo $lek_godziny[$i]['godzina']; ?></td>
+                <td class="info"><?php echo $lek_godziny[$i-1]['godzina']; ?></td>
                 <td>
                     <?php echo pobierzdzien('Poniedziałek', $i); ?>
                 </td>

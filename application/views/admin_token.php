@@ -58,10 +58,10 @@
                         echo 'Uzytkownik nie istnieje!';
                         exit;
                     }
-                    $db->DbInsert('tokeny', array('login' => $l[1]['login'], 'token' => md5('plan' . $ret)));
+                    $db->DbInsert('tokeny', array('login' => $l[0]['login'], 'token' => md5('plan' . $ret)));
                     ?>
                     <td style="width:10cm">
-                        <p>Użytkownik <b><?php echo $l[1]['login']; ?></b></p>
+                        <p>Użytkownik <b><?php echo $l[0]['login']; ?></b></p>
                         <h1><?php echo $ret; ?></h1>
                     </td>
                     <?php
@@ -75,10 +75,10 @@
                         echo 'Uzytkownik nie istnieje!';
                         exit;
                     }
-                    $db->DbInsert('tokeny', array('login' => $l[1]['login'], 'token' => md5('plan' . $ret)));
+                    $db->DbInsert('tokeny', array('login' => $l[0]['login'], 'token' => md5('plan' . $ret)));
                     ?>
                     <td style="width:10cm">
-                        <p>Użytkownik <b><?php echo $l[1]['login']; ?></b></p>
+                        <p>Użytkownik <b><?php echo $l[0]['login']; ?></b></p>
                         <h1><?php echo $ret; ?></h1>
                     </td>
                 </tr>

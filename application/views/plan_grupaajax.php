@@ -10,7 +10,7 @@ $isf->Connect(APP_DBSYS);
  * Pobiera ilość godzin lekcyjnych
  */
 $ilosc_lek = $isf->DbSelect('rejestr', array('wartosc'), 'where opcja=\'ilosc_godzin_lek\'');
-$ilosc_lek = $ilosc_lek[1]['wartosc'];
+$ilosc_lek = $ilosc_lek[0]['wartosc'];
 /**
  *  pobiera czas godzin lekcyjnych
  */
@@ -110,7 +110,7 @@ function pobierzdzien($dzien, $lekcja) {
         // pobiera ilosc grup
         $ilosc_grp = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'ilosc_grup\'');
         // przypisuje do zmiennej g, ilosc grup
-        $g = $ilosc_grp[1]['wartosc'];
+        $g = $ilosc_grp[0]['wartosc'];
         $i = 0;
         while ($i < $g) {
             $i++;
@@ -118,10 +118,10 @@ function pobierzdzien($dzien, $lekcja) {
             $ret .= '<select style=\'width:200px;\' name=\'' . $dzien . '[' . $lekcja . '][' . $i . ']\'>';
             $lg = $isf->DbSelect('plan_grupy', array('*'), 'where dzien=\'' . $dzien . '\' and lekcja=\'' . $lekcja . '\' and grupa=\'' . $i . '\' and klasa=\'' . $k . '\'');
             if (count($lg) != 0) {
-                if (isset($lg[1]['sala']) && isset($lg[1]['nauczyciel'])) {
-                    $vg = $lg[1]['przedmiot'] . ':' . $lg[1]['sala'] . ':' . $lg[1]['nauczyciel'];
+                if (isset($lg[0]['sala']) && isset($lg[0]['nauczyciel'])) {
+                    $vg = $lg[0]['przedmiot'] . ':' . $lg[0]['sala'] . ':' . $lg[0]['nauczyciel'];
                 } else {
-                    $vg = $lg[1]['przedmiot'];
+                    $vg = $lg[0]['przedmiot'];
                 }
                 $ret .= '<option selected>' . $vg . '</option>';
             }
@@ -135,12 +135,12 @@ function pobierzdzien($dzien, $lekcja) {
         }
     } else {
         if ($vl != '---') {
-            if ($lek[1]['sala'] == '' && $lek[1]['nauczyciel'] == '') {
-                $ret .= '<b>' . $lek[1]['przedmiot'] . '</b><br/>';
-                $vl = $lek[1]['przedmiot'];
+            if ($lek[0]['sala'] == '' && $lek[0]['nauczyciel'] == '') {
+                $ret .= '<b>' . $lek[0]['przedmiot'] . '</b><br/>';
+                $vl = $lek[0]['przedmiot'];
             } else {
-                $ret .= '<b>' . $lek[1]['przedmiot'] . '</b>(' . $lek[1]['sala'] . ')(' . $lek[1]['nauczyciel'] . ')<br/>';
-                $vl = $lek[1]['przedmiot'] . ':' . $lek[1]['sala'] . ':' . $lek[1]['nauczyciel'];
+                $ret .= '<b>' . $lek[0]['przedmiot'] . '</b>(' . $lek[0]['sala'] . ')(' . $lek[0]['nauczyciel'] . ')<br/>';
+                $vl = $lek[0]['przedmiot'] . ':' . $lek[0]['sala'] . ':' . $lek[0]['nauczyciel'];
             }
         }
     }
@@ -148,7 +148,7 @@ function pobierzdzien($dzien, $lekcja) {
     return $ret;
 }
 ?>
-<?php if ($ilosc_grp[1]['wartosc'] == 0): ?>
+<?php if ($ilosc_grp[0]['wartosc'] == 0): ?>
     <h3>Nie można dokonać edycji z powodu braku ustawionych grup</h3>
 <?php else: ?>
     <form action="<?php echo URL::site('plan/grupazatw'); ?>" method="post" name="formPlan" name="formPlan"
@@ -184,7 +184,7 @@ function pobierzdzien($dzien, $lekcja) {
                     <?php endif; ?>
                     <tr <?php echo $str; ?>>
                         <td><?php echo $i; ?></td>
-                        <td><?php echo $lek_godziny[$i]['godzina']; ?></td>
+                        <td><?php echo $lek_godziny[$i-1]['godzina']; ?></td>
                         <td>
                             <?php echo pobierzdzien('Poniedziałek', $i); ?>
                         </td>

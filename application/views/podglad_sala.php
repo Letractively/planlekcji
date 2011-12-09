@@ -7,7 +7,7 @@
 $isf = new Kohana_Isf();
 $isf->Connect(APP_DBSYS);
 $ilosc_lek = $isf->DbSelect('rejestr', array('wartosc'), 'where opcja=\'ilosc_godzin_lek\'');
-$ilosc_lek = $ilosc_lek[1]['wartosc'];
+$ilosc_lek = $ilosc_lek[0]['wartosc'];
 $lek_godziny = $isf->DbSelect('lek_godziny', array('*'));
 $k = $klasa;
 $GLOBALS['k'] = $klasa;
@@ -21,9 +21,9 @@ function pobierzdzien($dzien, $lekcja) {
     $ret = '';
     $r = $isf->DbSelect('planlek', array('*'), 'where sala=\'' . $k . '\' and dzien=\'' . $dzien . '\' and lekcja=\'' . $lekcja . '\'');
     if (count($r) != 0) {
-        echo '<b>'.$r[1]['przedmiot'] . '</b><span class="grptxt">
-            <a href=\'' . URL::site('podglad/klasa/' . $r[1]['klasa']) . '\'>' . $r[1]['klasa'] . '</a>
-            <a href=\'' . URL::site('podglad/nauczyciel/' . $r[1]['skrot']) . '\'>' . $r[1]['skrot'] . '</a>
+        echo '<b>'.$r[0]['przedmiot'] . '</b><span class="grptxt">
+            <a href=\'' . URL::site('podglad/klasa/' . $r[0]['klasa']) . '\'>' . $r[0]['klasa'] . '</a>
+            <a href=\'' . URL::site('podglad/nauczyciel/' . $r[0]['skrot']) . '\'>' . $r[0]['skrot'] . '</a>
             </span>';
     } else {
         $rn = $isf->DbSelect('plan_grupy', array('*'), 'where sala=\'' . $k . '\' and dzien=\'' . $dzien . '\' and lekcja=\'' . $lekcja . '\'');
@@ -75,7 +75,7 @@ function pobierzdzien($dzien, $lekcja) {
             <?php endif; ?>
             <tr <?php echo $cl; ?>>
                 <td><b><?php echo $i; ?></b></td>
-                <td class="info"><?php echo $lek_godziny[$i]['godzina']; ?></td>
+                <td class="info"><?php echo $lek_godziny[$i-1]['godzina']; ?></td>
                 <td>
                     <?php echo pobierzdzien('Poniedziałek', $i); ?>
                 </td>

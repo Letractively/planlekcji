@@ -13,7 +13,7 @@ $isf->Connect(APP_DBSYS);
  * Pobiera z rejestru ilość godzin lekcyjnych
  */
 $ilosc_lek = $isf->DbSelect('rejestr', array('wartosc'), 'where opcja=\'ilosc_godzin_lek\'');
-$ilosc_lek = $ilosc_lek[1]['wartosc'];
+$ilosc_lek = $ilosc_lek[0]['wartosc'];
 /**
  * Pobiera godziny lekcyjne
  */
@@ -87,12 +87,12 @@ function pobierzdzien($dzien, $lekcja) {
         }
     } else {
         if ($vl != '---') {
-            if ($lek[1]['sala'] == '' && $lek[1]['nauczyciel'] == '') {
-                $ret .= '<b>' . $lek[1]['przedmiot'] . '</b><br/>';
-                $vl = $lek[1]['przedmiot'];
+            if ($lek[0]['sala'] == '' && $lek[0]['nauczyciel'] == '') {
+                $ret .= '<b>' . $lek[0]['przedmiot'] . '</b><br/>';
+                $vl = $lek[0]['przedmiot'];
             } else {
-                $ret .= '<b>' . $lek[1]['przedmiot'] . '</b>(' . $lek[1]['sala'] . ')(' . $lek[1]['nauczyciel'] . ')<br/>';
-                $vl = $lek[1]['przedmiot'] . ':' . $lek[1]['sala'] . ':' . $lek[1]['nauczyciel'];
+                $ret .= '<b>' . $lek[0]['przedmiot'] . '</b>(' . $lek[0]['sala'] . ')(' . $lek[0]['nauczyciel'] . ')<br/>';
+                $vl = $lek[0]['przedmiot'] . ':' . $lek[0]['sala'] . ':' . $lek[0]['nauczyciel'];
             }
         }
     }
@@ -159,7 +159,7 @@ function pobierzdzien($dzien, $lekcja) {
                 <tr <?php echo $str; ?>>
                     <td><?php echo $i; ?></td>
 
-                    <td><?php echo $lek_godziny[$i]['godzina']; ?></td>
+                    <td><?php echo $lek_godziny[$i-1]['godzina']; ?></td>
 
                     <td>
                         <?php echo pobierzdzien('Poniedziałek', $i); ?>
