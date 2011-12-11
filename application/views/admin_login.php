@@ -7,8 +7,8 @@ if (!isset($_POST['inpLogin'])) {
     $_POST['inpLogin'] = null;
 }
 ?>
-<div class="a_odd" style="width: 100%;">
-    Logowanie metodą RAND_TOKEN
+<div class="a_odd" style="width: 780px;">
+    <b>Logowanie metodą RAND_TOKEN</b>
 </div>
 <style type="text/css">
     input{
@@ -19,12 +19,12 @@ if (!isset($_POST['inpLogin'])) {
 </style>
 
 <form action="<?php echo url::site('admin/dologin'); ?>" method="post" name="lgn">
-    <div class="a_light_menu" style="width: 100%;">
-        <table border="0">
+    <div class="a_light_menu">
+        <table border="0" style="width: 775px;">
             <tbody>
                 <tr>
                     <td style="width: 100px;">Login</td>
-                    <td style="width: 650px;">
+                    <td style="width: 675px;">
                         <input style="width: 100%;" type="text" name="inpLogin" value="<?php echo $_POST['inpLogin']; ?>"/>
                     </td>
                 </tr>

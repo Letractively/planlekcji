@@ -19,17 +19,22 @@ class Kohana_Isf {
 
     /** @var string */
     protected $isf_path;
+
     /** @var object PDO */
     protected $dbhandle;
+
     /** @var string */
     protected $script;
+
     /** @var string */
     protected $jqpath;
+
     /** @var string */
     protected $system;
+
     /** @var string */
     protected $ie9script;
-    
+
     /**
      * Zwraca obiekt ISF
      *
@@ -38,6 +43,7 @@ class Kohana_Isf {
     public static function factory() {
 	return new Kohana_Isf();
     }
+
     /**
      * Laczy sie z wybrana baza danych
      * 
@@ -77,6 +83,7 @@ class Kohana_Isf {
 		break;
 	}
     }
+
     /**
      * Laczy sie z baza PostgreSQL
      * 
@@ -87,7 +94,7 @@ class Kohana_Isf {
      * @param array $customvars Parametry polaczenia
      */
     protected function PgSQL_Connect($customvars=null) {
-	
+
 	$my_cfg = $GLOBALS['my_cfg'];
 
 	if (!class_exists('PDO') || !extension_loaded('pdo_pgsql')) {
@@ -114,6 +121,7 @@ class Kohana_Isf {
 	    }
 	}
     }
+
     /**
      * Laczy sie z baza danych SQLite
      * 
@@ -224,20 +232,15 @@ class Kohana_Isf {
 	$query = substr($query, 0, -2);
 	$query .= ') values (';
 	foreach ($col_val as $col => $val) {
-	    $valuesArray[] = $val;
 	    if ($specialchars == true)
 		$val = htmlspecialchars($val);
-	    if ($val != null) {
-		$query .= '?, ';
-	    } else {
-		$query .= '' . $val . ', ';
-	    }
+	    $valuesArray[] = $val;
+	    $query .= '?, ';
 	}
 	$query = substr($query, 0, -2);
 	$query .= ')';
 	try {
-	    $res = $this->dbhandle->prepare($query);
-	    $res->execute($valuesArray);
+	    $this->dbhandle->prepare($query)->execute($valuesArray);
 	} catch (SQLiteException $e) {
 	    echo $e->getMessage();
 	}
@@ -266,11 +269,11 @@ class Kohana_Isf {
 	if (empty($table) || !is_array($colvals) || empty($cond))
 	    die('Sprawdz parametry funkcji <b>update</b>!');
 	$query = 'update ' . $table . ' set ';
-	$valuesArray=array();
+	$valuesArray = array();
 	foreach ($colvals as $col => $val) {
 	    if ($usehtmlsc == true)
 		$val = htmlspecialchars($val);
-	    $valuesArray[]=$val;
+	    $valuesArray[] = $val;
 	    $query .= $col . '=?, ';
 	}
 	$query = substr($query, 0, -2);
@@ -282,7 +285,6 @@ class Kohana_Isf {
 	} catch (SQLiteException $e) {
 	    echo $e->getMessage();
 	}
-	
     }
 
     /**

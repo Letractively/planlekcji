@@ -7,9 +7,9 @@
  * @param string $wiadomosc 
  */
 function insert_log($modul, $wiadomosc) {
-    $db = new Kohana_Isf();
-    $db->Connect(APP_DBSYS);
-    $db->DbInsert('log', array('data' => date('d.m.Y H:i:s'), 'modul' => $modul, 'wiadomosc' => $wiadomosc));
+    //$db = new Kohana_Isf();
+    //$db->Connect(APP_DBSYS);
+    //$db->DbInsert('log', array('data' => date('d.m.Y H:i:s'), 'modul' => $modul, 'wiadomosc' => $wiadomosc));
 }
 
 /**
@@ -247,10 +247,10 @@ function doChangePass($token, $old, $new) {
     $db->Connect(APP_DBSYS);
     $oldm = md5('plan' . sha1('lekcji' . $old));
     $newm = md5('plan' . sha1('lekcji' . $new));
-    
-    if(count($db->DbSelect('uzytkownicy', array('haslo'), 'where haslo=\''.$oldm.'\''))!=1){
+
+    if (count($db->DbSelect('uzytkownicy', array('haslo'), 'where haslo=\'' . $oldm . '\'')) != 1) {
 	return 'auth:failed';
-    }else{
+    } else {
 	$db->DbUpdate('uzytkownicy', array('haslo' => $newm), 'webapi_token=\'' . $token . '\' and haslo=\'' . $oldm . '\'');
 	return 'auth:chpasswd';
     }

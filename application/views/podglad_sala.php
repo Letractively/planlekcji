@@ -1,52 +1,18 @@
 <?php
-/*
- * Plan zajęć dla sali
- * 
- * 
+/**
+ * Nowy podglad Planow Lekcji
  */
-$isf = new Kohana_Isf();
+$isf = Kohana_Isf::factory();
 $isf->Connect(APP_DBSYS);
-$ilosc_lek = $isf->DbSelect('rejestr', array('wartosc'), 'where opcja=\'ilosc_godzin_lek\'');
-$ilosc_lek = $ilosc_lek[0]['wartosc'];
-$lek_godziny = $isf->DbSelect('lek_godziny', array('*'));
-$k = $klasa;
-$GLOBALS['k'] = $klasa;
 
-function pobierzdzien($dzien, $lekcja) {
-    global $k;
-    $isf = new Kohana_Isf();
-    $isf->Connect(APP_DBSYS);
-    $apg = new App_Globals();
-    $ilosc_grp = $apg->getRegistryKey('ilosc_grup');
-    $ret = '';
-    $r = $isf->DbSelect('planlek', array('*'), 'where sala=\'' . $k . '\' and dzien=\'' . $dzien . '\' and lekcja=\'' . $lekcja . '\'');
-    if (count($r) != 0) {
-        echo '<b>'.$r[0]['przedmiot'] . '</b><span class="grptxt">
-            <a href=\'' . URL::site('podglad/klasa/' . $r[0]['klasa']) . '\'>' . $r[0]['klasa'] . '</a>
-            <a href=\'' . URL::site('podglad/nauczyciel/' . $r[0]['skrot']) . '\'>' . $r[0]['skrot'] . '</a>
-            </span>';
-    } else {
-        $rn = $isf->DbSelect('plan_grupy', array('*'), 'where sala=\'' . $k . '\' and dzien=\'' . $dzien . '\' and lekcja=\'' . $lekcja . '\'');
-        if (count($rn) == 0) {
-            echo '';
-        } else {
-            foreach ($rn as $rowid => $rowcol) {
-                echo '
-                    <p class=\'grplek\'><b>' . $rowcol['przedmiot'] . '</b>
-                    <span class="grptxt">
-                    <a href=\'' . URL::site('podglad/klasa/' . $rowcol['klasa']) . '\'>' . $rowcol['klasa'] . '</a>-' . $rowcol['grupa'] . '/' . $ilosc_grp . '
-                    <a href=\'' . URL::site('podglad/nauczyciel/' . $rowcol['skrot']) . '\'>' . $rowcol['skrot'] . '</a>
-                    </span></p>';
-            }
-        }
-    }
-}
+$appglobals = new App_Globals();
+
+$ilosc_grup = $appglobals->getRegistryKey('ilosc_grup');
+$k = $klasa;
+$dni = array('Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek');
+
+$godziny = $isf->DbSelect('lek_godziny', array('*'));
 ?>
-<style>
-    .grptxt{
-        font-size: 8pt;
-    }
-</style>
 <table class="przed" align="center" style="font-size: 9pt; width: auto;">
     <thead style="background: #ccccff;">
         <tr class="a_odd">
@@ -56,42 +22,57 @@ function pobierzdzien($dzien, $lekcja) {
                 </p>
             </td>
         </tr>
-        <tr class="a_even">
+	<tr class="a_even" style="text-align: center;">
             <td></td>
             <td>Godziny</td>
-            <td style="width: 110px;">Poniedziałek</td>
-            <td style="width: 110px;">Wtorek</td>
-            <td style="width: 110px;">Środa</td>
-            <td style="width: 110px;">Czwartek</td>
-            <td style="width: 110px;">Piątek</td>
+	    <?php foreach ($dni as $dzien): ?>
+    	    <td style="width: 130px;"><?php echo $dzien; ?></td>
+	    <?php endforeach; ?>
         </tr>
     </thead>
-    <tbody>
-        <?php for ($i = 1; $i <= $ilosc_lek; $i++): ?>
-            <?php if ($i % 2 == 0): ?>
-                <?php $cl = 'class="a_even"'; ?>
-            <?php else: ?>
-                <?php $cl = ''; ?>
-            <?php endif; ?>
-            <tr <?php echo $cl; ?>>
-                <td><b><?php echo $i; ?></b></td>
-                <td class="info"><?php echo $lek_godziny[$i-1]['godzina']; ?></td>
-                <td>
-                    <?php echo pobierzdzien('Poniedziałek', $i); ?>
-                </td>
-                <td>
-                    <?php echo pobierzdzien('Wtorek', $i); ?>
-                </td>
-                <td>
-                    <?php echo pobierzdzien('Środa', $i); ?>
-                </td>
-                <td>
-                    <?php echo pobierzdzien('Czwartek', $i); ?>
-                </td>
-                <td>
-                    <?php echo pobierzdzien('Piątek', $i); ?>
-                </td>
-            </tr>
-        <?php endfor; ?>
-    </tbody>
+    <?php $i = 0; ?>
+    <?php foreach ($godziny as $rowid => $values): ?>
+        <tr <?php echo ($i % 2 != 0) ? ('class="a_even"') : ""; ?>>
+    	<td><?php echo $values['lekcja']; ?></td>
+    	<td><?php echo $values['godzina']; ?></td>
+	    <?php foreach ($dni as $dzien): ?>
+		<td>
+		    <?php
+		    $z_cond = 'where sala=\'' . $k . '\' and dzien=\'' . $dzien . '\' and lekcja=\'' . $values['lekcja'] . '\'';
+		    $zwykla = $isf->DbSelect('planlek', array('*'), $z_cond);
+		    ?>
+		    <?php if (count($zwykla) != 0): ?>
+			<?php echo $zwykla[0]['przedmiot']; ?>
+	    	    <span class="grptxt">
+	    		<a href="<?php echo URL::site('podglad/nauczyciel/' . $zwykla[0]['skrot']); ?>">
+				<?php echo $zwykla[0]['skrot']; ?></a>&nbsp;
+	    		<a href="<?php echo URL::site('podglad/klasa/' . $zwykla[0]['klasa']); ?>">
+				<?php echo $zwykla[0]['klasa']; ?></a>
+	    	    </span>
+		    <?php else: ?>
+			<?php
+			$g_cond = 'where sala=\'' . $k . '\' and dzien=\'' . $dzien . '\' and lekcja=\'' . $values['lekcja'] . '\'';
+			$grupa = $isf->DbSelect('plan_grupy', array('*'), $g_cond);
+			?>
+			<?php if (count($grupa) != 0): ?>
+			    <?php foreach ($grupa as $rowid => $values): ?>
+		    	    <p class="grplek">
+				    <?php echo $values['przedmiot']; ?>
+		    		<span class="grptxt">
+		    		    <span class="grptxt">
+					<a href="<?php echo URL::site('podglad/klasa/' . $values['klasa']); ?>">
+						<?php echo $values['klasa']; ?></a>-<?php echo $values['grupa'].'/'.$ilosc_grup; ?>
+		    			<a href="<?php echo URL::site('podglad/nauczyciel/' . $values['skrot']); ?>">
+						<?php echo $values['skrot']; ?></a>
+		    		    </span>
+		    		</span>
+		    	    </p>
+			    <?php endforeach; ?>
+			<?php endif; ?>
+		    <?php endif; ?>
+		</td>
+	    <?php endforeach; ?>
+        </tr>
+	<?php $i++; ?>
+    <?php endforeach; ?>
 </table>

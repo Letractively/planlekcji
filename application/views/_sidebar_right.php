@@ -41,43 +41,26 @@ if ($zadmin > $toktime) {
     </fieldset>
     <?php if ($_SESSION['user'] == 'root'): ?>
         <p>
-            <img src="<?php echo URL::base() ?>lib/icons/edit.png" alt=""/>
-            <a href="<?php echo URL::site('admin/zmiendane'); ?>">
-                Szkoła i strona główna
-            </a>
+    	<img src="<?php echo URL::base() ?>lib/icons/edit.png" alt=""/>
+    	<a href="<?php echo URL::site('admin/zmiendane'); ?>">
+    	    Szkoła i strona główna
+    	</a>
         </p>
         <p>
-            <img src="<?php echo URL::base() ?>lib/icons/alert.png" alt=""/>
-            <a  href="<?php echo url::site('admin/reset'); ?>">
-                Wyczyść system
-            </a>
+    	<img src="<?php echo URL::base() ?>lib/icons/alert.png" alt=""/>
+    	<a  href="<?php echo url::site('admin/reset'); ?>">
+    	    Wyczyść system
+    	</a>
         </p>
         <p>
-            <img src="<?php echo URL::base(); ?>lib/icons/backup.png" alt=""/>
-            <a href="<?php echo URL::site('admin/backup'); ?>">Kopia zapasowa</a>
+    	<img src="<?php echo URL::base(); ?>lib/icons/backup.png" alt=""/>
+    	<a href="<?php echo URL::site('admin/backup'); ?>">Kopia zapasowa</a>
         </p>
-        <?php if (App_Globals::getSysLv() == 3): ?>
-            <p>
-                <img src="<?php echo URL::base(); ?>lib/icons/save.png" alt=""/>
-                <a href="#" onClick="window.open('<?php echo URL::base(); ?>export.php', 'moje', 'width=500,height=500,scrollbars=1')" >Eksport planów</a>
-            </p>
-        <?php endif; ?>
-        <?php if (App_Globals::getSysLv() == 0): ?>
-            <p>
-                <img src="<?php echo URL::base(); ?>lib/images/registry.png" alt="" width="16" height="16"/>
-                <a href="#" onClick="window.open('<?php echo URL::base(); ?>generator.php', 'moje', 'width=500,height=500,scrollbars=1')" >Generator planów zajęć</a>
-            </p>
-        <?php endif; ?>
     <?php endif; ?>
-    <?php if ($_SESSION['user'] != 'root' && App_Globals::getSysLv() == 0): ?>
+    <?php if (App_Globals::getSysLv() == 3): ?>
         <p>
-            <img src="<?php echo URL::base(); ?>lib/images/betasign.png" alt="" height="12"/>
-        </p>
-        <p>
-            <img src="<?php echo URL::base() ?>lib/images/registry.png" alt=""/>
-            <a href="#" onClick="window.open('<?php echo URL::base(); ?>generator.php', 'moje', 'width=500,height=500,scrollbars=1')" >
-                Generator planów zajęć
-            </a>
+    	<img src="<?php echo URL::base(); ?>lib/icons/save.png" alt=""/>
+    	<a href="<?php echo URL::site('plan/export'); ?>">Eksport planów</a>
         </p>
     <?php endif; ?>
 </td>

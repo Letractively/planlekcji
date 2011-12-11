@@ -67,7 +67,7 @@ $appver = App_Globals::getRegistryKey('app_ver');
 	<div id="container">
 	    <div id="container1">
 		<div id="pnlLeft">
-		    <div class="app_info">
+		    <div class="app_info" id="app_info">
 			<a href="<?php echo URL::site('default/index'); ?>">
 			    <img src="<?php echo URL::base(); ?>lib/icons/home.png" alt=""/></a>
 			Plan Lekcji
@@ -78,7 +78,7 @@ $appver = App_Globals::getRegistryKey('app_ver');
     			&nbsp;Używasz wersji rozwojowej systemu
     		    </div>
 		    <?php endif; ?>
-		    <div id="sidebar_menu" style="padding-left: 10px;">
+		    <div id="sidebar_menu" style="padding-left: 10px;" class="a_light_menu">
 			<?php echo View::factory()->render('_sidebar_menu'); ?>
 		    </div>
 		</div>
@@ -103,14 +103,18 @@ $appver = App_Globals::getRegistryKey('app_ver');
 		var contentDiv = document.getElementById('container');
 		var cDiv = document.getElementById('pnlCenter');
 		var rDiv = document.getElementById('pnlLeft');
+		var sDiv = document.getElementById('sidebar_menu');
 		var fDiv = document.getElementById('footer');
+		var aDiv = document.getElementById('app_info');
 		
 		// This may need to be done differently on IE than FF, but you get the idea. 
 		var viewPortHeight = window.innerHeight; 
 		contentDiv.style.height =  
 		    Math.max(viewPortHeight, contentDiv.clientHeight) + 'px';
-		cDiv.style.height = Math.min(viewPortHeight-fDiv.clientHeight, contentDiv.clientHeight) + 'px';
+		cDiv.style.height = viewPortHeight-fDiv.clientHeight + 'px';
+		cDiv.style.maxHeight = viewPortHeight-fDiv.clientHeight + 'px';
 		rDiv.style.height = Math.min(viewPortHeight-fDiv.clientHeight, contentDiv.clientHeight) + 'px';
+		sDiv.style.height = Math.min(viewPortHeight-fDiv.clientHeight-aDiv.clientHeight-10, contentDiv.clientHeight) + 'px';
 	    }
 	</script>
 	<!-- [/SEKCJA] -->

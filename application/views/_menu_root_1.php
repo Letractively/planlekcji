@@ -3,47 +3,51 @@
     <tbody>
         <tr>
             <td>
-                &bull; <a href="<?php echo URL::site('sale/index'); ?>">Sale</a>
+                 <a href="<?php echo URL::site('sale/index'); ?>">Sale</a>
             </td>
         </tr>
         <tr>
             <td>
-                &bull; <a href="<?php echo URL::site('przedmioty/index'); ?>">Przedmioty</a>
+                 <a href="<?php echo URL::site('przedmioty/index'); ?>">Przedmioty</a>
             </td>
         </tr>
         <tr>
             <td>
-                &bull; <a href="<?php echo URL::site('nauczyciele/index'); ?>">Nauczyciele</a>
+                 <a href="<?php echo URL::site('nauczyciele/index'); ?>">Nauczyciele</a>
             </td>
         </tr>
         <tr>
             <td>
-                &bull; <a href="<?php echo URL::site('klasy/index'); ?>">Klasy</a>
+                 <a href="<?php echo URL::site('klasy/index'); ?>">Klasy</a>
             </td>
         </tr>
         <tr>
             <td>
-                &bull; <a href="<?php echo URL::site('admin/users'); ?>">Użytkownicy</a>
+                 <a href="<?php echo URL::site('admin/users'); ?>">Użytkownicy</a>
             </td>
         </tr>
         <tr>
             <td>
-                &bull; <a href="<?php echo URL::site('godziny/index'); ?>">Godziny lekcyjne i przerwy</a>
+                 <a href="<?php echo URL::site('godziny/index'); ?>">Godziny lekcyjne i przerwy</a>
             </td>
         </tr>
         <tr>
             <td>
-                &bull; <a href="<?php echo URL::site('regedit'); ?>">Podgląd rejestru</a>
+                 <a href="<?php echo URL::site('regedit'); ?>">Podgląd rejestru</a>
             </td>
         </tr>
+	<?php
+	/*
+	  <tr>
+	  <td>
+	   <a href="<?php echo URL::site('admin/logs'); ?>">Podgląd dzienników</a>
+	  </td>
+	  </tr>
+	 */
+	?>
         <tr>
             <td>
-                &bull; <a href="<?php echo URL::site('admin/logs'); ?>">Podgląd dzienników</a>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                &bull; <b><a href="<?php echo URL::site('admin/zamknij'); ?>">Zamknięcie edycji</a></b>
+                 <b><a href="<?php echo URL::site('admin/zamknij'); ?>">Zamknięcie edycji</a></b>
             </td>
         </tr>
     </tbody>

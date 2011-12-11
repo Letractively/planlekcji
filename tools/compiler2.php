@@ -13,7 +13,7 @@ try {
     $params = array(
         'login' => 'root',
         'password' => 'Plan001',
-        'token' => '940911mbocian'
+        'token' => 'd020c9'
     );
     $token = $wsdl->call('doLogin', $params, 'webapi.planlekcji.isf');
 } catch (Exception $e) {
