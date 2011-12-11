@@ -117,10 +117,25 @@ START;
 
 		<?php endif; ?>
 	    <?php else: ?>
+		<?php
+		$valid_db = true;
+		$valid_paths = true;
+		if (!extension_loaded('pdo_sqlite') || !extension_loaded('pdo_pgsql')) {
+		    $valid_db = false;
+		}
+		$paths_err = '';
+		$paths = array('export', 'application/logs', 'application/cache', 'modules/isf/isf_resources');
+		foreach ($paths as $path) {
+		    if (!is_writable($path)) {
+			$paths_err .= '<li>Katalog <b>' . $path . '</b> musi posiadać prawa zapisu</li>';
+			$valid_paths = false;
+		    }
+		}
+		?>
 		<?php if (!isset($_POST['step2'])): ?>
-
 		    <img src="lib/images/logo.png"/>
 		    <h1>Internetowy Plan Lekcji <?php echo _I_SYSVER; ?></h1>
+
 		    <?php if (isset($_GET['reinstall'])): ?>
 	    	    <p class="info">Reinstalacja usunie wszystkich użytkowników, wszystkie dane
 	    		systemu zostaną zachowane.</p>
@@ -133,34 +148,49 @@ START;
 		    $r = str_replace('?reinstall', '', $r);
 		    ?>
 		    <h3>Instalator systetmu</h3>
-		    <form action="" method="post">
-			<b>Nazwa szkoły: </b>
-			<input type="text" name="inpSzkola" size="80"/><p/>
-			<b>Ścieżka aplikacji*: </b>
-			<input type="text" name="inpPath" size="50" value="<?php echo $r; ?>"/><p/>
-			<b>Typ bazy danych: </b>
-			<select name="dbtype">
-			    <option>SQLite</option>
-			    <option>PgSQL</option>
-			</select>
-			<input type="hidden" name="step2" value="true"/><p/>
-			<p class="info">
-			    Ścieżka aplikacji to ciąg znaków po nazwie hosta w pasku adresu
-			    przeglądarki. System automatycznie dopasuje odpowiednią wartość.
-			    Proszę nie zmieniać wartości tego pola chyba, że jest ona nieprawidłowa.
-			</p>
-			<h3>Dane serwera PostgreSQL</h3>
-			<p>W przypadku wybrania opcji <b>PgSQL</b></p>
-			<p><b>Host: <input type="text" name="dbHost" size="50"/></b></p>
-			<p><b>Login: <input type="text" name="dbLogin" size="50"/></b></p>
-			<p><b>Hasło: <input type="text" name="dbHaslo" size="50"/></b></p>
-			<p><b>Baza danych: <input type="text" name="dbBaza" size="50"/></b></p>
-			<button type="submit" name="btnSubmit">Zainstaluj aplikację</button>
-		    </form>
-		    <?php if (isset($_GET['err'])): ?>
-	    	    <p class="error">Żadne pole nie może być puste!</p>
+		    <?php if ($valid_db == false || $valid_paths == false): ?>
+	    	    <p>
+	    		<b>Wystąpiły błędy. Instalacja przerwana</b>
+	    	    </p>
+			<?php if ($valid_db == false): ?>
+			    <p>
+				Instalator wymaga obsługi <b>SQLite3</b> lub <b>PostgreSQL</b> w
+				wersjach <b>PDO</b>.</p>
+			<?php endif; ?>
+			<?php if ($valid_paths == false): ?>
+			    <ul>
+				<?php echo $paths_err; ?>
+			    </ul>
+			<?php endif; ?>
+		    <?php else: ?>
+	    	    <form action="" method="post">
+	    		<b>Nazwa szkoły: </b>
+	    		<input type="text" name="inpSzkola" size="80"/><p/>
+	    		<b>Ścieżka aplikacji*: </b>
+	    		<input type="text" name="inpPath" size="50" value="<?php echo $r; ?>"/><p/>
+	    		<b>Typ bazy danych: </b>
+	    		<select name="dbtype">
+	    		    <option>SQLite</option>
+	    		    <option>PgSQL</option>
+	    		</select>
+	    		<input type="hidden" name="step2" value="true"/><p/>
+	    		<p class="info">
+	    		    Ścieżka aplikacji to ciąg znaków po nazwie hosta w pasku adresu
+	    		    przeglądarki. System automatycznie dopasuje odpowiednią wartość.
+	    		    Proszę nie zmieniać wartości tego pola chyba, że jest ona nieprawidłowa.
+	    		</p>
+	    		<h3>Dane serwera PostgreSQL</h3>
+	    		<p>W przypadku wybrania opcji <b>PgSQL</b></p>
+	    		<p><b>Host: <input type="text" name="dbHost" size="50"/></b></p>
+	    		<p><b>Login: <input type="text" name="dbLogin" size="50"/></b></p>
+	    		<p><b>Hasło: <input type="text" name="dbHaslo" size="50"/></b></p>
+	    		<p><b>Baza danych: <input type="text" name="dbBaza" size="50"/></b></p>
+	    		<button type="submit" name="btnSubmit">Zainstaluj aplikację</button>
+	    	    </form>
+			<?php if (isset($_GET['err'])): ?>
+			    <p class="error">Żadne pole nie może być puste!</p>
+			<?php endif; ?>
 		    <?php endif; ?>
-
 		<?php else: ?>
 		    <?php
 		    if ($_POST['dbtype'] == 'PgSQL') {

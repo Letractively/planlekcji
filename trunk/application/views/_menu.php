@@ -14,7 +14,7 @@ else:
     ?>
     <?php if (App_Globals::getSysLv() == 3): //gdy system jest calkowicie otwarty bez edycji sal, czy planow ?>
         <p>
-            <img src="<?php echo URL::base(); ?>lib/icons/zastepstwa.png"/>
+            <img src="<?php echo URL::base(); ?>lib/icons/zastepstwa.png" alt=""/>
             <a href="<?php echo URL::site('zastepstwa/index'); ?>">
                 Zastępstwa
             </a>
