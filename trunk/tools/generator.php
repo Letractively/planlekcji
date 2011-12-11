@@ -1,4 +1,5 @@
-<?php require_once 'modules/isf/classes/kohana/isf.php'; ?>
+<?php require_once '../config.php'; ?>
+<?php require_once '../modules/isf/classes/kohana/isf.php'; ?>
 <?php $isf = new Kohana_Isf(); ?>
 <?php $isf->Connect(APP_DBSYS); ?>
 <!DOCTYPE html>
@@ -6,26 +7,7 @@
     <head>
         <meta charset="UTF-8"/>
         <title>Generator planów zajęć</title>
-	<style>
-	    body{
-		font-family: sans-serif;
-		font-size: 80%;
-	    }
-	    div#wrapper{
-		width: 1000px;
-		margin: 0 auto;
-	    }
-	    button{
-		border: 1px solid;
-		padding: 5px;
-	    }
-	    select{
-		font-size: 14pt;
-	    }
-	    option{
-		font-size: 14pt;
-	    }
-	</style>
+	<link rel="stylesheet" type="text/css" href="../lib/css/style.css"/>
     </head>
     <body>
 	<div id="wrapper">

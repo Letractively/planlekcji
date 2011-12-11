@@ -189,15 +189,14 @@ class Controller_Zastepstwa extends Controller {
 
 	$isf = new Kohana_Isf();
 	$isf->Connect(APP_DBSYS);
-
-        $isf->DbInsert('zast_id', array(
+	$isf->DbInsert('zast_id', array(
 	    'dzien' => $_POST['dzien'],
 	    'za_nl' => $_POST['za_nl'],
 	    'info' => $_POST['info'],
 	));
 
-        $id = $isf->DbSelect('zast_id', array('*'), 'where dzien=\'' . $_POST['dzien'] . '\' and za_nl=\'' . $_POST['za_nl'] . '\'');
-        $id = $id[1]['zast_id'];
+	$id = $isf->DbSelect('zast_id', array('*'), 'where dzien=\'' . $_POST['dzien'] . '\' and za_nl=\'' . $_POST['za_nl'] . '\'');
+	$id = $id[0]['zast_id'];
 
 	foreach ($_POST['zast'] as $lekcja => $zast) {
 	    $str = explode(':', $zast);

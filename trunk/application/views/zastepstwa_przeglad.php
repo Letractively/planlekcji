@@ -9,11 +9,11 @@ function pobierznl($lekcja, $id) {
 
     if (count($res) != 0) {
 
-        if (empty($res[0]['sala']) || empty($res[0]['nauczyciel'])) {
-            echo $res[0]['przedmiot'];
-        } else {
-            echo $res[0]['przedmiot'] . ' (' . $res[0]['sala'] . ') - ' . $res[0]['nauczyciel'];
-        }
+	if (empty($res[0]['sala']) || empty($res[0]['nauczyciel'])) {
+	    echo $res[0]['przedmiot'];
+	} else {
+	    echo $res[0]['przedmiot'] . ' (' . $res[0]['sala'] . ') - ' . $res[0]['nauczyciel'];
+	}
     }
 }
 
@@ -24,13 +24,13 @@ function pobierzdzien($id) {
     $nauczyciel = $nl[0]['za_nl'];
 
     $enpl_days = array(
-        'Monday' => 'Poniedziałek',
-        'Tuesday' => 'Wtorek',
-        'Wednesday' => 'Środa',
-        'Thursday' => 'Czwartek',
-        'Friday' => 'Piątek',
-        'Saturday' => 'Sobota',
-        'Sunday' => 'Niedziela',
+	'Monday' => 'Poniedziałek',
+	'Tuesday' => 'Wtorek',
+	'Wednesday' => 'Środa',
+	'Thursday' => 'Czwartek',
+	'Friday' => 'Piątek',
+	'Saturday' => 'Sobota',
+	'Sunday' => 'Niedziela',
     );
     $day = date('l', strtotime($nl[0]['dzien']));
     $dzien = $enpl_days[$day];
@@ -40,36 +40,37 @@ function pobierzdzien($id) {
                 <h3>' . $dzien . ' - ' . $nl[0]['dzien'] . '</h3></td></tr>
         <tr><td width="20"></td><td>Lekcja</td></tr></thead>';
     foreach ($isf->DbSelect('lek_godziny', array('*')) as $rowid => $rowcol) {
-        $lek_nr = $rowid;
-        if ($lek_nr % 2 == 0) {
-            echo '<tr class="a_even"><td>';
-        } else {
-            echo '<tr><td>';
-        }
-        echo $rowid . '</td><td>';
-        $res = $isf->DbSelect('planlek', array('*'), 'where nauczyciel=\'' . $nauczyciel . '\'
+	$rowid++;
+	$lek_nr = $rowid;
+	if ($lek_nr % 2 == 0) {
+	    echo '<tr class="a_even"><td>';
+	} else {
+	    echo '<tr><td>';
+	}
+	echo $rowid . '</td><td>';
+	$res = $isf->DbSelect('planlek', array('*'), 'where nauczyciel=\'' . $nauczyciel . '\'
             and dzien=\'' . $dzien . '\' and lekcja=\'' . $rowid . '\'');
-        if (count($res) == 1) {
-            echo '<span class="grptxt">
+	if (count($res) == 1) {
+	    echo '<span class="grptxt">
                 <b>' . $res[0]['klasa'] . '</b> - ';
-            pobierznl($lek_nr, $id);
-            echo '</span></td></tr>';
-        }
-        if (count($res) == 0) {
-            $res = $isf->DbSelect('plan_grupy', array('*'), 'where nauczyciel=\'' . $nauczyciel . '\'
+	    pobierznl($lek_nr, $id);
+	    echo '</span></td></tr>';
+	}
+	if (count($res) == 0) {
+	    $res = $isf->DbSelect('plan_grupy', array('*'), 'where nauczyciel=\'' . $nauczyciel . '\'
             and dzien=\'' . $dzien . '\' and lekcja=\'' . $lek_nr . '\'');
-            if (count($res) > 0) {
-                foreach ($res as $rowid => $rowcol) {
-                    echo '<p class="grplek">
+	    if (count($res) > 0) {
+		foreach ($res as $rowid => $rowcol) {
+		    echo '<p class="grplek">
                         <span class="grptxt">
                 <b>' . $rowcol['klasa'] . ' gr ' . $rowcol['grupa'] . '</b> - ';
-                    pobierznl($lek_nr, $id);
-                }
-                echo '</span></p></td></tr>';
-            } else {
-                echo '---</td></tr>';
-            }
-        }
+		    pobierznl($lek_nr, $id);
+		}
+		echo '</span></p></td></tr>';
+	    } else {
+		echo '---</td></tr>';
+	    }
+	}
     }
     echo '</table>';
 }

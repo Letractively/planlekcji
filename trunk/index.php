@@ -11,7 +11,7 @@
  * Proszę NIE MODYFIKOWAĆ poniższego kodu
  */
 $err = '';
-
+date_default_timezone_set('UTC');
 if (phpversion() < '5.2.5') {
     $err.='&bull; Wymagane jest PHP w wersji 5.2.5<br/>';
 }
@@ -78,12 +78,7 @@ echo Request::factory()
  * @param string $wiadomosc 
  */
 function insert_log ($modul, $wiadomosc){
-    $db = new Kohana_Isf();
-    $db->Connect(APP_DBSYS);
-    $id = $db->DbSelect('log', array('max(id) as id'));
-    if(count($id)==0)
-	$id=1;
-    else
-	$id = $id[0]['id'];
-    $db->DbInsert('log', array('id'=>$id, 'data'=>date('d.m.Y H:i:s'),'modul'=>$modul,'wiadomosc'=>$wiadomosc));
+    //$db = new Kohana_Isf();
+    //$db->Connect(APP_DBSYS);
+    //$db->DbInsert('log', array('data'=>date('d.m.Y H:i:s'),'modul'=>$modul,'wiadomosc'=>$wiadomosc));
 }

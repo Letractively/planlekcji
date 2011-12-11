@@ -476,5 +476,13 @@ class Controller_Plan extends Controller {
 
         echo '<html><head><script type=\'text/javascript\'>window.close();</script></head><body><a href=\'' . URL::site('') . '\'>[ powrót ]</a></body></html>';
     }
+    
+    public function action_export(){
+	$view = view::factory('main');
+	$view2 = view::factory('plan_export');
+	
+	$view->set('content', $view2->render());
+	echo $view->render();
+    }
 
 }
