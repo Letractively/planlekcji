@@ -99,65 +99,7 @@ class Controller_Podglad extends Controller {
 	$out = str_replace('{{theme}}', $_SESSION['app_theme'], $view->render());
 	echo $out;
     }
-
-    /**
-     * Wyswietla plan w trybie generatora
-     * 
-     * Czysty plan z HTML bez reszty systemu,menu
-     */
-    public function action_zzestawienie() {
-	$view = View::factory('podglad_zestawienie');
-	echo $view->render();
-    }
-
-    /**
-     * Wyswietla plan w trybie generatora
-     * 
-     * Czysty plan z HTML bez reszty systemu,menu
-     */
-    public function action_sklasa($klasa) {
-	echo $this->head;
-	$view = view::factory('podglad_klasa');
-	$view->set('klasa', $klasa);
-	echo $view->render();
-	echo '</body></html>';
-    }
-
-    /**
-     * Wyswietla plan w trybie generatora
-     * 
-     * Czysty plan z HTML bez reszty systemu,menu
-     */
-    public function action_ssala($klasa) {
-	echo $this->head;
-	$view = view::factory('podglad_sala');
-	$view->set('klasa', $klasa);
-	echo $view->render();
-	echo '</body></html>';
-    }
-
-    /**
-     * Wyswietla plan w trybie generatora
-     * 
-     * Czysty plan z HTML bez reszty systemu,menu
-     */
-    public function action_snauczyciel($nauczyciel) {
-	echo $this->head;
-	$view = view::factory('podglad_nauczyciel');
-
-	$isf = new Kohana_Isf();
-	$isf->Connect(APP_DBSYS);
-
-	$imienaz = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\'' . $nauczyciel . '\'');
-	$imienaz = $imienaz[0]['imie_naz'];
-
-	$view->set('skrot', $nauczyciel);
-	$view->set('klasa', $imienaz);
-
-	echo $view->render();
-	echo '</body></html>';
-    }
-
+    
     /**
      * Wyswietla plan w trybie generatora
      * 
@@ -219,15 +161,18 @@ class Controller_Podglad extends Controller {
 
 	return $out;
     }
-
+    
+    /**
+     * Eksportuje plan zajec
+     * 
+     * Eksport do postaci archiwum ZIP
+     */
     public function action_export() {
 	if (!isset($_POST)) {
 	    Kohana_Request::factory()->redirect('');
 	    exit;
 	}
-	/**
-	 * Sprawadza obecnosc wymaganych modulow
-	 */
+	
 	if (!class_exists('ZipArchive')) {
 	    die('Wymagana jest obsluga <b>ZipArchive</b>');
 	}
@@ -292,13 +237,10 @@ class Controller_Podglad extends Controller {
 	$zip->addFile('lib/images/printer.png', 'planlekcji/printer.png');
 	$zip->addFile('lib/css/style_print.css', 'planlekcji/style_print.css');
 	$zip->addFile('lib/css/themes/' . $_POST['motyw'] . '.css', 'planlekcji/' . $_POST['motyw'] . '.css');
-
-	/**
-	 * Utworzenie index
-	 */
-	$title = App_Globals::getRegistryKey('nazwa_szkoly');
 	
+	$title = App_Globals::getRegistryKey('nazwa_szkoly');
 	$thm = $_POST['motyw'] . '.css';
+	
 	$file = <<<START
 <!doctype html>
 <html lang="pl">
@@ -315,7 +257,7 @@ class Controller_Podglad extends Controller {
 </head>
 <body class="a_light_menu">
 START;
-	$file .= '<h1>Plan Lekcji - ' . $ns[0]['wartosc'] . '</h1><hr/>';
+	$file .= '<h1>Plan Lekcji - ' . $title . '</h1><hr/>';
 
 	$file .= '<h3>Klasy</h3><p class="grplek">';
 	foreach ($isf->DbSelect('klasy', array('*'), 'order by klasa asc') as $rowid => $rowcol) {
