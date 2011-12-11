@@ -61,7 +61,7 @@ if (!isset($_POST['inpLogin'])) {
     		<tr class="a_error">
     		    <td colspan="2">
     			Token został nadpisany. Prawdopodobnie inna osoba zalogowała się
-			na to konto. Sprawdź <b>Dziennik Aplikacji</b>.
+			na to konto.
     		    </td>
     		</tr>
 		<?php endif; ?>
