@@ -1,0 +1,43 @@
+.a_odd{
+    background-color: #ffaf00;
+    margin-top: 0px;
+    padding: 5px;
+}
+
+a.anodd{
+    color: white;
+}
+a.a_odd:link{
+    color: white;
+}
+a.anodd:active{
+    color: white;
+}
+a.anodd:visited{
+    color: white;
+}
+.a_light_menu{
+    background-color: #ffefba;
+}
+.a_even{
+    background-color: #f7cc6c;
+    margin-top: 0px;
+    padding: 5px;
+}
+.app_info{
+    background-color: #ffa200;
+    text-shadow: lightgray 1px 1px 3px;
+    font-style: italic;
+    font-weight: bolder;
+}
+.app_ver{
+    background-color: #fae1aa;
+    text-align: right;
+}
+button{
+    background-color: #8f67b8;
+    color: white;
+}
+input{
+    background-color: #f7f0d8;
+}
