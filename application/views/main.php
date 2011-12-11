@@ -24,8 +24,6 @@ $appver = App_Globals::getRegistryKey('app_ver');
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Plan lekcji - <?php echo App_Globals::getRegistryKey('nazwa_szkoly'); ?></title>
-
-        <!-- [SEKCJA]: JS,CSS,META -->
 	<?php echo $script; ?>
 	<link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/themes/<?php echo $_SESSION['app_theme']; ?>.css"/>
         <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style.css"/>
@@ -39,13 +37,6 @@ $appver = App_Globals::getRegistryKey('app_ver');
 	    $isf->IE9_apptask('Zastępstwa', 'index.php/zastepstwa/index');
 	}
 	echo $isf->IE9_make();
-	if (isset($_SESSION['token'])) {
-	    $zadmin = time() + 10 * 60;
-	    $toktime = strtotime($_SESSION['token_time']);
-	    if ($zadmin > $toktime) {
-		$bodystr = 'onLoad="alert(\'RAND_TOKEN: token wygaśnie za chwilę\\nProszę go odnowić!\');"';
-	    }
-	}
 	?>
         <style>
             body{
@@ -60,10 +51,9 @@ $appver = App_Globals::getRegistryKey('app_ver');
     	    }
 	    <?php endif; ?>
         </style>
-        <!-- [/SEKCJA] -->
-
     </head>
     <body onLoad="resizeContent()" onResize="resizeContent()">
+	<!-- kontener -->
 	<div id="container">
 	    <div id="container1">
 		<div id="pnlLeft">
@@ -90,14 +80,17 @@ $appver = App_Globals::getRegistryKey('app_ver');
     		<div id="pnlRight">
 			<?php echo View::factory()->render('_sidebar_right'); ?>
     		</div>
-    	    </div>
-	    <?php endif; ?>
-	    <div class="divbrk"/>
+		<?php endif; ?>
+	    </div>
+	    <!-- koniec kontenera II -->
+	    <div class="divbrk"></div>
+	    <!-- stopka -->
 	    <div id="footer">
 		<?php echo View::factory()->render('_panel_bottom'); ?>
 	    </div>
+	    <!-- koniec stopki -->
 	</div>
-	<!-- [SEKCJA]: JAVASCRIPT -->
+	<!-- koniec kontenera -->
 	<script type="text/javascript">
 	    function resizeContent() { 
 		var contentDiv = document.getElementById('container');
@@ -117,6 +110,5 @@ $appver = App_Globals::getRegistryKey('app_ver');
 		sDiv.style.height = Math.min(viewPortHeight-fDiv.clientHeight-aDiv.clientHeight-10, contentDiv.clientHeight) + 'px';
 	    }
 	</script>
-	<!-- [/SEKCJA] -->
     </body>
 </html>

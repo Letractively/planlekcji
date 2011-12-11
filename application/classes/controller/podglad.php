@@ -99,7 +99,7 @@ class Controller_Podglad extends Controller {
 	$out = str_replace('{{theme}}', $_SESSION['app_theme'], $view->render());
 	echo $out;
     }
-    
+
     /**
      * Wyswietla plan w trybie generatora
      * 
@@ -161,7 +161,7 @@ class Controller_Podglad extends Controller {
 
 	return $out;
     }
-    
+
     /**
      * Eksportuje plan zajec
      * 
@@ -172,7 +172,7 @@ class Controller_Podglad extends Controller {
 	    Kohana_Request::factory()->redirect('');
 	    exit;
 	}
-	
+
 	if (!class_exists('ZipArchive')) {
 	    die('Wymagana jest obsluga <b>ZipArchive</b>');
 	}
@@ -182,9 +182,9 @@ class Controller_Podglad extends Controller {
 
 	$isf = new Kohana_Isf();
 	$isf->Connect(APP_DBSYS);
-	
+
 	define('FILE_PATH', DOCROOT . 'export' . DIRECTORY_SEPARATOR . 'planlekcji.zip');
-	
+
 	try {
 	    $wsdl = new nusoap_client(URL::base() . 'webapi.php?wsdl');
 	    if (!isset($_SESSION['token'])) {
@@ -220,7 +220,7 @@ class Controller_Podglad extends Controller {
 	}
 
 	$zip = new ZipArchive();
-	
+
 	if ($zip->open(FILE_PATH, ZIPARCHIVE::CREATE) !== TRUE) {
 	    die('Nie udalo sie utworzyc pliku planlekcji.zip. <a href="index.php">Powrót</a>');
 	}
@@ -237,9 +237,16 @@ class Controller_Podglad extends Controller {
 	$zip->addFile('lib/images/printer.png', 'planlekcji/printer.png');
 	$zip->addFile('lib/css/style_print.css', 'planlekcji/style_print.css');
 	$zip->addFile('lib/css/themes/' . $_POST['motyw'] . '.css', 'planlekcji/' . $_POST['motyw'] . '.css');
-	
+
 	$title = App_Globals::getRegistryKey('nazwa_szkoly');
 	$thm = $_POST['motyw'] . '.css';
+
+	$footer = '<hr style="margin-top:10px;"/>
+	    <p class="grplek"><b>' . $title . '</b>, ' . date('Y') . '</p>
+		<p class="grplek">Wygenerowano aplikacją <a href="http://sites.google.com/site/internetowyplanlekcji">
+		Internetowy Plan Lekcji</a>,
+		dnia ' . date('d.m.Y') . '</p>
+		    </div></body></html>';
 	
 	$file = <<<START
 <!doctype html>
@@ -250,12 +257,13 @@ class Controller_Podglad extends Controller {
 <link rel="stylesheet" type="text/css" href="$thm"/>
 <title>Plan Lekcji - $title</title>
     <style>
-    body{
-    margin: 10px;
+    div#container{
+    padding-top: 10px;
     }
     </style>
 </head>
 <body class="a_light_menu">
+<div id="container">
 START;
 	$file .= '<h1>Plan Lekcji - ' . $title . '</h1><hr/>';
 
@@ -277,17 +285,14 @@ START;
 	}
 	$file .= '</p><h3><a target="_blank" href="nauczyciel/zestawienie.html">Zestawienie planów</a></h3>';
 
-	$file .= '<hr style="margin-top:10px;"/><p class="grplek">Wygenerowano aplikacją Plan Lekcji, dnia ' . date('d.m.Y') . '</p>';
-	$file .= <<<START
-</body>
-</html>
-START;
+	$file .= $footer;
+	
 	$zip->addFromString('planlekcji/index.html', $file);
 
 	foreach ($isf->DbSelect('klasy', array('*')) as $rid => $rcl) {
 	    ob_start();
 	    $ret = $this->action_nx_klasa($rcl['klasa']);
-	    $ret = str_replace('<body>', '<body class="a_light_menu">', $ret);
+	    $ret = str_replace('<body>', '<body class="a_light_menu"><div id="container">', $ret);
 	    $ret = str_replace('{{theme}}', $_POST['motyw'], $ret);
 	    $ret = str_replace('/index.php/podglad', '..', $ret);
 	    $ret = str_replace('/lib/css', '..', $ret);
@@ -297,7 +302,7 @@ START;
 	    $ret = preg_replace('/(klasa\/)(\w+)/e', '"$1$2".".html"', $ret);
 	    $ret = preg_replace('/(sala\/)(\w+)/e', '"$1$2".".html"', $ret);
 	    $ret = str_replace(array('</body>', '</html>'), '', $ret);
-	    $ret .= '<hr style="margin-top:10px;"/><p class="grplek">Wygenerowano aplikacją Plan Lekcji, dnia ' . date('d.m.Y') . '</p></body></html>';
+	    $ret .= $footer;
 	    echo $ret;
 	    $return = ob_get_contents();
 	    ob_clean();
@@ -310,7 +315,7 @@ START;
 	foreach ($isf->DbSelect('sale', array('*')) as $rid => $rcl) {
 	    ob_start();
 	    $ret = $this->action_nx_sala($rcl['sala']);
-	    $ret = str_replace('<body>', '<body class="a_light_menu">', $ret);
+	    $ret = str_replace('<body>', '<body class="a_light_menu"><div id="container">', $ret);
 	    $ret = str_replace('{{theme}}', $_POST['motyw'], $ret);
 	    $ret = str_replace('/index.php/podglad', '..', $ret);
 	    $ret = str_replace('/lib/css', '..', $ret);
@@ -320,7 +325,7 @@ START;
 	    $ret = preg_replace('/(klasa\/)(\w+)/e', '"$1$2".".html"', $ret);
 	    $ret = preg_replace('/(sala\/)(\w+)/e', '"$1$2".".html"', $ret);
 	    $ret = str_replace(array('</body>', '</html>'), '', $ret);
-	    $ret .= '<hr style="margin-top:10px;"/><p class="grplek">Wygenerowano aplikacją Plan Lekcji, dnia ' . date('d.m.Y') . '</p></body></html>';
+	    $ret .= $footer;
 	    echo $ret;
 	    $return = ob_get_contents();
 	    ob_clean();
@@ -333,7 +338,7 @@ START;
 	foreach ($isf->DbSelect('nauczyciele', array('*')) as $rid => $rcl) {
 	    ob_start();
 	    $ret = $this->action_nx_nauczyciel($rcl['skrot']);
-	    $ret = str_replace('<body>', '<body class="a_light_menu">', $ret);
+	    $ret = str_replace('<body>', '<body class="a_light_menu"><div id="container">', $ret);
 	    $ret = str_replace('{{theme}}', $_POST['motyw'], $ret);
 	    $ret = str_replace('/index.php/podglad', '..', $ret);
 	    $ret = str_replace('/lib/css', '..', $ret);
@@ -343,7 +348,7 @@ START;
 	    $ret = preg_replace('/(klasa\/)(\w+)/e', '"$1$2".".html"', $ret);
 	    $ret = preg_replace('/(sala\/)(\w+)/e', '"$1$2".".html"', $ret);
 	    $ret = str_replace(array('</body>', '</html>'), '', $ret);
-	    $ret .= '<hr style="margin-top:10px;"/><p class="grplek">Wygenerowano aplikacją Plan Lekcji, dnia ' . date('d.m.Y') . '</p></body></html>';
+	    $ret .= $footer;
 	    echo $ret;
 	    $return = ob_get_contents();
 	    ob_clean();
@@ -363,7 +368,7 @@ START;
 	$ret = preg_replace('/(klasa\/)(\w+)/e', '"$1$2".".html"', $ret);
 	$ret = preg_replace('/(sala\/)(\w+)/e', '"$1$2".".html"', $ret);
 	$ret = str_replace(array('</body>', '</html>'), '', $ret);
-	$ret .= '<hr style="margin-top:10px;"/><p class="grplek">Wygenerowano aplikacją Plan Lekcji, dnia ' . date('d.m.Y') . '</p></body></html>';
+	$ret .= $footer;
 	echo $ret;
 	$zestawienie = ob_get_contents();
 	ob_end_clean();
