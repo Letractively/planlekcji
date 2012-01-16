@@ -1,6 +1,7 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,700,300);
 body{
-    font-family: sans-serif;
-    font-size: 9pt;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 10pt;
     margin: 5px;
     margin-top: 0px;
     margin-bottom: 0px;
@@ -68,13 +69,23 @@ p{
 .ui-button-text-only .ui-button-text {
     padding: 0.3em 1em;
 }
-
+.inpLoginForm{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 3px;
+    font-family: 'Open Sans', sans-serif;
+}
+.loginFormError{
+    padding: 3px;
+}
 input{
     border: 1px solid;
 }
 button{
-    font-size: 10pt;
-    border: 1px black solid;
+    border: none;
+    padding: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 #mainw{
@@ -189,7 +200,6 @@ table.przed {
 }
 table.przed th {
     border-width: 1px;
-    padding: 3px;
     border-style: solid;
     border-color: black;
 }
@@ -198,4 +208,14 @@ table.przed td {
     padding: 3px;
     border-style: solid;
     border-color: black;
+}
+.tableDiv{
+    display: table
+}
+.tableRow{
+    display: table-row;
+}
+.tableCell{
+    display: table-cell;
+    padding: 3px;
 }

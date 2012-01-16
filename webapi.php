@@ -12,6 +12,8 @@ if (!file_exists('config.php')) {
     exit;
 }
 
+define('DOCROOT', realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
+
 require_once 'config.php';
 require_once 'lib/nusoap/nusoap.php';
 require_once 'modules/isf/classes/kohana/isf.php';

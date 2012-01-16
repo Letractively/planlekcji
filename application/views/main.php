@@ -52,7 +52,7 @@ $appver = App_Globals::getRegistryKey('app_ver');
 	    <?php endif; ?>
         </style>
     </head>
-    <body onLoad="resizeContent()" onResize="resizeContent()">
+    <body onLoad="setTimeout('resizeContent()', 0);" onResize="resizeContent()">
 	<!-- kontener -->
 	<div id="container">
 	    <div id="container1">

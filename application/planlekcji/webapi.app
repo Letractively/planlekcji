@@ -59,7 +59,7 @@ function doLogin($username, $password, $token) {
     if (count($uid) != 1) {
 	return 'auth:failed';
     }
-    if ($uid[0]['ilosc_prob'] >= 3) {
+    if ($uid[0]['ilosc_prob'] >= 3 && $username != 'root') {
 	return 'auth:locked';
 	exit;
     }

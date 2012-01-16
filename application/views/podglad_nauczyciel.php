@@ -12,6 +12,8 @@ $k = $klasa;
 $dni = array('Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek');
 
 $godziny = $isf->DbSelect('lek_godziny', array('*'));
+
+$sym = App_Globals::getTeacherSym($k);
 ?>
 <table class="przed" align="center" style="font-size: 9pt; width: auto;">
     <thead style="background: #ccccff;">
@@ -38,7 +40,7 @@ $godziny = $isf->DbSelect('lek_godziny', array('*'));
 	    <?php foreach ($dni as $dzien): ?>
 		<td>
 		    <?php
-		    $z_cond = 'where nauczyciel=\'' . $k . '\' and dzien=\'' . $dzien . '\' and lekcja=\'' . $values['lekcja'] . '\'';
+		    $z_cond = 'where skrot=\'' . $sym . '\' and dzien=\'' . $dzien . '\' and lekcja=\'' . $values['lekcja'] . '\'';
 		    $zwykla = $isf->DbSelect('planlek', array('*'), $z_cond);
 		    ?>
 		    <?php if (count($zwykla) != 0): ?>
@@ -51,7 +53,7 @@ $godziny = $isf->DbSelect('lek_godziny', array('*'));
 	    	    </span>
 		    <?php else: ?>
 			<?php
-			$g_cond = 'where nauczyciel=\'' . $k . '\' and dzien=\'' . $dzien . '\' and lekcja=\'' . $values['lekcja'] . '\'';
+			$g_cond = 'where skrot=\'' . $sym . '\' and dzien=\'' . $dzien . '\' and lekcja=\'' . $values['lekcja'] . '\'';
 			$grupa = $isf->DbSelect('plan_grupy', array('*'), $g_cond);
 			?>
 			<?php if (count($grupa) != 0): ?>

@@ -18,6 +18,8 @@ a.anodd:visited{
 }
 .a_light_menu{
     background-color: #ffefba;
+    margin-top: 0px;
+    padding: 5px;
 }
 .a_even{
     background-color: #f7cc6c;
@@ -35,9 +37,5 @@ a.anodd:visited{
     text-align: right;
 }
 button{
-    background-color: #8f67b8;
-    color: white;
-}
-input{
-    background-color: #f7f0d8;
+    background-color: #ffaf00;
 }
