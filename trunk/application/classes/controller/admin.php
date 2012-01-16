@@ -275,6 +275,7 @@ class Controller_Admin extends Controller {
 	    $isf = new Kohana_Isf();
 	    $isf->Connect(APP_DBSYS);
 	    $isf->DbUpdate('rejestr', array('wartosc' => '3'), 'opcja=\'edycja_danych\'');
+	    App_Globals::writeXmlTimetables();
 	    insert_log('admin.zamknij', 'Zamknięcie edycji planów');
 	    Kohana_Request::factory()->redirect('default/index');
 	}

@@ -124,7 +124,7 @@ START;
 		    $valid_db = false;
 		}
 		$paths_err = '';
-		$paths = array('export', 'application/logs', 'application/cache', 'modules/isf/isf_resources');
+		$paths = array('resources', 'resources/timetables', 'application/logs', 'application/cache');
 		foreach ($paths as $path) {
 		    if (!is_writable($path)) {
 			$paths_err .= '<li>Katalog <b>' . $path . '</b> musi posiadać prawa zapisu</li>';

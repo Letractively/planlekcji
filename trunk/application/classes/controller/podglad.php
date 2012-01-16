@@ -375,17 +375,12 @@ START;
 
 	$zip->addFromString('planlekcji/nauczyciel/zestawienie.html', $zestawienie);
 	$zip->close();
-
-	header("Content-Type: application/force-download");
-	header("Content-Type: application/octet-stream");
-	header("Content-Type: application/download");
-	header("Content-Disposition: attachment; filename=planlekcji" . date('dmY') . ".zip;");
-	header("Content-length: " . filesize(FILE_PATH));
-
-	ob_start();
-	readfile(FILE_PATH);
-	ob_end_flush();
-	exit;
+	
+	$view = View::factory('main');
+	$outtext = '<h1>Plany zostały wyeksportowane pomyślnie</h1>
+	    <p><a href="'.URL::base().'resources/planlekcji.zip'.'">Pobierz archiwum</a></p>';
+	$view->set('content', $outtext);
+	
     }
 
 }

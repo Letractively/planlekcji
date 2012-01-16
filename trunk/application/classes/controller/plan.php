@@ -126,10 +126,10 @@ class Controller_Plan extends Controller {
 	foreach ($dni as $dzien) {
 	    foreach ($_POST[$dzien] as $lek => $przedm) {
 		if ($przedm == '---') {
-		    $isf->DbDelete('planlek', 'dzien=\''.$dzien.'\' and lekcja=\'' . $lek . '\' and klasa=\'' . $klasa . '\'');
+		    $isf->DbDelete('planlek', 'dzien=\'' . $dzien . '\' and lekcja=\'' . $lek . '\' and klasa=\'' . $klasa . '\'');
 		} else {
 		    $przedm = explode(':', $przedm);
-		    $isf->DbDelete('planlek', 'dzien=\''.$dzien.'\' and lekcja=\'' . $lek . '\' and klasa=\'' . $klasa . '\'');
+		    $isf->DbDelete('planlek', 'dzien=\'' . $dzien . '\' and lekcja=\'' . $lek . '\' and klasa=\'' . $klasa . '\'');
 		    if (count($przedm) == 1) {
 			$colval = array(
 			    'dzien' => $dzien,
@@ -154,6 +154,7 @@ class Controller_Plan extends Controller {
 		}
 	    }
 	}
+
 	Kohana_Request::factory()->redirect();
     }
 
