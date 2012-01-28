@@ -1,0 +1,235 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,700,300);
+body{
+    font-family: 'Open Sans', sans-serif;
+    font-size: 10pt;
+    margin: 5px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    max-width: 100%;
+}
+div#divbrk{
+    clear: both;
+}
+div#container{
+    width: 1000px;
+    margin: 0 auto;
+    background-color: white;
+    box-shadow: white 0px 0px 6px;
+}
+div#container1{
+}
+div#pnlLeft{
+    width: 200px;
+    float: left;
+}
+div#sidebar_menu{
+    overflow: auto;
+}
+div#pnlCenter{
+    width: 790px;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-top: 5px;
+    overflow: auto;
+    float: left;
+}
+div#pnlRight{
+    width: 200px;
+    float: right;
+    padding-right: 5px;
+}
+div#footer{
+    position: fixed;
+    bottom: 0px;
+    width: 1000px;
+}
+
+.app_info{
+    padding: 5px;
+    font-size: 14pt;
+}
+.app_ver{
+    font-size: 8pt;
+    padding-right: 10px;
+}
+.a_error{
+    padding-top: 2px;
+    padding-bottom: 2px;
+    background-color: red;
+    color: white;
+}
+
+.a_klasy{
+    line-height: 200%;
+}
+
+p{
+    font-size: 8pt;
+}
+.ui-button-text-only .ui-button-text {
+    padding: 0.3em 1em;
+}
+.inpLoginForm{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 3px;
+    font-family: 'Open Sans', sans-serif;
+}
+.loginFormError{
+    padding: 3px;
+}
+input{
+    border: 1px solid;
+}
+button{
+    border: none;
+    padding: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#mainw{
+    max-height: 100%;
+
+}
+.grptxt{
+    font-size: 8pt;
+}
+.pltxt{
+    font-size: 24pt;
+    font-weight: bold;
+    text-shadow: gray 2px 2px 5px;
+}
+.button-jq { 
+    outline: 0; 
+    margin:0 4px 0 0; 
+    padding: .4em 1em; 
+    text-decoration:none !important; 
+    cursor:pointer; 
+    position: relative; 
+    text-align: center;
+}
+img{
+    border: 0px;
+}
+
+h1{
+    font-size: 14pt;
+}
+h2{
+    font-size: 12pt;
+}
+h3{
+    font-size: 10pt;
+}
+
+.anac{
+    color: #330033;
+    font-weight: bold;
+}
+a{
+    color: blue;
+}
+a:visited{
+    color: blue;
+}
+a:hover{
+    color: red;
+}
+label{
+    font-weight: bold;
+}
+a:hover{
+    color: #ff3300
+}
+li{
+    margin-top: 5px;
+}
+#top{
+    height: auto;
+    margin-bottom: 15px;
+}
+#middle{
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+table{
+    font-size: 8pt;
+}
+td{
+    padding: 5px;
+}
+thead{
+    font-weight: bold;
+}
+.info{
+    font-style: italic;
+}
+.grplek{
+    font-size: 9pt;
+    margin: 0px;
+}
+.ui-timepicker-div .ui-widget-header{ margin-bottom: 8px; }
+.ui-timepicker-div dl{ text-align: left; }
+.ui-timepicker-div dl dt{ height: 25px; }
+.ui-timepicker-div dl dd{ margin: -25px 0 10px 65px; }
+.ui-timepicker-div td { font-size: 90%; }
+select{
+    margin: 5px;
+}
+hr {
+    height: 0;
+    border-top: 0px none;
+    border-bottom: 1px dotted #000;
+}
+.notice{
+    color: darkgreen;
+}
+.hlt{
+    color: #f6bc3e;
+}
+.error{
+    color: red;
+}
+.t_page{
+    margin: 10px;
+}
+.t_day{
+    width: 200px;
+    max-width: 200px;
+}
+.t_cell{
+    border: 1px solid black;
+}
+.t_table{
+    border: 1px solid black;
+}
+table.przed {
+    border-width: 0px;
+    border-spacing: 0px;
+    border-style: solid;
+    border-color: green;
+    border-collapse: collapse;
+}
+table.przed th {
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+}
+table.przed td {
+    border-width: 1px;
+    padding: 3px;
+    border-style: solid;
+    border-color: black;
+}
+.tableDiv{
+    display: table;
+    border-collapse: collapse;
+}
+.tableRow{
+    display: table-row;
+}
+.tableCell{
+    display: table-cell;
+    padding: 3px;
+}
