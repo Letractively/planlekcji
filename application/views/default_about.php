@@ -4,6 +4,7 @@
     <li><b>Wersja systemu:</b> <?php echo App_Globals::getRegistryKey('app_ver'); ?></li>
     <li><b>System bazy danych:</b> <?php echo APP_DBSYS; ?></li>
     <li><b>Wersja oprogramowania:</b> <?php echo $_SERVER['SERVER_SOFTWARE']; ?></li>
+    <li><b>Wersja PHP:</b> <?php echo phpversion(); ?></li>
 </ul>
 <p>Użyte oprogramowanie</p>
 <ul>

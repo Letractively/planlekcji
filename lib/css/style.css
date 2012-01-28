@@ -191,6 +191,19 @@ hr {
 .error{
     color: red;
 }
+.t_page{
+    margin: 10px;
+}
+.t_day{
+    width: 200px;
+    max-width: 200px;
+}
+.t_cell{
+    border: 1px solid black;
+}
+.t_table{
+    border: 1px solid black;
+}
 table.przed {
     border-width: 0px;
     border-spacing: 0px;
@@ -210,7 +223,8 @@ table.przed td {
     border-color: black;
 }
 .tableDiv{
-    display: table
+    display: table;
+    border-collapse: collapse;
 }
 .tableRow{
     display: table-row;
