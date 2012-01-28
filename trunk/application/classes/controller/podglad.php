@@ -176,14 +176,14 @@ class Controller_Podglad extends Controller {
 	if (!class_exists('ZipArchive')) {
 	    die('Wymagana jest obsluga <b>ZipArchive</b>');
 	}
-	if (!is_writable('export')) {
-	    die('Katalog <b>export</b> musi byc zapisywalny');
+	if (!is_writable('resources')) {
+	    die('Katalog <b>resources</b> musi byc zapisywalny');
 	}
 
 	$isf = new Kohana_Isf();
 	$isf->Connect(APP_DBSYS);
 
-	define('FILE_PATH', DOCROOT . 'export' . DIRECTORY_SEPARATOR . 'planlekcji.zip');
+	define('FILE_PATH', DOCROOT . 'resources' . DIRECTORY_SEPARATOR . 'planlekcji.zip');
 
 	try {
 	    $wsdl = new nusoap_client(URL::base() . 'webapi.php?wsdl');
@@ -380,7 +380,7 @@ START;
 	$outtext = '<h1>Plany zostały wyeksportowane pomyślnie</h1>
 	    <p><a href="'.URL::base().'resources/planlekcji.zip'.'">Pobierz archiwum</a></p>';
 	$view->set('content', $outtext);
-	
+	echo $view->render();
     }
 
 }

@@ -81,4 +81,9 @@ class Controller_Default extends Controller {
 	echo $view->render();
     }
 
+    public function action_experimental() {
+	$view = View::factory('test_plan');
+	echo $view->render();
+    }
+
 }

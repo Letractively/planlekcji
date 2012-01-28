@@ -24,6 +24,7 @@ $application = 'application';
 $modules = 'modules';
 $system = 'system';
 define('EXT', '.php');
+define('DS', DIRECTORY_SEPARATOR);
 error_reporting(E_ALL | E_STRICT);
 define('DOCROOT', realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
 if (!is_dir($application) AND is_dir(DOCROOT . $application))

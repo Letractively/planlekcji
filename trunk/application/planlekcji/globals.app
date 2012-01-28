@@ -71,6 +71,39 @@ class Core_Tools {
 
 }
 
+class MPZ {
+
+    protected $CT;
+    protected $DB;
+
+    public function __construct() {
+	$this->CT = new Core_Tools();
+	$this->DB = Kohana_Isf::factory();
+	$this->DB->Connect(APP_DBSYS);
+    }
+
+    public function getLessonHour($lesson) {
+	$res = $this->DB->DbSelect('lek_godziny', array('godzina'), 'where lekcja=\'' . $lesson . '\'');
+	if (count($res) == 0) {
+	    $return = 'fetched:none';
+	} else {
+	    $return = $res[0]['godzina'];
+	}
+
+	return $return;
+    }
+
+    public function getLesson($class, $day, $lesson) {
+	$single = $this->CT->getSingleLesson($class, $day, $lesson);
+	if ($single == 'fetched:none') {
+	    return $this->CT->getGroupLesson($class, $day, $lesson);
+	} else {
+	    return array('t_single' => $single);
+	}
+    }
+
+}
+
 class App_Globals {
 
     public static function getThemes() {
