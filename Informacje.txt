@@ -1,0 +1,4 @@
+Dziêkujemy za zainteresowanie projektem Internetowy Plan Lekcji.
+
+W trosce o bezpieczeñstwo danych, prosimy w konfiguracji serwera www
+o ustawienie katalogu web, jako domyœlnego katalogu aplikacji.
