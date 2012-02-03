@@ -17,7 +17,7 @@ define('DOCROOT', realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
 
 require_once 'config.php';
 require_once 'lib/nusoap/nusoap.php';
-require_once 'modules/isf/classes/kohana/isf.php';
+require_once 'modules/isf/classes/isf2.php';
 require_once 'application/planlekcji/webapi.app';
 require_once 'application/planlekcji/globals.app';
 
