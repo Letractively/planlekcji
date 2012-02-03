@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plik główny projektu - bootloader Kohany
  * 
@@ -48,17 +49,30 @@ if (!defined('KOHANA_START_MEMORY')) {
 }
 require APPPATH . 'bootstrap' . EXT;
 echo Request::factory()
-        ->execute()
-        ->send_headers()
-        ->body();
+	->execute()
+	->send_headers()
+	->body();
+
 /**
  * Dodaje nowa wiadomosc do loga systemowego
  *
  * @param string $modul
  * @param string $wiadomosc 
  */
-function insert_log ($modul, $wiadomosc){
-    //$db = new Kohana_Isf();
-    //$db->Connect(APP_DBSYS);
-    //$db->DbInsert('log', array('data'=>date('d.m.Y H:i:s'),'modul'=>$modul,'wiadomosc'=>$wiadomosc));
+function insert_log($modul, $wiadomosc) {
+    if (!file_exists(APPROOTPATH . DS . 'resources' . DS . 'ipl-' . date('Ymd') . '.log')) {
+	$content = '';
+    } else {
+	$content = file_get_contents(APPROOTPATH . DS . 'resources' . DS . 'ipl-' . date('Ymd') . '.log');
+    }
+
+    $file_handler = fopen(APPROOTPATH . DS . 'resources' . DS . 'ipl-' . date('Ymd') . '.log', 'w');
+
+    $timestamp = date('H:i:s');
+    $message = '[' . $timestamp . '] ' . $modul . ': ' . $wiadomosc . PHP_EOL;
+
+    $content .= $message;
+
+    fwrite($file_handler, $content);
+    fclose($file_handler);
 }
