@@ -162,18 +162,15 @@ class Controller_Plan extends Controller {
      * Wprowadza zmiany do planu grupowego
      */
     public function action_grupazatw() {
-	$isf = new Kohana_Isf();
-	$isf->Connect(APP_DBSYS);
+	$isf = Isf2::Connect();
+
 	$klasa = $_POST['klasa'];
-	$isf->DbDelete('plan_grupy', 'klasa=\'' . $klasa . '\'');
 
+	$isf->Delete('plan_grupy')->Where(array('klasa' => $klasa))->Execute();
 	$dni = array('Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek');
-
 	$err = '';
-
 	foreach ($dni as $dzien) {
 	    foreach ($_POST[$dzien] as $lek => $przedlek) {
-
 		foreach ($przedlek as $grupa => $przedm) {
 		    if ($przedm != '---') {
 			$przedm = explode(':', $przedm);
@@ -186,11 +183,13 @@ class Controller_Plan extends Controller {
 				'przedmiot' => $przedm[0],
 			    );
 			} else {
-			    $nl_s = $isf->DbSelect('nauczyciele', array('skrot'), 'where imie_naz=\'' . $przedm[2] . '\'');
-			    $nl_s = $nl_s[0]['skrot'];
-
-			    $valid_cond = 'where dzien=\'' . $dzien . '\' and lekcja=\'' . $lek . '\' and nauczyciel=\'' . $przedm[2] . '\' and sala!=\'' . $przedm[1] . '\'';
-			    $valid = $isf->DbSelect('plan_grupy', array('*'), $valid_cond);
+			    $nl_s = App_Globals::getTeacherSym($przedm[2]);
+			    $valid = $isf->Select('plan_grupy')->Where(array(
+					'dzien' => $dzien,
+					'lekcja' => $lek,
+					'nauczyciel' => $przedm[2],
+					'sala::!=' => $przedm[1]
+				    ))->Execute()->fetchAll();
 			    if (count($valid) > 0) {
 				$err .= '<p>Nauczyciel ' . $przedm[2] . ' prowadzi juz zajecia z <b>' . $valid[0]['przedmiot'] . '</b> w
 				    <b>' . $dzien . '</b> na lekcji ' . $lek . '
@@ -211,7 +210,11 @@ class Controller_Plan extends Controller {
 				    'skrot' => $nl_s,
 				);
 			    }
-			    $isf->DbInsert('plan_grupy', $colval);
+			}
+			try {
+			    $isf->Insert('plan_grupy', $colval)->Execute();
+			} catch (Exception $e) {
+			    Core_Tools::ShowError($e->getMessage(), $e->getCode());
 			}
 		    }
 		}
