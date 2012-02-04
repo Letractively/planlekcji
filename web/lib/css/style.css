@@ -78,6 +78,9 @@ p{
 .loginFormError{
     padding: 3px;
 }
+.inpNoneBorder{
+    border: none;
+}
 input{
     border: 1px solid;
 }

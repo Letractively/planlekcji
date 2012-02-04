@@ -384,6 +384,7 @@ class Isf2 {
 	    $return = $this->dbhandle->prepare($this->BuildQuery());
 	    $return->execute($this->values_array);
 	    $this->values_array = array();
+	    $this->optional_statement = '';
 	    return $return;
 	} catch (PDOException $e) {
 	    throw $e;

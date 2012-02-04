@@ -47,7 +47,7 @@
 	?>
         <tr>
             <td>
-                 <b><a href="<?php echo URL::site('admin/zamknij'); ?>">Zamknięcie edycji</a></b>
+                 <b><a href="<?php echo URL::site('admin/doEditTimetables'); ?>">Plan Zajęć</a></b>
             </td>
         </tr>
     </tbody>

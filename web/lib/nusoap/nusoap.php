@@ -72,6 +72,7 @@ require_once('class.soap_server.php');*/
 // class variable emulation
 // cf. http://www.webkreator.com/php/techniques/php-static-class-variables.html
 $GLOBALS['_transient']['static']['nusoap_base']['globalDebugLevel'] = 9;
+date_default_timezone_set('Europe/Warsaw');
 
 /**
 *

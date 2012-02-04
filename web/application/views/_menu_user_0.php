@@ -9,7 +9,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                [ <a href="<?php echo URL::site('admin/zamknij2'); ?>">Zamknij edycję planów</a> ]
+                [ <a href="<?php echo URL::site('admin/doSaveTimetables'); ?>">Zamknij edycję planów</a> ]
             </td>
         </tr>
     </thead>

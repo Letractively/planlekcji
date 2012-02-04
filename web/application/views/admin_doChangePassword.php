@@ -4,7 +4,7 @@
  */
 ?>
 <h1>Zmiana hasła administratora</h1>
-<form action="<?php echo URL::site('admin/chpass'); ?>" method="post" name="form">
+<form action="<?php echo URL::site('admin/doChangePasswordPOST'); ?>" method="post" name="form">
     <p class="info">
         Wszystkie pola muszą być wypełnione oraz hasło musi mieć min. 6 znaków
     </p>

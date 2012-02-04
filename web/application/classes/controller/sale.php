@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Intersys - Plan Lekcji
  * 
@@ -7,6 +8,7 @@
  * @package logic
  */
 defined('SYSPATH') or die('No direct script access.');
+
 /**
  * 
  * Odpowiada za obssluge sal lekcyjnych
@@ -14,176 +16,152 @@ defined('SYSPATH') or die('No direct script access.');
  * @package sale
  */
 class Controller_Sale extends Controller {
+
     /**
      *
      * @var nusoap_client instancja klasy NuSOAP
      */
     public $wsdl;
-    
+
     /**
      * Tworzy obiekt sesji i sprawdza czy zalogowany
      */
     public function __construct() {
-        try {
-            $this->wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
-        } catch (Exception $e) {
-            echo $e->getMessage();
-            exit;
-        }
-        if (!isset($_SESSION['token'])) {
-            Kohana_Request::factory()->redirect('admin/login');
-            exit;
-        } else {
-            $auth = $this->wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
-            if (strtotime($_SESSION['token_time']) < time()) {
-                $this->wsdl->call('doLogout', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
-                session_destroy();
-                Kohana_Request::factory()->redirect('admin/login/delay');
-                exit;
-            }
-            if ($auth == 'auth:failed') {
-                Kohana_Request::factory()->redirect('admin/login');
-                exit;
-            }
-        }
-        $isf = new Kohana_Isf();
-	$isf->Connect(APP_DBSYS);
-        $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
-        /**
-         * Czy mozna edytowac dane
-         */
-        if ($reg[0]['wartosc'] != 1) {
-            echo '<h1>Edycja danych zostala zamknieta</h1>';
-            exit;
-        }
+	try {
+	    $this->wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
+	} catch (Exception $e) {
+	    echo $e->getMessage();
+	    exit;
+	}
+	if (!isset($_SESSION['token'])) {
+	    Kohana_Request::factory()->redirect('admin/login');
+	    exit;
+	} else {
+	    $auth = $this->wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
+	    if (strtotime($_SESSION['token_time']) < time()) {
+		$this->wsdl->call('doLogout', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
+		session_destroy();
+		Kohana_Request::factory()->redirect('admin/login/delay');
+		exit;
+	    }
+	    if ($auth == 'auth:failed') {
+		Kohana_Request::factory()->redirect('admin/login');
+		exit;
+	    }
+	}
+
+	/**
+	 * Czy mozna edytowac dane
+	 */
+	if (App_Globals::getRegistryKey('edycja_danych') != 1 || $_SESSION['user'] != 'root') {
+	    Kohana_Request::factory()->redirect('');
+	    exit;
+	}
     }
+
     /**
      * Wyswietla strone glowna z salami
      *
      * @param string $err kod bledu
      */
     public function action_index($err=null) {
-        $isf = new Isf();
-        $isf->Connect(APP_DBSYS);
+	$view = View::factory('main');
 
-        $view = View::factory('main');
+	$dbres = Isf2::Connect()->Select('sale')
+			->OrderBy(array('sala' => 'asc'))
+			->Execute()->fetchAll();
 
-        $dbres = $isf->DbSelect('sale', array('*'), 'order by sala asc');
-
-        $view2 = View::factory('sale_index');
-        $view2->set('res', $dbres);
-        $view2->set('_err', $err);
+	$view2 = View::factory('sale_index');
+	$view2->set('res', $dbres);
+	$view2->set('_err', $err);
 
 
-        $view->set('bodystr', 'onLoad=\'document.forms.form1.inpSala.focus()\'');
-        $view->set('content', $view2->render());
-        echo $view->render();
+	$view->set('bodystr', 'onLoad=\'document.forms.form1.inpSala.focus()\'');
+	$view->set('content', $view2->render());
+	echo $view->render();
     }
-    /**
-     * Usuwa sale
-     *
-     * @param string $sala sala
-     * @param mixed $usun czy usunac
-     */
-    public function action_usun($sala, $usun=null) {
 
-        $isf = new Isf();
-        $isf->Connect(APP_DBSYS);
+    public function action_commit() {
+	if (!isset($_POST)) {
+	    Kohana_Request::factory()->redirect('');
+	    exit;
+	}
+	if (isset($_POST['btnAdd'])) {
+	    $sala_exist = Isf2::Connect()->Select('sale')->
+			    Where(array('sala' => $_POST['inpSala']))->
+			    Execute()->fetchAll();
+	    if (count($sala_exist) != 0) {
+		Kohana_Request::factory()->redirect('sale/index/e1');
+		exit;
+	    }
 
-        if ($usun == null) {
+	    $m = preg_match('/([.!@#$;%^&*()_+|])/i', $_POST['inpSala']);
 
-            $view = View::factory('main');
-            $view2 = view::factory('sale_usun');
+	    if ($m == true) {
+		Kohana_Request::factory()->redirect('sale/index/e2');
+		exit;
+	    }
 
-            $view2->set('sala', $sala);
-
-            $c = count($isf->DbSelect('przedmiot_sale', array('przedmiot'), 'where sala=\'' . $sala . '\''));
-
-            if ($c == 0) {
-                $view2->set('ilosc_przed', 0);
-            } else {
-                $view2->set('ilosc_przed', $c);
-            }
-
-            $view2->set('sala_przedm', $isf->DbSelect('przedmiot_sale', array('przedmiot'), 'where sala=\'' . $sala . '\''));
-
-            $view->set('content', $view2->render());
-            echo $view->render();
-        } else {
-            $isf->DbDelete('sale', 'sala=\'' . $sala . '\'');
-            $isf->DbDelete('przedmiot_sale', 'sala=\'' . $sala . '\'');
-            Kohana_Request::factory()->redirect('sale/index/usun');
-        }
+	    if ($_POST['inpSala'] == '' || $_POST['inpSala'] == null || empty($_POST['inpSala'])) {
+		Kohana_Request::factory()->redirect('sale/index/e3');
+		exit;
+	    }
+	    try {
+		Isf2::Connect()->Insert('sale', array('sala' => $_POST['inpSala']))
+			->Execute();
+	    } catch (Exception $e) {
+		Core_Tools::ShowError($e->getMessage(), $e->getCode());
+	    }
+	    Kohana_Request::factory()->redirect('sale/index/pass');
+	}
+	if (isset($_POST['btnDelClasses'])) {
+	    if (!isset($_POST['sDel'])) {
+		Kohana_Request::factory()->redirect('sale/index/nchk');
+	    }
+	    foreach ($_POST['sDel'] as $id => $sala) {
+		Isf2::Connect()->Delete('sale')
+			->Where(array('sala' => $sala))
+			->Execute();
+		Isf2::Connect()->Delete('przedmiot_sale')
+			->Where(array('sala' => $sala))
+			->Execute();
+	    }
+	    Kohana_Request::factory()->redirect('sale/index/usun');
+	}
     }
-    /**
-     * Dodaje sale
-     */
-    public function action_dodaj() {
-        if (isset($_POST)) {
 
-            $isf = new Kohana_Isf();
-            $isf->Connect(APP_DBSYS);
-
-            if (count($isf->DbSelect('sale', array('*'), 'where sala=\'' . $_POST['inpSala'] . '\'')) != 0) {
-                Kohana_Request::factory()->redirect('sale/index/e1');
-                exit;
-            }
-
-            $m = preg_match('/([.!@#$;%^&*()_+|])/i', $_POST['inpSala']);
-
-            if ($m == true) {
-                Kohana_Request::factory()->redirect('sale/index/e2');
-                exit;
-            }
-
-            if ($_POST['inpSala'] == '' || $_POST['inpSala'] == null || empty($_POST['inpSala'])) {
-                Kohana_Request::factory()->redirect('sale/index/e3');
-                exit;
-            }
-
-            $isf->DbInsert('sale', array('sala' => $_POST['inpSala']));
-            Kohana_Request::factory()->redirect('sale/index/pass');
-        }
-
-        Kohana_Request::factory()->redirect('sale/index');
-    }
     /**
      * Strona przypisania sali przedmiotow
      *
      * @param string $sala sala
      */
     public function action_przedmiot($sala) {
-        $isf = new Kohana_Isf();
-        $isf->Connect(APP_DBSYS);
+	$isf = new Kohana_Isf();
+	$isf->Connect(APP_DBSYS);
 
-        $view = view::factory('main');
-        $view2 = view::factory('sale_przedmiot');
+	$view = view::factory('main');
+	$view2 = view::factory('sale_przedmiot');
+	$view2->set('sala', $sala);
 
-        $res = $isf->DbSelect('przedmiot_sale', array('*'), 'where sala=\'' . $sala . '\' order by przedmiot asc');
-        $prz_res = $isf->DbSelect('przedmioty', array('przedmiot'), 'except select przedmiot from przedmiot_sale where sala=\'' . $sala . '\' order by przedmiot asc');
-
-        $view2->set('sala', $sala);
-        $view2->set('c', count($res));
-        $view2->set('res', $res);
-        $view2->set('przed', $prz_res);
-
-        $view->set('content', $view2->render());
-        echo $view->render();
+	$view->set('content', $view2->render());
+	echo $view->render();
     }
+
     /**
      * Dodaje do sali przedmiot
      */
     public function action_dodajprzedm() {
-        $sala = $_POST['formSala'];
-        $przedmiot = $_POST['selPrzed'];
-        $isf = new Kohana_Isf();
-        $isf->Connect(APP_DBSYS);
-        $isf->DbInsert('przedmiot_sale', array(
-            'przedmiot' => $przedmiot,
-            'sala' => $sala,
-        ));
-        Kohana_Request::factory()->redirect('sale/przedmiot/' . $sala);
+	$sala = $_POST['formSala'];
+	$przedmiot = $_POST['selPrzed'];
+	$isf = new Kohana_Isf();
+	$isf->Connect(APP_DBSYS);
+	$isf->DbInsert('przedmiot_sale', array(
+	    'przedmiot' => $przedmiot,
+	    'sala' => $sala,
+	));
+	Kohana_Request::factory()->redirect('sale/przedmiot/' . $sala);
     }
+
     /**
      * Usuwa przypisanie sali przedmiotu
      *
@@ -191,10 +169,10 @@ class Controller_Sale extends Controller {
      * @param string $przedmiot przedmiot
      */
     public function action_przedusun($sala, $przedmiot) {
-        $isf = new Kohana_Isf();
-        $isf->Connect(APP_DBSYS);
-        $isf->DbDelete('przedmiot_sale', 'przedmiot=\'' . $przedmiot . '\' and sala=\'' . $sala . '\'');
-        Kohana_Request::factory()->redirect('sale/przedmiot/' . $sala);
+	$isf = new Kohana_Isf();
+	$isf->Connect(APP_DBSYS);
+	$isf->DbDelete('przedmiot_sale', 'przedmiot=\'' . $przedmiot . '\' and sala=\'' . $sala . '\'');
+	Kohana_Request::factory()->redirect('sale/przedmiot/' . $sala);
     }
 
 }

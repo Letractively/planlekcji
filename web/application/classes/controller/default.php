@@ -46,15 +46,13 @@ class Controller_Default extends Controller {
     /**
      * Wyswietla strone glowna
      */
-    public function action_index() {
-	$isf = new Kohana_Isf();
-	$isf->Connect(APP_DBSYS);
+    public function action_index($param=false) {
+	if ($param == 'nomobile') {
+	    setcookie('_nomobile', true, time() + 3600 * 24, '/');
+	}
 	$view = View::factory('main');
 
-	$content = $isf->DbSelect('rejestr', array('*'), 'where opcja = \'index_text\'');
-	$content = $content[0]['wartosc'];
-
-	$view->set('content', $content);
+	$view->set('content', App_Globals::getRegistryKey('index_text'));
 	echo $view->render();
     }
 

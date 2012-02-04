@@ -18,6 +18,10 @@ if (!isset($script))
 if (!isset($bodystr))
     $bodystr = null;
 $appver = App_Globals::getRegistryKey('app_ver');
+if (Core_Tools::is_mobile() && !isset($_COOKIE['_nomobile'])) {
+    Kohana_Request::factory()->redirect('mobile/index');
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -69,6 +73,9 @@ $appver = App_Globals::getRegistryKey('app_ver');
     		    </div>
 		    <?php endif; ?>
 		    <div id="sidebar_menu" style="padding-left: 10px;" class="a_light_menu">
+			<?php if (Core_Tools::is_mobile()): ?>
+			<h3><a href="<?php echo URL::site('mobile/index'); ?>">Wersja mobilna</a></h3>
+			<?php endif; ?>
 			<?php echo View::factory()->render('_sidebar_menu'); ?>
 		    </div>
 		</div>

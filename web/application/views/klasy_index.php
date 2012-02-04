@@ -5,25 +5,6 @@
  * 
  */
 ?>
-<?php /** kody bledow */ ?>
-<?php switch ($_err): ?>
-<?php case 'e1': ?>
-<p class="error">Klasa już istnieje</p>
-<?php break; ?>
-<?php case 'e2': ?>
-<p class="error">Ciąg zawiera niedozwolone znaki</p>
-<?php break; ?>
-<?php case 'e3': ?>
-<p class="error">Ciąg nie może być pusty</p>
-<?php break; ?>
-<?php case 'pass': ?>
-<p class="notice">Klasa została wpisana</p>
-<?php break; ?>
-<?php case 'usun': ?>
-<p class="notice">Klasa została usunięta</p>
-<?php break; ?>
-<?php endswitch; ?>
-
 <?php
 $isf = new Kohana_Isf();
 $isf->Connect(APP_DBSYS);
@@ -69,6 +50,24 @@ $grp = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'ilosc_grup\'');
                     Usunięcie klasy usunie wszystkie powiązania z nauczycielami uczących daną klasę.
                 </p>
             <?php endif; ?>
+<?php /** kody bledow */ ?>
+<?php switch ($_err): ?>
+<?php case 'e1': ?>
+<p class="error">Klasa już istnieje</p>
+<?php break; ?>
+<?php case 'e2': ?>
+<p class="error">Ciąg zawiera niedozwolone znaki</p>
+<?php break; ?>
+<?php case 'e3': ?>
+<p class="error">Ciąg nie może być pusty</p>
+<?php break; ?>
+<?php case 'pass': ?>
+<p class="notice">Klasa została wpisana</p>
+<?php break; ?>
+<?php case 'usun': ?>
+<p class="notice">Klasa została usunięta</p>
+<?php break; ?>
+<?php endswitch; ?>
         </td>
         <td style="width: 50%;">
             <h3>Dodaj klasę</h3>

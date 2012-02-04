@@ -11,7 +11,7 @@ $nazwa = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'nazwa_szkoly\'');
 /** pobiera tresc strony glownej */
 $msg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'index_text\'');
 ?>
-<form action="<?php echo URL::site('admin/dochange'); ?>" method="post" name="formPlan">
+<form action="<?php echo URL::site('admin/doEditSettingsPOST'); ?>" method="post" name="formPlan">
     <p style="text-align: center;">
         <button type="submit" name="btnSubmit">Zapisz ustawienia</button>
     </p>

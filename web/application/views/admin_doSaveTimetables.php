@@ -11,7 +11,7 @@
     <li>Możliwość wygenerowania planów do plików HTML</li>
 </ul>
 <h3>Przed zamknięciem upewnij się, że wszystkie plany zostały wprowadzone!</h3>
-<form action="<?php echo URL::site('admin/zamknijconfirm2'); ?>" method="post">
+<form action="<?php echo URL::site('admin/doSaveTimetablesPOST'); ?>" method="post">
     <button type="submit" name="btnS">
         Wykonaj operację
     </button>
