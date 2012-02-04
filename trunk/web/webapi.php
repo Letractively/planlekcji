@@ -19,7 +19,7 @@ require_once 'config.php';
 require_once 'lib/nusoap/nusoap.php';
 require_once 'modules/isf/classes/isf2.php';
 require_once 'application/planlekcji/webapi.app';
-require_once 'application/planlekcji/globals.app';
+require_once 'application/planlekcji/system.app';
 
 $ver = explode(' ', App_Globals::getRegistryKey('app_ver'));
 $ver = explode('.', $ver[0]);

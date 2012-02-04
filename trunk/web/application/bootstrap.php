@@ -4,7 +4,7 @@ defined('SYSPATH') or die('No direct script access.');
 if(!isset($_SESSION['app_theme'])){
     $_SESSION['app_theme']='domyslny';
 }
-require_once 'planlekcji/globals.app';
+require_once 'planlekcji/system.app';
 require SYSPATH . 'classes/kohana/core' . EXT;
 if (is_file(APPPATH . 'classes/kohana' . EXT)) {
     require APPPATH . 'classes/kohana' . EXT;

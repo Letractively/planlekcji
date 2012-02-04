@@ -17,19 +17,19 @@ if ($zadmin > $toktime) {
         <ul style="font-size: 8pt; list-style: none; padding: 0px;">
             <li>
                 <img src="<?php echo URL::base() ?>lib/icons/token.png" alt=""/>
-                <a href="<?php echo URL::site('admin/renew'); ?>">
+                <a href="<?php echo URL::site('admin/doRenewToken'); ?>">
                     Odnów mój token
                 </a>
             </li>
             <li>
                 <img src="<?php echo URL::base() ?>lib/icons/password.png" alt=""/>
-                <a href="<?php echo URL::site('admin/haslo'); ?>">
+                <a href="<?php echo URL::site('admin/doChangePassword'); ?>">
                     Zmień moje hasło
                 </a>
             </li>
             <li>
                 <img src="<?php echo URL::base() ?>lib/icons/logout.png" alt=""/>
-                <a href="<?php echo URL::site('admin/logout'); ?>">
+                <a href="<?php echo URL::site('admin/doLogout'); ?>">
                     Wyloguj mnie
                 </a>
             </li>
@@ -42,20 +42,20 @@ if ($zadmin > $toktime) {
     <?php if ($_SESSION['user'] == 'root'): ?>
         <p>
     	<img src="<?php echo URL::base() ?>lib/icons/edit.png" alt=""/>
-    	<a href="<?php echo URL::site('admin/zmiendane'); ?>">
-    	    Szkoła i strona główna
+    	<a href="<?php echo URL::site('admin/doEditSettings'); ?>">
+    	    Ustawienia strony głównej
     	</a>
         </p>
         <p>
     	<img src="<?php echo URL::base() ?>lib/icons/alert.png" alt=""/>
-    	<a  href="<?php echo url::site('admin/reset'); ?>">
+    	<a  href="<?php echo url::site('admin/doCleanupSystem'); ?>">
     	    Wyczyść system
     	</a>
         </p>
-        <p>
-    	<img src="<?php echo URL::base(); ?>lib/icons/backup.png" alt=""/>
-    	<a href="<?php echo URL::site('admin/backup'); ?>">Kopia zapasowa</a>
-        </p>
+        <!--<p>
+        <img src="<?php echo URL::base(); ?>lib/icons/backup.png" alt=""/>
+        <a href="<?php echo URL::site('admin/backup'); ?>">Kopia zapasowa</a>
+        </p>-->
     <?php endif; ?>
     <?php if (App_Globals::getSysLv() == 3): ?>
         <p>

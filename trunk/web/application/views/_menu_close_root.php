@@ -13,6 +13,3 @@
 </p>
  */
 ?>
-<p class="grptxt">Jako <b>root</b> nie masz dostępu do edycji planów i zastępstw.
-    Aby powrócić do ustawień sal, przedmiotów i nauczycieli wykonaj reset systemu,
-    który usunie wszystkie plany.</p>

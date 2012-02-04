@@ -31,7 +31,7 @@ $res = $res[0]['wartosc'];
                         przedmioty, klasy i inne ustawienia pozostają nienaruszone.
                     </p>
                 </div>
-                <form action="<?php echo url::site('admin/planreset'); ?>" method="post">
+                <form action="<?php echo url::site('admin/doTimetablesCleanup'); ?>" method="post">
                     <button type="submit" name="btnSubmit" class="button-jq ui-state-default ui-button" style="margin: 5px;">
                         Usuń tylko dane planów zajęć i zastępstw
                     </button>
@@ -49,7 +49,7 @@ $res = $res[0]['wartosc'];
                     administratora systemu.
                 </p>
             </div>
-            <form action="<?php echo url::site('admin/doreset'); ?>" method="post">
+            <form action="<?php echo url::site('admin/doCleanupSystemPOST'); ?>" method="post">
                 <div class="ui-state-error ui-corner-all" style="margin: 5px; padding: 0pt 0.7em;">
                     <p>
                     <p><b>Wyczyść cały system </b><input type="checkbox" name="cl"/></p>

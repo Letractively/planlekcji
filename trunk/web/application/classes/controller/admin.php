@@ -53,11 +53,13 @@ class Controller_Admin extends Controller {
      * @param string $only_root Dostep tylko dla root
      * @return string Komunikat
      */
-    public function check_login($only_root=true) {
-	if (!isset($_SESSION['token'])) {
+    public function check_login($only_root=true, $loginpage=false) {
+	if (!isset($_SESSION['token']) || !isset($_SESSION['user'])) {
+	    if ($loginpage == false) {
+		Kohana_Request::factory()->redirect('admin/login');
+		exit;
+	    }
 	    return false;
-	    Kohana_Request::factory()->redirect('admin/login');
-	    exit;
 	} else {
 
 	    $auth = $this->wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']));
@@ -83,8 +85,8 @@ class Controller_Admin extends Controller {
 	    }
 
 	    if ($auth == 'auth:failed') {
-		return false;
 		Kohana_Request::factory()->redirect('admin/login');
+		session_destroy();
 		exit;
 	    }
 
@@ -111,8 +113,8 @@ class Controller_Admin extends Controller {
      */
     public function action_login($pass='') {
 
-	if ($this->check_login(false) == true) {
-	    Request::factory()->redirect('');
+	if ($this->check_login(false, true) != false) {
+	    Kohana_Request::factory()->redirect('');
 	    exit;
 	}
 
@@ -125,10 +127,6 @@ class Controller_Admin extends Controller {
 	    $view2->set('pass', '');
 	}
 
-	$isf = new Kohana_Isf();
-	$isf->JQUi();
-
-	$view->set('script', $isf->JQUi_MakeScript());
 	$view->set('content', $view2->render());
 	echo $view->render();
     }
@@ -168,12 +166,12 @@ class Controller_Admin extends Controller {
     /**
      * strona zamkniecia edycji sal, przedmiotow, etc
      */
-    public function action_zamknij() {
+    public function action_doEditTimetables() {
 
 	$this->check_login();
 
 	$view = view::factory('main');
-	$view2 = view::factory('admin_zamknij');
+	$view2 = view::factory('admin_doEditTimetables');
 
 	$isf = new Kohana_Isf();
 	$isf->JQUi();
@@ -184,50 +182,38 @@ class Controller_Admin extends Controller {
     }
 
     /**
+     * potwierdza zamkniecie edycji sal, przedmiotow, etc
+     */
+    public function action_doEditTimetablesPOST() {
+
+	$this->check_login();
+	if (isset($_POST)) {
+	    Isf2::Connect()->Update('rejestr', array('wartosc' => '0'))
+		    ->Where(array('opcja' => 'edycja_danych'))
+		    ->Execute();
+	    insert_log('admin.doEditTimetables', 'Przejscie do modulu Planu Zajec');
+	    Kohana_Request::factory()->redirect('default/index');
+	}
+    }
+
+    /**
      * strona zamkniecia edycji planow zajec
      */
-    public function action_zamknij2() {
+    public function action_doSaveTimetables() {
 
 	$this->check_login(false);
 
 	$view = view::factory('main');
-	$view2 = view::factory('admin_zamknij2');
+	$view2 = view::factory('admin_doSaveTimetables');
 
 	$view->set('content', $view2->render());
 	echo $view->render();
     }
 
     /**
-     * Odnawia token
-     */
-    public function action_renew() {
-
-	$this->check_login(false);
-	insert_log('admin.renewtoken', 'Uzytkownik ' . $_SESSION['user'] . ' odnowil token');
-	$this->wsdl->call('doRenewToken', array('token' => $_SESSION['token']));
-	$_SESSION['token_time'] = $this->wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']));
-	Request::factory()->redirect('');
-    }
-
-    /**
-     * potwierdza zamkniecie edycji sal, przedmiotow, etc
-     */
-    public function action_zamknijconfirm() {
-
-	$this->check_login();
-	if (isset($_POST)) {
-	    $isf = new Kohana_Isf();
-	    $isf->Connect(APP_DBSYS);
-	    $isf->DbUpdate('rejestr', array('wartosc' => '0'), 'opcja=\'edycja_danych\'');
-	    insert_log('admin.zamknij', 'Zamknięcie edycji systemu');
-	    Kohana_Request::factory()->redirect('default/index');
-	}
-    }
-
-    /**
      * potwierdza zamkniecie edycji planow
      */
-    public function action_zamknijconfirm2() {
+    public function action_doSaveTimetablesPOST() {
 
 	$this->check_login(false);
 	if (isset($_POST)) {
@@ -235,19 +221,31 @@ class Controller_Admin extends Controller {
 	    $isf->Connect(APP_DBSYS);
 	    $isf->DbUpdate('rejestr', array('wartosc' => '3'), 'opcja=\'edycja_danych\'');
 	    App_Globals::writeXmlTimetables();
-	    insert_log('admin.zamknij', 'Zamknięcie edycji planów');
+	    insert_log('admin.doSavetimetablesPOST', 'Zamkniecie edycji Planow Zajec');
 	    Kohana_Request::factory()->redirect('default/index');
 	}
     }
 
     /**
+     * Odnawia token
+     */
+    public function action_doRenewToken() {
+
+	$this->check_login(false);
+	insert_log('admin.doRenewToken', 'Uzytkownik ' . $_SESSION['user'] . ' odnowil token');
+	$this->wsdl->call('doRenewToken', array('token' => $_SESSION['token']));
+	$_SESSION['token_time'] = $this->wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']));
+	Request::factory()->redirect('');
+    }
+
+    /**
      * wylogowuje
      */
-    public function action_logout() {
+    public function action_doLogout() {
 	$this->wsdl->call('doLogout', array('token' => $_SESSION['token']));
 	unset($_SESSION['token']);
 	setcookie('login', '', time() - 3600, '/');
-	insert_log('admin.logout', 'Uzytkownik ' . $_SESSION['user'] . ' wylogował się');
+	insert_log('admin.doLogout', 'Uzytkownik ' . $_SESSION['user'] . ' wylogował się');
 	session_destroy();
 
 	Kohana_Request::factory()->redirect('default/index');
@@ -256,7 +254,7 @@ class Controller_Admin extends Controller {
     /**
      * strona usuwania planow
      */
-    public function action_planreset() {
+    public function action_doTimetablesCleanup() {
 
 	$this->check_login();
 
@@ -264,20 +262,21 @@ class Controller_Admin extends Controller {
 	    Kohana_Request::factory()->redirect('');
 	    exit;
 	}
-	$isf = new Kohana_Isf();
-	$isf->Connect(APP_DBSYS);
-	$isf->DbDelete('planlek', 'klasa like \'%\'');
-	$isf->DbDelete('plan_grupy', 'klasa like \'%\'');
-	$isf->DbDelete('zast_id', 'zast_id like \'%\'');
-	$isf->DbDelete('zastepstwa', 'zast_id like \'%\'');
-	$isf->DbUpdate('rejestr', array('wartosc' => '0'), 'opcja=\'edycja_danych\'');
+	$db = Isf2::Connect();
+	$db->Delete('planlek')->Execute();
+	$db->Delete('plan_grupy')->Execute();
+	$db->Delete('zast_id')->Execute();
+	$db->Delete('zastepstwa')->Execute();
+	$db->Update('rejestr', array('wartosc'=>'0'))
+		->Where(array('opcja'=>'edycja_danych'))
+		->Execute();
 	Kohana_Request::factory()->redirect('default/index');
     }
 
     /**
      * strona usuwania danych jak sale, etc
      */
-    public function action_reset() {
+    public function action_doCleanupSystem() {
 
 	$this->check_login();
 
@@ -287,7 +286,7 @@ class Controller_Admin extends Controller {
 	$isf->JQUi();
 
 	$view = view::factory('main');
-	$view2 = view::factory('admin_reset');
+	$view2 = view::factory('admin_doCleanupSystem');
 
 	$view->set('script', $isf->JQUi_MakeScript());
 	$view->set('content', $view2->render());
@@ -297,27 +296,29 @@ class Controller_Admin extends Controller {
     /**
      * usuwa dane jak sale, etc
      */
-    public function action_doreset() {
+    public function action_doCleanupSystemPOST() {
 
 	$this->check_login();
 
-	$isf = new Kohana_Isf();
-	$isf->Connect(APP_DBSYS);
-	$isf->DbDelete('planlek', 'klasa like \'%\'');
-	$isf->DbDelete('plan_grupy', 'klasa like \'%\'');
-	$isf->DbDelete('zast_id', 'zast_id like \'%\'');
-	$isf->DbDelete('zastepstwa', 'zast_id like \'%\'');
-	$isf->DbUpdate('rejestr', array('wartosc' => '1'), 'opcja=\'edycja_danych\'');
+	$db = Isf2::Connect();
+	$db->Delete('planlek')->Execute();
+	$db->Delete('plan_grupy')->Execute();
+	$db->Delete('zast_id')->Execute();
+	$db->Delete('zastepstwa')->Execute();
+	$db->Update('rejestr', array('wartosc'=>'1'))
+		->Where(array('opcja'=>'edycja_danych'))
+		->Execute();
 	if (isset($_POST['cl'])) {
-	    $isf->DbDelete('klasy', 'klasa like \'%\'');
-	    $isf->DbDelete('lek_godziny', 'lekcja like \'%\'');
-	    $isf->DbDelete('nauczyciele', 'imie_naz like \'%\'');
-	    $isf->DbDelete('nl_klasy', 'klasa like \'%\'');
-	    $isf->DbDelete('nl_przedm', 'przedmiot like \'%\'');
-	    $isf->DbDelete('przedmiot_sale', 'sala like \'%\'');
-	    $isf->DbDelete('przedmioty', 'przedmiot like \'%\'');
-	    $isf->DbDelete('sale', 'sala like \'%\'');
-	    $isf->DbUpdate('rejestr', array('wartosc' => '1'), 'opcja=\'ilosc_godzin_lek\'');
+	    $db->Delete('klasy')->Execute();
+	    $db->Delete('nauczyciele')->Execute();
+	    $db->Delete('nl_klasy')->Execute();
+	    $db->Delete('nl_przedm')->Execute();
+	    $db->Delete('przedmiot_sale')->Execute();
+	    $db->Delete('przedmioty')->Execute();
+	    $db->Delete('sale')->Execute();
+	    $db->Update('rejestr', array('wartosc'=>'1'))
+		->Where(array('opcja'=>'ilosc_godzin_lek'))
+		->Execute();
 	}
 	Kohana_Request::factory()->redirect('');
     }
@@ -325,7 +326,7 @@ class Controller_Admin extends Controller {
     /**
      * strona zmiana danych szkoly, strony glownej
      */
-    public function action_zmiendane() {
+    public function action_doEditSettings() {
 
 	$this->check_login();
 
@@ -344,7 +345,7 @@ class Controller_Admin extends Controller {
 START;
 
 	$view = view::factory('main');
-	$view2 = view::factory('admin_zmiendane');
+	$view2 = view::factory('admin_doEditSettings');
 
 	$view->set('script', $script);
 	$view->set('content', $view2->render());
@@ -354,7 +355,7 @@ START;
     /**
      * zmienia dane szkoly, strony glownej
      */
-    public function action_dochange() {
+    public function action_doEditSettingsPOST() {
 
 	$this->check_login();
 
@@ -377,12 +378,12 @@ START;
     /**
      * strona zmiany hasla
      */
-    public function action_haslo($err=false) {
+    public function action_doChangePassword($err=false) {
 
 	$this->check_login(false);
 
 	$view = view::factory('main');
-	$view2 = view::factory('admin_haslo');
+	$view2 = view::factory('admin_doChangePassword');
 
 	if ($err != false) {
 	    $view2->set('_tplerr', $err);
@@ -397,7 +398,7 @@ START;
     /**
      * zmienia haslo
      */
-    public function action_chpass() {
+    public function action_doChangePasswordPOST() {
 	$this->check_login(false);
 
 	insert_log('admin.chpass', 'Uzytkownik ' . $_SESSION['user'] . ' proboje zmienic haslo');
@@ -411,12 +412,12 @@ START;
 	    $p = $_POST['inpPH'];
 
 	    if (strlen($_POST['inpNH']) < 6) {
-		Kohana_Request::factory()->redirect('admin/haslo/false');
+		Kohana_Request::factory()->redirect('admin/doChangePassword/false');
 		exit;
 	    }
 
 	    if ($n != $p) {
-		Kohana_Request::factory()->redirect('admin/haslo/false');
+		Kohana_Request::factory()->redirect('admin/doChangePassword/false');
 		exit;
 	    }
 	    $arr['token'] = $_SESSION['token'];
@@ -424,10 +425,10 @@ START;
 	    $arr['new'] = $n;
 	    $act = $this->wsdl->call('doChangePass', $arr);
 	    if ($act == 'auth:failed') {
-		Kohana_Request::factory()->redirect('admin/haslo/false');
+		Kohana_Request::factory()->redirect('admin/doChangePassword/false');
 	    } else {
 		insert_log('admin.chpass', 'Uzytkownik ' . $_SESSION['user'] . ' zmienil haslo');
-		Kohana_Request::factory()->redirect('admin/haslo/pass');
+		Kohana_Request::factory()->redirect('admin/doChangePassword/pass');
 	    }
 	} else {
 	    Kohana_Request::factory()->redirect('');
