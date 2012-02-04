@@ -12,6 +12,7 @@ if (!file_exists('config.php')) {
     exit;
 }
 
+define('DS', DIRECTORY_SEPARATOR);
 define('APPROOTPATH', realpath('..'));
 define('DOCROOT', realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
 
@@ -35,18 +36,18 @@ $soapsrv->configureWSDL('ipl-' . API_VER . 'api', API_NS);
  * Struktury WSDL
  */
 $soapsrv->wsdl->addComplexType(
-        'Klasy', 'complexType', 'struct', 'sequence', '', array(
+	'Klasy', 'complexType', 'struct', 'sequence', '', array(
     'klasa' => array(
-        'name' => 'klasa',
-        'type' => 'xsd:string'
+	'name' => 'klasa',
+	'type' => 'xsd:string'
     ),
-        )
+	)
 );
 
 $soapsrv->wsdl->addComplexType(
-        'KlasyArray', 'complexType', 'array', '', 'SOAP-ENC:Array', array(), array(
+	'KlasyArray', 'complexType', 'array', '', 'SOAP-ENC:Array', array(), array(
     array('ref' => 'SOAP-ENC:arrayType', 'wsdl:arrayType' => 'tns:Klasy[]')
-        ), 'tns:Klasy'
+	), 'tns:Klasy'
 );
 
 /**
