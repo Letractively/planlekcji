@@ -1,17 +1,17 @@
+<?php
+define('MOBILE_LIB_PATH', URL::base().'lib/jquery/mobile/');
+?>
 <!DOCTYPE html>
 <html>
     <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1"/>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css" />
-	<script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
-	<script src="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.js"></script>        
+	<link rel="stylesheet" href="<?php echo MOBILE_LIB_PATH; ?>jquery.mobile-1.0.1.min.css" />
+	<script src="<?php echo MOBILE_LIB_PATH; ?>jquery-1.6.4.min.js"></script>
+	<script src="<?php echo MOBILE_LIB_PATH; ?>jquery.mobile-1.0.1.min.js"></script>        
         <title>Internetowy Plan Lekcji - <?php echo App_Globals::getRegistryKey('nazwa_szkoly'); ?></title>
 	<script>
             $(document).ready(function() {
-		$("#swipeMe").bind("swipeleft",function(){
-		    alert("swipe!");
-		});
             });
         </script>
     </head>
