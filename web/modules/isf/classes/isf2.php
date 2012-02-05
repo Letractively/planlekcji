@@ -133,7 +133,7 @@ class Isf2 {
      * @param string $system System bazy danych
      * @param mixed $param Parametr polaczenia dla danego typu bazy danych
      */
-    public function __construct($system, $param) {
+    public function __construct($system, $param=null) {
 	switch ($system) {
 	    case 'sqlite':
 		$this->SQLite_Connect($param);
@@ -157,7 +157,10 @@ class Isf2 {
      * @param mixed $param Parametr polaczenia dla danego typu bazy danych
      * @return Isf2 Zwraca obiekt klasy ISF2
      */
-    public static function Connect($system=APP_DBSYS, $param=null) {
+    public static function Connect($system=APP_DBSYS, $param=null, $drop_file=false) {
+	if ($drop_file == true) {
+	    fopen(APPROOTPATH . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'default.sqlite', 'w');
+	}
 	return new Isf2($system, $param);
     }
 
@@ -268,6 +271,12 @@ class Isf2 {
 	return $this;
     }
 
+    /**
+     * Operacja DELETE
+     *
+     * @param string $table Nazwa tabeli
+     * @return Isf2 
+     */
     public function Delete($table) {
 	if (!isset($table)) {
 	    throw new Exception('ISF2: Invalid Delete statement syntax', 251);
@@ -277,6 +286,26 @@ class Isf2 {
 
 	$this->base_statement = 'delete from ' . $this->table . ' ';
 
+	return $this;
+    }
+
+    /**
+     * Tworzy tabele
+     *
+     * @param string $table_name Nazwa tabeli
+     * @param array $columns [kolumna=>typ]
+     * @return Isf2 
+     */
+    public function CreateTable($table_name, $columns) {
+	if (empty($table_name) || !is_array($columns)) {
+	    throw new Exception('ISF2: Invalid CreateTable syntax', 401);
+	}
+	$this->base_statement = 'create table ' . $table_name;
+	$this->optional_statement = '(';
+	foreach ($columns as $col => $type) {
+	    $this->optional_statement .= '"' . $col . '" ' . $type . ', ';
+	}
+	$this->optional_statement = substr($this->optional_statement, 0, -2) . ')';
 	return $this;
     }
 
@@ -387,7 +416,7 @@ class Isf2 {
 	    $this->optional_statement = '';
 	    return $return;
 	} catch (PDOException $e) {
-	    throw $e;
+	    throw new Exception($e->getMessage() . '::' . $this->BuildQuery(), 999);
 	}
     }
 

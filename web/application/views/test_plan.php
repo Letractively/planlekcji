@@ -23,8 +23,8 @@ $klasa = '2D';
     <body class="t_page">
 	<?php
 	try {
-	    echo Isf2::Connect()->Select('klasy')
-			->OrderBy(array('klasa', 'asc'));
+	    Isf2::Connect()->CreateTable('aaa', array('test'=>'text'))->Execute();
+	    echo 'gut';
 	} catch (Exception $e) {
 	    echo Core_Tools::ShowError($e->getMessage(), $e->getCode());
 	}
