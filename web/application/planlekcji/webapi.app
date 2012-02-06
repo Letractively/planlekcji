@@ -61,8 +61,6 @@ function checkauth($token) {
  */
 function doLogin($username, $password, $token) {
 
-    insert_log('aaa', 'test');
-
     $dbn = Isf2::Connect();
 
     $token = md5('plan' . $token);

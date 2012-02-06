@@ -173,17 +173,10 @@ class Controller_Podglad extends Controller {
 	    exit;
 	}
 
-	if (!class_exists('ZipArchive')) {
-	    die('Wymagana jest obsluga <b>ZipArchive</b>');
-	}
-	if (!is_writable('resources')) {
-	    die('Katalog <b>resources</b> musi byc zapisywalny');
-	}
-
 	$isf = new Kohana_Isf();
 	$isf->Connect(APP_DBSYS);
 
-	define('FILE_PATH', DOCROOT . 'resources' . DIRECTORY_SEPARATOR . 'planlekcji.zip');
+	define('FILE_PATH', APP_ROOT . DS . 'resources' . DS . 'planlekcji.zip');
 
 	try {
 	    $wsdl = new nusoap_client(URL::base() . 'webapi.php?wsdl');
@@ -247,7 +240,7 @@ class Controller_Podglad extends Controller {
 		Internetowy Plan Lekcji</a>,
 		dnia ' . date('d.m.Y') . '</p>
 		    </div></body></html>';
-	
+
 	$file = <<<START
 <!doctype html>
 <html lang="pl">
@@ -286,7 +279,7 @@ START;
 	$file .= '</p><h3><a target="_blank" href="nauczyciel/zestawienie.html">Zestawienie planów</a></h3>';
 
 	$file .= $footer;
-	
+
 	$zip->addFromString('planlekcji/index.html', $file);
 
 	foreach ($isf->DbSelect('klasy', array('*')) as $rid => $rcl) {
@@ -375,10 +368,10 @@ START;
 
 	$zip->addFromString('planlekcji/nauczyciel/zestawienie.html', $zestawienie);
 	$zip->close();
-	
+
 	$view = View::factory('main');
 	$outtext = '<h1>Plany zostały wyeksportowane pomyślnie</h1>
-	    <p><a href="'.URL::base().'resources/planlekcji.zip'.'">Pobierz archiwum</a></p>';
+	    <p>Możesz pobrać archiwum z folderu <b>' . realpath(APP_ROOT . DS . 'resources') . '</b>.</p>';
 	$view->set('content', $outtext);
 	echo $view->render();
     }

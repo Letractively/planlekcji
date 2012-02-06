@@ -70,10 +70,10 @@ class Isf2 {
     protected function PgSQL_Connect($customvars=null) {
 
 	$my_cfg = array(
-	    'host' => app_dbconfig_host,
-	    'database' => app_dbconfig_dbname,
-	    'user' => app_dbconfig_user,
-	    'password' => app_dbconfig_password,
+	    'host' => dbconfig_host,
+	    'database' => dbconfig_dbname,
+	    'user' => dbconfig_user,
+	    'password' => dbconfig_password,
 	);
 
 	if (!class_exists('PDO') || !extension_loaded('pdo_pgsql')) {
@@ -347,7 +347,7 @@ class Isf2 {
 	    if (count($__tmp_ecols) == 2) {
 		$__tmp_cols = $__tmp_ecols[0] . ' ' . $__tmp_ecols[1] . ' ';
 	    } else {
-		$__tmp_cols = $column . ' == ';
+		$__tmp_cols = $column . ' = ';
 	    }
 
 	    if (is_array($value)) {

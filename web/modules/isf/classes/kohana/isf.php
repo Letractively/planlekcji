@@ -95,7 +95,12 @@ class Kohana_Isf {
      */
     protected function PgSQL_Connect($customvars=null) {
 
-	$my_cfg = $GLOBALS['my_cfg'];
+	$my_cfg = array(
+	    'host' => dbconfig_host,
+	    'database' => dbconfig_dbname,
+	    'user' => dbconfig_user,
+	    'password' => dbconfig_password,
+	);
 
 	if (!class_exists('PDO') || !extension_loaded('pdo_pgsql')) {
 	    $_err = 'Aby korzystac z obslugi PDO PostgreSQL, nalezy wlaczyc jego obsluge w PHP. ';
