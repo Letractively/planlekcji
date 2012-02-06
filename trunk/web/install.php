@@ -12,6 +12,7 @@
  */
 define('_I_SYSVER', 'trunk dev');
 define('MOBILE_LIB_PATH', '/lib/jquery/mobile/');
+define('C', '"');
 ?>
 <!DOCTYPE html>
 <html>
@@ -120,13 +121,13 @@ define('MOBILE_LIB_PATH', '/lib/jquery/mobile/');
 			$a = fopen(APP_ROOT . DS . 'resources' . DS . 'config.ini', 'w');
 
 			$file = '[global]' . PHP_EOL;
-			$file .= 'app_path = ' . $_POST['inpPath'] . PHP_EOL;
-			$file .= 'app_dbsys = pgsql' . PHP_EOL;
+			$file .= 'app_path = ' . C . $_POST['inpPath'] . C . PHP_EOL;
+			$file .= 'app_dbsys = "pgsql"' . PHP_EOL . PHP_EOL;
 			$file .= '[dbconfig]' . PHP_EOL;
-			$file .= 'host = ' . $_POST['dbHost'] . PHP_EOL;
-			$file .= 'dbname = ' . $_POST['dbBaza'] . PHP_EOL;
-			$file .= 'user = ' . $_POST['dbLogin'] . PHP_EOL;
-			$file .= 'password = ' . $_POST['dbHaslo'];
+			$file .= 'host = ' . C . $_POST['dbHost'] . C . PHP_EOL;
+			$file .= 'dbname = ' . C . $_POST['dbBaza'] . C . PHP_EOL;
+			$file .= 'user = ' . C . $_POST['dbLogin'] . C . PHP_EOL;
+			$file .= 'password = ' . C . $_POST['dbHaslo'] . C;
 
 			fputs($a, $file);
 			fclose($a);
@@ -145,8 +146,8 @@ define('MOBILE_LIB_PATH', '/lib/jquery/mobile/');
 			$a = fopen(APP_ROOT . DS . 'resources' . DS . 'config.ini', 'w');
 
 			$file = '[global]' . PHP_EOL;
-			$file .= 'app_path = ' . $_POST['inpPath'] . PHP_EOL;
-			$file .= 'app_dbsys = sqlite';
+			$file .= 'app_path = ' . C . $_POST['inpPath'] . C . PHP_EOL;
+			$file .= 'app_dbsys = "sqlite"';
 
 			fputs($a, $file);
 			fclose($a);
