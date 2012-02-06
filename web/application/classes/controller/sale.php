@@ -128,14 +128,57 @@ class Controller_Sale extends Controller {
 	    }
 	    Kohana_Request::factory()->redirect('sale/index/usun');
 	}
+	if (isset($_POST['btnEditClasses'])) {
+	    if (!isset($_POST['rdClassroom'])) {
+		Kohana_Request::factory()->redirect('sale/index/nchkc');
+	    }
+	    $this->action_przedmiot($_POST['rdClassroom']);
+	}
+    }
+
+    public function action_wypisz() {
+	if (isset($_POST)) {
+	    if (isset($_POST['rdPrzedmiot']))
+		$this->action_przedusun($_POST['sala'], $_POST['rdPrzedmiot']);
+	    $this->action_przedmiot($_POST['sala']);
+	}else {
+	    Kohana_Request::factory()->redirect('');
+	}
     }
 
     /**
-     * Strona przypisania sali przedmiotow
+     * Dodaje do sali przedmiot
+     */
+    public function action_dodaj() {
+	$sala = $_POST['formSala'];
+	$przedmiot = $_POST['selPrzed'];
+	$isf = new Kohana_Isf();
+	$isf->Connect(APP_DBSYS);
+	$isf->DbInsert('przedmiot_sale', array(
+	    'przedmiot' => $przedmiot,
+	    'sala' => $sala,
+	));
+	$this->action_przedmiot($_POST['sala']);
+    }
+
+    /**
+     * Usuwa przypisanie sali do przedmiotow
+     *
+     * @param string $sala sala
+     * @param string $przedmiot przedmiot
+     */
+    private function action_przedusun($sala, $przedmiot) {
+	$isf = new Kohana_Isf();
+	$isf->Connect(APP_DBSYS);
+	$isf->DbDelete('przedmiot_sale', 'przedmiot=\'' . $przedmiot . '\' and sala=\'' . $sala . '\'');
+    }
+
+    /**
+     * Przypisanie sali do przedmiotow
      *
      * @param string $sala sala
      */
-    public function action_przedmiot($sala) {
+    private function action_przedmiot($sala) {
 	$isf = new Kohana_Isf();
 	$isf->Connect(APP_DBSYS);
 
@@ -145,34 +188,6 @@ class Controller_Sale extends Controller {
 
 	$view->set('content', $view2->render());
 	echo $view->render();
-    }
-
-    /**
-     * Dodaje do sali przedmiot
-     */
-    public function action_dodajprzedm() {
-	$sala = $_POST['formSala'];
-	$przedmiot = $_POST['selPrzed'];
-	$isf = new Kohana_Isf();
-	$isf->Connect(APP_DBSYS);
-	$isf->DbInsert('przedmiot_sale', array(
-	    'przedmiot' => $przedmiot,
-	    'sala' => $sala,
-	));
-	Kohana_Request::factory()->redirect('sale/przedmiot/' . $sala);
-    }
-
-    /**
-     * Usuwa przypisanie sali przedmiotu
-     *
-     * @param string $sala sala
-     * @param string $przedmiot przedmiot
-     */
-    public function action_przedusun($sala, $przedmiot) {
-	$isf = new Kohana_Isf();
-	$isf->Connect(APP_DBSYS);
-	$isf->DbDelete('przedmiot_sale', 'przedmiot=\'' . $przedmiot . '\' and sala=\'' . $sala . '\'');
-	Kohana_Request::factory()->redirect('sale/przedmiot/' . $sala);
     }
 
 }

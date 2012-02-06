@@ -8,9 +8,9 @@
     	</tr>
     	<tr class="a_even">
     	    <td colspan="3" style="text-align: center;">
-    		<form action="<?php echo URL::site('sale/dodaj'); ?>" method="post" name="form1">
+    		<form action="<?php echo URL::site('sale/commit'); ?>" method="post" name="form1">
     		    Sala: <input type="text" name="inpSala"/>&nbsp;
-    		    <button type="submit" name="btnSubmit">Dodaj salę</button>
+    		    <button type="submit" name="btnAdd">Dodaj salę</button>
     		</form>
     	    </td>
     	</tr>
@@ -41,8 +41,11 @@
 		<?php foreach ($res as $rowid => $rowcol): ?>
 		    <tr <?php echo ($i % 2 == 1) ? 'class="a_even"' : ''; ?>>
 			<td>
+			    <input type="radio"
+				   name="rdClassroom"
+				   value="<?php echo $rowcol['sala']; ?>"
+				   class="inpNoneBorder"/>
 			    <?php echo $rowcol['sala']; ?>
-			    (<a href="<?php echo URL::site('sale/przedmiot/' . $rowcol['sala']); ?>">przedmioty</a>)
 			</td>
 			<td>
 			    <?php
@@ -62,9 +65,9 @@
 		    <?php $i++; ?>
 		<?php endforeach; ?>
     	    <tr>
-    		<td></td>
+    		<td><button type="submit" name="btnEditClasses">Edytuj salę</button></td>
     		<td colspan="2" style="text-align: right;">
-    		    <button type="submit" name="btnDelClasses">Usuń zaznaczone klasy</button>
+    		    <button type="submit" name="btnDelClasses">Usuń zaznaczone sale</button>
     		</td>
     	    </tr>
     	</tbody>
@@ -83,6 +86,9 @@
 <?php break; ?>
 <?php case 'nchk': ?>
 <p class="error">Nie wybrano żadnej sali do usunięcia</p>
+<?php break; ?>
+<?php case 'nchkc': ?>
+<p class="error">Nie wybrano żadnej sali</p>
 <?php break; ?>
 <?php case 'pass': ?>
 <p class="notice">Operacja wykonana poprawnie</p>

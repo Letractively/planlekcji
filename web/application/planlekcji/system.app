@@ -4,12 +4,94 @@ class Core_Tools {
 
     protected $dbhandle;
 
-    public static function ShowError($message, $code='---') {
-	$errorPage = View::factory('_cterror');
-	$errorPage->set('message', $message);
-	$errorPage->set('code', $code);
-	echo $errorPage->render();
+    public static function ShowError($message, $code='---', $self_doc=false) {
+
+	$errorPage = file_get_contents(APPPATH . 'error_page.html');
+	$errorPage = str_replace('{{message}}', $message, $errorPage);
+	$errorPage = str_replace('{{code}}', $code, $errorPage);
+	if (!defined('global_app_path')) {
+	    $r = $_SERVER['REQUEST_URI'];
+	    $r = str_replace('index.php', '', $r);
+	    $r = str_replace('install.php', '', $r);
+	    $r = str_replace('?err', '', $r);
+	    $r = str_replace('?reinstall', '', $r);
+	    $errorPage = str_replace('{{HTTP_PATH}}', $r, $errorPage);
+	} else {
+	    $errorPage = str_replace('{{HTTP_PATH}}', global_app_path, $errorPage);
+	}
+	if ($self_doc) {
+	    header('Content-Type: text/html');
+	    $header = '<!DOCTYPE html><html><head><meta charset="UTF-8"/></head><body>';
+	    $footer = '</body></html>';
+	    $return = $header . $errorPage . $footer;
+	    echo $return;
+	} else {
+	    echo $errorPage;
+	}
 	exit;
+    }
+
+    public static function CheckInstalled() {
+	$paths_err = '<p><ul>';
+	$paths = array('../resources',
+	    '../resources/timetables',
+	    'application/logs',
+	    'application/cache');
+	$valid_paths = true;
+	foreach ($paths as $path) {
+	    if (!is_writable($path)) {
+		$paths_err .= '<li>Katalog <b>' . realpath($path) . '</b> musi posiadać prawa zapisu</li>';
+		$valid_paths = false;
+	    }
+	}
+	$paths_err .= '</ul></p>';
+	if (!$valid_paths) {
+	    self::ShowError($paths_err, 'S001', true);
+	}
+	if (!extension_loaded('pdo_sqlite') || !extension_loaded('pdo_pgsql')) {
+	    $dbErrMessage = 'IPL: PDO_SQLITE or PDO_PGSQL extension enabled is required';
+	    self::ShowError($dbErrMessage, 'S002', true);
+	}
+	if (!file_exists(APP_ROOT . DS . 'resources' . DS . 'config.ini')) {
+	    throw new Exception('IPL: Ready to install', 501);
+	} else {
+	    $cfg = parse_ini_file(APP_ROOT . DS . 'resources' . DS . 'config.ini', true);
+	    if (!isset($cfg['global'])
+		    || !isset($cfg['global']['app_path'])
+		    || !isset($cfg['global']['app_dbsys'])) {
+		self::ShowError('IPL: Config file is corrupt. Please remove config.ini file and refresh', 502, true);
+	    }
+	    if ($cfg['global']['app_dbsys'] != 'sqlite') {
+		if (!isset($cfg['dbconfig'])
+			|| !isset($cfg['dbconfig']['host'])
+			|| !isset($cfg['dbconfig']['user'])
+			|| !isset($cfg['dbconfig']['password'])
+			|| !isset($cfg['dbconfig']['dbname'])) {
+		    self::ShowError('IPL: Database config in config.ini is corrupt.', 503, true);
+		}
+	    }
+	    foreach ($cfg as $group => $values) {
+		foreach ($values as $name => $value) {
+		    define($group . '_' . $name, $value);
+		}
+	    }
+	    try {
+		Isf2::Connect()->Select('rejestr')
+			->Where(array('opcja' => 'installed'))->Execute()->fetchAll();
+	    } catch (Exception $e) {
+		self::ShowError('IPL: Database is corrupt.' . $e->getMessage(), 504, true);
+	    }
+	    throw new Exception('IPL: READY', 505);
+	}
+    }
+
+    public static function parseCfgFile() {
+	$cfg = parse_ini_file(APP_ROOT . DS . 'resources' . DS . 'config.ini', true);
+	foreach ($cfg as $group => $values) {
+	    foreach ($values as $name => $value) {
+		define($group . '_' . $name, $value);
+	    }
+	}
     }
 
     public static function is_mobile() {
@@ -406,7 +488,7 @@ class App_Globals {
 	    }
 	    $xml->endElement();
 	    $xml->endDocument();
-	    $fh = fopen(APPROOTPATH . DS . 'resources/timetables/' . $klasa . '.xml', 'w');
+	    $fh = fopen(APP_ROOT . DS . 'resources/timetables/' . $klasa . '.xml', 'w');
 	    fputs($fh, $xml->flush());
 	    fclose($fh);
 	}
