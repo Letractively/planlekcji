@@ -1,12 +1,23 @@
 <?php
-
-date_default_timezone_set('Europe/Warsaw');
-
+/**
+ * Jadra instalatora IPL
+ * 
+ * @package ipl\core
+ * @author Michal Bocian <mhl.bocian@gmail.com>
+ * @license GNU GPL v3
+ */
+/**
+ * Klasa odpowiedzialna za instalacje systemu
+ */
 class Core_Install {
 
     public $Isf;
     public $type;
-
+    /**
+     *
+     * @param string $type Rodzaj polaczenia
+     * @return Isf2
+     */
     public function Connect($type) {
 	$this->type = $type;
 	switch ($type) {
@@ -23,7 +34,13 @@ class Core_Install {
 		break;
 	}
     }
-
+    /**
+     * Inicjalizacja bazy danych
+     *
+     * @param string $szkola Nazwa szkoly
+     * @param string $ver Wersja systemu
+     * @return mixed 
+     */
     public function DbInit($szkola, $ver) {
 
 	try {

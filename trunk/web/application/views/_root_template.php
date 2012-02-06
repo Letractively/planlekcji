@@ -1,9 +1,9 @@
 <?php
 /*
- * Strona glowna Planu Lekcji
+ * Szablon systemu Internetowy Planu Lekcji
  * 
  * @author Michal Bocian <mhl.bocian@gmail.com>
- * 
+ * @package views
  */
 /**
  * Instrukcje dotyczace zmiennych w szablone, gdy

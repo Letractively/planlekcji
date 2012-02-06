@@ -1,9 +1,29 @@
 <?php
 
+/**
+ * Plik jadra IPL
+ * 
+ * @author Michal Bocian <mhl.bocian@gmail.com>
+ * @license GNU GPL v3
+ * @package ipl\core
+ */
+
+/**
+ * Podstawowe API IPL
+ * 
+ * @package ipl\core
+ */
 class Core_Tools {
 
     protected $dbhandle;
 
+    /**
+     * Wyswietla strone z bledami
+     *
+     * @param string $message Tresc bledu
+     * @param string $code Kod bledu
+     * @param bool $self_doc Wyswietlic osobna strone
+     */
     public static function ShowError($message, $code='---', $self_doc=false) {
 
 	$errorPage = file_get_contents(APPPATH . 'error_page.html');
@@ -31,6 +51,9 @@ class Core_Tools {
 	exit;
     }
 
+    /**
+     * Sprawdza czy system jest zainicjowany
+     */
     public static function CheckInstalled() {
 	$paths_err = '<p><ul>';
 	$paths = array('../resources',
@@ -85,6 +108,9 @@ class Core_Tools {
 	}
     }
 
+    /**
+     * Parsuje plik konfiguracyjny
+     */
     public static function parseCfgFile() {
 	$cfg = parse_ini_file(APP_ROOT . DS . 'resources' . DS . 'config.ini', true);
 	foreach ($cfg as $group => $values) {
@@ -94,6 +120,11 @@ class Core_Tools {
 	}
     }
 
+    /**
+     * Wykrywa przegladarke mobilna
+     *
+     * @return boolean 
+     */
     public static function is_mobile() {
 
 	$user_agent = $_SERVER['HTTP_USER_AGENT'];
@@ -264,16 +295,32 @@ class Core_Tools {
 	return $is_mobile;
     }
 
+    /**
+     * Konstruktor klasy
+     */
     public function Core_Tools() {
 	$this->dbhandle = Kohana_Isf::factory();
 	$this->dbhandle->Connect(APP_DBSYS);
     }
 
+    /**
+     * Pobiera klasy
+     *
+     * @return array
+     */
     public function getClasses() {
 	$result = $this->dbhandle->DbSelect('klasy', array('*'), 'order by klasa asc');
 	return $result;
     }
 
+    /**
+     * Pobiera pojedyncza lekcje
+     *
+     * @param string $class Klasa
+     * @param string $day Dzien tyogdnia
+     * @param string $lesson Lekcja
+     * @return mixed 
+     */
     public function getSingleLesson($class, $day, $lesson) {
 	$condition = 'where klasa=\'' . $class . '\' and dzien=\'' . $day . '\' and lekcja=\'' . $lesson . '\'';
 	$cols = array(
@@ -300,6 +347,14 @@ class Core_Tools {
 	return $return;
     }
 
+    /**
+     * Pobiera lekcje grupowa
+     *
+     * @param string $class Klasa
+     * @param string $day Dzien tygodnia
+     * @param string $lesson Lekcja
+     * @return mixed 
+     */
     public function getGroupLesson($class, $day, $lesson) {
 	$condition = 'where klasa=\'' . $class . '\' and dzien=\'' . $day . '\' and lekcja=\'' . $lesson . '\' order by grupa asc';
 	$cols = array(
@@ -331,17 +386,31 @@ class Core_Tools {
 
 }
 
+/**
+ * Klasa modulu planu zajec
+ *
+ * @package ipl\core
+ */
 class MPZ {
 
     protected $CT;
     protected $DB;
 
+    /**
+     * Konstruktor klasy
+     */
     public function __construct() {
 	$this->CT = new Core_Tools();
 	$this->DB = Kohana_Isf::factory();
 	$this->DB->Connect(APP_DBSYS);
     }
 
+    /**
+     * Zwraca przedzial godzinowy lekcji
+     *
+     * @param int $lesson Lekcja
+     * @return string 
+     */
     public function getLessonHour($lesson) {
 	$res = $this->DB->DbSelect('lek_godziny', array('godzina'), 'where lekcja=\'' . $lesson . '\'');
 	if (count($res) == 0) {
@@ -353,6 +422,14 @@ class MPZ {
 	return $return;
     }
 
+    /**
+     * Pobiera lekcje dla klasy
+     *
+     * @param string $class Klasa
+     * @param string $day Dzien tygodnia
+     * @param string $lesson Lekcja
+     * @return mixed 
+     */
     public function getLesson($class, $day, $lesson) {
 	$single = $this->CT->getSingleLesson($class, $day, $lesson);
 	if ($single == 'fetched:none') {
@@ -364,8 +441,18 @@ class MPZ {
 
 }
 
+/**
+ * Podstawowe metody zwiazane z IPL
+ * 
+ * @package ipl\core
+ */
 class App_Globals {
 
+    /**
+     * Pobiera motywy systemu
+     *
+     * @return array
+     */
     public static function getThemes() {
 	$handle = opendir(DOCROOT . 'lib' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'themes');
 	$themes = array();
@@ -378,13 +465,29 @@ class App_Globals {
 	return $themes;
     }
 
+    /**
+     * Pobiera stan systemu
+     * 
+     * <ul>
+     * <li>0 - edycja planow zajec</li>
+     * <li>1 - edycja sal, przedmiotow</li>
+     * <li>3 - zapisane plany zajec, zastepstwa</li>
+     * </ul>
+     *
+     * @return string 
+     */
     public static function getSysLv() {
 	$isf = new Kohana_Isf();
 	$isf->Connect(APP_DBSYS);
 	$a = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
 	return $a[0]['wartosc'];
     }
-
+    /**
+     * Pobiera wartosc klucza rejestru
+     *
+     * @param string $key Klucz rejestru
+     * @return string 
+     */
     public static function getRegistryKey($key) {
 	$a = Isf2::Connect()->Select('rejestr')
 			->Where(array('opcja' => $key))
@@ -395,7 +498,12 @@ class App_Globals {
 	    return $a[0]['wartosc'];
 	}
     }
-
+    /**
+     * Pobiera symbol n-l na podstawie imienia i nazwiska
+     *
+     * @param string $teacher Imie i nazwisko nauczyciela
+     * @return string 
+     */
     public static function getTeacherSym($teacher) {
 	$isf = new Kohana_Isf();
 	$isf->Connect(APP_DBSYS);
@@ -407,7 +515,12 @@ class App_Globals {
 	}
 	return $return;
     }
-
+    /**
+     * Pobiera imie i nazwisko n-l na podstawie symbolu
+     *
+     * @param string $sym Symbol n-l
+     * @return string 
+     */
     public static function getTeacherName($sym) {
 	$isf = new Kohana_Isf();
 	$isf->Connect(APP_DBSYS);
@@ -419,7 +532,9 @@ class App_Globals {
 	}
 	return $return;
     }
-
+    /**
+     * Zapisuje plany zajec do postaci XML
+     */
     public static function writeXmlTimetables() {
 	$CTools = new Core_Tools();
 

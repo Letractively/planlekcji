@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * Bootloader bibliotek IPL
+ * @author Michal Bocian <mhl.bocian@gmail.com>
+ * @license GNU GPL v3
+ * @package core
+ */
 require_once 'lib/nusoap/nusoap.php';
 require_once DOCROOT . 'modules' . DS . 'isf' . DS . 'classes' . DS . 'kohana' . DS . 'isf.php';
 require_once DOCROOT . 'modules' . DS . 'isf' . DS . 'classes' . DS . 'isf2.php';

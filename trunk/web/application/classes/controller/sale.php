@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Intersys - Plan Lekcji
+ * Internetowy Plan Lekcji
  * 
  * @author Michal Bocian <mhl.bocian@gmail.com>
  * @license GNU GPL v3
- * @package logic
+ * @package ipl\logic
  */
 defined('SYSPATH') or die('No direct script access.');
 
@@ -65,7 +65,7 @@ class Controller_Sale extends Controller {
      * @param string $err kod bledu
      */
     public function action_index($err=null) {
-	$view = View::factory('main');
+	$view = View::factory('_root_template');
 
 	$dbres = Isf2::Connect()->Select('sale')
 			->OrderBy(array('sala' => 'asc'))
@@ -80,7 +80,10 @@ class Controller_Sale extends Controller {
 	$view->set('content', $view2->render());
 	echo $view->render();
     }
-
+    /**
+     * Operacje na dodawaniu/usuwaniu sal
+     * 
+     */
     public function action_commit() {
 	if (!isset($_POST)) {
 	    Kohana_Request::factory()->redirect('');
@@ -135,7 +138,9 @@ class Controller_Sale extends Controller {
 	    $this->action_przedmiot($_POST['rdClassroom']);
 	}
     }
-
+    /**
+     * Wypisuje przedmiot z sali
+     */
     public function action_wypisz() {
 	if (isset($_POST)) {
 	    if (isset($_POST['rdPrzedmiot']))
@@ -182,7 +187,7 @@ class Controller_Sale extends Controller {
 	$isf = new Kohana_Isf();
 	$isf->Connect(APP_DBSYS);
 
-	$view = view::factory('main');
+	$view = View::factory('_root_template');
 	$view2 = view::factory('sale_przedmiot');
 	$view2->set('sala', $sala);
 

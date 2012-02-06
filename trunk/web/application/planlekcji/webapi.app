@@ -1,6 +1,12 @@
 <?php
 
 /**
+ * Definiuje API systemu IPL
+ * 
+ * @package ipl\api
+ */
+
+/**
  * Dodaje nowa wiadomosc do loga systemowego
  *
  * @param string $modul
@@ -301,7 +307,12 @@ function doChangePass($token, $old, $new) {
 	return 'auth:chpasswd';
     }
 }
-
+/**
+ * Pobiera klasy w systemie
+ *
+ * @param token $token Token sesji
+ * @return mixed 
+ */
 function doShowClasses($token) {
     if (!checkauth($token)) {
 	return 'auth:failed';
@@ -311,7 +322,13 @@ function doShowClasses($token) {
 			->Execute()->fetchAll();
     }
 }
-
+/**
+ * Czysci system
+ *
+ * @param string $token Token sesji
+ * @param string $param Tryb
+ * @return string 
+ */
 function doSysClean($token, $param) {
     if (!checkauth($token)) {
 	return 'auth:failed';
