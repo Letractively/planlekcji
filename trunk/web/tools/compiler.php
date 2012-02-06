@@ -2,10 +2,10 @@
 
 $pathx = realpath(__DIR__ . '/../');
 define('DS', DIRECTORY_SEPARATOR);
-define('APPROOTPATH', realpath('../..'));
+define('APP_ROOT', realpath('../..'));
 
 require_once $pathx . DS . 'config.php';
-echo APPROOTPATH;
+echo APP_ROOT;
 require_once $pathx . DS . 'modules' . DS . 'isf' . DS . 'classes' . DS . 'kohana' . DS . 'isf.php';
 
 $start_time = microtime();

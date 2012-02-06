@@ -136,7 +136,7 @@ class Kohana_Isf {
 	if ($name == null) {
 	    $name = 'default';
 	}
-	$this->isf_path = APPROOTPATH . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR;
+	$this->isf_path = APP_ROOT . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR;
 
 	if (!class_exists('PDO') || !extension_loaded('pdo_sqlite')) {
 	    $_err = '<b>PDO_SQLite</b> nie jest wlaczany.';

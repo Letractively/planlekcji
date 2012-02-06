@@ -69,7 +69,12 @@ class Isf2 {
      */
     protected function PgSQL_Connect($customvars=null) {
 
-	$my_cfg = $GLOBALS['my_cfg'];
+	$my_cfg = array(
+	    'host' => app_dbconfig_host,
+	    'database' => app_dbconfig_dbname,
+	    'user' => app_dbconfig_user,
+	    'password' => app_dbconfig_password,
+	);
 
 	if (!class_exists('PDO') || !extension_loaded('pdo_pgsql')) {
 	    $_err = 'ISF2: PDO PostgreSQL is not enabled';
@@ -110,21 +115,21 @@ class Isf2 {
 	if ($name == null) {
 	    $name = 'default';
 	}
-	$this->isf_path = APPROOTPATH . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR;
+	$this->isf_path = APP_ROOT . DS . 'resources' . DS . $name . '.sqlite';
 
 	if (!class_exists('PDO') || !extension_loaded('pdo_sqlite')) {
 	    throw new Exception('ISF2: PDO SQLite is not enabled', 181);
 	}
 
 	try {
-	    $this->dbhandle = new PDO('sqlite:' . $this->isf_path . $name . '.sqlite');
+	    $this->dbhandle = new PDO('sqlite:' . $this->isf_path);
 	    $this->dbhandle->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	} catch (Exception $e) {
 	    throw new Exception('ISF2: ' . $e->getMessage(), 182);
 	}
 
-	if (!file_exists($this->isf_path . $name . '.sqlite'))
-	    throw new Exception('ISF2: ' . $this->isf_path . $name . '.sqlite does not exsit', 182);
+	if (!file_exists($this->isf_path))
+	    throw new Exception('ISF2: ' . $this->isf_path . ' does not exsit', 182);
     }
 
     /**
@@ -157,9 +162,9 @@ class Isf2 {
      * @param mixed $param Parametr polaczenia dla danego typu bazy danych
      * @return Isf2 Zwraca obiekt klasy ISF2
      */
-    public static function Connect($system=APP_DBSYS, $param=null, $drop_file=false) {
+    public static function Connect($system=global_app_dbsys, $param=null, $drop_file=false) {
 	if ($drop_file == true) {
-	    fopen(APPROOTPATH . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'default.sqlite', 'w');
+	    fopen(APP_ROOT . DS . 'resources' . DS . 'default.sqlite', 'w');
 	}
 	return new Isf2($system, $param);
     }

@@ -7,20 +7,21 @@
  * @license GNU GPL v3
  * @package main\webapi
  */
-if (!file_exists('config.php')) {
+if (!file_exists('../resources/config.ini')) {
     echo file_get_contents('application/planlekcji/initerr.html');
     exit;
 }
 
 define('DS', DIRECTORY_SEPARATOR);
-define('APPROOTPATH', realpath('..'));
+define('APP_ROOT', realpath('..'));
 define('DOCROOT', realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
 
-require_once 'config.php';
 require_once 'lib/nusoap/nusoap.php';
 require_once 'modules/isf/classes/isf2.php';
 require_once 'application/planlekcji/webapi.app';
 require_once 'application/planlekcji/system.app';
+
+Core_Tools::parseCfgFile();
 
 $ver = explode(' ', App_Globals::getRegistryKey('app_ver'));
 $ver = explode('.', $ver[0]);

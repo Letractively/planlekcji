@@ -84,7 +84,7 @@ $grz = App_Globals::getRegistryKey('godz_rozp_zaj');
     			    </td>
     			    <td>
 				    <?php
-				    if (count($godz) == 0):
+				    if (!isset($godz[0]['godzina'])):
 					echo '';
 				    else:
 					echo $godz[0]['godzina'];

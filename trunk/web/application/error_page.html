@@ -1,5 +1,5 @@
 <style>
-    @import url('<?php echo URL::base() . 'lib/css/style.css'; ?>');
+    @import url({{HTTP_PATH}}lib/css/style.css);
 </style>
 <div id="error" class="tableDiv">
     <div class="tableRow">
@@ -8,7 +8,7 @@
 	</div>
     </div>
     <div class="tableRow CTErrorMessage">
-	<p>Kod błędu: <span class="CTErrorText"><?php echo $code; ?></span></p>
-	<p>Treść: <span class="CTErrorText"><?php echo $message; ?></span></p>
+	<p>Kod błędu: <span class="CTErrorText">{{code}}</span></p>
+	<p>Treść: <span class="CTErrorText">{{message}}</span></p>
     </div>
 </div>
