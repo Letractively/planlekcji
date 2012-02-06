@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Intersys - Plan Lekcji
+ * Internetowy Plan Lekcji
  * 
  * @author Michal Bocian <mhl.bocian@gmail.com>
  * @license GNU GPL v3
- * @package logic
+ * @package ipl\logic
  */
 defined('SYSPATH') or die('No direct script access.');
 
@@ -69,7 +69,7 @@ class Controller_Przedmioty extends Controller {
         $isf = new Kohana_Isf();
         $isf->Connect(APP_DBSYS);
 
-        $view = view::factory('main');
+        $view = View::factory('_root_template');
         $view2 = view::factory('przedmioty_index');
 
         $view2->set('_err', $err);
@@ -92,7 +92,7 @@ class Controller_Przedmioty extends Controller {
 
         if ($usun == null) {
             $isf->JQUi();
-            $view = View::factory('main');
+            $view = View::factory('_root_template');
             $view->set('script', $isf->JQUi_MakeScript());
             $view2 = view::factory('przedmioty_usun');
             $view2->set('przedmiot', $przedmiot);
@@ -157,7 +157,7 @@ class Controller_Przedmioty extends Controller {
         $isf = new Kohana_Isf();
         $isf->Connect(APP_DBSYS);
         $isf->JQUi();
-        $view = view::factory('main');
+        $view = View::factory('_root_template');
         $view2 = view::factory('przedmioty_sale');
 
         $res = $isf->DbSelect('przedmiot_sale', array('sala'), 'where przedmiot=\'' . $przedmiot . '\' order by cast(sala as numeric) asc');
@@ -203,7 +203,7 @@ class Controller_Przedmioty extends Controller {
      * @param string $przedmiot przedmiot
      */
     public function action_zarzadzanie($przedmiot) {
-        $view = view::factory('main');
+        $view = View::factory('_root_template');
         $view2 = view::factory('przedmioty_zarzadzanie');
 
         $view2->set('przedmiot', $przedmiot);

@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Intersys - Plan Lekcji
+ * Internetowy Plan Lekcji
  * 
  * @author Michal Bocian <mhl.bocian@gmail.com>
  * @license GNU GPL v3
- * @package logic
+ * @package ipl\logic
  */
 defined('SYSPATH') or die('No direct script access.');
 
@@ -223,7 +223,7 @@ class Controller_Plan extends Controller {
 	if ($err == '') {
 	    Kohana_Request::factory()->redirect();
 	} else {
-	    $view = view::factory('main');
+	    $view = View::factory('_root_template');
 	    $view2 = view::factory('plan_error');
 	    $view2->set('content', $err);
 	    $view->set('content', $view2->render());
@@ -235,7 +235,7 @@ class Controller_Plan extends Controller {
      * Wyswietla strone eksportu
      */
     public function action_export() {
-	$view = view::factory('main');
+	$view = View::factory('_root_template');
 	$view2 = view::factory('plan_export');
 
 	$view->set('content', $view2->render());

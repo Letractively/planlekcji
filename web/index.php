@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Plik główny projektu - bootloader Kohany
+ * Plik główny projektu - bootloader IPL
  * 
  * @author Michał Bocian <mhl.bocian@gmail.com>
  * @license GNU GPL v3
- * @package main\index
+ * @package core
  */
 date_default_timezone_set('UTC');
 define('APP_ROOT', realpath('..'));
@@ -26,17 +26,20 @@ define('APPPATH', realpath($application) . DIRECTORY_SEPARATOR);
 define('MODPATH', realpath($modules) . DIRECTORY_SEPARATOR);
 define('SYSPATH', realpath($system) . DIRECTORY_SEPARATOR);
 unset($application, $modules, $system);
-
 if (!defined('KOHANA_START_TIME')) {
     define('KOHANA_START_TIME', microtime(TRUE));
 }
-
 if (!defined('KOHANA_START_MEMORY')) {
     define('KOHANA_START_MEMORY', memory_get_usage());
 }
-
+/**
+ * Zaladowanie glownych bibliotek ISF, NuSOAP
+ */
 require '_boot.php';
-
+/**
+ * Sprawdza poprawnosc instalacji
+ * 
+ */
 try {
     Core_Tools::CheckInstalled();
 } catch (Exception $e) {

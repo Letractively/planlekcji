@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Intersys - Plan Lekcji
+ * Internetowy Plan Lekcji
  * 
  * @author Michal Bocian <mhl.bocian@gmail.com>
  * @license GNU GPL v3
- * @package logic
+ * @package ipl\logic
  */
 defined('SYSPATH') or die('No direct script access.');
 
@@ -50,7 +50,7 @@ class Controller_Default extends Controller {
 	if ($param == 'nomobile') {
 	    setcookie('_nomobile', true, time() + 3600 * 24, '/');
 	}
-	$view = View::factory('main');
+	$view = View::factory('_root_template');
 
 	$view->set('content', App_Globals::getRegistryKey('index_text'));
 	echo $view->render();
@@ -72,15 +72,18 @@ class Controller_Default extends Controller {
      * Informacje o systemie
      */
     public function action_about() {
-	$view = View::factory('main');
+	$view = View::factory('_root_template');
 	$view2 = View::factory('default_about');
 
 	$view->set('content', $view2->render());
 	echo $view->render();
     }
-
+    
+    /**
+     * Ukryta strona dla eksperymentow
+     */
     public function action_experimental() {
-	$view = View::factory('test_plan');
+	$view = View::factory('_experimental');
 	echo $view->render();
     }
 

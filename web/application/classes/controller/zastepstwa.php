@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Intersys - Plan Lekcji
+ * Internetowy Plan Lekcji
  * 
  * @author Michal Bocian <mhl.bocian@gmail.com>
  * @license GNU GPL v3
- * @package logic
+ * @package ipl\logic
  */
 defined('SYSPATH') or die('No direct script access.');
 
@@ -27,7 +27,7 @@ class Controller_Zastepstwa extends Controller {
      * Wyswietlenie strony glownej zastepstw
      */
     public function action_index() {
-	$view = view::factory('main');
+	$view = View::factory('_root_template');
 	$view2 = view::factory('zastepstwa_index');
 
 	$view->set('content', $view2->render());
@@ -81,7 +81,7 @@ class Controller_Zastepstwa extends Controller {
 	$isf->JQUi();
 	$isf->JQUi_CustomFunction('$(\'#inpDate\').datepicker({beforeShowDay: $.datepicker.noWeekends, \'dateFormat\': \'yy-mm-dd\'});');
 
-	$view = view::factory('main');
+	$view = View::factory('_root_template');
 	$view2 = view::factory('zastepstwa_edycja');
 	$view2->set('blad', $blad);
 
@@ -127,7 +127,7 @@ class Controller_Zastepstwa extends Controller {
 	    exit;
 	}
 
-	$view = view::factory('main');
+	$view = View::factory('_root_template');
 	$view2 = view::factory('zastepstwa_wypeln');
 
 	if (!isset($_POST['inpComment'])) {
@@ -149,7 +149,7 @@ class Controller_Zastepstwa extends Controller {
      * @param integer $id numer zastepstwa
      */
     public function action_przeglad($id) {
-	$view = view::factory('main');
+	$view = View::factory('_root_template');
 	$view2 = view::factory('zastepstwa_przeglad');
 
 	$isf = new Kohana_Isf();

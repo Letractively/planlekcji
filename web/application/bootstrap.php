@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Bootloader Kohany
+ * @package core
+ * @license GNU GPL v3
+ */
 defined('SYSPATH') or die('No direct script access.');
 @session_start();
 if (!isset($_SESSION['app_theme'])) {

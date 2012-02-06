@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Intersys - Plan Lekcji
+ * Internetowy Plan Lekcji
  * 
  * @author Michal Bocian <mhl.bocian@gmail.com>
  * @license GNU GPL v3
- * @package logic
+ * @package ipl\logic
  */
 defined('SYSPATH') or die('No direct script access.');
 
@@ -118,7 +118,7 @@ class Controller_Admin extends Controller {
 	    exit;
 	}
 
-	$view = view::factory('main');
+	$view = View::factory('_root_template');
 	$view2 = view::factory('admin_login');
 
 	if (isset($pass)) {
@@ -170,7 +170,7 @@ class Controller_Admin extends Controller {
 
 	$this->check_login();
 
-	$view = view::factory('main');
+	$view = View::factory('_root_template');
 	$view2 = view::factory('admin_doEditTimetables');
 
 	$isf = new Kohana_Isf();
@@ -203,7 +203,7 @@ class Controller_Admin extends Controller {
 
 	$this->check_login(false);
 
-	$view = view::factory('main');
+	$view = View::factory('_root_template');
 	$view2 = view::factory('admin_doSaveTimetables');
 
 	$view->set('content', $view2->render());
@@ -285,7 +285,7 @@ class Controller_Admin extends Controller {
 
 	$isf->JQUi();
 
-	$view = view::factory('main');
+	$view = View::factory('_root_template');
 	$view2 = view::factory('admin_doCleanupSystem');
 
 	$view->set('script', $isf->JQUi_MakeScript());
@@ -344,7 +344,7 @@ class Controller_Admin extends Controller {
 </script>
 START;
 
-	$view = view::factory('main');
+	$view = View::factory('_root_template');
 	$view2 = view::factory('admin_doEditSettings');
 
 	$view->set('script', $script);
@@ -382,7 +382,7 @@ START;
 
 	$this->check_login(false);
 
-	$view = view::factory('main');
+	$view = View::factory('_root_template');
 	$view2 = view::factory('admin_doChangePassword');
 
 	if ($err != false) {
@@ -442,7 +442,7 @@ START;
     public function action_users() {
 	$this->check_login();
 	$isf = new Kohana_Isf();
-	$view = new View('main');
+	$view = View::factory('_root_template');
 	$view2 = new View('admin_users');
 	$isf->JQUi();
 	$isf->JQUi_ButtonCreate('btnCUser');
@@ -459,7 +459,7 @@ START;
      */
     public function action_logs($page=1) {
 	$this->check_login();
-	$view = new View('main');
+	$view = View::factory('_root_template');
 	$view2 = new View('admin_logs');
 	$view2->set('page', $page);
 	$view->set('content', $view2->render());
@@ -516,7 +516,7 @@ START;
      */
     public function action_adduser($err=null) {
 	$this->check_login();
-	$view = new View('main');
+	$view = View::factory('_root_template');
 	$view2 = new View('admin_adduser');
 	$view2->set('err', $err);
 	$view->set('content', $view2->render());
@@ -572,7 +572,7 @@ START;
      * Wyswietla strone kopii zapasowej
      */
     public function action_backup() {
-	$view = new View('main');
+	$view = View::factory('_root_template');
 	$view2 = new View('admin_backup');
 	$view->set('content', $view2->render());
 	echo $view->render();

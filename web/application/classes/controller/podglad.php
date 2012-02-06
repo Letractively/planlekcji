@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Intersys - Plan Lekcji
+ * Internetowy Plan Lekcji
  * 
  * @author Michal Bocian <mhl.bocian@gmail.com>
  * @license GNU GPL v3
- * @package logic
+ * @package ipl\logic
  */
 defined('SYSPATH') or die('No direct script access.');
 
@@ -42,7 +42,7 @@ class Controller_Podglad extends Controller {
      * @param string $klasa 
      */
     public function action_klasa($klasa) {
-	$vm = view::factory('main');
+	$vm = View::factory('_root_template');
 	$view = view::factory('podglad_klasa');
 	$view->set('klasa', $klasa);
 
@@ -57,7 +57,7 @@ class Controller_Podglad extends Controller {
      */
     public function action_sala($sala) {
 
-	$main = View::factory('main');
+	$main = View::factory('_root_template');
 
 	$view = view::factory('podglad_sala');
 	$view->set('klasa', $sala);
@@ -74,7 +74,7 @@ class Controller_Podglad extends Controller {
      */
     public function action_nauczyciel($nauczyciel) {
 
-	$main = View::factory('main');
+	$main = View::factory('_root_template');
 
 	$view = view::factory('podglad_nauczyciel');
 
@@ -369,7 +369,7 @@ START;
 	$zip->addFromString('planlekcji/nauczyciel/zestawienie.html', $zestawienie);
 	$zip->close();
 
-	$view = View::factory('main');
+	$view = View::factory('_root_template');
 	$outtext = '<h1>Plany zostały wyeksportowane pomyślnie</h1>
 	    <p>Możesz pobrać archiwum z folderu <b>' . realpath(APP_ROOT . DS . 'resources') . '</b>.</p>';
 	$view->set('content', $outtext);

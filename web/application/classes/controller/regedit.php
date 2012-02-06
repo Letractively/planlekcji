@@ -1,10 +1,10 @@
 <?php
 /**
- * Intersys - Plan Lekcji
+ * Internetowy Plan Lekcji
  * 
  * @author Michal Bocian <mhl.bocian@gmail.com>
  * @license GNU GPL v3
- * @package logic
+ * @package ipl\logic
  */
 defined('SYSPATH') or die('No direct script access.');
 
@@ -43,7 +43,7 @@ class Controller_Regedit extends Controller {
                 exit;
             }
             if ($auth == 'auth:failed' || $_SESSION['user'] != 'root') {
-                Kohana_Request::factory()->redirect('admin/login');
+                Kohana_Request::factory()->redirect('');
                 exit;
             }
         }
@@ -52,7 +52,7 @@ class Controller_Regedit extends Controller {
      * Strona glowna rejestru
      */
     public function action_index() {
-        $view = view::factory('main');
+        $view = View::factory('_root_template');
         $view2 = view::factory('regedit_index');
 
         $view->set('content', $view2->render());

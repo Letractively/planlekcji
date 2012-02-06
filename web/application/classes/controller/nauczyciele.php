@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Intersys - Plan Lekcji
+ * Internetowy Plan Lekcji
  * 
  * @author Michal Bocian <mhl.bocian@gmail.com>
  * @license GNU GPL v3
- * @package logic
+ * @package ipl\logic
  */
 defined('SYSPATH') or die('No direct script access.');
 
@@ -67,7 +67,7 @@ class Controller_Nauczyciele extends Controller {
      * @param string $err kod bledu w szablonie
      */
     public function action_index($err=null) {
-        $view = View::factory('main');
+        $view = View::factory('_root_template');
         $view2 = View::factory('nauczyciele_index');
 
         $view2->set('_err', $err);
@@ -130,7 +130,7 @@ class Controller_Nauczyciele extends Controller {
         $nauczyciel = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\'' . $skrot . '\'');
         $nauczyciel = $nauczyciel[0]['imie_naz'];
 
-        $view = View::factory('main');
+        $view = View::factory('_root_template');
         $view2 = View::factory('nauczyciele_zarzadzanie');
         $view2->set('nauczyciel', $nauczyciel);
         $view2->set('nskr', $skrot);
@@ -164,7 +164,7 @@ class Controller_Nauczyciele extends Controller {
      */
     public function action_usun($nauczyciel, $confirm=false) {
         if ($confirm == false) {
-            $view = view::factory('main');
+            $view = View::factory('_root_template');
             $view2 = view::factory('nauczyciele_usun');
             $view2->set('nauczyciel', $nauczyciel);
 

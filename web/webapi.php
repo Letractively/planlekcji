@@ -5,7 +5,7 @@
  * 
  * @author Michal Bocian <mhl.bocian@gmail.com>
  * @license GNU GPL v3
- * @package main\webapi
+ * @package ipl\api
  */
 if (!file_exists('../resources/config.ini')) {
     echo file_get_contents('application/planlekcji/initerr.html');

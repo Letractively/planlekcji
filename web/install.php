@@ -3,16 +3,12 @@
  * Instalator Planu Lekcji
  * 
  * @author Michał Bocian <mhl.bocian@gmail.com>
- * @version 1.5
  * @license GNU GPL v3
- * @package main\install
+ * @package core
  */
-/**
- * Wersja instalatora
- */
-define('_I_SYSVER', 'trunk dev');
-define('MOBILE_LIB_PATH', '/lib/jquery/mobile/');
-define('C', '"');
+define('_I_SYSVER', 'trunk dev'); // wersja instalatora
+define('MOBILE_LIB_PATH', '/lib/jquery/mobile/'); // sciezka do JQuery Mobile
+define('C', '"'); // znak "
 ?>
 <!DOCTYPE html>
 <html>
@@ -117,7 +113,9 @@ define('C', '"');
 			    'password' => $_POST['dbHaslo'],
 			    'database' => $_POST['dbBaza'],
 			);
-
+			/**
+			 * Tworzy plik konifugracyjny dla PostgreSQL
+			 */
 			$a = fopen(APP_ROOT . DS . 'resources' . DS . 'config.ini', 'w');
 
 			$file = '[global]' . PHP_EOL;
@@ -142,7 +140,9 @@ define('C', '"');
 			    header('Location: install.php?err');
 			    exit;
 			}
-
+			/**
+			 * Tworzy plik konfiguracyjny dla SQLite
+			 */
 			$a = fopen(APP_ROOT . DS . 'resources' . DS . 'config.ini', 'w');
 
 			$file = '[global]' . PHP_EOL;

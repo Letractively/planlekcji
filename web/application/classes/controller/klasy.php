@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Intersys - Plan Lekcji
+ * Internetowy Plan Lekcji
  * 
  * @author Michal Bocian <mhl.bocian@gmail.com>
  * @license GNU GPL v3
- * @package logic
+ * @package ipl\logic
  */
 defined('SYSPATH') or die('No direct script access.');
 
@@ -65,7 +65,7 @@ class Controller_Klasy extends Controller {
      * Strona glowna
      */
     public function action_index($err=null) {
-        $view = View::factory('main');
+        $view = View::factory('_root_template');
         $view2 = View::factory('klasy_index');
 
         $view2->set('_err', $err);
