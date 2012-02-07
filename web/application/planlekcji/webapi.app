@@ -7,30 +7,6 @@
  */
 
 /**
- * Dodaje nowa wiadomosc do loga systemowego
- *
- * @param string $modul
- * @param string $wiadomosc 
- */
-function insert_log($modul, $wiadomosc) {
-    if (!file_exists(realpath('..') . DS . 'resources' . DS . 'ipl-' . date('Ymd') . '.log')) {
-	$content = '';
-    } else {
-	$content = file_get_contents(realpath('..') . DS . 'resources' . DS . 'ipl-' . date('Ymd') . '.log');
-    }
-
-    $file_handler = fopen(realpath('..') . DS . 'resources' . DS . 'ipl-' . date('Ymd') . '.log', 'w');
-
-    $timestamp = date('H:i:s');
-    $message = '[' . $timestamp . '] ' . $modul . ': ' . $wiadomosc . PHP_EOL;
-
-    $content .= $message;
-
-    fwrite($file_handler, $content);
-    fclose($file_handler);
-}
-
-/**
  * Zwraca token sesyjny
  *
  * @param string $uid login uzytkownika
@@ -81,6 +57,13 @@ function doLogin($username, $password, $token) {
 			'login' => $username,
 			'token' => $token,
 		    ))->Execute()->fetchAll();
+
+    $dbn->Update('uzytkownicy', array(
+		'webapi_token' => '',
+		'webapi_timestamp' => '',
+	    ))
+	    ->Where(array('login' => $_POST['inpLogin']))
+	    ->Execute();
 
     if (count($uid) != 1) {
 	return 'auth:failed';
@@ -307,6 +290,7 @@ function doChangePass($token, $old, $new) {
 	return 'auth:chpasswd';
     }
 }
+
 /**
  * Pobiera klasy w systemie
  *
@@ -322,6 +306,7 @@ function doShowClasses($token) {
 			->Execute()->fetchAll();
     }
 }
+
 /**
  * Czysci system
  *

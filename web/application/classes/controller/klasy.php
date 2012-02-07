@@ -27,51 +27,48 @@ class Controller_Klasy extends Controller {
      * Tworzy obiekt sesji i sprawdza czy zalogowany
      */
     public function __construct() {
-        try {
-            $this->wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
-        } catch (Exception $e) {
-            echo $e->getMessage();
-            exit;
-        }
-        if (!isset($_SESSION['token'])) {
-            Kohana_Request::factory()->redirect('admin/login');
-            exit;
-        } else {
-            $auth = $this->wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
-            if (strtotime($_SESSION['token_time']) < time()) {
-                $this->wsdl->call('doLogout', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
-                session_destroy();
-                Kohana_Request::factory()->redirect('admin/login/delay');
-                exit;
-            }
-            if ($auth == 'auth:failed') {
-                Kohana_Request::factory()->redirect('admin/login');
-                exit;
-            }
-        }
-        $isf = new Kohana_Isf();
-        $isf->Connect(APP_DBSYS);
-        $reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
-        /**
-         * Czy mozna edytowac dane
-         */
-        if ($reg[0]['wartosc'] != 1) {
-            echo '<h1>Edycja danych zostala zamknieta</h1>';
-            exit;
-        }
+	try {
+	    $this->wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
+	} catch (Exception $e) {
+	    echo $e->getMessage();
+	    exit;
+	}
+	if (!isset($_SESSION['token'])) {
+	    Kohana_Request::factory()->redirect('admin/login');
+	    exit;
+	} else {
+	    $auth = $this->wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
+	    if (strtotime($_SESSION['token_time']) < time()) {
+		$this->wsdl->call('doLogout', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
+		session_destroy();
+		Kohana_Request::factory()->redirect('admin/login/delay');
+		exit;
+	    }
+	    if ($auth == 'auth:failed') {
+		Kohana_Request::factory()->redirect('admin/login');
+		exit;
+	    }
+	}
+
+	/**
+	 * Czy mozna edytowac dane
+	 */
+	if (App_Globals::getRegistryKey('edycja_danych') != 1 || $_SESSION['user'] != 'root') {
+	    Kohana_Request::factory()->redirect('');
+	    exit;
+	}
     }
 
     /**
      * Strona glowna
      */
     public function action_index($err=null) {
-        $view = View::factory('_root_template');
-        $view2 = View::factory('klasy_index');
+	$view = View::factory('_root_template');
+	$view2 = View::factory('klasy_index');
 
-        $view2->set('_err', $err);
-        $view->set('bodystr', 'onLoad=\'document.forms.form1.inpKlasa.focus()\'');
-        $view->set('content', $view2->render());
-        echo $view->render();
+	$view2->set('_err', $err);
+	$view->set('content', $view2->render());
+	echo $view->render();
     }
 
     /**
@@ -80,11 +77,10 @@ class Controller_Klasy extends Controller {
      * @param string $klasa klasa
      */
     public function action_usun($klasa) {
-        $isf = new Kohana_Isf();
-        $isf->Connect(APP_DBSYS);
-        $isf->DbDelete('klasy', 'klasa=\'' . $klasa . '\'');
-        $isf->DbDelete('nl_klasy', 'klasa=\'' . $klasa . '\'');
-        Kohana_Request::factory()->redirect('klasy/index/usun');
+	$isf = Isf2::Connect();
+	$isf->Delete('klasy')->Where(array('klasa' => $klasa))->Execute();
+	$isf->Delete('nl_klasy')->Where(array('klasa' => $klasa))->Execute();
+	Kohana_Request::factory()->redirect('klasy/index/usun');
     }
 
     /**
@@ -92,48 +88,45 @@ class Controller_Klasy extends Controller {
      */
     public function action_dodaj() {
 
-        if (!isset($_POST)) {
+	if (!isset($_POST)) {
+	    Kohana_Request::factory()->redirect('klasy/index');
+	    exit;
+	} else {
+	    $class_exist = Isf2::Connect()->Select('klasy')
+		    ->Where(array('klasa'=>$_POST['inpKlasa']))
+		    ->Execute()->fetchAll();
+	    if (count($class_exist) != 0) {
+		Kohana_Request::factory()->redirect('klasy/index/e1');
+		exit;
+	    }
+	    $m = preg_match('/([.!@#$;%^&*()_+|])/i', $_POST['inpKlasa']);
+	    if ($m == true) {
+		Kohana_Request::factory()->redirect('klasy/index/e2');
+		exit;
+	    }
+	    if ($_POST['inpKlasa'] == '' || $_POST['inpKlasa'] == null || empty($_POST['inpKlasa'])) {
+		Kohana_Request::factory()->redirect('klasy/index/e3');
+		exit;
+	    }
 
-            Kohana_Request::factory()->redirect('klasy/index');
-            exit;
-        } else {
+	    Isf2::Connect()->Insert('klasy', array('klasa' => $_POST['inpKlasa']))
+		    ->Execute();
 
-            $isf = new Kohana_Isf();
-            $isf->Connect(APP_DBSYS);
-
-            if (count($isf->DbSelect('klasy', array('*'), 'where klasa=\'' . $_POST['inpKlasa'] . '\'')) != 0) {
-                Kohana_Request::factory()->redirect('klasy/index/e1');
-                exit;
-            }
-
-            $m = preg_match('/([.!@#$;%^&*()_+|])/i', $_POST['inpKlasa']);
-
-            if ($m == true) {
-                Kohana_Request::factory()->redirect('klasy/index/e2');
-                exit;
-            }
-
-            if ($_POST['inpKlasa'] == '' || $_POST['inpKlasa'] == null || empty($_POST['inpKlasa'])) {
-                Kohana_Request::factory()->redirect('klasy/index/e3');
-                exit;
-            }
-
-            $isf->DbInsert('klasy', array('klasa' => $_POST['inpKlasa']));
-            Kohana_Request::factory()->redirect('klasy/index/pass');
-        }
+	    Kohana_Request::factory()->redirect('klasy/index/pass');
+	}
     }
 
     /**
      * Strona grup klasowych
      */
     public function action_grupyklasowe() {
-        if (isset($_POST)) {
-            $i = $_POST['grp'];
-            $isf = new Kohana_Isf();
-            $isf->Connect(APP_DBSYS);
-            $isf->DbUpdate('rejestr', array('wartosc' => $i), 'opcja=\'ilosc_grup\'');
-        }
-        Kohana_Request::factory()->redirect('klasy/index');
+	if (isset($_POST)) {
+	    $i = $_POST['grp'];
+	    Isf2::Connect()->Update('rejestr', array('wartosc' => $i))
+		    ->Where(array('opcja' => 'ilosc_grup'))
+		    ->Execute();
+	}
+	Kohana_Request::factory()->redirect('klasy/index');
     }
 
 }

@@ -74,9 +74,7 @@ class Controller_Sale extends Controller {
 	$view2 = View::factory('sale_index');
 	$view2->set('res', $dbres);
 	$view2->set('_err', $err);
-
-
-	$view->set('bodystr', 'onLoad=\'document.forms.form1.inpSala.focus()\'');
+	
 	$view->set('content', $view2->render());
 	echo $view->render();
     }
@@ -150,22 +148,7 @@ class Controller_Sale extends Controller {
 	    Kohana_Request::factory()->redirect('');
 	}
     }
-
-    /**
-     * Dodaje do sali przedmiot
-     */
-    public function action_dodaj() {
-	$sala = $_POST['formSala'];
-	$przedmiot = $_POST['selPrzed'];
-	$isf = new Kohana_Isf();
-	$isf->Connect(APP_DBSYS);
-	$isf->DbInsert('przedmiot_sale', array(
-	    'przedmiot' => $przedmiot,
-	    'sala' => $sala,
-	));
-	$this->action_przedmiot($_POST['sala']);
-    }
-
+    
     /**
      * Usuwa przypisanie sali do przedmiotow
      *

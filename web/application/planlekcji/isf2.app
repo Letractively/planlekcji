@@ -138,18 +138,31 @@ class Isf2 {
      * @param string $system System bazy danych
      * @param mixed $param Parametr polaczenia dla danego typu bazy danych
      */
-    public function __construct($system, $param=null) {
-	switch ($system) {
-	    case 'sqlite':
-		$this->SQLite_Connect($param);
-		break;
-	    case 'pgsql':
-		$this->PgSQL_Connect($param);
-		break;
-	    default:
-		throw new Exception('ISF2: Unregistered database system', 100);
-		break;
+    public function __construct($system=null, $param=null) {
+	if ($system != null) {
+	    switch ($system) {
+		case 'sqlite':
+		    $this->SQLite_Connect($param);
+		    break;
+		case 'pgsql':
+		    $this->PgSQL_Connect($param);
+		    break;
+		default:
+		    throw new Exception('ISF2: Unregistered database system', 100);
+		    break;
+	    }
 	}
+    }
+
+    /**
+     * Zwraca niepolaczony z baza obiekt
+     * 
+     * Dla zapytan except
+     *
+     * @return Isf2 
+     */
+    public static function Query() {
+	return new Isf2();
     }
 
     /**
@@ -291,6 +304,22 @@ class Isf2 {
 
 	$this->base_statement = 'delete from ' . $this->table . ' ';
 
+	return $this;
+    }
+
+    /**
+     * Operacja EXCEPT
+     *
+     * @param Isf2 $query
+     * @return Isf2 
+     */
+    public function Except(Isf2 $query) {
+	$this->optional_statement = ' except ' . $query->BuildQuery();
+	if (count($query->values_array) > 0) {
+	    foreach($query->values_array as $id => $value){
+		$this->values_array[] = $value;
+	    }
+	}
 	return $this;
     }
 

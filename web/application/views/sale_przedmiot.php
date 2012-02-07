@@ -6,20 +6,12 @@ $res = $db->Select('przedmiot_sale')
 		->Execute()->fetchAll();
 $przedm = $db->Select('przedmioty')->OrderBy(array('przedmiot' => 'asc'))
 		->Execute()->fetchAll();
-$przedmioty = array();
-if (count($przedm) != 0) {
-    foreach ($przedm as $rowid => $rowcol) {
-	$nonused = true;
-	for ($i = 0; $i < count($res); $i++) {
-	    if (in_array($rowcol['przedmiot'], $res[$i], true)) {
-		$nonused = false;
-	    }
-	}
-	if ($nonused) {
-	    $przedmioty[] = $rowcol['przedmiot'];
-	}
-    }
-}
+//$prz_res = $isf->DbSelect('przedmioty', array('przedmiot'), 'except select przedmiot from przedmiot_sale where sala=\'' . $sala . '\' order by przedmiot asc');
+$przedmioty = $db->Select('przedmioty', array('przedmiot'))
+		->Except($db->Query()->Select('przedmiot_sale', array('przedmiot'))
+			->Where(array('sala' => $sala))
+			->OrderBy(array('przedmiot' => 'asc')))
+		->Execute()->fetchAll();
 ?>
 <h1><?php echo $sala; ?></h3>
 <?php if (count($res) == 0): ?>
@@ -41,8 +33,8 @@ if (count($przedm) != 0) {
 		<?php endforeach; ?>
     	</ul>
     	<p style="text-align: right;">
-	    <button type="submit" name="btnWypisz">Wypisz przedmiot</button>
-	</p>
+    	    <button type="submit" name="btnWypisz">Wypisz przedmiot</button>
+    	</p>
         </fieldset>
     </form>
 <?php endif; ?>
@@ -51,21 +43,21 @@ if (count($przedm) != 0) {
 <?php else: ?>
     <form action="<?php echo URL::site('sale/dodaj') ?>" method="post">
         <input type="hidden" name="sala" value="<?php echo $sala; ?>"/>
-	<fieldset>
-        <legend>Wybierz przedmiot skojarzony z tą salą</legend>
-        <input type="hidden" name="formSala" value="<?php echo $sala; ?>"/>
-        <select name="selPrzed">
-	    <?php foreach ($przedmioty as $pid => $pcol): ?>
-		<option><?php echo $pcol; ?></option>
-	    <?php endforeach; ?>
-        </select>
-        <p style="text-align: right;">
-	    <button type="submit" name="btnSubmit">Dodaj przedmiot</button>
-	</p>
-	</fieldset>
+        <fieldset>
+    	<legend>Wybierz przedmiot skojarzony z tą salą</legend>
+    	<input type="hidden" name="formSala" value="<?php echo $sala; ?>"/>
+    	<select name="selPrzed">
+		<?php foreach ($przedmioty as $pid => $pcol): ?>
+		    <option><?php echo $pcol['przedmiot']; ?></option>
+		<?php endforeach; ?>
+    	</select>
+    	<p style="text-align: right;">
+    	    <button type="submit" name="btnSubmit">Dodaj przedmiot</button>
+    	</p>
+        </fieldset>
     </form>
 <?php endif; ?>
-    <p>
-	<a href="<?php echo URL::site('sale/index'); ?>">Powrót</a>
-    </p>
+<p>
+    <a href="<?php echo URL::site('sale/index'); ?>">Powrót</a>
+</p>
 

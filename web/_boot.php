@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Bootloader bibliotek IPL
  * @author Michal Bocian <mhl.bocian@gmail.com>
@@ -6,10 +7,13 @@
  * @package core
  */
 require_once 'lib/nusoap/nusoap.php';
-require_once DOCROOT . 'modules' . DS . 'isf' . DS . 'classes' . DS . 'kohana' . DS . 'isf.php';
-require_once DOCROOT . 'modules' . DS . 'isf' . DS . 'classes' . DS . 'isf2.php';
-require_once APPPATH . 'planlekcji/system.app';
-require_once APPPATH . 'planlekcji/core.app';
+if (!defined('APPPATH')) {
+    define('APPPATH', realpath('application') . DS);
+}
+require_once APPPATH . 'planlekcji' . DS . 'isf.app';
+require_once APPPATH . 'planlekcji' . DS . 'isf2.app';
+require_once APPPATH . 'planlekcji' . DS . 'system.app';
+require_once APPPATH . 'planlekcji' . DS . 'core.app';
 
 function insert_log($modul, $wiadomosc) {
     if (!file_exists(APP_ROOT . DS . 'resources' . DS . 'ipl-' . date('Ymd') . '.log')) {
