@@ -140,6 +140,7 @@ class Controller_Admin extends Controller {
 	if (!isset($_POST['inpToken'])) {
 	    $_POST['inpToken'] = '';
 	}
+
 	$msg = $this->wsdl->call('doLogin', array('login' => $login, 'haslo' => $haslo, 'token' => $_POST['inpToken']));
 	if ($msg != 'auth:failed' && $msg != 'auth:locked') {
 	    $_SESSION['token'] = $msg;
@@ -267,8 +268,8 @@ class Controller_Admin extends Controller {
 	$db->Delete('plan_grupy')->Execute();
 	$db->Delete('zast_id')->Execute();
 	$db->Delete('zastepstwa')->Execute();
-	$db->Update('rejestr', array('wartosc'=>'0'))
-		->Where(array('opcja'=>'edycja_danych'))
+	$db->Update('rejestr', array('wartosc' => '0'))
+		->Where(array('opcja' => 'edycja_danych'))
 		->Execute();
 	Kohana_Request::factory()->redirect('default/index');
     }
@@ -305,8 +306,8 @@ class Controller_Admin extends Controller {
 	$db->Delete('plan_grupy')->Execute();
 	$db->Delete('zast_id')->Execute();
 	$db->Delete('zastepstwa')->Execute();
-	$db->Update('rejestr', array('wartosc'=>'1'))
-		->Where(array('opcja'=>'edycja_danych'))
+	$db->Update('rejestr', array('wartosc' => '1'))
+		->Where(array('opcja' => 'edycja_danych'))
 		->Execute();
 	if (isset($_POST['cl'])) {
 	    $db->Delete('klasy')->Execute();
@@ -316,9 +317,9 @@ class Controller_Admin extends Controller {
 	    $db->Delete('przedmiot_sale')->Execute();
 	    $db->Delete('przedmioty')->Execute();
 	    $db->Delete('sale')->Execute();
-	    $db->Update('rejestr', array('wartosc'=>'1'))
-		->Where(array('opcja'=>'ilosc_godzin_lek'))
-		->Execute();
+	    $db->Update('rejestr', array('wartosc' => '1'))
+		    ->Where(array('opcja' => 'ilosc_godzin_lek'))
+		    ->Execute();
 	}
 	Kohana_Request::factory()->redirect('');
     }
@@ -440,13 +441,10 @@ START;
      * Wyswietla strone z uzytkownikami
      */
     public function action_users() {
+
 	$this->check_login();
-	$isf = new Kohana_Isf();
 	$view = View::factory('_root_template');
 	$view2 = new View('admin_users');
-	$isf->JQUi();
-	$isf->JQUi_ButtonCreate('btnCUser');
-	$view->set('script', $isf->JQUi_MakeScript());
 	$view->set('content', $view2->render());
 
 	echo $view->render();

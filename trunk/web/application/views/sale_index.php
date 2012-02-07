@@ -30,7 +30,8 @@
     		<td style="width: 100px;">Sala</td>
     		<td>Przedmioty</td>
     		<td style="width: 20px;">
-    		    <input type="checkbox" name="chAll" id="chAll" onclick="checkAll(<?php echo count($res) - 1; ?>);"
+    		    <input type="checkbox" name="chAll" id="chAll"
+    			   onclick="checkAll(<?php echo count($res) - 1; ?>);"
     			   class="inpNoneBorder"/>
     		</td>
     	    </tr>
@@ -45,7 +46,7 @@
 				   name="rdClassroom"
 				   value="<?php echo $rowcol['sala']; ?>"
 				   class="inpNoneBorder"/>
-			    <?php echo $rowcol['sala']; ?>
+				   <?php echo $rowcol['sala']; ?>
 			</td>
 			<td>
 			    <?php

@@ -58,9 +58,9 @@ define('C', '"'); // znak "
 
     		    <div data-role="fieldcontain">
     			<label for="dbtype" class="select">Typ bazy danych</label>
-    			<select name="dbtype" id="dbtype">
-    			    <option>SQLite</option>
-    			    <option>PgSQL</option>
+    			<select name="dbtype" id="dbtype" data-native-menu="false">
+    			    <option value="SQLite">SQLite</option>
+    			    <option value="PostgreSQL">PgSQL</option>
     			</select>
     		    </div>
 

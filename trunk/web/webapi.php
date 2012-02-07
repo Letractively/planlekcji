@@ -16,10 +16,8 @@ define('DS', DIRECTORY_SEPARATOR);
 define('APP_ROOT', realpath('..'));
 define('DOCROOT', realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
 
-require_once 'lib/nusoap/nusoap.php';
-require_once 'modules/isf/classes/isf2.php';
-require_once 'application/planlekcji/webapi.app';
-require_once 'application/planlekcji/system.app';
+require_once '_boot.php';
+require_once APPPATH . 'planlekcji' . DS . 'webapi.app';
 
 Core_Tools::parseCfgFile();
 
