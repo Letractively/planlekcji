@@ -504,6 +504,16 @@ class App_Auth {
 	}
     }
 
+    /**
+     * Zwraca token sesyjny
+     *
+     * @param string $uid login uzytkownika
+     * @return string token
+     */
+    public static function generateToken($login) {
+	return md5(sha1('1s#plan!!002' . $login . 'r98mMjs7^A2b' . rand(1000, 9999)) . time());
+    }
+
 }
 
 /**

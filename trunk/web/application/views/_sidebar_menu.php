@@ -1,6 +1,4 @@
 <!-- [SEKCJA]: SIDEBAR MENU -->
-<?php $isf = new Kohana_Isf(); ?>
-<?php $isf->Connect(APP_DBSYS); ?>
 <?php if ($_SESSION['token'] == null): ?>
     <!-- menu dla niezalogowanych -->
     <?php echo View::factory()->render('_menu'); ?>

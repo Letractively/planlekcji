@@ -1,17 +1,11 @@
 .a_odd{
-    background-color: #383535;
+    background-color: #2B6FB6;
     margin-top: 0px;
     padding: 5px;
     color: white;
 }
-a:visited{
-    color: #383535;
-}
-a:link{
-    color: #383535;
-}
 a:hover{
-    font-weight: bold;
+    background-color: lightgray;
 }
 a.anodd{
     color: white;
@@ -30,26 +24,23 @@ a.anodd:visited{
     margin-top: 0px;
     padding: 5px;
 }
-.a_error{
-    background-color: #df8080;
-}
 .a_even{
-    background-color: #cccbcb;
+    background-color: lightgrey;
     margin-top: 0px;
     padding: 5px;
 }
 .app_info{
-    background-color: #383535;
+    background-color: #2B6FB6;
     text-shadow: lightgray 1px 1px 3px;
     font-style: italic;
     font-weight: bolder;
     color: white;
 }
 .app_ver{
-    background-color: #cccbcb;
+    background-color: lightgrey;
     text-align: right;
 }
 button{
-    background-color: #4f4d4d;
+    background-color: #2B6FB6;
     color: white;
 }

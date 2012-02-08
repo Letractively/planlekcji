@@ -1,16 +1,7 @@
-<?php $isf = new Kohana_Isf(); ?>
-<?php $isf->Connect(APP_DBSYS); ?>
-<?php if (!isset($_SESSION['token'])): ?>
-    <p>
-        <img src="<?php echo URL::base(); ?>lib/icons/adminlogin.png" alt=""/>
-        <a href="<?php echo URL::site('admin/login'); ?>">
-            Logowanie
-        </a>
-    </p>
-<?php endif; ?>
 <?php if (App_Globals::getSysLv() == 1): ?>
-    <p class="info">System będzie niedostępny, dopóki opcja edycji sal, przedmiotów, itp.
-        będzie <b>włączona</b>.</p>
+    <p class="info">
+        Bardzo nam przykro, ale system jest aktualnie niedostępny.
+    </p>
     <?php
 else:
     ?>
@@ -29,7 +20,8 @@ else:
 	</p>
 	<?php echo View::factory('_menu_plany')->render(); ?>
     <?php else: ?>
-	<p class="info">Dopóki system edycji planów będzie otwarty, nie ma możliwości
-	    podglądu planu zajęć oraz zastępstw.</p>
+	<p class="info">
+	    Bardzo nam przykro, ale system jest aktualnie niedostępny.
+	</p>
     <?php endif; ?>
 <?php endif; ?>

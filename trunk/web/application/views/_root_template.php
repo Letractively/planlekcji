@@ -29,8 +29,8 @@ if (Core_Tools::is_mobile() && !isset($_COOKIE['_nomobile'])) {
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Plan lekcji - <?php echo App_Globals::getRegistryKey('nazwa_szkoly'); ?></title>
 	<?php echo $script; ?>
-	<link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/themes/<?php echo $_SESSION['app_theme']; ?>.css"/>
         <link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/style.css"/>
+	<link rel="stylesheet" type="text/css" href="<?php echo URL::base() ?>lib/css/themes/<?php echo $_SESSION['app_theme']; ?>.css"/>
 	<?php
 	$isf = new Kohana_Isf();
 	$isf->IE9_faviconset();
@@ -44,7 +44,7 @@ if (Core_Tools::is_mobile() && !isset($_COOKIE['_nomobile'])) {
 	?>
         <style>
             body{
-		background: #21638c;
+		background: #13181a;
 		background-image: url('<?php echo URL::base(); ?>lib/images/image1.jpg'),
 		    url('<?php echo URL::base(); ?>lib/images/image2.jpg');
 		background-repeat: repeat-x, repeat;
@@ -70,6 +70,11 @@ if (Core_Tools::is_mobile() && !isset($_COOKIE['_nomobile'])) {
 		    <?php if (preg_match('#dev#', $appver)): ?>
     		    <div class="a_error" style="width: 100%; font-size: x-small;">
     			&nbsp;Używasz wersji rozwojowej systemu
+    		    </div>
+		    <?php endif; ?>
+		    <?php if (defined('ldap_enable')&&ldap_enable=="true"): ?>
+    		    <div class="a_error" style="width: 100%; font-size: x-small;">
+    			&nbsp;Eksperymentalne logowanie LDAP
     		    </div>
 		    <?php endif; ?>
 		    <div id="sidebar_menu" style="padding-left: 10px;" class="a_light_menu">

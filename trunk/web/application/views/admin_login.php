@@ -8,7 +8,10 @@ if (!isset($_POST['inpLogin'])) {
 }
 ?>
 <div class="a_odd" style="width: 780px;">
-    <b>Logowanie metodą RAND_TOKEN</b>
+    <b>
+	Logowanie metodą
+	<?php echo (defined('ldap_enable') && ldap_enable == "true") ? 'LDAP' : 'RAND_TOKEN'; ?>
+    </b>
 </div>
 <?php if ($pass == 'false'): ?>
     <div class="loginFormError a_error">
@@ -54,8 +57,14 @@ if (!isset($_POST['inpLogin'])) {
 		<label for="inpToken">Token</label>
 	    </div>
 	    <div class="tableCell">
-		<input class="a_light_menu inpLoginForm" type="text" name="inpToken" value=""/>
+		<?php if (defined('ldap_enable') && ldap_enable == "true"): ?>
+    		<p>Logowanie w trybie LDAP nie wymaga podania tokena autoryzacji.</p>
+		<?php else: ?>
+    		<input class="a_light_menu inpLoginForm" type="text" name="inpToken" value=""/>
+		<?php endif; ?>
 	    </div>
+	</div>
+	<div class="tableRow">
 	    <div class="tableCell">
 		<button type="submit" name="btnSubmit" id="btnSubmit">Zaloguj</button>
 	    </div>
