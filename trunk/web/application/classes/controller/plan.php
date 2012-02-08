@@ -18,42 +18,13 @@ defined('SYSPATH') or die('No direct script access.');
 class Controller_Plan extends Controller {
 
     /**
-     *
-     * @var nusoap_client instancja klasy nusoap
-     */
-    protected $wsdl;
-
-    /**
      * Sprawdza zalogowanie uzytkownika
      */
     public function __construct() {
-	try {
-	    $this->wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
-	} catch (Exception $e) {
-	    echo $e->getMessage();
-	    exit;
-	}
-	if (!isset($_SESSION['token'])) {
-	    Kohana_Request::factory()->redirect('admin/login');
-	    exit;
-	} else {
-	    $auth = $this->wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
-	    if (strtotime($_SESSION['token_time']) < time()) {
-		$this->wsdl->call('doLogout', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
-		session_destroy();
-		Kohana_Request::factory()->redirect('admin/login/delay');
-		exit;
-	    }
-	    if ($auth == 'auth:failed') {
-		Kohana_Request::factory()->redirect('admin/login');
-		exit;
-	    }
-	}
-	$isf = new Kohana_Isf();
-	$isf->Connect(APP_DBSYS);
-	$reg = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
-	if ($reg[0]['wartosc'] == 1) {
-	    echo '<h1>Edycja danych nie zostala zamknieta</h1>';
+	App_Auth::isLogged(FALSE);
+
+	if (App_Globals::getRegistryKey('edycja_danych') == 1) {
+	    Kohana_Request::factory()->redirect('');
 	    exit;
 	}
     }
@@ -116,20 +87,24 @@ class Controller_Plan extends Controller {
      * Wprowadza zmiany do planu klasy
      */
     public function action_zatwierdz() {
-	$isf = new Kohana_Isf();
-	$isf->Connect(APP_DBSYS);
+	$isf = Isf2::Connect();
+
 	$klasa = $_POST['klasa'];
-	$isf->DbDelete('plan_grupy', 'klasa=\'' . $klasa . '\'');
+
+	$isf->Delete('plan_grupy')->Where(array('klasa' => $klasa))->Execute();
 
 	$dni = array('Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek');
 
 	foreach ($dni as $dzien) {
 	    foreach ($_POST[$dzien] as $lek => $przedm) {
-		if ($przedm == '---') {
-		    $isf->DbDelete('planlek', 'dzien=\'' . $dzien . '\' and lekcja=\'' . $lek . '\' and klasa=\'' . $klasa . '\'');
-		} else {
+		$isf->Delete('planlek')
+			->Where(array(
+			    'dzien' => $dzien,
+			    'lekcja' => $lek,
+			    'klasa' => $klasa
+			))->Execute();
+		if ($przedm != '---') {
 		    $przedm = explode(':', $przedm);
-		    $isf->DbDelete('planlek', 'dzien=\'' . $dzien . '\' and lekcja=\'' . $lek . '\' and klasa=\'' . $klasa . '\'');
 		    if (count($przedm) == 1) {
 			$colval = array(
 			    'dzien' => $dzien,
@@ -150,7 +125,11 @@ class Controller_Plan extends Controller {
 			    'skrot' => $nl_s,
 			);
 		    }
-		    $isf->DbInsert('planlek', $colval);
+		    try {
+			$isf->Insert('planlek', $colval)->Execute();
+		    } catch (Exception $e) {
+			Core_Tools::ShowError($e->getMessage(), $e->getCode());
+		    }
 		}
 	    }
 	}

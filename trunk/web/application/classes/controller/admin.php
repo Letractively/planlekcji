@@ -24,18 +24,6 @@ class Controller_Admin extends Controller {
     public $wsdl;
 
     /**
-     *
-     * @var string Czas waznosci tokena 
-     */
-    public $token_time;
-
-    /**
-     *
-     * @var string Token uzytkownika 
-     */
-    public $token;
-
-    /**
      * Konstruktor tworzy obiekt sesji
      */
     public function __construct() {
@@ -48,62 +36,10 @@ class Controller_Admin extends Controller {
     }
 
     /**
-     * Sprawdza zalogowanie uzytkownika
-     *
-     * @param string $only_root Dostep tylko dla root
-     * @return string Komunikat
-     */
-    public function check_login($only_root=true, $loginpage=false) {
-	if (!isset($_SESSION['token']) || !isset($_SESSION['user'])) {
-	    if ($loginpage == false) {
-		Kohana_Request::factory()->redirect('admin/login');
-		exit;
-	    }
-	    return false;
-	} else {
-
-	    $auth = $this->wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']));
-
-	    try {
-		$res = Isf2::Connect()->Select('uzytkownicy', array('webapi_token'))
-			->Where(array('login' => $_SESSION['user'], 'webapi_token' => $_SESSION['token']))
-			->Execute();
-	    } catch (Exception $e) {
-		echo Core_Tools::ShowError($e->getMessage(), $e->getCode());
-	    }
-
-	    if (count($res) != 1) {
-		session_destroy();
-		Kohana_Request::factory()->redirect('admin/login/exist');
-	    }
-
-	    if (strtotime($_SESSION['token_time']) < time()) {
-		$this->wsdl->call('doLogout', array('token' => $_SESSION['token']));
-		session_destroy();
-		Kohana_Request::factory()->redirect('admin/login/delay');
-		exit;
-	    }
-
-	    if ($auth == 'auth:failed') {
-		Kohana_Request::factory()->redirect('admin/login');
-		session_destroy();
-		exit;
-	    }
-
-	    if ($_SESSION['user'] != 'root' && $only_root == true) {
-		Kohana_Request::factory()->redirect('');
-		exit;
-	    }
-
-	    return true;
-	}
-    }
-
-    /**
-     * uruchamia glowna strone
+     * Uruchamia glowna strone
      */
     public function action_index() {
-	$this->check_login(false);
+	App_Auth::isLogged(false);
     }
 
     /**
@@ -113,7 +49,7 @@ class Controller_Admin extends Controller {
      */
     public function action_login($pass='') {
 
-	if ($this->check_login(false, true) != false) {
+	if (App_Auth::isLogged(false, true) != false) {
 	    Kohana_Request::factory()->redirect('');
 	    exit;
 	}
@@ -169,7 +105,7 @@ class Controller_Admin extends Controller {
      */
     public function action_doEditTimetables() {
 
-	$this->check_login();
+	App_Auth::isLogged();
 
 	$view = View::factory('_root_template');
 	$view2 = view::factory('admin_doEditTimetables');
@@ -187,7 +123,7 @@ class Controller_Admin extends Controller {
      */
     public function action_doEditTimetablesPOST() {
 
-	$this->check_login();
+	App_Auth::isLogged();
 	if (isset($_POST)) {
 	    Isf2::Connect()->Update('rejestr', array('wartosc' => '0'))
 		    ->Where(array('opcja' => 'edycja_danych'))
@@ -202,7 +138,7 @@ class Controller_Admin extends Controller {
      */
     public function action_doSaveTimetables() {
 
-	$this->check_login(false);
+	App_Auth::isLogged(false);
 
 	$view = View::factory('_root_template');
 	$view2 = view::factory('admin_doSaveTimetables');
@@ -216,7 +152,7 @@ class Controller_Admin extends Controller {
      */
     public function action_doSaveTimetablesPOST() {
 
-	$this->check_login(false);
+	App_Auth::isLogged(false);
 	if (isset($_POST)) {
 	    $isf = new Kohana_Isf();
 	    $isf->Connect(APP_DBSYS);
@@ -232,7 +168,7 @@ class Controller_Admin extends Controller {
      */
     public function action_doRenewToken() {
 
-	$this->check_login(false);
+	App_Auth::isLogged(false);
 	insert_log('admin.doRenewToken', 'Uzytkownik ' . $_SESSION['user'] . ' odnowil token');
 	$this->wsdl->call('doRenewToken', array('token' => $_SESSION['token']));
 	$_SESSION['token_time'] = $this->wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']));
@@ -257,7 +193,7 @@ class Controller_Admin extends Controller {
      */
     public function action_doTimetablesCleanup() {
 
-	$this->check_login();
+	App_Auth::isLogged();
 
 	if (!isset($_POST)) {
 	    Kohana_Request::factory()->redirect('');
@@ -279,7 +215,7 @@ class Controller_Admin extends Controller {
      */
     public function action_doCleanupSystem() {
 
-	$this->check_login();
+	App_Auth::isLogged();
 
 	$isf = new Kohana_Isf();
 	$isf->Connect(APP_DBSYS);
@@ -299,7 +235,7 @@ class Controller_Admin extends Controller {
      */
     public function action_doCleanupSystemPOST() {
 
-	$this->check_login();
+	App_Auth::isLogged();
 
 	$db = Isf2::Connect();
 	$db->Delete('planlek')->Execute();
@@ -329,7 +265,7 @@ class Controller_Admin extends Controller {
      */
     public function action_doEditSettings() {
 
-	$this->check_login();
+	App_Auth::isLogged();
 
 	$url = substr(URL::base(), 0, -1);
 	/**
@@ -358,7 +294,7 @@ START;
      */
     public function action_doEditSettingsPOST() {
 
-	$this->check_login();
+	App_Auth::isLogged();
 
 	if (!isset($_POST)) {
 	    Kohana_Request::factory()->redirect('');
@@ -367,11 +303,12 @@ START;
 	$nazwa = $_POST['inpNazwa'];
 	$text = $_POST['txtMsg'];
 
-	$isf = new Kohana_Isf();
-	$isf->Connect(APP_DBSYS);
+	$isf = Isf2::Connect();
 
-	$isf->DbUpdate('rejestr', array('wartosc' => $nazwa), 'opcja=\'nazwa_szkoly\'');
-	$isf->DbUpdate('rejestr', array('wartosc' => $text), 'opcja=\'index_text\'', false);
+	$isf->Update('rejestr', array('wartosc' => $nazwa))
+		->Where(array('opcja' => 'nazwa_szkoly'))->Execute();
+	$isf->Update('rejestr', array('wartosc' => $text))
+		->Where(array('opcja' => 'index_text'))->Execute();
 
 	Kohana_Request::factory()->redirect('default/index');
     }
@@ -381,7 +318,7 @@ START;
      */
     public function action_doChangePassword($err=false) {
 
-	$this->check_login(false);
+	App_Auth::isLogged(false);
 
 	$view = View::factory('_root_template');
 	$view2 = view::factory('admin_doChangePassword');
@@ -400,13 +337,10 @@ START;
      * zmienia haslo
      */
     public function action_doChangePasswordPOST() {
-	$this->check_login(false);
 
-	insert_log('admin.chpass', 'Uzytkownik ' . $_SESSION['user'] . ' proboje zmienic haslo');
+	App_Auth::isLogged(false);
 
 	if (isset($_POST)) {
-	    $isf = new Kohana_Isf();
-	    $isf->Connect(APP_DBSYS);
 
 	    $s = $_POST['inpSH'];
 	    $n = $_POST['inpNH'];
@@ -442,7 +376,7 @@ START;
      */
     public function action_users() {
 
-	$this->check_login();
+	App_Auth::isLogged();
 	$view = View::factory('_root_template');
 	$view2 = new View('admin_users');
 	$view->set('content', $view2->render());
@@ -456,7 +390,7 @@ START;
      * @param integer $page strona logow
      */
     public function action_logs($page=1) {
-	$this->check_login();
+	App_Auth::isLogged();
 	$view = View::factory('_root_template');
 	$view2 = new View('admin_logs');
 	$view2->set('page', $page);
@@ -470,7 +404,7 @@ START;
      * Usuwa wszystkie logi systemowe
      */
     public function action_dellogs() {
-	$this->check_login();
+	App_Auth::isLogged();
 	$isf = new Kohana_Isf();
 	$isf->Connect(APP_DBSYS);
 	$isf->DbDelete('log', 'id like \'%\'');
@@ -484,7 +418,7 @@ START;
      * @param integer $user id uzytkownika
      */
     public function action_token($user) {
-	$this->check_login();
+	App_Auth::isLogged();
 	$view = View::factory('admin_token');
 	$view->set('id', $user);
 	echo $view->render();
@@ -497,7 +431,7 @@ START;
      * @param integer $uid numer uzytkownika
      */
     public function action_userdel($uid) {
-	$this->check_login();
+	App_Auth::isLogged();
 	$isf = new Kohana_Isf();
 	$isf->Connect(APP_DBSYS);
 	$u = $isf->DbSelect('uzytkownicy', array('*'), 'where uid=\'' . $uid . '\'');
@@ -513,7 +447,7 @@ START;
      * @param string $err kod bledu do szablonu
      */
     public function action_adduser($err=null) {
-	$this->check_login();
+	App_Auth::isLogged();
 	$view = View::factory('_root_template');
 	$view2 = new View('admin_adduser');
 	$view2->set('err', $err);
@@ -527,7 +461,7 @@ START;
      * Dodaje uzytkownika
      */
     public function action_douseradd() {
-	$this->check_login();
+	App_Auth::isLogged();
 	if (!isset($_POST)) {
 	    Kohana_Request::factory()->redirect('');
 	    exit;
@@ -560,9 +494,9 @@ START;
      * @param integer $uid ID uzytkownika
      */
     public function action_userublock($uid) {
-	$db = new Kohana_Isf();
-	$db->Connect(APP_DBSYS);
-	$db->DbUpdate('uzytkownicy', array('ilosc_prob' => '0'), 'uid=\'' . $uid . '\'');
+	$db = Isf2::Connect();
+	$db->Update('uzytkownicy', array('ilosc_prob' => '0'))
+		->Where(array('uid' => $uid))->Execute();
 	Kohana_Request::factory()->redirect('admin/users');
     }
 

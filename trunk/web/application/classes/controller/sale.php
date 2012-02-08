@@ -18,42 +18,13 @@ defined('SYSPATH') or die('No direct script access.');
 class Controller_Sale extends Controller {
 
     /**
-     *
-     * @var nusoap_client instancja klasy NuSOAP
-     */
-    public $wsdl;
-
-    /**
      * Tworzy obiekt sesji i sprawdza czy zalogowany
      */
     public function __construct() {
-	try {
-	    $this->wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
-	} catch (Exception $e) {
-	    echo $e->getMessage();
-	    exit;
-	}
-	if (!isset($_SESSION['token'])) {
-	    Kohana_Request::factory()->redirect('admin/login');
-	    exit;
-	} else {
-	    $auth = $this->wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
-	    if (strtotime($_SESSION['token_time']) < time()) {
-		$this->wsdl->call('doLogout', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
-		session_destroy();
-		Kohana_Request::factory()->redirect('admin/login/delay');
-		exit;
-	    }
-	    if ($auth == 'auth:failed') {
-		Kohana_Request::factory()->redirect('admin/login');
-		exit;
-	    }
-	}
 
-	/**
-	 * Czy mozna edytowac dane
-	 */
-	if (App_Globals::getRegistryKey('edycja_danych') != 1 || $_SESSION['user'] != 'root') {
+	App_Auth::isLogged();
+
+	if (App_Globals::getRegistryKey('edycja_danych') != 1) {
 	    Kohana_Request::factory()->redirect('');
 	    exit;
 	}
@@ -74,10 +45,11 @@ class Controller_Sale extends Controller {
 	$view2 = View::factory('sale_index');
 	$view2->set('res', $dbres);
 	$view2->set('_err', $err);
-	
+
 	$view->set('content', $view2->render());
 	echo $view->render();
     }
+
     /**
      * Operacje na dodawaniu/usuwaniu sal
      * 
@@ -136,6 +108,22 @@ class Controller_Sale extends Controller {
 	    $this->action_przedmiot($_POST['rdClassroom']);
 	}
     }
+
+    /**
+     * Dodaje przedmiot do sali
+     */
+    public function action_dodaj() {
+	if (isset($_POST)) {
+	    Isf2::Connect()->Insert('przedmiot_sale', array(
+		'sala' => $_POST['formSala'],
+		'przedmiot' => $_POST['selPrzed']
+	    ))->Execute();
+	    $this->action_przedmiot($_POST['formSala']);
+	} else {
+	    Kohana_Request::factory()->redirect('');
+	}
+    }
+
     /**
      * Wypisuje przedmiot z sali
      */
@@ -148,7 +136,7 @@ class Controller_Sale extends Controller {
 	    Kohana_Request::factory()->redirect('');
 	}
     }
-    
+
     /**
      * Usuwa przypisanie sali do przedmiotow
      *
@@ -156,9 +144,11 @@ class Controller_Sale extends Controller {
      * @param string $przedmiot przedmiot
      */
     private function action_przedusun($sala, $przedmiot) {
-	$isf = new Kohana_Isf();
-	$isf->Connect(APP_DBSYS);
-	$isf->DbDelete('przedmiot_sale', 'przedmiot=\'' . $przedmiot . '\' and sala=\'' . $sala . '\'');
+	Isf2::Connect()->Delete('przedmiot_sale')
+		->Where(array(
+		    'przedmiot' => $przedmiot,
+		    'sala' => $sala))
+		->Execute();
     }
 
     /**
@@ -167,8 +157,6 @@ class Controller_Sale extends Controller {
      * @param string $sala sala
      */
     private function action_przedmiot($sala) {
-	$isf = new Kohana_Isf();
-	$isf->Connect(APP_DBSYS);
 
 	$view = View::factory('_root_template');
 	$view2 = view::factory('sale_przedmiot');

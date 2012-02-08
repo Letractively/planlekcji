@@ -18,42 +18,13 @@ defined('SYSPATH') or die('No direct script access.');
 class Controller_Przedmioty extends Controller {
 
     /**
-     *
-     * @var nusoap_client instancja klasy nusoap
-     */
-    public $wsdl;
-
-    /**
      * Tworzy obiekt sesji i sprawdza czy zalogowany
      */
     public function __construct() {
-	try {
-	    $this->wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
-	} catch (Exception $e) {
-	    echo $e->getMessage();
-	    exit;
-	}
-	if (!isset($_SESSION['token'])) {
-	    Kohana_Request::factory()->redirect('admin/login');
-	    exit;
-	} else {
-	    $auth = $this->wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
-	    if (strtotime($_SESSION['token_time']) < time()) {
-		$this->wsdl->call('doLogout', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
-		session_destroy();
-		Kohana_Request::factory()->redirect('admin/login/delay');
-		exit;
-	    }
-	    if ($auth == 'auth:failed') {
-		Kohana_Request::factory()->redirect('admin/login');
-		exit;
-	    }
-	}
 
-	/**
-	 * Czy mozna edytowac dane
-	 */
-	if (App_Globals::getRegistryKey('edycja_danych') != 1 || $_SESSION['user'] != 'root') {
+	App_Auth::isLogged();
+
+	if (App_Globals::getRegistryKey('edycja_danych') != 1) {
 	    Kohana_Request::factory()->redirect('');
 	}
     }
@@ -76,6 +47,7 @@ class Controller_Przedmioty extends Controller {
 	$view->set('content', $view2->render());
 	echo $view->render();
     }
+
     /**
      * Operacje na przedmiotach
      */

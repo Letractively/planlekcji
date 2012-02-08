@@ -442,6 +442,71 @@ class MPZ {
 }
 
 /**
+ * Uwierzytelnianie uzytkownikow
+ */
+class App_Auth {
+
+    protected static $wsdl;
+
+    /**
+     * Sprawdza zalogowanie uzytkownika
+     *
+     * @param bool $only_root Dostep tylko dla root
+     * @param bool $loginpage Pominiecie funkcji dla strony logowania
+     * @return bool 
+     */
+    public static function isLogged($only_root=true, $loginpage=false) {
+
+	self::$wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
+
+	if (!isset($_SESSION['token']) || !isset($_SESSION['user'])) {
+	    if ($loginpage == false) {
+		Kohana_Request::factory()->redirect('admin/login');
+		exit;
+	    }
+	    return false;
+	} else {
+
+	    $auth = self::$wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']));
+
+	    try {
+		$res = Isf2::Connect()->Select('uzytkownicy', array('webapi_token'))
+			->Where(array('login' => $_SESSION['user'], 'webapi_token' => $_SESSION['token']))
+			->Execute();
+	    } catch (Exception $e) {
+		echo Core_Tools::ShowError($e->getMessage(), $e->getCode());
+	    }
+
+	    if (count($res) != 1) {
+		session_destroy();
+		Kohana_Request::factory()->redirect('admin/login/exist');
+	    }
+
+	    if (strtotime($_SESSION['token_time']) < time()) {
+		self::$wsdl->call('doLogout', array('token' => $_SESSION['token']));
+		session_destroy();
+		Kohana_Request::factory()->redirect('admin/login/delay');
+		exit;
+	    }
+
+	    if ($auth == 'auth:failed') {
+		Kohana_Request::factory()->redirect('admin/login');
+		session_destroy();
+		exit;
+	    }
+
+	    if ($_SESSION['user'] != 'root' && $only_root == true) {
+		Kohana_Request::factory()->redirect('');
+		exit;
+	    }
+
+	    return true;
+	}
+    }
+
+}
+
+/**
  * Podstawowe metody zwiazane z IPL
  * 
  * @package ipl\core
@@ -482,6 +547,7 @@ class App_Globals {
 	$a = $isf->DbSelect('rejestr', array('*'), 'where opcja=\'edycja_danych\'');
 	return $a[0]['wartosc'];
     }
+
     /**
      * Pobiera wartosc klucza rejestru
      *
@@ -498,6 +564,7 @@ class App_Globals {
 	    return $a[0]['wartosc'];
 	}
     }
+
     /**
      * Pobiera symbol n-l na podstawie imienia i nazwiska
      *
@@ -515,6 +582,7 @@ class App_Globals {
 	}
 	return $return;
     }
+
     /**
      * Pobiera imie i nazwisko n-l na podstawie symbolu
      *
@@ -532,6 +600,7 @@ class App_Globals {
 	}
 	return $return;
     }
+
     /**
      * Zapisuje plany zajec do postaci XML
      */
