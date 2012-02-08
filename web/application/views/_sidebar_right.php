@@ -22,10 +22,14 @@ if ($zadmin > $toktime) {
                 </a>
             </li>
             <li>
-                <img src="<?php echo URL::base() ?>lib/icons/password.png" alt=""/>
-                <a href="<?php echo URL::site('admin/doChangePassword'); ?>">
-                    Zmień moje hasło
-                </a>
+		<?php if (defined('ldap_enable') && ldap_enable == "true"): ?>
+    		Zmiana hasła w trybie LDAP jest niemożliwa
+		<?php else: ?>
+    		<img src="<?php echo URL::base() ?>lib/icons/password.png" alt=""/>
+                    <a href="<?php echo URL::site('admin/doChangePassword'); ?>">
+                        Zmień moje hasło
+                    </a>
+		<?php endif; ?>
             </li>
             <li>
                 <img src="<?php echo URL::base() ?>lib/icons/logout.png" alt=""/>

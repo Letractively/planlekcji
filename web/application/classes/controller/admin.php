@@ -73,29 +73,86 @@ class Controller_Admin extends Controller {
     public function action_dologin() {
 	$login = $_POST['inpLogin'];
 	$haslo = $_POST['inpHaslo'];
-	if (!isset($_POST['inpToken'])) {
-	    $_POST['inpToken'] = '';
-	}
+	/**
+	 * Klasyczne logowanie z bazy danych
+	 */
+	if (!defined('ldap_enable') || ldap_enable != "true") {
 
-	$msg = $this->wsdl->call('doLogin', array('login' => $login, 'haslo' => $haslo, 'token' => $_POST['inpToken']));
-	if ($msg != 'auth:failed' && $msg != 'auth:locked') {
-	    $_SESSION['token'] = $msg;
-	    $_SESSION['user'] = $login;
-	    if (isset($_POST['inpToken']) && $login != 'root') {
-		$_SESSION['usr_token'] = $_POST['inpToken'];
+	    if (!isset($_POST['inpToken'])) {
+		$_POST['inpToken'] = '';
 	    }
-	    $_SESSION['token_time'] = $this->wsdl->call('doShowAuthTime', array('token' => $msg));
-	    insert_log('admin.login', 'Uzytkownik ' . $login . ' zalogowal sie');
-	    Kohana_Request::factory()->redirect('');
-	} else {
-	    if ($msg == 'auth:locked') {
-		Kohana_Request::factory()->post('inpLogin', $login);
-		Kohana_Request::factory()->redirect('admin/login/locked');
-		insert_log('admin.login', 'Nieudana próba zalogowania zablokowanego użytkownika ' . $login);
+
+	    $msg = $this->wsdl->call('doLogin', array(
+		'login' => $login,
+		'haslo' => $haslo,
+		'token' => $_POST['inpToken']));
+
+	    if ($msg != 'auth:failed' && $msg != 'auth:locked') {
+		$_SESSION['token'] = $msg;
+		$_SESSION['user'] = $login;
+		if (isset($_POST['inpToken']) && $login != 'root') {
+		    $_SESSION['usr_token'] = $_POST['inpToken'];
+		}
+		$_SESSION['token_time'] = $this->wsdl->call('doShowAuthTime', array('token' => $msg));
+		insert_log('admin.login', 'Uzytkownik ' . $login . ' zalogowal sie');
+		Kohana_Request::factory()->redirect('');
 	    } else {
-		Kohana_Request::factory()->post('inpLogin', $login);
+		if ($msg == 'auth:locked') {
+		    Kohana_Request::factory()->post('inpLogin', $login);
+		    Kohana_Request::factory()->redirect('admin/login/locked');
+		    insert_log('admin.login', 'Nieudana próba zalogowania zablokowanego użytkownika ' . $login);
+		} else {
+		    Kohana_Request::factory()->post('inpLogin', $login);
+		    Kohana_Request::factory()->redirect('admin/login/false');
+		    insert_log('admin.login', 'Nieudana próba zalogowania użytkownika ' . $login);
+		}
+	    }
+	} else { // Logowanie z katalogu LDAP
+	    if (!defined('ldap_server') || !defined('ldap_basedn')) {
+		Core_Tools::ShowError('LDAP configuration is corrupt', '801', true);
+	    }
+	    $conn = ldap_connect(ldap_server);
+	    $dn = 'cn=' . $_POST['inpLogin'] . ',' . ldap_basedn;
+	    try {
+		$bind = ldap_bind($conn, $dn, $_POST['inpHaslo']);
+	    } catch (Exception $e) {
 		Kohana_Request::factory()->redirect('admin/login/false');
-		insert_log('admin.login', 'Nieudana próba zalogowania użytkownika ' . $login);
+		insert_log('admin.login.ldap', 'Nieudana autoryzacja: ' . $dn);
+	    }
+	    if ($bind) {
+		$token = App_Auth::generateToken($_POST['inpLogin']);
+		$timestamp = $timestamp = (time() + 3600 * 3);
+		$_SESSION['token'] = $token;
+		$_SESSION['user'] = $_POST['inpLogin'];
+		$isf = Isf2::Connect();
+		$suildb = $isf->Select('uzytkownicy')
+				->Where(array('login' => $_POST['inpLogin']))
+				->Execute()->fetchAll();
+		if (count($suildb) == 0) {
+		    $uid = $isf->Select('uzytkownicy', array('*'))
+				    ->OrderBy(array('uid' => 'desc'))
+				    ->Execute()->fetchAll();
+		    $uid = $uid[0]['uid'] + 1;
+		    $isf->Insert('uzytkownicy', array(
+			'uid' => $uid,
+			'login' => $_POST['inpLogin'],
+			'haslo' => 'ldap_login',
+			'webapi_token' => $token,
+			'webapi_timestamp' => $timestamp,
+		    ))->Execute();
+		} else {
+		    $isf->Update('uzytkownicy', array(
+			'webapi_token' => $token,
+			'webapi_timestamp' => $timestamp,
+		    ))->Execute();
+		}
+		$_SESSION['token_time'] = $this->wsdl
+			->call('doShowAuthTime', array('token' => $token));
+		insert_log('admin.login.ldap', 'Autoryzacja ' . $dn . ': OK');
+		Kohana_Request::factory()->redirect('');
+	    } else {
+		Kohana_Request::factory()->redirect('admin/login/false');
+		insert_log('admin.login.ldap', 'Nieudana autoryzacja: ' . $dn);
 	    }
 	}
     }
@@ -377,6 +434,9 @@ START;
     public function action_users() {
 
 	App_Auth::isLogged();
+	if (defined('ldap_enable') && ldap_enable == "true") {
+	    Kohana_Request::factory()->redirect('');
+	}
 	$view = View::factory('_root_template');
 	$view2 = new View('admin_users');
 	$view->set('content', $view2->render());
@@ -448,6 +508,9 @@ START;
      */
     public function action_adduser($err=null) {
 	App_Auth::isLogged();
+	if (defined('ldap_enable') && ldap_enable == "true") {
+	    Kohana_Request::factory()->redirect('');
+	}
 	$view = View::factory('_root_template');
 	$view2 = new View('admin_adduser');
 	$view2->set('err', $err);

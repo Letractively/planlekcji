@@ -29,7 +29,6 @@ div#pnlCenter{
     width: 790px;
     padding-left: 5px;
     padding-right: 5px;
-    margin-top: 5px;
     overflow: auto;
     float: left;
 }
@@ -44,6 +43,7 @@ div#footer{
     width: 1000px;
 }
 
+/* Menu */
 .app_info{
     padding: 5px;
     font-size: 14pt;
@@ -58,17 +58,10 @@ div#footer{
     background-color: red;
     color: white;
 }
-
 .a_klasy{
     line-height: 200%;
 }
 
-p{
-    font-size: 8pt;
-}
-.ui-button-text-only .ui-button-text {
-    padding: 0.3em 1em;
-}
 .inpLoginForm{
     margin-top: 5px;
     margin-bottom: 5px;
@@ -115,15 +108,22 @@ button{
 img{
     border: 0px;
 }
-
+p{
+    margin-top: 10px;
+    margin-bottom: 0px;
+    font-size: 10pt;
+}
 h1{
-    font-size: 14pt;
+    line-height: 5px;
+    font-size: 16pt;
 }
 h2{
-    font-size: 12pt;
+    line-height: 5px;
+    font-size: 14pt;
 }
 h3{
-    font-size: 10pt;
+    line-height: 5px;
+    font-size: 12pt;
 }
 
 .anac{
@@ -135,9 +135,6 @@ a{
 }
 a:visited{
     color: blue;
-}
-a:hover{
-    color: red;
 }
 label{
     font-weight: bold;

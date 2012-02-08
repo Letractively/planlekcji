@@ -3,51 +3,55 @@
     <tbody>
         <tr>
             <td>
-                 <a href="<?php echo URL::site('sale/index'); ?>">Sale</a>
+		<a href="<?php echo URL::site('sale/index'); ?>">Sale</a>
             </td>
         </tr>
         <tr>
             <td>
-                 <a href="<?php echo URL::site('przedmioty/index'); ?>">Przedmioty</a>
+		<a href="<?php echo URL::site('przedmioty/index'); ?>">Przedmioty</a>
             </td>
         </tr>
         <tr>
             <td>
-                 <a href="<?php echo URL::site('nauczyciele/index'); ?>">Nauczyciele</a>
+		<a href="<?php echo URL::site('nauczyciele/index'); ?>">Nauczyciele</a>
             </td>
         </tr>
         <tr>
             <td>
-                 <a href="<?php echo URL::site('klasy/index'); ?>">Klasy</a>
+		<a href="<?php echo URL::site('klasy/index'); ?>">Klasy</a>
             </td>
         </tr>
         <tr>
             <td>
-                 <a href="<?php echo URL::site('admin/users'); ?>">Użytkownicy</a>
+		<?php if (defined('ldap_enable') && ldap_enable == "true"): ?>
+    		Moduł użytkowników w trybie LDAP jest nieaktywny
+		<?php else: ?>
+    		<a href="<?php echo URL::site('admin/users'); ?>">Użytkownicy</a>
+		<?php endif; ?>
             </td>
         </tr>
         <tr>
             <td>
-                 <a href="<?php echo URL::site('godziny/index'); ?>">Godziny lekcyjne i przerwy</a>
+		<a href="<?php echo URL::site('godziny/index'); ?>">Godziny lekcyjne i przerwy</a>
             </td>
         </tr>
         <tr>
             <td>
-                 <a href="<?php echo URL::site('regedit'); ?>">Podgląd rejestru</a>
+		<a href="<?php echo URL::site('regedit'); ?>">Podgląd rejestru</a>
             </td>
         </tr>
 	<?php
 	/*
 	  <tr>
 	  <td>
-	   <a href="<?php echo URL::site('admin/logs'); ?>">Podgląd dzienników</a>
+	  <a href="<?php echo URL::site('admin/logs'); ?>">Podgląd dzienników</a>
 	  </td>
 	  </tr>
 	 */
 	?>
         <tr>
             <td>
-                 <b><a href="<?php echo URL::site('admin/doEditTimetables'); ?>">Plan Zajęć</a></b>
+		<b><a href="<?php echo URL::site('admin/doEditTimetables'); ?>">Plan Zajęć</a></b>
             </td>
         </tr>
     </tbody>
