@@ -1,40 +1,40 @@
 .a_odd{
-    background-color: #9cc36f;
+    background-color: #5d8a5f;
     margin-top: 0px;
     padding: 5px;
+    color: white;
 }
 
 a.anodd{
-    color: lightgoldenrodyellow;
 }
 a.a_odd:link{
-    color: lightgoldenrodyellow;
 }
 a.anodd:active{
-    color: lightgoldenrodyellow;
 }
 a.anodd:visited{
-    color: lightgoldenrodyellow;
 }
 .a_light_menu{
-    background-color: #dffcc0;
+    background-color: #cfeed0;
+    margin-top: 0px;
+    padding: 5px;
 }
 .a_even{
-    background-color: #c1ec95;
+    background-color: #9bb89c;
     margin-top: 0px;
     padding: 5px;
 }
 .app_info{
-    background-color: #9cc36f;
+    background-color: #668767;
     text-shadow: black 1px 1px 3px;
     font-style: italic;
     font-weight: bolder;
     color: white;
 }
 .app_ver{
-    background-color: #c1ec95;
+    background-color: #9bb89c;
     text-align: right;
 }
 button{
-    background-color: #9cc36f;
+    background-color: #668767;
+    color: white;
 }

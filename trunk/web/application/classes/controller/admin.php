@@ -97,14 +97,13 @@ class Controller_Admin extends Controller {
 		insert_log('admin.login', 'Uzytkownik ' . $login . ' zalogowal sie');
 		Kohana_Request::factory()->redirect('');
 	    } else {
+		insert_log('admin.login', 'Nieudana próba zalogowania użytkownika ' . $login);
 		if ($msg == 'auth:locked') {
-		    Kohana_Request::factory()->post('inpLogin', $login);
-		    Kohana_Request::factory()->redirect('admin/login/locked');
-		    insert_log('admin.login', 'Nieudana próba zalogowania zablokowanego użytkownika ' . $login);
+		    Kohana_Request::factory()->post('inpLogin', $login)
+			    ->redirect('admin/login/locked');
 		} else {
-		    Kohana_Request::factory()->post('inpLogin', $login);
-		    Kohana_Request::factory()->redirect('admin/login/false');
-		    insert_log('admin.login', 'Nieudana próba zalogowania użytkownika ' . $login);
+		    Kohana_Request::factory()->post('inpLogin', $login)
+			    ->redirect('admin/login/false');
 		}
 	    }
 	} else { // Logowanie z katalogu LDAP
@@ -121,7 +120,7 @@ class Controller_Admin extends Controller {
 	    }
 	    if ($bind) {
 		$token = App_Auth::generateToken($_POST['inpLogin']);
-		$timestamp = $timestamp = (time() + 3600 * 3);
+		$timestamp = time() + 3600 * 3;
 		$_SESSION['token'] = $token;
 		$_SESSION['user'] = $_POST['inpLogin'];
 		$isf = Isf2::Connect();
@@ -142,9 +141,11 @@ class Controller_Admin extends Controller {
 		    ))->Execute();
 		} else {
 		    $isf->Update('uzytkownicy', array(
-			'webapi_token' => $token,
-			'webapi_timestamp' => $timestamp,
-		    ))->Execute();
+				'webapi_token' => $token,
+				'webapi_timestamp' => $timestamp,
+			    ))
+			    ->Where(array('login' => $_POST['inpLogin']))
+			    ->Execute();
 		}
 		$_SESSION['token_time'] = $this->wsdl
 			->call('doShowAuthTime', array('token' => $token));

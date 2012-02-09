@@ -65,23 +65,20 @@ if (Core_Tools::is_mobile() && !isset($_COOKIE['_nomobile'])) {
 			<a href="<?php echo URL::site('default/index'); ?>">
 			    <img src="<?php echo URL::base(); ?>lib/icons/home.png" alt=""/></a>
 			Plan Lekcji
-			<?php echo View::factory()->render('_snippet_theme'); ?>
 		    </div>
 		    <?php if (preg_match('#dev#', $appver)): ?>
     		    <div class="a_error" style="width: 100%; font-size: x-small;">
     			&nbsp;Używasz wersji rozwojowej systemu
     		    </div>
 		    <?php endif; ?>
-		    <?php if (defined('ldap_enable')&&ldap_enable=="true"): ?>
-    		    <div class="a_error" style="width: 100%; font-size: x-small;">
-    			&nbsp;Eksperymentalne logowanie LDAP
-    		    </div>
-		    <?php endif; ?>
 		    <div id="sidebar_menu" style="padding-left: 10px;" class="a_light_menu">
+			
 			<?php if (Core_Tools::is_mobile()): ?>
 			<h3><a href="<?php echo URL::site('mobile/index'); ?>">Wersja mobilna</a></h3>
 			<?php endif; ?>
 			<?php echo View::factory()->render('_sidebar_menu'); ?>
+			<hr/>
+			<?php echo View::factory()->render('_snippet_theme'); ?>
 		    </div>
 		</div>
 		<div id="pnlCenter">

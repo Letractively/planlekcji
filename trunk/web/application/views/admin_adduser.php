@@ -1,7 +1,7 @@
 <?php
-$isf = new Kohana_Isf();
-$isf->Connect(APP_DBSYS);
-$uid = $isf->DbSelect('uzytkownicy', array('*'), 'order by uid desc');
+$isf = Isf2::Connect();
+$uid = $isf->Select('uzytkownicy', array('*'))
+	->OrderBy(array('uid' => 'desc'));
 $uid = $uid[0]['uid'] + 1;
 ?>
 <form action="<?php echo URL::site('admin/douseradd'); ?>" method="post">

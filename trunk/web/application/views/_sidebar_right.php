@@ -12,36 +12,33 @@ if ($zadmin > $toktime) {
     <fieldset>
         <legend>
             <img src="<?php echo URL::base() ?>lib/images/user.gif" alt=""/>
-            Zalogowany jako: <b><?php echo $_SESSION['user']; ?></b>
+	    <?php echo $_SESSION['user']; ?>
         </legend>
-        <ul style="font-size: 8pt; list-style: none; padding: 0px;">
-            <li>
-                <img src="<?php echo URL::base() ?>lib/icons/token.png" alt=""/>
-                <a href="<?php echo URL::site('admin/doRenewToken'); ?>">
-                    Odnów mój token
-                </a>
-            </li>
-            <li>
-		<?php if (defined('ldap_enable') && ldap_enable == "true"): ?>
-    		Zmiana hasła w trybie LDAP jest niemożliwa
-		<?php else: ?>
-    		<img src="<?php echo URL::base() ?>lib/icons/password.png" alt=""/>
-                    <a href="<?php echo URL::site('admin/doChangePassword'); ?>">
-                        Zmień moje hasło
-                    </a>
-		<?php endif; ?>
-            </li>
-            <li>
-                <img src="<?php echo URL::base() ?>lib/icons/logout.png" alt=""/>
-                <a href="<?php echo URL::site('admin/doLogout'); ?>">
-                    Wyloguj mnie
-                </a>
-            </li>
-            <li>
-                <br/>
-                <b>Token wygasa o: </b> <?php echo $tokenizer; ?>
-            </li>
-        </ul>
+	<p class="grptxt">
+	    <img src="<?php echo URL::base() ?>lib/icons/logout.png" alt=""/>
+	    <a href="<?php echo URL::site('admin/doLogout'); ?>">
+		Wyloguj mnie
+	    </a>
+	</p>
+	<p class="grptxt">
+	    <?php if (defined('ldap_enable') && ldap_enable == "true"): ?>
+    	    Zmiana hasła w trybie LDAP jest niemożliwa
+	    <?php else: ?>
+    	    <img src="<?php echo URL::base() ?>lib/icons/password.png" alt=""/>
+    	    <a href="<?php echo URL::site('admin/doChangePassword'); ?>">
+    		Zmień moje hasło
+    	    </a>
+	    <?php endif; ?>
+	</p>
+	<p class="grptxt">
+	    <img src="<?php echo URL::base() ?>lib/icons/token.png" alt=""/>
+	    <a href="<?php echo URL::site('admin/doRenewToken'); ?>">
+		Odnów mój token
+	    </a>
+	</p>
+	<p class="grptxt">
+	    <b>Token: </b> <?php echo $tokenizer; ?>
+	</p>
     </fieldset>
     <?php if ($_SESSION['user'] == 'root'): ?>
         <p>
