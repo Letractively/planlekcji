@@ -71,7 +71,7 @@ class Core_Tools {
 	if (!$valid_paths) {
 	    self::ShowError($paths_err, 'S001', true);
 	}
-	if (!extension_loaded('pdo_sqlite') || !extension_loaded('pdo_pgsql')) {
+	if (!extension_loaded('pdo_sqlite') && !extension_loaded('pdo_pgsql')) {
 	    $dbErrMessage = 'IPL: PDO_SQLITE or PDO_PGSQL extension enabled is required';
 	    self::ShowError($dbErrMessage, 'S002', true);
 	}
