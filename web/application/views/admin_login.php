@@ -41,7 +41,7 @@ if (!isset($_POST['inpLogin'])) {
 		<label for="inpLogin">Login</label>
 	    </div>
 	    <div class="tableCell">
-		<input class="a_light_menu inpLoginForm" type="text" name="inpLogin" value=""/><p></p>
+		<input class="inpLoginForm" type="text" name="inpLogin" value="<?php echo $_POST['inpLogin']; ?>"/>
 	    </div>
 	</div>
 	<div class="tableRow">
@@ -49,26 +49,20 @@ if (!isset($_POST['inpLogin'])) {
 		<label for="inpHaslo">Hasło</label>
 	    </div>
 	    <div class="tableCell">
-		<input class="a_light_menu inpLoginForm" type="password" name="inpHaslo" value=""/><p></p>
-	    </div>
-	</div>
-	<div class="tableRow">
-	    <div class="tableCell">
-		<label for="inpToken">Token</label>
-	    </div>
-	    <div class="tableCell">
-		<?php if (defined('ldap_enable') && ldap_enable == "true"): ?>
-    		<p>Logowanie w trybie LDAP nie wymaga podania tokena autoryzacji.</p>
-		<?php else: ?>
-    		<input class="a_light_menu inpLoginForm" type="text" name="inpToken" value=""/>
-		<?php endif; ?>
-	    </div>
-	</div>
-	<div class="tableRow">
-	    <div class="tableCell">
+		<input class="inpLoginForm" type="password" name="inpHaslo" value=""/>
 		<button type="submit" name="btnSubmit" id="btnSubmit">Zaloguj</button>
 	    </div>
 	</div>
+	<?php if (!defined('ldap_enable') || ldap_enable != "true"): ?>
+    	<div class="tableRow">
+    	    <div class="tableCell">
+    		<label for="inpToken">Token</label>
+    	    </div>
+    	    <div class="tableCell">
+    		<input class="inpLoginForm" type="text" name="inpToken" value=""/>
+    	    </div>
+    	</div>
+	<?php endif; ?>
     </div>
 </form>
 

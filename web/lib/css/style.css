@@ -63,10 +63,8 @@ div#footer{
 }
 
 .inpLoginForm{
-    margin-top: 5px;
-    margin-bottom: 5px;
-    padding: 3px;
-    font-family: 'Open Sans', sans-serif;
+    width: 200px;
+    height: 16pt;
 }
 .loginFormError{
     padding: 3px;

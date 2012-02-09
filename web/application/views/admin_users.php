@@ -1,8 +1,9 @@
 <?php
-$isf = new Kohana_Isf();
-$isf->Connect(APP_DBSYS);
+$isf = Isf2::Connect();
+$res = $isf->Select('uzytkownicy')
+		->Where(array('login::!=' => 'root', 'haslo::!=' => 'ldap_login'))
+		->Execute()->fetchAll();
 ?>
-<?php $res = $isf->DbSelect('uzytkownicy', array('*'), 'where login != \'root\''); ?>
 <table style="width: 100%;">
     <thead class="a_odd">
         <tr>
@@ -29,7 +30,17 @@ $isf->Connect(APP_DBSYS);
 	    <tr>
 	    <?php endif; ?>
     	<td><?php echo $rowcol['uid']; ?></td>
-    	<td><?php echo $rowcol['login']; ?> (<?php echo count($isf->DbSelect('tokeny', array('*'), 'where login=\'' . $rowcol['login'] . '\'')); ?>)</td>
+    	<td>
+		<?php echo $rowcol['login']; ?>
+    	    (
+		<?php
+		echo count($isf->Select('tokeny', array('*'))->Where(array(
+				    'login' => $rowcol['login']
+				))
+				->Execute()->fetchAll());
+		?>
+    	    )
+    	</td>
 	    <?php if ($rowcol['ilosc_prob'] >= 3): ?>
 		<td><p class="error">█ zablokowany</p></td>
 	    <?php else: ?>

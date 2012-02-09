@@ -2,9 +2,7 @@
     <p class="info">
         Bardzo nam przykro, ale system jest aktualnie niedostępny.
     </p>
-    <?php
-else:
-    ?>
+<?php else: ?>
     <?php if (App_Globals::getSysLv() == 3): //gdy system jest calkowicie otwarty bez edycji sal, czy planow ?>
 	<p>
 	    <img src="<?php echo URL::base(); ?>lib/icons/zastepstwa.png" alt=""/>

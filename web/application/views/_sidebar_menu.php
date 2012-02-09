@@ -15,8 +15,7 @@
 	<?php if ($_SESSION['user'] == 'root'): ?>
 	    <?php echo View::factory()->render('_menu_root_1'); ?>
 	<?php else: ?>
-	    <p class="error">Witaj <b><?php echo $_SESSION['user']; ?></b>.
-	        Niestety, nie masz dostępu do edycji sal, przedmiotów, godzin,
+	    <p class="grptxt">Niestety, nie masz dostępu do edycji sal, przedmiotów, godzin,
 	        klas i nauczycieli.</p>
 	<?php endif; ?>
     <?php endif; ?>

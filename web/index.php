@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(-1);
 /**
  * Plik główny projektu - bootloader IPL
  * 
