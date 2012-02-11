@@ -44,7 +44,7 @@ if ($zadmin > $toktime) {
         <p>
     	<img src="<?php echo URL::base() ?>lib/icons/edit.png" alt=""/>
     	<a href="<?php echo URL::site('admin/doEditSettings'); ?>">
-    	    Ustawienia strony głównej
+    	    Ustawienia systemu
     	</a>
         </p>
         <p>

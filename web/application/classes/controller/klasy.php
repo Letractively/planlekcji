@@ -47,10 +47,13 @@ class Controller_Klasy extends Controller {
      *
      * @param string $klasa klasa
      */
-    public function action_usun($klasa) {
+    public function action_usun() {
+	if (!isset($_POST)) {
+	    Kohana_Request::factory()->redirect('klasy/index');
+	}
 	$isf = Isf2::Connect();
-	$isf->Delete('klasy')->Where(array('klasa' => $klasa))->Execute();
-	$isf->Delete('nl_klasy')->Where(array('klasa' => $klasa))->Execute();
+	$isf->Delete('klasy')->Where(array('klasa' => $_POST['btnClass'][0]))->Execute();
+	$isf->Delete('nl_klasy')->Where(array('klasa' => $_POST['btnClass'][0]))->Execute();
 	Kohana_Request::factory()->redirect('klasy/index/usun');
     }
 
