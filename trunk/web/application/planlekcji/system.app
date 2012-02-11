@@ -130,154 +130,56 @@ class Core_Tools {
 	$user_agent = $_SERVER['HTTP_USER_AGENT'];
 
 	$mobile_agents = Array(
-	    "240x320",
-	    "acer",
-	    "acoon",
-	    "acs-",
-	    "abacho",
-	    "ahong",
-	    "airness",
-	    "alcatel",
-	    "amoi",
-	    "android",
-	    "anywhereyougo.com",
-	    "applewebkit/525",
-	    "applewebkit/532",
-	    "asus",
-	    "audio",
-	    "au-mic",
-	    "avantogo",
-	    "becker",
-	    "benq",
-	    "bilbo",
-	    "bird",
-	    "blackberry",
-	    "blazer",
-	    "bleu",
-	    "cdm-",
-	    "compal",
-	    "coolpad",
-	    "danger",
-	    "dbtel",
-	    "dopod",
-	    "elaine",
-	    "eric",
-	    "etouch",
-	    "fly ",
-	    "fly_",
-	    "fly-",
-	    "go.web",
-	    "goodaccess",
-	    "gradiente",
-	    "grundig",
-	    "haier",
-	    "hedy",
-	    "hitachi",
-	    "htc",
-	    "huawei",
-	    "hutchison",
-	    "inno",
-	    "ipad",
-	    "ipaq",
-	    "ipod",
-	    "jbrowser",
-	    "kddi",
-	    "kgt",
-	    "kwc",
-	    "lenovo",
-	    "lg ",
-	    "lg2",
-	    "lg3",
-	    "lg4",
-	    "lg5",
-	    "lg7",
-	    "lg8",
-	    "lg9",
-	    "lg-",
-	    "lge-",
-	    "lge9",
-	    "longcos",
-	    "maemo",
-	    "mercator",
-	    "meridian",
-	    "micromax",
-	    "midp",
-	    "mini",
-	    "mitsu",
-	    "mmm",
-	    "mmp",
-	    "mobi",
-	    "mot-",
-	    "moto",
-	    "nec-",
-	    "netfront",
-	    "newgen",
-	    "nexian",
-	    "nf-browser",
-	    "nintendo",
-	    "nitro",
-	    "nokia",
-	    "nook",
-	    "novarra",
-	    "obigo",
-	    "palm",
-	    "panasonic",
-	    "pantech",
-	    "philips",
-	    "phone",
-	    "pg-",
-	    "playstation",
-	    "pocket",
-	    "pt-",
-	    "qc-",
-	    "qtek",
-	    "rover",
-	    "sagem",
-	    "sama",
-	    "samu",
-	    "sanyo",
-	    "samsung",
-	    "sch-",
-	    "scooter",
-	    "sec-",
-	    "sendo",
-	    "sgh-",
-	    "sharp",
-	    "siemens",
-	    "sie-",
-	    "softbank",
-	    "sony",
-	    "spice",
-	    "sprint",
-	    "spv",
-	    "symbian",
-	    "tablet",
-	    "talkabout",
-	    "tcl-",
-	    "teleca",
-	    "telit",
-	    "tianyu",
-	    "tim-",
-	    "toshiba",
-	    "tsm",
-	    "up.browser",
-	    "utec",
-	    "utstar",
-	    "verykool",
-	    "virgin",
-	    "vk-",
-	    "voda",
-	    "voxtel",
-	    "vx",
-	    "wap",
-	    "wellco",
-	    "wig browser",
-	    "wii",
-	    "windows ce",
-	    "wireless",
-	    "xda",
-	    "xde",
-	    "zte"
+	    '240x320', 'acer', 'acoon',
+	    'acs-', 'abacho', 'ahong',
+	    'airness', 'alcatel', 'amoi',
+	    'android', 'anywhereyougo.com', 'applewebkit/525',
+	    'applewebkit/532', 'asus', 'audio',
+	    'au-mic', 'avantogo', 'becker',
+	    'benq', 'bilbo', 'bird',
+	    'blackberry', 'blazer', 'bleu',
+	    'cdm-', 'compal', 'coolpad',
+	    'danger', 'dbtel', 'dopod',
+	    'elaine', 'eric', 'etouch',
+	    'fly ', 'fly_', 'fly-',
+	    'go.web', 'goodaccess', 'gradiente',
+	    'grundig', 'haier', 'hedy',
+	    'hitachi', 'htc', 'huawei',
+	    'hutchison', 'inno', 'ipad',
+	    'ipaq', 'ipod', 'jbrowser',
+	    'kddi', 'kgt', 'kwc',
+	    'lenovo', 'lg ', 'lg2',
+	    'lg3', 'lg4', 'lg5',
+	    'lg7', 'lg8', 'lg9',
+	    'lg-', 'lge-', 'lge9',
+	    'longcos', 'maemo', 'mercator',
+	    'meridian', 'micromax', 'midp',
+	    'mini', 'mitsu', 'mmm',
+	    'mmp', 'mobi', 'mot-',
+	    'moto', 'nec-',
+	    'netfront', 'newgen', 'nexian',
+	    'nf-browser', 'nintendo', 'nitro',
+	    'nokia', 'nook', 'novarra',
+	    'obigo', 'palm', 'panasonic',
+	    'pantech', 'philips', 'phone',
+	    'pg-', 'playstation', 'pocket',
+	    'pt-', 'qc-', 'qtek',
+	    'rover', 'sagem', 'sama',
+	    'samu', 'sanyo', 'samsung',
+	    'sch-', 'scooter', 'sec-',
+	    'sendo', 'sgh-', 'sharp',
+	    'siemens', 'sie-', 'softbank',
+	    'sony', 'spice', 'sprint',
+	    'spv', 'symbian', 'tablet',
+	    'talkabout', 'tcl-', 'teleca',
+	    'telit', 'tianyu', 'tim-',
+	    'toshiba', 'tsm', 'up.browser',
+	    'utec', 'utstar', 'verykool',
+	    'virgin', 'vk-', 'voda',
+	    'voxtel', 'vx', 'wap',
+	    'wellco', 'wig browser', 'wii',
+	    'windows ce', 'wireless', 'xda',
+	    'xde', 'zte'
 	);
 
 	$is_mobile = false;
@@ -501,6 +403,93 @@ class App_Auth {
 	    }
 
 	    return true;
+	}
+    }
+
+    /**
+     * Logowanie do IPL
+     *
+     * @param string $login
+     * @param string $password
+     * @param string $token 
+     */
+    public static function doLogin($login, $password, $token) {
+	self::$wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
+	if (!defined('ldap_enable') || ldap_enable != "true") {
+
+	    $msg = self::$wsdl->call('doLogin', array(
+		'login' => $login,
+		'haslo' => $password,
+		'token' => $token));
+
+	    if ($msg != 'auth:failed' && $msg != 'auth:locked') {
+		$_SESSION['token'] = $msg;
+		$_SESSION['user'] = $login;
+		if (isset($token) && $login != 'root') {
+		    $_SESSION['usr_token'] = $token;
+		}
+		$_SESSION['token_time'] = self::$wsdl->call('doShowAuthTime', array('token' => $msg));
+		insert_log('admin.login', 'Uzytkownik ' . $login . ' zalogowal sie');
+		Kohana_Request::factory()->redirect('');
+	    } else {
+		insert_log('admin.login', 'Nieudana próba zalogowania użytkownika ' . $login);
+		if ($msg == 'auth:locked') {
+		    Kohana_Request::factory()->post('inpLogin', $login)
+			    ->redirect('admin/login/locked');
+		} else {
+		    Kohana_Request::factory()->post('inpLogin', $login)
+			    ->redirect('admin/login/false');
+		}
+	    }
+	} else { // Logowanie z katalogu LDAP
+	    if (!defined('ldap_server') || !defined('ldap_basedn')) {
+		Core_Tools::ShowError('LDAP configuration is corrupt', '801', true);
+	    }
+	    $conn = ldap_connect(ldap_server);
+	    $dn = 'cn=' . $login . ',' . ldap_basedn;
+	    try {
+		$bind = ldap_bind($conn, $dn, $password);
+	    } catch (Exception $e) {
+		Kohana_Request::factory()->redirect('admin/login/false');
+		insert_log('admin.login.ldap', 'Nieudana autoryzacja: ' . $dn);
+	    }
+	    if ($bind) {
+		$token = App_Auth::generateToken($login);
+		$timestamp = time() + 3600 * 3;
+		$_SESSION['token'] = $token;
+		$_SESSION['user'] = $login;
+		$isf = Isf2::Connect();
+		$suildb = $isf->Select('uzytkownicy')
+				->Where(array('login' => $login))
+				->Execute()->fetchAll();
+		if (count($suildb) == 0) {
+		    $uid = $isf->Select('uzytkownicy', array('*'))
+				    ->OrderBy(array('uid' => 'desc'))
+				    ->Execute()->fetchAll();
+		    $uid = $uid[0]['uid'] + 1;
+		    $isf->Insert('uzytkownicy', array(
+			'uid' => $uid,
+			'login' => $login,
+			'haslo' => 'ldap_login',
+			'webapi_token' => $token,
+			'webapi_timestamp' => $timestamp,
+		    ))->Execute();
+		} else {
+		    $isf->Update('uzytkownicy', array(
+				'webapi_token' => $token,
+				'webapi_timestamp' => $timestamp,
+			    ))
+			    ->Where(array('login' => $login))
+			    ->Execute();
+		}
+		$_SESSION['token_time'] = self::$wsdl
+			->call('doShowAuthTime', array('token' => $token));
+		insert_log('admin.login.ldap', 'Autoryzacja ' . $dn . ': OK');
+		Kohana_Request::factory()->redirect('');
+	    } else {
+		Kohana_Request::factory()->redirect('admin/login/false');
+		insert_log('admin.login.ldap', 'Nieudana autoryzacja: ' . $dn);
+	    }
 	}
     }
 

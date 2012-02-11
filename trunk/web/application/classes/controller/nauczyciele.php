@@ -46,45 +46,49 @@ class Controller_Nauczyciele extends Controller {
 	echo $view->render();
     }
 
-    /**
-     * Dodaje nauczyciela
-     */
-    public function action_dodaj() {
-	if (isset($_POST)) {
-
-	    $isf = new Kohana_Isf();
-	    $isf->Connect(APP_DBSYS);
-
-	    if (count($isf->DbSelect('nauczyciele', array('*'), 'where imie_naz=\'' . $_POST['inpName'] . '\'')) != 0) {
-		Kohana_Request::factory()->redirect('nauczyciele/index/e1');
-		exit;
-	    }
-
-	    $m = preg_match('/([.!@#$%;^&*()_+|])/i', $_POST['inpName']);
-
-	    if ($m == true) {
-		Kohana_Request::factory()->redirect('nauczyciele/index/e2');
-		exit;
-	    }
-
-	    if ($_POST['inpName'] == '' || $_POST['inpName'] == null || empty($_POST['inpName'])) {
-		Kohana_Request::factory()->redirect('nauczyciele/index/e3');
-		exit;
-	    }
-
-	    $lit = substr($_POST['inpName'], 0, 1);
-	    $rsl = $isf->DbSelect('nauczyciele', array('*'), 'where imie_naz like \'' . $lit . '%\'');
-	    $nr = count($rsl) + 1;
-	    $sk = strtoupper($lit . $nr);
-
-	    $isf->DbInsert('nauczyciele', array(
-		'imie_naz' => $_POST['inpName'],
-		'skrot' => $sk,
-	    ));
-
-	    Kohana_Request::factory()->redirect('nauczyciele/index/pass');
-	} else {
+    public function action_commit() {
+	if (!isset($_POST)) {
 	    Kohana_Request::factory()->redirect('');
+	}
+	if (isset($_POST['btnAddTeacher'])) {
+	    $this->action_dodaj($_POST['inpTeacherName']);
+	}
+	if (isset($_POST['btnEdit'])) {
+	    if (!isset($_POST['rdTeacher'])) {
+		Kohana_Request::factory()->redirect('nauczyciele/index/nonesel');
+	    }
+	    $this->action_zarzadzanie($_POST['rdTeacher']);
+	}
+	if (isset($_POST['btnDel'])) {
+	    if (!isset($_POST['tDel'])) {
+		Kohana_Request::factory()->redirect('nauczyciele/index/nonesel');
+	    }
+	    foreach ($_POST['tDel'] as $id => $sym) {
+		$this->action_usun($sym);
+	    }
+	    Kohana_Request::factory()->redirect('nauczyciele/index/completed');
+	}
+	if (isset($_POST['btnAddClass'])) {
+	    $this->action_dodklasa($_POST['skrot'], $_POST['selKlasy']);
+	    $this->action_zarzadzanie($_POST['skrot']);
+	}
+	if (isset($_POST['btnDelClass'])) {
+	    if (!isset($_POST['rdClass'])) {
+		$this->action_zarzadzanie($_POST['skrot']);
+	    }
+	    $this->action_delklasa($_POST['skrot'], $_POST['rdClass']);
+	    $this->action_zarzadzanie($_POST['skrot']);
+	}
+	if (isset($_POST['btnAddSubject'])) {
+	    $this->action_dodprzed($_POST['skrot'], $_POST['selPrzedm']);
+	    $this->action_zarzadzanie($_POST['skrot']);
+	}
+	if (isset($_POST['btnDelSubject'])) {
+	    if (!isset($_POST['rdSubject'])) {
+		$this->action_zarzadzanie($_POST['skrot']);
+	    }
+	    $this->action_delprzed($_POST['skrot'], $_POST['rdSubject']);
+	    $this->action_zarzadzanie($_POST['skrot']);
 	}
     }
 
@@ -93,78 +97,96 @@ class Controller_Nauczyciele extends Controller {
      *
      * @param string $skrot kod nauczyciela
      */
-    public function action_zarzadzanie($skrot) {
-	$isf = new Kohana_Isf();
-	$isf->Connect(APP_DBSYS);
-	$nauczyciel = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\'' . $skrot . '\'');
-	$nauczyciel = $nauczyciel[0]['imie_naz'];
+    private function action_zarzadzanie($skrot) {
+
+	$nauczyciel = App_Globals::getTeacherName($skrot);
 
 	$view = View::factory('_root_template');
 	$view2 = View::factory('nauczyciele_zarzadzanie');
 	$view2->set('nauczyciel', $nauczyciel);
-	$view2->set('nskr', $skrot);
+	$view2->set('skrot', $skrot);
 
 	$view->set('content', $view2->render());
 	echo $view->render();
     }
 
     /**
-     * Przypisuje nauczycielowi klase
+     * Dodaje nauczyciela
+     * 
+     * @param string $teacher Imie i nazwisko
      */
-    public function action_dodklasa() {
-	$naucz = $_POST['nauczyciel'];
-	$klasa = $_POST['selKlasy'];
-	$isf = new Kohana_Isf();
-	$isf->Connect(APP_DBSYS);
-	$nl = $isf->DbSelect('nauczyciele', array('*'), 'where imie_naz=\'' . $naucz . '\'');
-	$nl = $nl[0]['skrot'];
-	$isf->DbInsert('nl_klasy', array(
-	    'nauczyciel' => $naucz,
-	    'klasa' => $klasa
-	));
-	Kohana_Request::factory()->redirect('nauczyciele/zarzadzanie/' . $nl);
+    private function action_dodaj($teacher) {
+
+	$isf = Isf2::Connect();
+
+	$nl_exist = $isf->Select('nauczyciele')
+			->Where(array('imie_naz' => $teacher))
+			->Execute()->fetchAll();
+
+	if (count($nl_exist) != 0) {
+	    Kohana_Request::factory()->redirect('nauczyciele/index/e1');
+	    exit;
+	}
+
+	$m = preg_match('/([.!@#$%;^&*()_+|])/i', $teacher);
+
+	if ($m == true) {
+	    Kohana_Request::factory()->redirect('nauczyciele/index/e2');
+	    exit;
+	}
+
+	if ($teacher == '' || $teacher == null || empty($teacher)) {
+	    Kohana_Request::factory()->redirect('nauczyciele/index/e3');
+	    exit;
+	}
+
+	$lit = substr($teacher, 0, 1);
+
+	$rsl = $isf->Select('nauczyciele')->Where(array('imie_naz::like' => $lit . '%'))
+			->OrderBy(array('skrot' => 'desc'))
+			->Execute()->fetchAll();
+
+	if (count($rsl) == 0)
+	    $nr = 1;
+	else
+	    $nr = (int) (substr($rsl[0]['skrot'], 1)) + 1;
+
+	$skrot = strtoupper($lit . $nr);
+
+	$isf->Insert('nauczyciele', array(
+	    'imie_naz' => $teacher,
+	    'skrot' => $skrot,
+	))->Execute();
+
+	Kohana_Request::factory()->redirect('nauczyciele/index/pass');
     }
 
     /**
      * Usuwa nauczyciela
      *
-     * @param string $nauczyciel kod nauczyciela
-     * @param boolean $confirm czy usunac
+     * @param string $teacher_sym kod nauczyciela
      */
-    public function action_usun($nauczyciel, $confirm=false) {
-	if ($confirm == false) {
-	    $view = View::factory('_root_template');
-	    $view2 = view::factory('nauczyciele_usun');
-	    $view2->set('nauczyciel', $nauczyciel);
-
-	    $view->set('content', $view2->render());
-	    echo $view->render();
-	} else {
-	    $isf = new Kohana_Isf();
-	    $isf->Connect(APP_DBSYS);
-	    $nl = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\'' . $nauczyciel . '\'');
-	    $isf->DbDelete('nauczyciele', 'skrot=\'' . $nauczyciel . '\'');
-	    $nauczyciel = $nl[0]['imie_naz'];
-	    $isf->DbDelete('nl_klasy', 'nauczyciel=\'' . $nauczyciel . '\'');
-	    $isf->DbDelete('nl_przedm', 'nauczyciel=\'' . $nauczyciel . '\'');
-	    Kohana_Request::factory()->redirect('nauczyciele/index');
-	}
+    private function action_usun($teacher_sym) {
+	$isf = Isf2::Connect();
+	$isf->Delete('nauczyciele')
+		->Where(array('skrot' => $teacher_sym))->Execute();
+	$nauczyciel = App_Globals::getTeacherName($teacher_sym);
+	$isf->Delete('nl_klasy')
+		->Where(array('nauczyciel' => $nauczyciel))->Execute();
+	$isf->Delete('nl_przedm')
+		->Where(array('nauczyciel' => $nauczyciel))->Execute();
     }
 
     /**
-     * Przypisuje przedmiot nauczycielowi
+     * Przypisuje nauczycielowi klase
      */
-    public function action_dodprzed() {
-	$skr = $_POST['skrot'];
-	$naucz = $_POST['nauczyciel'];
-	$przedmiot = $_POST['selPrzedm'];
-	$isf = new Kohana_Isf();
-	$isf->Connect(APP_DBSYS);
-	$isf->DbInsert('nl_przedm', array(
-	    'nauczyciel' => $naucz,
-	    'przedmiot' => $przedmiot
-	));
-	Kohana_Request::factory()->redirect('nauczyciele/zarzadzanie/' . $skr);
+    private function action_dodklasa($skrot, $klasa) {
+	$isf = Isf2::Connect();
+	$nauczyciel = App_Globals::getTeacherName($skrot);
+	$isf->Insert('nl_klasy', array(
+	    'nauczyciel' => $nauczyciel,
+	    'klasa' => $klasa
+	))->Execute();
     }
 
     /**
@@ -173,13 +195,26 @@ class Controller_Nauczyciele extends Controller {
      * @param string $nauczyciel kod nauczyciela
      * @param string $klasa klasa klasa
      */
-    public function action_klwyp($nauczyciel, $klasa) {
-	$isf = new Kohana_Isf();
-	$isf->Connect(APP_DBSYS);
-	$nl = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\'' . $nauczyciel . '\'');
-	$nl = $nl[0]['imie_naz'];
-	$isf->DbDelete('nl_klasy', 'nauczyciel=\'' . $nl . '\' and klasa=\'' . $klasa . '\'');
-	Kohana_Request::factory()->redirect('nauczyciele/zarzadzanie/' . $nauczyciel);
+    public function action_delklasa($skrot, $klasa) {
+	$isf = Isf2::Connect();
+	$nl = App_Globals::getTeacherName($skrot);
+	$isf->Delete('nl_klasy')
+		->Where(array(
+		    'nauczyciel' => $nl,
+		    'klasa' => $klasa))
+		->Execute();
+    }
+
+    /**
+     * Przypisuje przedmiot nauczycielowi
+     */
+    private function action_dodprzed($skrot, $przedmiot) {
+	$isf = Isf2::Connect();
+	$nauczyciel = App_Globals::getTeacherName($skrot);
+	$isf->Insert('nl_przedm', array(
+	    'nauczyciel' => $nauczyciel,
+	    'przedmiot' => $przedmiot
+	))->Execute();
     }
 
     /**
@@ -188,13 +223,14 @@ class Controller_Nauczyciele extends Controller {
      * @param string $nauczyciel kod nauczyciela
      * @param string $przedmiot przedmiot do wypisania
      */
-    public function action_przwyp($nauczyciel, $przedmiot) {
-	$isf = new Kohana_Isf();
-	$isf->Connect(APP_DBSYS);
-	$nl = $isf->DbSelect('nauczyciele', array('*'), 'where skrot=\'' . $nauczyciel . '\'');
-	$nl = $nl[0]['imie_naz'];
-	$isf->DbDelete('nl_przedm', 'nauczyciel=\'' . $nl . '\' and przedmiot=\'' . $przedmiot . '\'');
-	Kohana_Request::factory()->redirect('nauczyciele/zarzadzanie/' . $nauczyciel);
+    private function action_delprzed($skrot, $przedmiot) {
+	$isf = Isf2::Connect();
+	$nl = App_Globals::getTeacherName($skrot);
+	$isf->Delete('nl_przedm')
+		->Where(array(
+		    'nauczyciel' => $nl,
+		    'przedmiot' => $przedmiot
+		))->Execute();
     }
 
 }
