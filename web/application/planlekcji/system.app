@@ -348,6 +348,35 @@ class MPZ {
  */
 class App_Auth {
 
+    /**
+     * Zmienia haslo uzytkownika
+     *
+     * @param string $token token
+     * @param string $old stare haslo
+     * @param string $new nowe haslo
+     * @return string auth:chpasswd, auth:failed 
+     */
+    public static function doChangePass($token, $old, $new) {
+
+	$db = Isf2::Connect();
+
+	$oldm = md5('plan' . sha1('lekcji' . $old));
+	$newm = md5('plan' . sha1('lekcji' . $new));
+
+	$old_user = $db->Select('uzytkownicy', array('haslo'))
+			->Where(array('haslo' => $oldm))
+			->Execute()->FetchAll();
+
+	if (count($old_user) != 1) {
+	    return 'auth:failed';
+	} else {
+	    $db->Update('uzytkownicy', array('haslo' => $newm))
+		    ->Where(array('webapi_token' => $token, 'haslo' => $oldm))
+		    ->Execute();
+	    return 'auth:chpasswd';
+	}
+    }
+
     public static function showAuthTime($token) {
 	$res = Isf2::Connect()->Select('uzytkownicy')
 			->Where(array('webapi_token' => $token))
@@ -490,7 +519,7 @@ class App_Auth {
 	    exit;
 	} else {
 	    $timestamp = (time() + 3600 * 3);
-	    $sessionToken = gentoken($userData[0]['login']);
+	    $sessionToken = App_Auth::generateToken($userData[0]['login']);
 
 	    if ($login != 'root') {
 		$dbn->Delete('tokeny')
@@ -522,7 +551,7 @@ class App_Auth {
     public static function doLogin($login, $password, $token) {
 	if (!defined('ldap_enable') || ldap_enable != "true") {
 
-	    $msg = self::doUserLogin($login, $pass, $token);
+	    $msg = self::doUserLogin($login, $password, $token);
 
 	    if ($msg != 'auth:failed' && $msg != 'auth:locked') {
 		$_SESSION['token'] = $msg;
