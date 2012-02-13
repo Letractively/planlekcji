@@ -18,24 +18,6 @@ defined('SYSPATH') or die('No direct script access.');
 class Controller_Admin extends Controller {
 
     /**
-     *
-     * @var nusoap_client Obiekt klienta NuSOAP 
-     */
-    public $wsdl;
-
-    /**
-     * Konstruktor tworzy obiekt sesji
-     */
-    public function __construct() {
-	try {
-	    $this->wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
-	} catch (Exception $e) {
-	    echo $e->getMessage();
-	    exit;
-	}
-    }
-
-    /**
      * Uruchamia glowna strone
      */
     public function action_index() {
@@ -337,10 +319,7 @@ START;
 		Kohana_Request::factory()->redirect('admin/doChangePassword/false');
 		exit;
 	    }
-	    $arr['token'] = $_SESSION['token'];
-	    $arr['old'] = $s;
-	    $arr['new'] = $n;
-	    $act = $this->wsdl->call('doChangePass', $arr);
+	    $act = App_Auth::doChangePass($_SESSION['token'], $s, $n);
 	    if ($act == 'auth:failed') {
 		Kohana_Request::factory()->redirect('admin/doChangePassword/false');
 	    } else {

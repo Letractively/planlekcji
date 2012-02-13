@@ -12,7 +12,7 @@ $res = $isf->Select('klasy', array('klasa'))
 		->Execute()->fetchAll();
 $grp = App_Globals::getRegistryKey('ilosc_grup');
 ?>
-<div class="tableDiv">
+<div class="tableDiv" style="width: 100%;">
     <div class="tableRow">
 	<div class="tableCell" style="width: 50%;">
 	    <h3>Dodaj klasę</h3>
