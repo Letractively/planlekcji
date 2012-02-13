@@ -348,7 +348,25 @@ class MPZ {
  */
 class App_Auth {
 
-    protected static $wsdl;
+    public static function showAuthTime($token) {
+	$res = Isf2::Connect()->Select('uzytkownicy')
+			->Where(array('webapi_token' => $token))
+			->Execute()->fetchAll();
+	if (count($res) != 1) {
+	    return 'auth:failed';
+	} else {
+	    return date('Y-m-d H:i:s', $res[0]['webapi_timestamp']);
+	}
+    }
+
+    public static function doLogout($token) {
+	Isf2::Connect()->Update('uzytkownicy', array(
+		    'webapi_timestamp' => '', 'webapi_token' => ''
+		))
+		->Where(array('webapi_token' => $token))
+		->Execute();
+	return 'auth:logout';
+    }
 
     /**
      * Sprawdza zalogowanie uzytkownika
@@ -359,8 +377,6 @@ class App_Auth {
      */
     public static function isLogged($only_root=true, $loginpage=false) {
 
-	self::$wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
-
 	if (!isset($_SESSION['token']) || !isset($_SESSION['user'])) {
 	    if ($loginpage == false) {
 		Kohana_Request::factory()->redirect('admin/login');
@@ -369,7 +385,7 @@ class App_Auth {
 	    return false;
 	} else {
 
-	    $auth = self::$wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']));
+	    $auth = self::showAuthTime($_SESSION['token']);
 
 	    try {
 		$res = Isf2::Connect()->Select('uzytkownicy', array('webapi_token'))
@@ -379,21 +395,24 @@ class App_Auth {
 		echo Core_Tools::ShowError($e->getMessage(), $e->getCode());
 	    }
 
-	    if (count($res) != 1) {
+	    if (count($res) == 0) {
 		session_destroy();
+		self::doLogout($_SESSION['token']);
 		Kohana_Request::factory()->redirect('admin/login/exist');
+		exit;
 	    }
 
 	    if (strtotime($_SESSION['token_time']) < time()) {
-		self::$wsdl->call('doLogout', array('token' => $_SESSION['token']));
 		session_destroy();
+		self::doLogout($_SESSION['token']);
 		Kohana_Request::factory()->redirect('admin/login/delay');
 		exit;
 	    }
 
 	    if ($auth == 'auth:failed') {
-		Kohana_Request::factory()->redirect('admin/login');
 		session_destroy();
+		self::doLogout($_SESSION['token']);
+		Kohana_Request::factory()->redirect('admin/login');
 		exit;
 	    }
 
@@ -407,6 +426,93 @@ class App_Auth {
     }
 
     /**
+     * Zwraca token sesyjny
+     *
+     * @param string $uid login uzytkownika
+     * @return string token
+     */
+    public static function generateToken($login) {
+	return md5(sha1('1s#plan!!002' . $login . 'r98mMjs7^A2b' . rand(1000, 9999)) . time());
+    }
+
+    /**
+     * Logowanie uzytkownika
+     *
+     * @param string $login nazwa uzytkownika
+     * @param string $password haslo
+     * @param string $token token logowania
+     * @return string token lub auth:failed 
+     */
+    public static function doUserLogin($login, $password, $token) {
+
+	$dbn = Isf2::Connect();
+
+	$token = md5('plan' . $token);
+	$haslo = md5('plan' . sha1('lekcji' . $password));
+
+	$userData = $dbn->Select('uzytkownicy')
+			->Where(array('login' => $login))
+			->Execute()->fetchAll();
+
+	$userToken = $dbn->Select('tokeny')
+			->Where(array(
+			    'login' => $login,
+			    'token' => $token,
+			))->Execute()->fetchAll();
+
+	$dbn->Update('uzytkownicy', array(
+		    'webapi_token' => '',
+		    'webapi_timestamp' => '',
+		))
+		->Where(array('login' => $_POST['inpLogin']))
+		->Execute();
+
+	if (count($userData) != 1) {
+	    return 'auth:failed';
+	} else if ($userData[0]['ilosc_prob'] >= 3 && $login != 'root') {
+	    return 'auth:locked';
+	} else if ($userData[0]['haslo'] != $haslo) {
+	    if ($login != 'root') {
+		$nr = $userData[0]['ilosc_prob'] + 1;
+		$dbn->Update('uzytkownicy', array('ilosc_prob' => $nr))
+			->Where(array('login' => $login))
+			->Execute();
+	    }
+	    return 'auth:failed';
+	} else if (count($userToken) == 0) {
+	    if ($login != 'root') {
+		$nr = $userData[0]['ilosc_prob'] + 1;
+		$dbn->Update('uzytkownicy', array('ilosc_prob' => $nr))
+			->Where(array('login' => $login))
+			->Execute();
+	    }
+	    return 'auth:failed';
+	    exit;
+	} else {
+	    $timestamp = (time() + 3600 * 3);
+	    $sessionToken = gentoken($userData[0]['login']);
+
+	    if ($login != 'root') {
+		$dbn->Delete('tokeny')
+			->Where(array('login' => $login, 'token' => $token))
+			->Execute();
+	    }
+
+	    $arr = array(
+		'ilosc_prob' => '0',
+		'webapi_token' => $sessionToken,
+		'webapi_timestamp' => $timestamp
+	    );
+
+	    $dbn->Update('uzytkownicy', $arr)
+		    ->Where(array('login' => $login))
+		    ->Execute();
+
+	    return $sessionToken;
+	}
+    }
+
+    /**
      * Logowanie do IPL
      *
      * @param string $login
@@ -414,13 +520,9 @@ class App_Auth {
      * @param string $token 
      */
     public static function doLogin($login, $password, $token) {
-	self::$wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
 	if (!defined('ldap_enable') || ldap_enable != "true") {
 
-	    $msg = self::$wsdl->call('doLogin', array(
-		'login' => $login,
-		'haslo' => $password,
-		'token' => $token));
+	    $msg = self::doUserLogin($login, $pass, $token);
 
 	    if ($msg != 'auth:failed' && $msg != 'auth:locked') {
 		$_SESSION['token'] = $msg;
@@ -428,7 +530,7 @@ class App_Auth {
 		if (isset($token) && $login != 'root') {
 		    $_SESSION['usr_token'] = $token;
 		}
-		$_SESSION['token_time'] = self::$wsdl->call('doShowAuthTime', array('token' => $msg));
+		$_SESSION['token_time'] = self::showAuthTime($_SESSION['token']);
 		insert_log('admin.login', 'Uzytkownik ' . $login . ' zalogowal sie');
 		Kohana_Request::factory()->redirect('');
 	    } else {
@@ -482,8 +584,7 @@ class App_Auth {
 			    ->Where(array('login' => $login))
 			    ->Execute();
 		}
-		$_SESSION['token_time'] = self::$wsdl
-			->call('doShowAuthTime', array('token' => $token));
+		$_SESSION['token_time'] = self::showAuthTime($_SESSION['token']);
 		insert_log('admin.login.ldap', 'Autoryzacja ' . $dn . ': OK');
 		Kohana_Request::factory()->redirect('');
 	    } else {
@@ -491,16 +592,6 @@ class App_Auth {
 		insert_log('admin.login.ldap', 'Nieudana autoryzacja: ' . $dn);
 	    }
 	}
-    }
-
-    /**
-     * Zwraca token sesyjny
-     *
-     * @param string $uid login uzytkownika
-     * @return string token
-     */
-    public static function generateToken($login) {
-	return md5(sha1('1s#plan!!002' . $login . 'r98mMjs7^A2b' . rand(1000, 9999)) . time());
     }
 
 }

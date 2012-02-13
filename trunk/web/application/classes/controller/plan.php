@@ -35,9 +35,16 @@ class Controller_Plan extends Controller {
      * @param string $klasa klasa
      */
     public function action_klasa($klasa) {
+	$isf = new Kohana_Isf();
+	$isf->Connect(APP_DBSYS);
+	$isf->JQUi();
+	$isf->JQUi_AjaxdivDoAjax('progress', URL::site('plan/klasaajax/' . $klasa), true);
+
 	$view = view::factory('plan_klasa');
 	$view->set('klasa', $klasa);
-	echo $view->render();
+	echo View::factory('_root_template')
+		->set('content', $view)
+		->set('script', $isf->JQUi_MakeScript());
     }
 
     /**
@@ -113,8 +120,7 @@ class Controller_Plan extends Controller {
 			    'przedmiot' => $przedm[0],
 			);
 		    } else {
-			$nl_s = $isf->DbSelect('nauczyciele', array('skrot'), 'where imie_naz=\'' . $przedm[2] . '\'');
-			$nl_s = $nl_s[0]['skrot'];
+			$nl_s = App_Globals::getTeacherSym($przedm[2]);
 			$colval = array(
 			    'dzien' => $dzien,
 			    'klasa' => $klasa,

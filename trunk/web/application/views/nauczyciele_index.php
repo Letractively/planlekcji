@@ -19,9 +19,9 @@ $res = $isf->Select('nauczyciele')->OrderBy(array('skrot' => 'asc'))
     	</tr>
     	<tr>
     	    <td class="a_even" style="text-align: center;">
-    		<form action="<?php echo URL::site('nauczyciele/dodaj'); ?>" method="post" name="form1">
-    		    Imię i nazwisko: <input type="text" name="inpName"/>&nbsp;
-    		    <button type="submit" name="btnSubmit">Dodaj nauczyciela</button>
+    		<form action="<?php echo URL::site('nauczyciele/commit'); ?>" method="post" name="form1">
+    		    Imię i nazwisko: <input type="text" name="inpTeacherName"/>&nbsp;
+    		    <button type="submit" name="btnAddTeacher">Dodaj nauczyciela</button>
     		</form>
     	    </td>
     	</tr>

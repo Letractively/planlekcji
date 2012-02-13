@@ -1,7 +1,11 @@
+body{
+    background-color: #5d8a5f;
+}
+div#container{
+    box-shadow: black 0px 0px 6px;
+}
 .a_odd{
     background-color: #5d8a5f;
-    margin-top: 0px;
-    padding: 5px;
     color: white;
 }
 
@@ -15,19 +19,13 @@ a.anodd:visited{
 }
 .a_light_menu{
     background-color: #cfeed0;
-    margin-top: 0px;
-    padding: 5px;
 }
 .a_even{
     background-color: #9bb89c;
-    margin-top: 0px;
-    padding: 5px;
 }
 .app_info{
     background-color: #668767;
     text-shadow: black 1px 1px 3px;
-    font-style: italic;
-    font-weight: bolder;
     color: white;
 }
 .app_ver{

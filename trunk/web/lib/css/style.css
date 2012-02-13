@@ -1,17 +1,17 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,700,300);
 body{
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Trebuchet MS',sans-serif;
     font-size: 10pt;
     margin: 5px;
     margin-top: 0px;
     margin-bottom: 0px;
     max-width: 100%;
 }
+/* szkielet strony */
 div#divbrk{
     clear: both;
 }
 div#container{
-    width: 1000px;
+    min-width: 1000px;
     margin: 0 auto;
     background-color: white;
     box-shadow: white 0px 0px 6px;
@@ -26,27 +26,38 @@ div#sidebar_menu{
     overflow: auto;
 }
 div#pnlCenter{
-    width: 790px;
+    min-width: 790px;
     padding-left: 5px;
-    padding-right: 5px;
     overflow: auto;
     float: left;
 }
 div#pnlRight{
+    position: fixed;
+    top: 0px;
+    right: 0px;
     width: 200px;
-    float: right;
     padding-right: 5px;
+    background-color: white;
+    border: 1px solid;
+    padding: 5px;
 }
 div#footer{
     position: fixed;
     bottom: 0px;
-    width: 1000px;
+    min-width: 1000px;
+}
+button#showpanel{
+    position: fixed;
+    top: 0px;
+    right: 0px;
 }
 
 /* Menu */
 .app_info{
     padding: 5px;
     font-size: 14pt;
+    font-style: italic;
+    font-weight: bolder;
 }
 .app_ver{
     font-size: 8pt;
@@ -61,7 +72,7 @@ div#footer{
 .a_klasy{
     line-height: 200%;
 }
-
+/* wygląd formularzy */
 .inpLoginForm{
     width: 200px;
     height: 16pt;
@@ -81,11 +92,21 @@ button{
     padding-left: 10px;
     padding-right: 10px;
 }
-
-#mainw{
-    max-height: 100%;
-
+/* wygląd elementów tabel */
+.a_odd{
+    margin-top: 0px;
+    padding: 5px;
 }
+.a_even{
+    margin-top: 0px;
+    padding: 5px;
+}
+.a_light_menu{
+    margin-top: 0px;
+    padding: 5px;
+}
+
+/* wygląd tekstu w planach i tabelach */
 .grptxt{
     font-size: 8pt;
 }
@@ -94,15 +115,11 @@ button{
     font-weight: bold;
     text-shadow: gray 2px 2px 5px;
 }
-.button-jq { 
-    outline: 0; 
-    margin:0 4px 0 0; 
-    padding: .4em 1em; 
-    text-decoration:none !important; 
-    cursor:pointer; 
-    position: relative; 
-    text-align: center;
+.grplek{
+    font-size: 9pt;
+    margin: 0px;
 }
+/* wygląd podstawowych elementów tekstu */
 img{
     border: 0px;
 }
@@ -123,7 +140,7 @@ h3{
     line-height: 5px;
     font-size: 12pt;
 }
-
+/* wygląd hiperłączy */
 .anac{
     color: #330033;
     font-weight: bold;
@@ -140,6 +157,7 @@ label{
 a:hover{
     color: #ff3300
 }
+
 li{
     margin-top: 5px;
 }
@@ -151,6 +169,7 @@ li{
     margin-top: 15px;
     margin-bottom: 15px;
 }
+
 table{
     font-size: 8pt;
 }
@@ -163,10 +182,7 @@ thead{
 .info{
     font-style: italic;
 }
-.grplek{
-    font-size: 9pt;
-    margin: 0px;
-}
+
 .ui-timepicker-div .ui-widget-header{ margin-bottom: 8px; }
 .ui-timepicker-div dl{ text-align: left; }
 .ui-timepicker-div dl dt{ height: 25px; }

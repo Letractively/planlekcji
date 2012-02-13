@@ -1,7 +1,8 @@
+body{
+    background-color: #2B6FB6;
+}
 .a_odd{
     background-color: #2B6FB6;
-    margin-top: 0px;
-    padding: 5px;
     color: white;
 }
 a:hover{
@@ -21,19 +22,13 @@ a.anodd:visited{
 }
 .a_light_menu{
     background-color: #e5e5e5;
-    margin-top: 0px;
-    padding: 5px;
 }
 .a_even{
     background-color: lightgrey;
-    margin-top: 0px;
-    padding: 5px;
 }
 .app_info{
     background-color: #2B6FB6;
     text-shadow: lightgray 1px 1px 3px;
-    font-style: italic;
-    font-weight: bolder;
     color: white;
 }
 .app_ver{

@@ -28,18 +28,7 @@ class Controller_Default extends Controller {
      */
     public function __construct() {
 	if (isset($_SESSION['token'])) {
-	    try {
-		$this->wsdl = new nusoap_client(URL::base('http') . 'webapi.php?wsdl');
-	    } catch (Exception $e) {
-		echo $e->getMessage();
-		exit;
-	    }
-	    if (strtotime($_SESSION['token_time']) < time()) {
-		$this->wsdl->call('doLogout', array('token' => $_SESSION['token']), 'webapi.planlekcji.isf');
-		session_destroy();
-		Kohana_Request::factory()->redirect('admin/login/delay');
-		exit;
-	    }
+	    App_Auth::isLogged(false);
 	}
     }
 
@@ -78,7 +67,7 @@ class Controller_Default extends Controller {
 	$view->set('content', $view2->render());
 	echo $view->render();
     }
-    
+
     /**
      * Ukryta strona dla eksperymentow
      */
