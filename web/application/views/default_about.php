@@ -1,4 +1,4 @@
-<h1>Internetowy Plan Lekcji</h1
+<img src="<?php echo URL::base(); ?>lib/images/logo.png" alt="IPL"/>
 <p>Informacje systemowe</p>
 <ul>
     <li><b>Wersja systemu:</b> <?php echo App_Globals::getRegistryKey('app_ver'); ?></li>

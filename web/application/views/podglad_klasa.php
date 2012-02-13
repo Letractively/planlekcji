@@ -14,7 +14,7 @@ $dni = array('Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek');
 $godziny = $isf->DbSelect('lek_godziny', array('*'));
 ?>
 <table class="przed" align="center" style="font-size: 9pt; width: auto;">
-    <thead style="background: #ccccff;">
+    <thead>
         <tr class="a_odd">
             <td colspan="7" style="text-align: center">
                 <p>

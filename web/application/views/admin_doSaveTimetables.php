@@ -10,7 +10,7 @@
     <li>Plany zajęć będą ogólnodostępne i zapisane w postaci plików XML</li>
     <li>Możliwość wygenerowania planów do plików HTML</li>
 </ul>
-<h3>Przed zamknięciem upewnij się, że wszystkie plany zostały wprowadzone!</h3>
+<b>Przed zamknięciem upewnij się, że wszystkie plany zostały wprowadzone!</b>
 <form action="<?php echo URL::site('admin/doSaveTimetablesPOST'); ?>" method="post">
     <button type="submit" name="btnS">
         Wykonaj operację

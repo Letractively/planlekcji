@@ -6,7 +6,7 @@ function pobierz_naglowki() {
     $isf = new Kohana_Isf();
     $isf->Connect(APP_DBSYS);
     $klasy = $isf->DbSelect('klasy', array('*'));
-    $nl = $isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc');
+    $nl = $isf->DbSelect('nauczyciele', array('*'), 'order by skrot asc');
     $GLOBALS['ilosc_nl'] = count($nl);
     $GLOBALS['ilosc_klas'] = count($klasy);
 
@@ -67,7 +67,7 @@ function pobierz_klasy($dzien, $lekcja) {
 	}
 	echo '</td>';
     }
-    $nl = $isf->DbSelect('nauczyciele', array('*'), 'order by imie_naz asc');
+    $nl = $isf->DbSelect('nauczyciele', array('*'), 'order by skrot asc');
     foreach ($nl as $rowid => $rowcol) {
 	echo '<td>';
 	$lek = $isf->DbSelect('planlek', array('*'), 'where dzien=\'' . $dzien . '\' and nauczyciel=\'' . $rowcol['imie_naz'] . '\'

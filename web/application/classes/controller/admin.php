@@ -93,7 +93,7 @@ class Controller_Admin extends Controller {
 
 	$view = View::factory('_root_template');
 	$view2 = view::factory('admin_doEditTimetables');
-	
+
 	$view->set('content', $view2->render());
 	echo $view->render();
     }
@@ -149,9 +149,13 @@ class Controller_Admin extends Controller {
     public function action_doRenewToken() {
 
 	App_Auth::isLogged(false);
+
+	$timestamp = (time() + 3600 * 3);
+	Isf2::Connect()->Update('uzytkownicy', array('webapi_timestamp' => $timestamp))
+		->Where(array('webapi_token' => $_SESSION['token']))
+		->Execute();
+	$_SESSION['token_time'] = App_Auth::showAuthTime($_SESSION['token']);
 	insert_log('admin.doRenewToken', 'Uzytkownik ' . $_SESSION['user'] . ' odnowil token');
-	$this->wsdl->call('doRenewToken', array('token' => $_SESSION['token']));
-	$_SESSION['token_time'] = $this->wsdl->call('doShowAuthTime', array('token' => $_SESSION['token']));
 	Request::factory()->redirect('');
     }
 
@@ -159,12 +163,10 @@ class Controller_Admin extends Controller {
      * wylogowuje
      */
     public function action_doLogout() {
-	$this->wsdl->call('doLogout', array('token' => $_SESSION['token']));
-	unset($_SESSION['token']);
+	App_Auth::doLogout($_SESSION['token']);
 	setcookie('login', '', time() - 3600, '/');
-	insert_log('admin.doLogout', 'Uzytkownik ' . $_SESSION['user'] . ' wylogował się');
 	session_destroy();
-
+	insert_log('admin.doLogout', 'Uzytkownik ' . $_SESSION['user'] . ' wylogował się');
 	Kohana_Request::factory()->redirect('default/index');
     }
 

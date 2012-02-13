@@ -371,7 +371,7 @@ START;
 
 	$view = View::factory('_root_template');
 	$outtext = '<h1>Plany zostały wyeksportowane pomyślnie</h1>
-	    <p>Możesz pobrać archiwum z folderu <b>' . realpath(APP_ROOT . DS . 'resources') . '</b>.</p>';
+	    <p>Archiwum jest dostępne z poziomu folderu <b>' . realpath(APP_ROOT . DS . 'resources') . '</b>.</p>';
 	$view->set('content', $outtext);
 	echo $view->render();
     }

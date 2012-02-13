@@ -45,7 +45,6 @@ class Controller_Sale extends Controller {
 	$view2 = View::factory('sale_index');
 	$view2->set('res', $dbres);
 	$view2->set('_err', $err);
-
 	$view->set('content', $view2->render());
 	echo $view->render();
     }

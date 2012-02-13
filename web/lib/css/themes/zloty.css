@@ -1,32 +1,21 @@
+body{
+    background-color: #ffc000;
+}
+div#container{
+    box-shadow: black 0px 0px 6px;
+}
 .a_odd{
     background-color: #f1db48;
-    margin-top: 0px;
-    padding: 5px;
-}
-
-a.anodd{
-}
-a.a_odd:link{
-}
-a.anodd:active{
-}
-a.anodd:visited{
 }
 .a_light_menu{
     background-color: #f1f1ae;
-    margin-top: 0px;
-    padding: 5px;
 }
 .a_even{
     background-color: #f7f7a9;
-    margin-top: 0px;
-    padding: 5px;
 }
 .app_info{
     background-color: #f1db48;
     text-shadow: gray 1px 1px 3px;
-    font-style: italic;
-    font-weight: bolder;
 }
 .app_ver{
     background-color: #f1db48;
