@@ -4,15 +4,14 @@
  */
 ?>
 <h1>Zamknięcie edycji planów zajęć</h1>
-<h3>Dzięki zamknięciu edycji planów zajęć</h3>
-<ul>
-    <li>Uzyskasz dostęp do systemu zastępstw (tylko z zajęciami przypisanymi do nauczycieli)</li>
-    <li>Plany zajęć będą ogólnodostępne i zapisane w postaci plików XML</li>
-    <li>Możliwość wygenerowania planów do plików HTML</li>
-</ul>
-<b>Przed zamknięciem upewnij się, że wszystkie plany zostały wprowadzone!</b>
+
+<p>Zamknięcie edycji planów spowoduje zapisanie wszystkich planów zajęć
+    w bazie IPL oraz XML oraz udostępni możliwość wprowadzania zastępstw oraz
+    przęglądu planów zajęć.</p>
+<p>
 <form action="<?php echo URL::site('admin/doSaveTimetablesPOST'); ?>" method="post">
     <button type="submit" name="btnS">
         Wykonaj operację
     </button>
 </form>
+</p>
