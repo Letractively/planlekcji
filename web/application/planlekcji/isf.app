@@ -723,7 +723,7 @@ class Kohana_Isf {
 	$script = '<div id="isf_adiv_' . $name . '" style="display: none;">';
 	if ($progressgif == true) {
 	    $script .= '<div id="isf_adc_' . $name . '">';
-	    $script .= '<img src="' . $this->jqpath . '/css/load.gif" id="isf_adl_' . $name . '">';
+	    $script .= '<img src="' . URL::base(). 'lib/jquery/css/load.gif" id="isf_adl_' . $name . '">';
 	} else {
 	    $script .= '<div id="isf_adc_' . $name . '">';
 	}

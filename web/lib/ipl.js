@@ -1,12 +1,16 @@
+function initTemplate(){
+    setTimeout('resizeContent()', 0);
+    togglePanel();
+}
 function togglePanel(){
     var pnlRight = document.getElementById('pnlRight');
     var showpanel = document.getElementById('showpanel');
     if(pnlRight.style.display=="none"){
-	pnlRight.style.display="block";
-	showpanel.innerHTML = "Ukryj panel";
+        pnlRight.style.display="block";
+        showpanel.innerHTML = "Ukryj panel";
     }else{
-	pnlRight.style.display="none";
-	showpanel.innerHTML = "Pokaż panel";
+        pnlRight.style.display="none";
+        showpanel.innerHTML = "Pokaż panel";
     }
 }
 function resizeContent() { 

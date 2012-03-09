@@ -53,9 +53,14 @@ class Controller_Plan extends Controller {
      * @param string $klasa klasa
      */
     public function action_grupy($klasa) {
+        $isf = new Kohana_Isf();
+        $isf->JQUi();
+	$isf->JQUi_AjaxdivDoAjax('progress', URL::site('plan/grupaajax/' . $klasa), true);
 	$view = view::factory('plan_grupy');
 	$view->set('klasa', $klasa);
-	echo $view->render();
+	echo View::factory('_root_template')
+		->set('content', $view)
+		->set('script', $isf->JQUi_MakeScript());
     }
 
     /**

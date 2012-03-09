@@ -24,14 +24,16 @@ function gentoken($uid) {
  */
 function checkauth($token) {
     $res = Isf2::Connect()->Select('uzytkownicy')
-		    ->Where(array('webapi_token' => $token))
-		    ->Execute()->fetchAll();
+                    ->Where(array('webapi_token' => $token))
+                    ->Execute()->fetchAll();
     if (count($res) != 1) {
-	return false;
+        return false;
     } else {
-	return $res;
+        return $res;
     }
 }
+
+//////////////////////////// AUTHENTICATION METHODS
 
 /**
  * Logowanie uzytkownika
@@ -42,77 +44,27 @@ function checkauth($token) {
  * @return string token lub auth:failed 
  */
 function doLogin($username, $password, $token) {
-
-    $dbn = Isf2::Connect();
-
-    $token = md5('plan' . $token);
-    $haslo = md5('plan' . sha1('lekcji' . $password));
-
-    $uid = $dbn->Select('uzytkownicy')
-		    ->Where(array('login' => $username))
-		    ->Execute()->fetchAll();
-
-    $tokena = $dbn->Select('tokeny')
-		    ->Where(array(
-			'login' => $username,
-			'token' => $token,
-		    ))->Execute()->fetchAll();
-
-    $dbn->Update('uzytkownicy', array(
-		'webapi_token' => '',
-		'webapi_timestamp' => '',
-	    ))
-	    ->Where(array('login' => $_POST['inpLogin']))
-	    ->Execute();
-
-    if (count($uid) != 1) {
-	return 'auth:failed';
-    }
-    if ($uid[0]['ilosc_prob'] >= 3 && $username != 'root') {
-	return 'auth:locked';
-	exit;
-    }
-    if ($uid[0]['haslo'] != $haslo) {
-	if ($username != 'root') {
-	    $nr = $uid[0]['ilosc_prob'] + 1;
-	    $dbn->Update('uzytkownicy', array('ilosc_prob' => $nr))
-		    ->Where(array('login' => $username))
-		    ->Execute();
-	}
-	return 'auth:failed';
-	exit;
-    }
-    if (count($tokena) == 0) {
-	if ($username != 'root') {
-	    $nr = $uid[0]['ilosc_prob'] + 1;
-	    $dbn->Update('uzytkownicy', array('ilosc_prob' => $nr))
-		    ->Where(array('login' => $username))
-		    ->Execute();
-	}
-	return 'auth:failed';
-	exit;
+    if (!defined('ldap_enable') || ldap_enable != "true") {
+        $msg = App_Auth::doUserLogin($username, $password, $token);
     } else {
-	$timestamp = (time() + 3600 * 3);
-	$token_x = gentoken($uid[0]['login']);
-
-	if ($username != 'root') {
-	    $dbn->Delete('tokeny')
-		    ->Where(array('login' => $username, 'token' => $token))
-		    ->Execute();
-	}
-
-	$arr = array(
-	    'ilosc_prob' => '0',
-	    'webapi_token' => $token_x,
-	    'webapi_timestamp' => $timestamp
-	);
-
-	$dbn->Update('uzytkownicy', $arr)
-		->Where(array('login' => $username))
-		->Execute();
-
-	return $token_x;
+        $msg = App_Auth::doLDAPLogin($username, $password);
     }
+    return $msg;
+}
+
+/**
+ * Wylogowuje
+ *
+ * @param string $token token sesji
+ * @return string auth:logout 
+ */
+function doLogout($token) {
+    Isf2::Connect()->Update('uzytkownicy', array(
+                'webapi_timestamp' => '', 'webapi_token' => ''
+            ))
+            ->Where(array('webapi_token' => $token))
+            ->Execute();
+    return 'auth:logout';
 }
 
 /**
@@ -124,141 +76,9 @@ function doLogin($username, $password, $token) {
 function doShowAuthTime($token) {
     $r = checkauth($token);
     if ($r == false) {
-	return 'auth:failed';
+        return 'auth:failed';
     } else {
-	return date('Y-m-d H:i:s', $r[0]['webapi_timestamp']);
-    }
-}
-
-/**
- * Pobiera klucz rejestru systemowego
- *
- * @param string $token token zalogowanego uzytkownika
- * @param string $key nazwa klucza
- * @return string fetch:failed lub wartosc klucza 
- */
-function doGetRegistryKey($token, $key) {
-    if (!checkauth($token)) {
-	return 'auth:failed';
-    } else {
-	$res = Isf2::Connect()->Select('rejestr')
-			->Where(array('opcja' => $key))
-			->Execute()->fetchAll();
-	if (count($res) == 0) {
-	    return 'fetch:failed';
-	} else {
-	    return $res[0]['wartosc'];
-	}
-    }
-}
-
-/**
- * Odnawia token
- *
- * @param string $token token sesji
- * @return string auth:renew 
- */
-function doRenewToken($token) {
-    $timestamp = (time() + 3600 * 3);
-    Isf2::Connect()->Update('uzytkownicy', array('webapi_timestamp' => $timestamp))
-	    ->Where(array('webapi_token' => $token))
-	    ->Execute();
-    return 'auth:renew';
-}
-
-/**
- * Wylogowuje
- *
- * @param string $token token sesji
- * @return string auth:logout 
- */
-function doLogout($token) {
-    Isf2::Connect()->Update('uzytkownicy', array(
-		'webapi_timestamp' => '', 'webapi_token' => ''
-	    ))
-	    ->Where(array('webapi_token' => $token))
-	    ->Execute();
-    return 'auth:logout';
-}
-
-/**
- * Dodaje klase
- *
- * @param string $token token
- * @param string $class nazwa klasy
- * @return type  class:exists, class:added, auth:failed
- */
-function doAddClassroom($token, $class) {
-    if (!checkauth($token)) {
-	return 'auth:failed';
-    } else {
-	$exist = Isf2::Connect()->Select('sale')
-			->Where(array('sala' => $class))
-			->Execute()->fetchAll();
-	if (count($exist) != 0) {
-	    return 'class:exists';
-	} else {
-	    if (preg_match('/([.!@#$;%^&*()_+|])/i', $class)) {
-		return 'class:nameerror';
-	    } else {
-		Isf2::Connect()->Insert('sale', array('sala' => $class))
-			->Execute();
-		return 'class:added';
-	    }
-	}
-    }
-}
-
-/**
- * Dodaje klase
- *
- * @param string $token Token sesji
- * @param string  $class Klasa
- * @return string
- */
-function doAddClass($token, $class) {
-    if (!checkauth($token)) {
-	return 'auth:failed';
-    } else {
-	$exist = Isf2::Connect()->Select('klasy')
-			->Where(array('klasa' => $class))
-			->Execute()->fetchAll();
-	if (count($exist) != 0) {
-	    return 'class:exists';
-	} else {
-	    if (preg_match('/([.!@#$;%^&*()_+|])/i', $class)) {
-		return 'class:nameerror';
-	    } else {
-		Isf2::Connect()->Insert('klasy', array('klasa' => $class))
-			->Execute();
-		return 'class:added';
-	    }
-	}
-    }
-}
-
-/**
- * Usuwa klasę
- *
- * @param string $token
- * @param string $class
- * @return string 
- */
-function doDelClass($token, $class) {
-    if (!checkauth($token)) {
-	return 'auth:failed';
-    } else {
-	$exist = Isf2::Connect()->Select('klasy')
-			->Where(array('klasa' => $class))
-			->Execute()->FetchAll();
-	if (count($exist) == 0) {
-	    return 'class:notexists';
-	} else {
-	    Isf2::Connect()->Delete('klasy')
-		    ->Where(array('klasa' => $class))
-		    ->Execute();
-	    return 'class:deleted';
-	}
+        return date('Y-m-d H:i:s', $r[0]['webapi_timestamp']);
     }
 }
 
@@ -278,18 +98,34 @@ function doChangePass($token, $old, $new) {
     $newm = md5('plan' . sha1('lekcji' . $new));
 
     $old_user = $db->Select('uzytkownicy', array('haslo'))
-		    ->Where(array('haslo' => $oldm))
-		    ->Execute()->FetchAll();
+                    ->Where(array('haslo' => $oldm))
+                    ->Execute()->FetchAll();
 
     if (count($old_user) != 1) {
-	return 'auth:failed';
+        return 'auth:failed';
     } else {
-	$db->Update('uzytkownicy', array('haslo' => $newm))
-		->Where(array('webapi_token' => $token, 'haslo' => $oldm))
-		->Execute();
-	return 'auth:chpasswd';
+        $db->Update('uzytkownicy', array('haslo' => $newm))
+                ->Where(array('webapi_token' => $token, 'haslo' => $oldm))
+                ->Execute();
+        return 'auth:chpasswd';
     }
 }
+
+/**
+ * Odnawia token
+ *
+ * @param string $token token sesji
+ * @return string auth:renew 
+ */
+function doRenewToken($token) {
+    $timestamp = (time() + 3600 * 3);
+    Isf2::Connect()->Update('uzytkownicy', array('webapi_timestamp' => $timestamp))
+            ->Where(array('webapi_token' => $token))
+            ->Execute();
+    return 'auth:renew';
+}
+
+//////////////////////////// CLASSES MANAGMENT
 
 /**
  * Pobiera klasy w systemie
@@ -297,13 +133,157 @@ function doChangePass($token, $old, $new) {
  * @param token $token Token sesji
  * @return mixed 
  */
-function doShowClasses($token) {
+function doGetClasses($token) {
     if (!checkauth($token)) {
-	return 'auth:failed';
+        return 'auth:failed';
     } else {
-	return Isf2::Connect()->Select('klasy')
-			->OrderBy(array('klasa' => 'asc'))
-			->Execute()->fetchAll();
+        return Isf2::Connect()->Select('klasy')
+                        ->OrderBy(array('klasa' => 'asc'))
+                        ->Execute()->fetchAll();
+    }
+}
+
+/**
+ * Dodaje klase
+ *
+ * @param string $token Token sesji
+ * @param string  $class Klasa
+ * @return string
+ */
+function doAddClass($token, $class) {
+    if (!checkauth($token)) {
+        return 'auth:failed';
+    } else {
+        $exist = Isf2::Connect()->Select('klasy')
+                        ->Where(array('klasa' => $class))
+                        ->Execute()->fetchAll();
+        if (count($exist) != 0) {
+            return 'class:exists';
+        } else {
+            if (preg_match('/([.!@#$;%^&*()_+|])/i', $class)) {
+                return 'class:nameerror';
+            } else {
+                Isf2::Connect()->Insert('klasy', array('klasa' => $class))
+                        ->Execute();
+                return 'class:added';
+            }
+        }
+    }
+}
+
+/**
+ * Usuwa klasę
+ *
+ * @param string $token
+ * @param string $class
+ * @return string 
+ */
+function doDelClass($token, $class) {
+    if (!checkauth($token)) {
+        return 'auth:failed';
+    } else {
+        $exist = Isf2::Connect()->Select('klasy')
+                        ->Where(array('klasa' => $class))
+                        ->Execute()->FetchAll();
+        if (count($exist) == 0) {
+            return 'class:notexists';
+        } else {
+            Isf2::Connect()->Delete('klasy')
+                    ->Where(array('klasa' => $class))
+                    ->Execute();
+            return 'class:deleted';
+        }
+    }
+}
+
+//////////////////////////// CLASSROOM MANAGMENT
+
+/**
+ * Pobiera klasy w systemie
+ *
+ * @param token $token Token sesji
+ * @return mixed 
+ */
+function doGetClassrooms($token) {
+    if (!checkauth($token)) {
+        return 'auth:failed';
+    } else {
+        return Isf2::Connect()->Select('sale')
+                        ->OrderBy(array('sala' => 'asc'))
+                        ->Execute()->fetchAll();
+    }
+}
+
+/**
+ * Dodaje sale
+ *
+ * @param string $token token
+ * @param string $class nazwa sali
+ * @return type  class:exists, class:added, auth:failed
+ */
+function doAddClassroom($token, $classroom) {
+    if (!checkauth($token)) {
+        return 'auth:failed';
+    } else {
+        $exist = Isf2::Connect()->Select('sale')
+                        ->Where(array('sala' => $class))
+                        ->Execute()->fetchAll();
+        if (count($exist) != 0) {
+            return 'class:exists';
+        } else {
+            if (preg_match('/([.!@#$;%^&*()_+|])/i', $class)) {
+                return 'class:nameerror';
+            } else {
+                Isf2::Connect()->Insert('sale', array('sala' => $class))
+                        ->Execute();
+                return 'class:added';
+            }
+        }
+    }
+}
+
+/**
+ * Usuwa sale
+ *
+ * @param string $token
+ * @param string $classroom
+ * @return string classroom:removed auth:failed
+ */
+function doDelClassroom($token, $classroom){
+    if (!checkauth($token)) {
+        return 'auth:failed';
+    } else {
+        Isf2::Connect()->Delete('sale')
+                ->Where(array('sala'=>$classroom))
+                ->Execute();
+        Isf2::Connect()->Delete('przedmiot_sale')
+                ->Where(array('sala'=>$classroom))
+                ->Execute();
+        return 'classroom:removed';
+    }
+}
+
+//////////////////////////// SYSTEM MANAGMENT
+
+/**
+ * Pobiera klucz rejestru systemowego
+ *
+ * @param string $token token zalogowanego uzytkownika
+ * @param string $key nazwa klucza
+ * @return string fetch:failed lub wartosc klucza 
+ */
+function doGetRegistryKey($token, $key) {
+    if (!checkauth($token)) {
+        return 'auth:failed';
+    } else {
+        $res = Isf2::Connect()->Select('rejestr')
+                        ->Where(array('opcja' => $key))
+                        ->Execute()->fetchAll();
+        if (count($res) == 0) {
+            return 'fetch:failed';
+        } else {
+            return $res[0]['wartosc'];
+        }
     }
 }
 
@@ -314,42 +294,42 @@ function doShowClasses($token) {
  * @param string $param Tryb
  * @return string 
  */
-function doSysClean($token, $param) {
+function doSystemClean($token, $param) {
     if (!checkauth($token)) {
-	return 'auth:failed';
+        return 'auth:failed';
     } else {
-	/*
-	  $isf = new Kohana_Isf();
-	  $isf->Connect(APP_DBSYS);
-	  $isf->DbDelete('planlek', 'klasa like \'%\'');
-	  $isf->DbDelete('plan_grupy', 'klasa like \'%\'');
-	  $isf->DbDelete('zast_id', 'zast_id like \'%\'');
-	  $isf->DbDelete('zastepstwa', 'zast_id like \'%\'');
-	  $isf->DbUpdate('rejestr', array('wartosc' => '1'), 'opcja=\'edycja_danych\'');
-	 */
-	$db = Isf2::Connect();
-	$db->Delete('planlek')->Execute();
-	$db->Delete('plan_grupy')->Execute();
-	$db->Delete('zastepstwa')->Execute();
-	$db->Delete('zast_id')->Execute();
-	$db->Update('rejestr', array('wartosc' => '1'))
-		->Where(array('opcja' => 'edycja_danych'))
-		->Execute();
+        /*
+          $isf = new Kohana_Isf();
+          $isf->Connect(APP_DBSYS);
+          $isf->DbDelete('planlek', 'klasa like \'%\'');
+          $isf->DbDelete('plan_grupy', 'klasa like \'%\'');
+          $isf->DbDelete('zast_id', 'zast_id like \'%\'');
+          $isf->DbDelete('zastepstwa', 'zast_id like \'%\'');
+          $isf->DbUpdate('rejestr', array('wartosc' => '1'), 'opcja=\'edycja_danych\'');
+         */
+        $db = Isf2::Connect();
+        $db->Delete('planlek')->Execute();
+        $db->Delete('plan_grupy')->Execute();
+        $db->Delete('zastepstwa')->Execute();
+        $db->Delete('zast_id')->Execute();
+        $db->Update('rejestr', array('wartosc' => '1'))
+                ->Where(array('opcja' => 'edycja_danych'))
+                ->Execute();
 
-	if ($param == 'permament') {
-	    $db->Delete('klasy')->Execute();
-	    $db->Delete('lek_godziny')->Execute();
-	    $db->Delete('nauczyciele')->Execute();
-	    $db->Delete('nl_klasy')->Execute();
-	    $db->Delete('nl_przedm')->Execute();
-	    $db->Delete('przedmiot_sale')->Execute();
-	    $db->Delete('przedmioty')->Execute();
-	    $db->Delete('sale')->Execute();
-	    $db->Update('rejestr', array('wartosc' => '1'))
-		    ->Where(array('opcja' => 'ilosc_godzin_lek'))
-		    ->Execute();
-	}
-	insert_log('webapi.sysapi', 'Uzytkownik ' . $username . ' dokonal ' . (($param == 'permament') ? 'kompletnego' : 'czesciowego') . ' czyszczenia poprzez IPL-CLI');
-	return 'sys:cleaned';
+        if ($param == 'permament') {
+            $db->Delete('klasy')->Execute();
+            $db->Delete('lek_godziny')->Execute();
+            $db->Delete('nauczyciele')->Execute();
+            $db->Delete('nl_klasy')->Execute();
+            $db->Delete('nl_przedm')->Execute();
+            $db->Delete('przedmiot_sale')->Execute();
+            $db->Delete('przedmioty')->Execute();
+            $db->Delete('sale')->Execute();
+            $db->Update('rejestr', array('wartosc' => '1'))
+                    ->Where(array('opcja' => 'ilosc_godzin_lek'))
+                    ->Execute();
+        }
+        insert_log('webapi.sysapi', 'Uzytkownik dokonal ' . (($param == 'permament') ? 'kompletnego' : 'czesciowego') . ' czyszczenia poprzez IPL-CLI');
+        return 'sys:cleaned';
     }
 }

@@ -3,7 +3,6 @@
  * Strona ze skryptem AJAX, ktory pobiera wlasciwa
  * strone edycji planu (klasaajax)
  */
-$k = $klasa;
 ?>
 <h1>
     <a href="<?php echo URL::site('default/index'); ?>">
@@ -13,9 +12,9 @@ $k = $klasa;
 	<img src="<?php echo URL::base() ?>lib/icons/save.png" alt="zapisz"/></a>
 </h1>
 <?php
+$isf = new Kohana_Isf();
 $alternative = '<b>Przeglądarka nie obsługuje JavaScript?
                 Spróbuj <a href="' . URL::site('plan/klasaajax/' . $klasa . '/true') . '">metodę alternatywną</a></b>';
 $customload = ' Trwa przypisywanie sal, przedmiotów i nauczycieli...';
 echo $isf->JQUi_AjaxdivCreate('progress', true, false, $alternative, $customload);
 ?>
-<?php echo $isf->JQUi_MakeScript(); ?>

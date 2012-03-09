@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ISF Framework wersja druga
+ * ISF Framework 2.0
  * 
  * @author Michal Bocian <mhl.bocian@gmail.com>
  * @license GNU GPL v3
