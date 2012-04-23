@@ -334,7 +334,7 @@ class Isf2 {
 	if (empty($table_name) || !is_array($columns)) {
 	    throw new Exception('ISF2: Invalid CreateTable syntax', 401);
 	}
-	$this->base_statement = 'create table ' . $table_name;
+	$this->base_statement = 'create table if not exists ' . $table_name;
 	$this->optional_statement = '(';
 	foreach ($columns as $col => $type) {
 	    $this->optional_statement .= '"' . $col . '" ' . $type . ', ';

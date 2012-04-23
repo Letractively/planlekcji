@@ -6,7 +6,7 @@
  * @license GNU GPL v3
  * @package core
  */
-define('_I_SYSVER', 'trunk dev'); // wersja instalatora
+define('_I_SYSVER', '2.0.0'); // wersja instalatora
 define('MOBILE_LIB_PATH', '/lib/jquery/mobile/'); // sciezka do JQuery Mobile
 define('C', '"'); // znak "
 ?>
@@ -60,7 +60,7 @@ define('C', '"'); // znak "
     			<label for="dbtype" class="select">Typ bazy danych</label>
     			<select name="dbtype" id="dbtype" data-native-menu="false">
     			    <option value="SQLite">SQLite</option>
-    			    <option value="PostgreSQL">PgSQL</option>
+    			    <option value="PgSQL">PosgreSQL</option>
     			</select>
     		    </div>
 
@@ -88,7 +88,7 @@ define('C', '"'); // znak "
     		    <button type="submit" name="btnSubmit">Zainstaluj aplikację</button>
     		</form>
 		    <?php if (isset($_GET['err'])): ?>
-			<span style="font-weight: bold; color:red;">Żadne pole nie może być puste!</p>
+			<span style="font-weight: bold; color:red;">Żadne pole nie może być puste!</span>
 			<?php endif; ?>
     	    </div>
 

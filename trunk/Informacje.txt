@@ -1,4 +1,28 @@
-Dzi�kujemy za zainteresowanie projektem Internetowy Plan Lekcji.
+Dziękujemy za zainteresowanie projektem Internetowy Plan Lekcji 2.0.0!
 
-W trosce o bezpiecze�stwo danych, prosimy w konfiguracji serwera www
-o ustawienie katalogu web, jako domy�lnego katalogu aplikacji.
+W trosce o bezpieczeństwo danych, prosimy w konfiguracji serwera www
+o ustawienie katalogu web, jako domyślnego katalogu aplikacji.
+
+=== USTAWIENIA EKSPERYMENTALNE IPL ===
+
+ - Logowanie LDAP
+    Umożliwia autoryzację użytkowników na podstawie danych w katalogu LDAP.
+
+    Oprogramowanie: OpenDS/OpenDJ (zalecane), ApacheDS, OpenLDAP uruchomione
+    na domyślnym porcie 389.
+
+    Ustawienia w katalogu: wymagany jeden użytkownik -root-
+
+    config.ini
+
+    Należy dodać następującą sekcję do pliku konfiguracyjnego:
+        
+        [ldap]
+        enable = "true" ; inna wartość wyłącza logowanie LDAP
+        server = "adres_serwera" ; localhost, jezeli komputer lokalny
+        basedn = "" ; ścieżka LDAP katalogu np "ou=ipl,o=zso"
+        
+
+=== AUTORZY ===
+
+    Michał Bocian <mhl.bocian@gmail.com>
