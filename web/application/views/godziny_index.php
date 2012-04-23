@@ -4,6 +4,11 @@ $dlugosc = App_Globals::getRegistryKey('dlugosc_lekcji');
 $grz = App_Globals::getRegistryKey('godz_rozp_zaj');
 ?>
 <table border="0" style="width: 100%;">
+    <thead style="text-align: center;">
+        <tr class="a_odd" colspan="2">
+            <td colspan="2">Godziny systemowe</td>
+        </tr>
+    </thead>
     <tr valign="top">
         <td style="width: 50%;">
 	    <fieldset>

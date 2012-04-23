@@ -70,7 +70,7 @@ if (Core_Tools::is_mobile() && !isset($_COOKIE['_nomobile'])) {
                 </div>
 
                 <?php if ($_SESSION['token'] != null): ?>
-                    <button id="showpanel" onclick="togglePanel();">
+                    <button id="showpanel" onclick="togglePanel();" class="btnShowPanel">
                     </button>
                     <div id="pnlRight">
                         <?php echo View::factory()->render('_sidebar_right'); ?>

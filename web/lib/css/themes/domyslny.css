@@ -11,15 +11,6 @@ h1, h2, h3, p{
 .pltxt{
     color:white;
 }
-a:visited{
-    color: #383535;
-}
-a:link{
-    color: #383535;
-}
-a:hover{
-    font-weight: bold;
-}
 a.anodd{
     color: white;
 }

@@ -22,14 +22,17 @@ div#pnlLeft{
     width: 200px;
     float: left;
 }
+div#pnlLeft a{
+    text-decoration: none;
+}
 div#sidebar_menu{
     overflow: auto;
 }
 div#pnlCenter{
     min-width: 790px;
-    padding-left: 5px;
     overflow: auto;
     float: left;
+    padding-left: 5px;
 }
 div#pnlRight{
     position: fixed;
@@ -41,6 +44,9 @@ div#pnlRight{
     border: 1px solid;
     padding: 5px;
 }
+div#pnlRight a{
+    text-decoration: none;
+}
 div#footer{
     position: fixed;
     bottom: 0px;
@@ -50,6 +56,9 @@ button#showpanel{
     position: fixed;
     top: 0px;
     right: 0px;
+}
+.btnShowPanel{
+    border: 1px solid #000000;
 }
 /* Menu */
 .app_info{
@@ -103,11 +112,16 @@ button{
 .a_light_menu{
     margin-top: 0px;
     padding: 5px;
+    font-size: 10pt;
 }
 
 /* wygląd tekstu w planach i tabelach */
 .grptxt{
     font-size: 8pt;
+}
+.centerize{
+    text-align: center;
+    font-weight: bold;
 }
 .pltxt{
     font-size: 24pt;
@@ -128,16 +142,13 @@ p{
     font-size: 10pt;
 }
 h1{
-    line-height: 5px;
-    font-size: 16pt;
-}
-h2{
-    line-height: 5px;
     font-size: 14pt;
 }
-h3{
-    line-height: 5px;
+h2{
     font-size: 12pt;
+}
+h3{
+    font-size: 11pt;
 }
 /* wygląd hiperłączy */
 .anac{
@@ -153,10 +164,12 @@ a:visited{
 label{
     font-weight: bold;
 }
-a:hover{
-    color: #ff3300
+a:visited{
+    color: #383535;
 }
-
+a:link{
+    color: #383535;
+}
 li{
     margin-top: 5px;
 }

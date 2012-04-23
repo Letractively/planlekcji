@@ -72,8 +72,9 @@ class Controller_Default extends Controller {
      * Ukryta strona dla eksperymentow
      */
     public function action_experimental() {
-	$view = View::factory('_experimental');
-	echo $view->render();
+        $view = View::factory('podglad_zestawienie_new');
+        $out = str_replace('{{theme}}', $_SESSION['app_theme'], $view->render());
+        echo $out;
     }
 
 }

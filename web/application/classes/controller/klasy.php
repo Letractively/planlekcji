@@ -52,8 +52,8 @@ class Controller_Klasy extends Controller {
 	    Kohana_Request::factory()->redirect('klasy/index');
 	}
 	$isf = Isf2::Connect();
-	$isf->Delete('klasy')->Where(array('klasa' => $_POST['btnClass'][0]))->Execute();
-	$isf->Delete('nl_klasy')->Where(array('klasa' => $_POST['btnClass'][0]))->Execute();
+	$isf->Delete('klasy')->Where(array('klasa' => $_POST['btnClass']))->Execute();
+	$isf->Delete('nl_klasy')->Where(array('klasa' => $_POST['btnClass']))->Execute();
 	Kohana_Request::factory()->redirect('klasy/index/usun');
     }
 

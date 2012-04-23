@@ -2,6 +2,7 @@
     <p>
         Moduł użytkowników w trybie LDAP jest niedostępny
     </p>
+    <hr/>
 <?php else: ?>
     <p>
         <img src="<?php echo URL::base(); ?>lib/icons/user.png" alt=""/>
